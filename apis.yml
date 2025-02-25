@@ -19,21 +19,23 @@ tags:
   - Cross-Border Payments
   - Foreign Exchange
   - Currencies
-type: Index
+type: Contract
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 access: 3rd-Party
 created: '2025-02-17'
 modified: '2025-02-24'
-position: Consumer
+position: Consuming
 description: >-
-  Airwallex is a financial technology company that specializes in cross-border
-  payment solutions for businesses. Their platform offers a range of services,
-  including foreign exchange, payment processing, and multi-currency accounts,
-  all designed to streamline international transactions and reduce costs for
-  their clients. By leveraging technology and automation, Airwallex provides
-  businesses with a more efficient and transparent way to manage their global
-  payments, ultimately helping them to expand their reach and grow their
-  business on a global scale.
+  Airwallex is a financial technology company that specializes in providing
+  cross-border payment solutions for businesses. Their platform allows companies
+  to send and receive money internationally with ease, reducing costs and
+  increasing efficiency. Airwallex offers competitive exchange rates, fast
+  transaction speeds, and multiple currency options, making it a convenient and
+  reliable choice for businesses of all sizes. In addition to payment solutions,
+  Airwallex also offers foreign exchange services, virtual account management,
+  and integrated APIs for seamless integration with existing systems.Overall,
+  Airwallex helps businesses streamline their international transactions and
+  expand their global reach.
 maintainers:
   - FN: Kin Lane
     email: info@apievangelist.com
