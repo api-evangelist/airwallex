@@ -4,8 +4,7 @@ url: >-
 apis:
   - aid: airwallex:airwallex
     name: Airwallex
-    tags:
-      - API
+    tags: []
     humanURL: ' https://www.airwallex.com/docs/api#/Introduction'
     properties:
       - url: ' https://www.airwallex.com/docs/api#/Introduction'
@@ -15,10 +14,10 @@ apis:
       when you convert currencies, make payments and manage your accounts.
 name: Airwallex
 tags:
-  - Payments
   - Cross-Border Payments
-  - Foreign Exchange
   - Currencies
+  - Foreign Exchange
+  - Payments
 type: Contract
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 access: 3rd-Party
