@@ -1,0 +1,69 @@
+name: airwallex-api
+description: Shared Airwallex API capability definition for payment acceptance, global accounts, payouts, and FX operations.
+version: "1.0"
+provider: Airwallex
+baseUrl: https://api.airwallex.com/api/v1
+auth:
+  type: bearer
+  description: Bearer token obtained via Airwallex authentication endpoint.
+operations:
+  - operationId: createPaymentIntent
+    summary: Create Payment Intent
+    method: POST
+    path: /pa/payment_intents/create
+    description: Create a new payment intent to initiate a payment collection session.
+    tags: [payment-acceptance]
+  - operationId: getPaymentIntent
+    summary: Get Payment Intent
+    method: GET
+    path: /pa/payment_intents/{id}
+    description: Retrieve details of a specific payment intent by ID.
+    tags: [payment-acceptance]
+  - operationId: confirmPaymentIntent
+    summary: Confirm Payment Intent
+    method: POST
+    path: /pa/payment_intents/{id}/confirm
+    description: Confirm a payment intent to trigger payment processing.
+    tags: [payment-acceptance]
+  - operationId: listPaymentIntents
+    summary: List Payment Intents
+    method: GET
+    path: /pa/payment_intents
+    description: Retrieve a paginated list of payment intents.
+    tags: [payment-acceptance]
+  - operationId: getAccount
+    summary: Get Account
+    method: GET
+    path: /accounts/{id}
+    description: Retrieve a global multi-currency account by ID.
+    tags: [global-accounts]
+  - operationId: listAccountBalances
+    summary: List Account Balances
+    method: GET
+    path: /accounts/{id}/balances
+    description: List all currency balances held in an account.
+    tags: [global-accounts]
+  - operationId: createTransfer
+    summary: Create Transfer
+    method: POST
+    path: /transfers/create
+    description: Initiate a cross-border transfer to a beneficiary account.
+    tags: [payouts]
+  - operationId: getTransfer
+    summary: Get Transfer
+    method: GET
+    path: /transfers/{id}
+    description: Retrieve details of a specific transfer by ID.
+    tags: [payouts]
+  - operationId: getFxQuote
+    summary: Get FX Quote
+    method: POST
+    path: /fx/quotes
+    description: Request a foreign exchange rate quote for a currency pair.
+    tags: [fx]
+  - operationId: convertCurrency
+    summary: Convert Currency
+    method: POST
+    path: /fx/conversions
+    description: Execute a currency conversion using a previously obtained FX quote.
+    tags: [fx]

@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/airwallex/refs/heads/main/json-schema/airwallex-payment-intent-schema.json",
+  "title": "PaymentIntent",
+  "description": "An Airwallex payment intent representing a payment session for collecting customer payment.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique payment intent identifier.",
+      "example": "int_abc123def456"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Payment amount in the specified currency.",
+      "example": 100.00
+    },
+    "currency": {
+      "type": "string",
+      "description": "ISO 4217 currency code.",
+      "example": "USD"
+    },
+    "merchant_order_id": {
+      "type": "string",
+      "description": "Merchant's own order identifier.",
+      "example": "order-20260419-001"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["CREATED", "REQUIRES_PAYMENT_METHOD", "REQUIRES_CUSTOMER_ACTION", "REQUIRES_CAPTURE", "SUCCEEDED", "CANCELLED", "EXPIRED"],
+      "description": "Current payment intent status.",
+      "example": "SUCCEEDED"
+    },
+    "client_secret": {
+      "type": "string",
+      "description": "Client secret for frontend SDK initialization.",
+      "example": "cs_abc123"
+    },
+    "captured_amount": {
+      "type": "number",
+      "description": "Amount captured so far.",
+      "example": 100.00
+    },
+    "customer_id": {
+      "type": "string",
+      "description": "Airwallex customer ID.",
+      "example": "cus_abc123"
+    },
+    "payment_method_options": {
+      "type": "object",
+      "description": "Payment method configuration options."
+    },
+    "descriptor": {
+      "type": "string",
+      "description": "Statement descriptor shown on customer bank statement.",
+      "example": "ACME Corp"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Arbitrary key-value metadata for the payment intent."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when the payment intent was created.",
+      "example": "2026-04-19T10:30:00Z"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of last update.",
+      "example": "2026-04-19T10:31:00Z"
+    }
+  },
+  "required": ["id", "amount", "currency", "status"]
+}

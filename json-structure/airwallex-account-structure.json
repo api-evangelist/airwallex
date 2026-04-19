@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-structure.org/meta/core/v0/#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/airwallex/refs/heads/main/json-structure/airwallex-account-structure.json",
+  "name": "Account",
+  "description": "An Airwallex global multi-currency account.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique account identifier.",
+      "example": "acct_abc123def456"
+    },
+    "account_name": {
+      "type": "string",
+      "description": "Business name of the account holder.",
+      "example": "ACME Corp Ltd"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "PENDING",
+        "ACTIVE",
+        "SUSPENDED",
+        "CLOSED"
+      ],
+      "description": "Account status.",
+      "example": "ACTIVE"
+    },
+    "primary_currency": {
+      "type": "string",
+      "description": "Primary currency for the account.",
+      "example": "USD"
+    },
+    "balances": {
+      "type": "array",
+      "description": "Currency balances held in the account.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "currency": {
+            "type": "string"
+          },
+          "available_amount": {
+            "type": "double"
+          },
+          "pending_amount": {
+            "type": "double"
+          }
+        }
+      }
+    },
+    "country_code": {
+      "type": "string",
+      "description": "ISO 3166-1 alpha-2 country code of the account.",
+      "example": "US"
+    },
+    "created_at": {
+      "type": "datetime",
+      "description": "Account creation timestamp.",
+      "example": "2026-01-15T08:00:00Z"
+    }
+  },
+  "required": [
+    "id",
+    "account_name",
+    "status",
+    "primary_currency"
+  ]
+}

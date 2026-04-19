@@ -1,0 +1,133 @@
+name: airwallex-vocabulary
+description: Vocabulary for the Airwallex global payments and financial infrastructure platform.
+version: "1.0"
+provider: Airwallex
+
+resources:
+  - name: PaymentIntent
+    description: A payment session object that represents a customer's intent to pay a specific amount in a given currency.
+    schema: ../json-schema/airwallex-payment-intent-schema.json
+    operations:
+      - createPaymentIntent
+      - getPaymentIntent
+      - confirmPaymentIntent
+      - listPaymentIntents
+    capabilities:
+      - payments-management#create_payment_intent
+      - payments-management#confirm_payment_intent
+      - payments-management#get_payment_intent
+      - payments-management#list_payment_intents
+    tags: [Payments, Checkout, Payment Acceptance]
+
+  - name: Transfer
+    description: A cross-border payment transfer from an Airwallex account to a beneficiary in another country or currency.
+    schema: ../json-schema/airwallex-transfer-schema.json
+    operations:
+      - createTransfer
+      - getTransfer
+    capabilities:
+      - payments-management#create_transfer
+      - payments-management#get_transfer
+    tags: [Payouts, Cross-Border, Transfers]
+
+  - name: Account
+    description: A global multi-currency business account that holds balances in multiple currencies for international operations.
+    schema: ../json-schema/airwallex-account-schema.json
+    operations:
+      - getAccount
+      - listAccountBalances
+    capabilities:
+      - payments-management#get_account
+      - payments-management#list_account_balances
+    tags: [Global Accounts, Multi-Currency, Wallets]
+
+  - name: FxQuote
+    description: A foreign exchange rate quote for a specific currency pair, valid for a limited time window.
+    schema: ../json-schema/airwallex-fx-quote-schema.json
+    operations:
+      - getFxQuote
+      - convertCurrency
+    capabilities:
+      - payments-management#get_fx_quote
+      - payments-management#execute_currency_conversion
+    tags: [FX, Currency Conversion, Exchange Rates]
+
+  - name: Beneficiary
+    description: A registered recipient entity for cross-border payouts, including bank account or wallet details.
+    tags: [Payouts, Beneficiaries, Recipients]
+
+  - name: PaymentMethod
+    description: A customer payment instrument (card, bank account, digital wallet) used to fulfill a payment intent.
+    tags: [Payments, Payment Methods, Cards]
+
+actions:
+  - name: createPaymentIntent
+    description: Create a new payment intent to initiate a checkout or payment collection session.
+    method: POST
+    resource: PaymentIntent
+    tags: [Create, Payments]
+
+  - name: confirmPayment
+    description: Confirm a payment intent with a payment method to process the payment.
+    method: POST
+    resource: PaymentIntent
+    tags: [Confirm, Capture, Payments]
+
+  - name: initiateTransfer
+    description: Send money internationally from an Airwallex account to a beneficiary.
+    method: POST
+    resource: Transfer
+    tags: [Transfer, Payout, Cross-Border]
+
+  - name: convertCurrency
+    description: Convert funds between currencies using a locked FX quote rate.
+    method: POST
+    resource: FxQuote
+    tags: [FX, Convert, Currency]
+
+  - name: checkBalance
+    description: View current balances across all currencies held in a global account.
+    method: GET
+    resource: Account
+    tags: [Balance, Account, Multi-Currency]
+
+  - name: requestFxQuote
+    description: Obtain a real-time foreign exchange rate quote for a currency pair.
+    method: POST
+    resource: FxQuote
+    tags: [FX, Quote, Exchange Rate]
+
+  - name: trackTransfer
+    description: Monitor the status and progress of an international transfer.
+    method: GET
+    resource: Transfer
+    tags: [Track, Status, Transfers]
+
+workflows:
+  - name: cross-border-payment
+    description: End-to-end workflow for sending an international payment from FX quote through transfer settlement.
+    steps:
+      - action: requestFxQuote
+        description: Obtain an FX rate for the source and target currency pair.
+      - action: initiateTransfer
+        description: Create the transfer using the quoted FX rate.
+      - action: trackTransfer
+        description: Monitor the transfer until it reaches SETTLED status.
+    capability: payments-management
+    tags: [Payouts, Workflow, Cross-Border]
+
+personas:
+  - name: Merchant
+    description: A business using Airwallex to accept online payments from customers globally through payment intents and checkout.
+    actions: [createPaymentIntent, confirmPayment]
+    tags: [Merchant, Payments, E-Commerce]
+
+  - name: Finance Manager
+    description: A finance team member managing multi-currency balances, FX conversions, and cross-border payouts for business operations.
+    actions: [checkBalance, requestFxQuote, convertCurrency, initiateTransfer, trackTransfer]
+    tags: [Finance, FX, Payouts, Treasury]
+
+  - name: Platform Developer
+    description: A developer integrating Airwallex APIs into a marketplace or SaaS platform to provide embedded financial services to sub-accounts.
+    actions: [createPaymentIntent, initiateTransfer, checkBalance]
+    tags: [Developer, Platform, Integration]

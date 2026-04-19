@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-structure.org/meta/core/v0/#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/airwallex/refs/heads/main/json-structure/airwallex-transfer-structure.json",
+  "name": "Transfer",
+  "description": "An Airwallex cross-border transfer to a beneficiary account.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique transfer identifier.",
+      "example": "txf_abc123def456"
+    },
+    "source_amount": {
+      "type": "double",
+      "description": "Amount debited from the source account.",
+      "example": 1000.0
+    },
+    "source_currency": {
+      "type": "string",
+      "description": "ISO 4217 currency code of the source amount.",
+      "example": "USD"
+    },
+    "target_amount": {
+      "type": "double",
+      "description": "Amount received by the beneficiary.",
+      "example": 920.5
+    },
+    "target_currency": {
+      "type": "string",
+      "description": "ISO 4217 currency code of the target amount.",
+      "example": "EUR"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "CREATED",
+        "PENDING",
+        "SUBMITTED",
+        "SETTLED",
+        "FAILED",
+        "CANCELLED"
+      ],
+      "description": "Current transfer status.",
+      "example": "SETTLED"
+    },
+    "beneficiary_id": {
+      "type": "string",
+      "description": "ID of the beneficiary account.",
+      "example": "ben_abc123"
+    },
+    "reference": {
+      "type": "string",
+      "description": "Payment reference for the transfer.",
+      "example": "Invoice-2026-001"
+    },
+    "fee": {
+      "type": "double",
+      "description": "Transfer fee charged.",
+      "example": 5.0
+    },
+    "fee_currency": {
+      "type": "string",
+      "description": "Currency of the fee.",
+      "example": "USD"
+    },
+    "fx_rate": {
+      "type": "double",
+      "description": "Applied foreign exchange rate.",
+      "example": 0.9205
+    },
+    "created_at": {
+      "type": "datetime",
+      "description": "Timestamp when the transfer was created.",
+      "example": "2026-04-19T10:30:00Z"
+    }
+  },
+  "required": [
+    "id",
+    "source_amount",
+    "source_currency",
+    "status"
+  ]
+}

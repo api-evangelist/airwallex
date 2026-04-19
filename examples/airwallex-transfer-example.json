@@ -1,0 +1,14 @@
+{
+  "id": "abc123def456",
+  "source_amount": 100.0,
+  "source_currency": "USD",
+  "target_amount": 100.0,
+  "target_currency": "USD",
+  "status": "CREATED",
+  "beneficiary_id": "abc123def456",
+  "reference": "REF-001",
+  "fee": 1,
+  "fee_currency": "USD",
+  "fx_rate": 0.9205,
+  "created_at": "2026-04-19T10:30:00Z"
+}

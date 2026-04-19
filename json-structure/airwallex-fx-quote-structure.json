@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-structure.org/meta/core/v0/#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/airwallex/refs/heads/main/json-structure/airwallex-fx-quote-structure.json",
+  "name": "FxQuote",
+  "description": "An Airwallex foreign exchange rate quote for currency conversion.",
+  "type": "object",
+  "properties": {
+    "quote_id": {
+      "type": "string",
+      "description": "Unique quote identifier.",
+      "example": "qte_abc123"
+    },
+    "from_currency": {
+      "type": "string",
+      "description": "Source currency ISO 4217 code.",
+      "example": "USD"
+    },
+    "to_currency": {
+      "type": "string",
+      "description": "Target currency ISO 4217 code.",
+      "example": "GBP"
+    },
+    "rate": {
+      "type": "double",
+      "description": "Quoted exchange rate (from_currency to to_currency).",
+      "example": 0.7825
+    },
+    "from_amount": {
+      "type": "double",
+      "description": "Source amount to convert.",
+      "example": 1000.0
+    },
+    "to_amount": {
+      "type": "double",
+      "description": "Target amount after conversion.",
+      "example": 782.5
+    },
+    "expires_at": {
+      "type": "datetime",
+      "description": "Timestamp when the quote expires.",
+      "example": "2026-04-19T10:32:00Z"
+    },
+    "created_at": {
+      "type": "datetime",
+      "description": "Quote creation timestamp.",
+      "example": "2026-04-19T10:30:00Z"
+    }
+  },
+  "required": [
+    "quote_id",
+    "from_currency",
+    "to_currency",
+    "rate"
+  ]
+}

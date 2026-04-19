@@ -1,0 +1,90 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "airwallex": "https://airwallex.com/schema/",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "PaymentIntent": "airwallex:PaymentIntent",
+    "Transfer": "airwallex:Transfer",
+    "Account": "airwallex:Account",
+    "FxQuote": "airwallex:FxQuote",
+    "amount": {
+      "@id": "schema:price",
+      "@type": "xsd:decimal"
+    },
+    "currency": {
+      "@id": "airwallex:currency",
+      "@type": "xsd:string"
+    },
+    "status": {
+      "@id": "airwallex:status",
+      "@type": "xsd:string"
+    },
+    "createdAt": {
+      "@id": "schema:dateCreated",
+      "@type": "xsd:dateTime"
+    },
+    "updatedAt": {
+      "@id": "schema:dateModified",
+      "@type": "xsd:dateTime"
+    },
+    "merchantOrderId": {
+      "@id": "airwallex:merchant_order_id",
+      "@type": "xsd:string"
+    },
+    "clientSecret": {
+      "@id": "airwallex:client_secret",
+      "@type": "xsd:string"
+    },
+    "sourceAmount": {
+      "@id": "airwallex:source_amount",
+      "@type": "xsd:decimal"
+    },
+    "sourceCurrency": {
+      "@id": "airwallex:source_currency",
+      "@type": "xsd:string"
+    },
+    "targetAmount": {
+      "@id": "airwallex:target_amount",
+      "@type": "xsd:decimal"
+    },
+    "targetCurrency": {
+      "@id": "airwallex:target_currency",
+      "@type": "xsd:string"
+    },
+    "fxRate": {
+      "@id": "airwallex:fx_rate",
+      "@type": "xsd:decimal"
+    },
+    "reference": {
+      "@id": "airwallex:reference",
+      "@type": "xsd:string"
+    },
+    "fromCurrency": {
+      "@id": "airwallex:from_currency",
+      "@type": "xsd:string"
+    },
+    "toCurrency": {
+      "@id": "airwallex:to_currency",
+      "@type": "xsd:string"
+    },
+    "rate": {
+      "@id": "airwallex:rate",
+      "@type": "xsd:decimal"
+    },
+    "expiresAt": {
+      "@id": "airwallex:expires_at",
+      "@type": "xsd:dateTime"
+    },
+    "countryCode": {
+      "@id": "airwallex:country_code",
+      "@type": "xsd:string"
+    },
+    "primaryCurrency": {
+      "@id": "airwallex:primary_currency",
+      "@type": "xsd:string"
+    },
+    "name": "schema:name",
+    "description": "schema:description"
+  }
+}
