@@ -135,6 +135,8 @@ description: >-
   Airwallex is a financial technology company that specializes in providing global payment solutions for businesses. Their platform enables companies to accept payments, manage multi-currency accounts,
   convert currencies at competitive rates, send cross-border payments, issue corporate cards, and embed financial services into their own products. Airwallex serves businesses in over 150 countries with
   APIs for payment acceptance, FX, accounts, transfers, and embedded finance.
+integrations:
+  - name: Log in
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -226,3 +228,5 @@ common:
 - url: >-
     https://raw.githubusercontent.com/api-evangelist/airwallex/refs/heads/main/vocabulary/airwallex-vocabulary.yaml
   type: Vocabulary
+- type: Integrations
+  url: https://www.airwallex.com/integrations
