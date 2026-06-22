@@ -4,11 +4,11 @@
     {
       "source": "https://www.airwallex.com/blog",
       "feed_url": "https://www.airwallex.com/blog",
-      "title": "",
-      "saved": 0,
-      "method": "none"
+      "title": "Airwallex Blog",
+      "saved": 3,
+      "method": "html-scrape"
     }
   ],
-  "fetched": "2026-06-14T20:42:17Z",
-  "post_count": 2
+  "fetched": "2026-06-21T17:00:00Z",
+  "post_count": 5
 }
