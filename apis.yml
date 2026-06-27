@@ -22,16 +22,16 @@ apis:
       - url: https://www.airwallex.com/docs/api#/Payment_Acceptance/Authentication
         type: Authentication
       - url: https://github.com/airwallex/airwallex-payment-android
-        type: SDK
+        type: SDKs
         title: Android SDK
       - url: https://github.com/airwallex/airwallex-payment-ios
-        type: SDK
+        type: SDKs
         title: iOS SDK
       - url: https://github.com/airwallex/airwallex-payment-react-native
-        type: SDK
+        type: SDKs
         title: React Native SDK
       - url: https://github.com/airwallex/airwallex-payment-flutter
-        type: SDK
+        type: SDKs
         title: Flutter SDK
   - aid: airwallex:global-accounts
     name: Airwallex Global Accounts API
@@ -69,7 +69,7 @@ apis:
       - url: https://www.airwallex.com/docs/api#/Payouts
         type: APIReference
       - url: https://github.com/airwallex/payouts-web-sdk
-        type: SDK
+        type: SDKs
         title: Payouts Web SDK
   - aid: airwallex:fx
     name: Airwallex FX API
@@ -122,7 +122,7 @@ apis:
       - url: https://www.airwallex.com/docs/api#/Platform
         type: APIReference
       - url: https://github.com/airwallex/platform-onboarding-sdk
-        type: SDK
+        type: SDKs
         title: Platform Onboarding SDK
 name: Airwallex
 tags:
@@ -176,10 +176,10 @@ common:
     type: CLI
     title: Airwallex CLI
   - url: https://github.com/airwallex/paymentacceptance-plugin-magento
-    type: SDK
+    type: SDKs
     title: Magento Plugin
   - url: https://github.com/airwallex/airwallex-salesforce-commerce-cloud-cartridge
-    type: SDK
+    type: SDKs
     title: Salesforce Commerce Cloud
   - type: Features
     data:
