@@ -152,6 +152,14 @@ maintainers:
     email: kin@apievangelist.com
 specificationVersion: '0.19'
 common:
+  - type: TrustCenter
+    url: security/airwallex-trust-center.yml
+  - type: VulnerabilityDisclosure
+    url: security/airwallex-vulnerability-disclosure.yml
+  - type: DomainSecurity
+    url: security/airwallex-domain-security.yml
+  - type: Authentication
+    url: authentication/airwallex-authentication.yml
   - type: LinkedIn
     url: https://www.linkedin.com/company/airwallex
   - url: https://www.airwallex.com

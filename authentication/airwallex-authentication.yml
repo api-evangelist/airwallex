@@ -1,0 +1,30 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/airwallex-openapi.yml
+summary:
+  types:
+  - apiKey
+  - http
+  api_key_in:
+  - header
+schemes:
+- name: BearerAuth
+  type: http
+  scheme: bearer
+  description: |-
+    Bearer access token obtained via POST /api/v1/authentication/login using
+    `x-client-id` and `x-api-key` request headers.
+  sources:
+  - openapi/airwallex-openapi.yml
+- name: ClientIdHeader
+  type: apiKey
+  in: header
+  parameter: x-client-id
+  sources:
+  - openapi/airwallex-openapi.yml
+- name: ApiKeyHeader
+  type: apiKey
+  in: header
+  parameter: x-api-key
+  sources:
+  - openapi/airwallex-openapi.yml
