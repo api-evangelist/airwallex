@@ -1,0 +1,74 @@
+openapi: 3.1.0
+info:
+  title: Airwallex Open Authentication Customers API
+  version: v1
+  description: 'Best-effort OpenAPI 3.1 representation of the Airwallex REST API derived from
+
+    https://www.airwallex.com/docs/api. Airwallex is a global payments and
+
+    financial infrastructure platform. Coverage in this best-effort spec
+
+    focuses on the Payment Acceptance and related core resources: payment
+
+    intents, customers, refunds, payouts, transfers, balances, beneficiaries
+
+    and account authentication. Endpoints accept and return JSON.
+
+    '
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Airwallex production
+- url: https://api-demo.airwallex.com
+  description: Airwallex demo / sandbox
+security:
+- BearerAuth: []
+- ClientIdHeader: []
+  ApiKeyHeader: []
+tags:
+- name: Customers
+paths:
+  /api/v1/pa/customers/create:
+    post:
+      tags:
+      - Customers
+      summary: Create customer
+      operationId: createCustomer
+      responses:
+        '201':
+          description: Created
+  /api/v1/pa/customers/{id}:
+    get:
+      tags:
+      - Customers
+      summary: Retrieve customer
+      operationId: getCustomer
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Bearer access token obtained via POST /api/v1/authentication/login using
+
+        `x-client-id` and `x-api-key` request headers.
+
+        '
+    ClientIdHeader:
+      type: apiKey
+      in: header
+      name: x-client-id
+    ApiKeyHeader:
+      type: apiKey
+      in: header
+      name: x-api-key
