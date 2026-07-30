@@ -1,129 +1,211 @@
 aid: airwallex
 url: https://raw.githubusercontent.com/api-evangelist/airwallex/refs/heads/main/apis.yml
 apis:
-  - aid: airwallex:payment-acceptance
-    name: Airwallex Payment Acceptance API
-    tags:
-      - Payments
-      - Checkout
-      - Cards
-      - Online Payments
-    humanURL: https://www.airwallex.com/docs/api#/Introduction
-    baseURL: https://api.airwallex.com/api/v1
-    description: >-
-      The Airwallex Payment Acceptance API enables businesses to accept online payments globally. Supports credit and
-      debit cards, local payment methods, and 3D Secure. Available as hosted checkout or embedded via Drop-in UI,
-      Payment Elements, and mobile SDKs for iOS, Android, React Native, and Flutter.
-    properties:
-      - url: https://www.airwallex.com/docs/api#/Introduction
-        type: Documentation
-      - url: https://www.airwallex.com/docs/api#/Payment_Acceptance
-        type: APIReference
-      - url: https://www.airwallex.com/docs/api#/Payment_Acceptance/Authentication
-        type: Authentication
-      - url: https://github.com/airwallex/airwallex-payment-android
-        type: SDKs
-        title: Android SDK
-      - url: https://github.com/airwallex/airwallex-payment-ios
-        type: SDKs
-        title: iOS SDK
-      - url: https://github.com/airwallex/airwallex-payment-react-native
-        type: SDKs
-        title: React Native SDK
-      - url: https://github.com/airwallex/airwallex-payment-flutter
-        type: SDKs
-        title: Flutter SDK
-  - aid: airwallex:global-accounts
-    name: Airwallex Global Accounts API
-    tags:
-      - Accounts
-      - Multi-Currency
-      - Banking
-      - FX
-    humanURL: https://www.airwallex.com/docs/api#/Accounts
-    baseURL: https://api.airwallex.com/api/v1
-    description: >-
-      The Airwallex Global Accounts API enables businesses to create and manage multi-currency accounts. Supports
-      account creation, balance management, account statements, and receiving funds in multiple currencies with local
-      bank details.
-    properties:
-      - url: https://www.airwallex.com/docs/api#/Accounts
-        type: Documentation
-      - url: https://www.airwallex.com/docs/api#/Accounts
-        type: APIReference
-  - aid: airwallex:payouts
-    name: Airwallex Payouts API
-    tags:
-      - Payouts
-      - Cross-Border Payments
-      - Transfers
-      - International
-    humanURL: https://www.airwallex.com/docs/api#/Payouts
-    baseURL: https://api.airwallex.com/api/v1
-    description: >-
-      The Airwallex Payouts API enables businesses to send cross-border payments to suppliers, contractors, and
-      employees globally. Supports bank transfers to 150+ countries, bulk payouts, and beneficiary management.
-    properties:
-      - url: https://www.airwallex.com/docs/api#/Payouts
-        type: Documentation
-      - url: https://www.airwallex.com/docs/api#/Payouts
-        type: APIReference
-      - url: https://github.com/airwallex/payouts-web-sdk
-        type: SDKs
-        title: Payouts Web SDK
-  - aid: airwallex:fx
-    name: Airwallex FX API
-    tags:
-      - Foreign Exchange
-      - Currency Conversion
-      - FX
-    humanURL: https://www.airwallex.com/docs/api#/FX
-    baseURL: https://api.airwallex.com/api/v1
-    description: >-
-      The Airwallex FX API provides access to real-time foreign exchange rates and currency conversion. Supports spot
-      conversions, rate quotes, and conversion history for 60+ currencies.
-    properties:
-      - url: https://www.airwallex.com/docs/api#/FX
-        type: Documentation
-      - url: https://www.airwallex.com/docs/api#/FX
-        type: APIReference
-  - aid: airwallex:issuing
-    name: Airwallex Issuing API
-    tags:
-      - Cards
-      - Corporate Cards
-      - Issuing
-      - Expense Management
-    humanURL: https://www.airwallex.com/docs/api#/Issuing
-    baseURL: https://api.airwallex.com/api/v1
-    description: >-
-      The Airwallex Issuing API enables businesses to create and manage virtual and physical corporate cards for
-      employee spending. Supports card issuance, spend controls, transaction management, and expense reporting.
-    properties:
-      - url: https://www.airwallex.com/docs/api#/Issuing
-        type: Documentation
-      - url: https://www.airwallex.com/docs/api#/Issuing
-        type: APIReference
-  - aid: airwallex:platform
-    name: Airwallex Platform API
-    tags:
-      - Embedded Finance
-      - Platform
-      - Marketplace
-      - Split Payments
-    humanURL: https://www.airwallex.com/docs/api#/Platform
-    baseURL: https://api.airwallex.com/api/v1
-    description: >-
-      The Airwallex Platform API enables businesses to embed financial services into their products. Supports merchant
-      onboarding, sub-account management, platform payments, and split payouts for marketplace and SaaS platforms.
-    properties:
-      - url: https://www.airwallex.com/docs/api#/Platform
-        type: Documentation
-      - url: https://www.airwallex.com/docs/api#/Platform
-        type: APIReference
-      - url: https://github.com/airwallex/platform-onboarding-sdk
-        type: SDKs
-        title: Platform Onboarding SDK
+- aid: airwallex:payment-acceptance
+  name: Airwallex Payment Acceptance API
+  tags:
+  - Payments
+  - Checkout
+  - Cards
+  - Online Payments
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  description: >-
+    The Airwallex Payment Acceptance API enables businesses to accept online payments globally. Supports
+    credit and debit cards, local payment methods, and 3D Secure. Available as hosted checkout or embedded
+    via Drop-in UI, Payment Elements, and mobile SDKs for iOS, Android, React Native, and Flutter.
+  properties:
+  - url: https://www.airwallex.com/docs/api#/Introduction
+    type: Documentation
+  - url: https://www.airwallex.com/docs/api#/Payment_Acceptance
+    type: APIReference
+  - url: https://www.airwallex.com/docs/api#/Payment_Acceptance/Authentication
+    type: Authentication
+  - url: https://github.com/airwallex/airwallex-payment-android
+    type: SDKs
+    title: Android SDK
+  - url: https://github.com/airwallex/airwallex-payment-ios
+    type: SDKs
+    title: iOS SDK
+  - url: https://github.com/airwallex/airwallex-payment-react-native
+    type: SDKs
+    title: React Native SDK
+  - url: https://github.com/airwallex/airwallex-payment-flutter
+    type: SDKs
+    title: Flutter SDK
+- aid: airwallex:global-accounts
+  name: Airwallex Global Accounts API
+  tags:
+  - Accounts
+  - Multi-Currency
+  - Banking
+  - FX
+  humanURL: https://www.airwallex.com/docs/api#/Accounts
+  baseURL: https://api.airwallex.com/api/v1
+  description: >-
+    The Airwallex Global Accounts API enables businesses to create and manage multi-currency accounts.
+    Supports account creation, balance management, account statements, and receiving funds in multiple
+    currencies with local bank details.
+  properties:
+  - url: https://www.airwallex.com/docs/api#/Accounts
+    type: Documentation
+  - url: https://www.airwallex.com/docs/api#/Accounts
+    type: APIReference
+- aid: airwallex:payouts
+  name: Airwallex Payouts API
+  tags:
+  - Payouts
+  - Cross-Border Payments
+  - Transfers
+  - International
+  humanURL: https://www.airwallex.com/docs/api#/Payouts
+  baseURL: https://api.airwallex.com/api/v1
+  description: >-
+    The Airwallex Payouts API enables businesses to send cross-border payments to suppliers, contractors,
+    and employees globally. Supports bank transfers to 150+ countries, bulk payouts, and beneficiary management.
+  properties:
+  - url: https://www.airwallex.com/docs/api#/Payouts
+    type: Documentation
+  - url: https://www.airwallex.com/docs/api#/Payouts
+    type: APIReference
+  - url: https://github.com/airwallex/payouts-web-sdk
+    type: SDKs
+    title: Payouts Web SDK
+- aid: airwallex:fx
+  name: Airwallex FX API
+  tags:
+  - Foreign Exchange
+  - Currency Conversion
+  - FX
+  humanURL: https://www.airwallex.com/docs/api#/FX
+  baseURL: https://api.airwallex.com/api/v1
+  description: >-
+    The Airwallex FX API provides access to real-time foreign exchange rates and currency conversion.
+    Supports spot conversions, rate quotes, and conversion history for 60+ currencies.
+  properties:
+  - url: https://www.airwallex.com/docs/api#/FX
+    type: Documentation
+  - url: https://www.airwallex.com/docs/api#/FX
+    type: APIReference
+- aid: airwallex:issuing
+  name: Airwallex Issuing API
+  tags:
+  - Cards
+  - Corporate Cards
+  - Issuing
+  - Expense Management
+  humanURL: https://www.airwallex.com/docs/api#/Issuing
+  baseURL: https://api.airwallex.com/api/v1
+  description: >-
+    The Airwallex Issuing API enables businesses to create and manage virtual and physical corporate cards
+    for employee spending. Supports card issuance, spend controls, transaction management, and expense
+    reporting.
+  properties:
+  - url: https://www.airwallex.com/docs/api#/Issuing
+    type: Documentation
+  - url: https://www.airwallex.com/docs/api#/Issuing
+    type: APIReference
+- aid: airwallex:platform
+  name: Airwallex Platform API
+  tags:
+  - Embedded Finance
+  - Platform
+  - Marketplace
+  - Split Payments
+  humanURL: https://www.airwallex.com/docs/api#/Platform
+  baseURL: https://api.airwallex.com/api/v1
+  description: >-
+    The Airwallex Platform API enables businesses to embed financial services into their products. Supports
+    merchant onboarding, sub-account management, platform payments, and split payouts for marketplace
+    and SaaS platforms.
+  properties:
+  - url: https://www.airwallex.com/docs/api#/Platform
+    type: Documentation
+  - url: https://www.airwallex.com/docs/api#/Platform
+    type: APIReference
+  - url: https://github.com/airwallex/platform-onboarding-sdk
+    type: SDKs
+    title: Platform Onboarding SDK
+- aid: airwallex:airwallex-authentication-api
+  name: Airwallex Authentication API
+  description: The Authentication API from Airwallex — 1 operation(s) for authentication.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Authentication
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-authentication-api-openapi.yml
+- aid: airwallex:airwallex-balances-api
+  name: Airwallex Balances API
+  description: The Balances API from Airwallex — 1 operation(s) for balances.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Balances
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-balances-api-openapi.yml
+- aid: airwallex:airwallex-beneficiaries-api
+  name: Airwallex Beneficiaries API
+  description: The Beneficiaries API from Airwallex — 3 operation(s) for beneficiaries.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Beneficiaries
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-beneficiaries-api-openapi.yml
+- aid: airwallex:airwallex-customers-api
+  name: Airwallex Customers API
+  description: The Customers API from Airwallex — 2 operation(s) for customers.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Customers
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-customers-api-openapi.yml
+- aid: airwallex:airwallex-payment-intents-api
+  name: Airwallex Payment Intents API
+  description: The Payment Intents API from Airwallex — 5 operation(s) for payment intents.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Payment Intents
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-payment-intents-api-openapi.yml
+- aid: airwallex:airwallex-payouts-api
+  name: Airwallex Payouts API
+  description: The Payouts API from Airwallex — 2 operation(s) for payouts.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Payouts
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-payouts-api-openapi.yml
+- aid: airwallex:airwallex-refunds-api
+  name: Airwallex Refunds API
+  description: The Refunds API from Airwallex — 2 operation(s) for refunds.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Refunds
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-refunds-api-openapi.yml
+- aid: airwallex:airwallex-transfers-api
+  name: Airwallex Transfers API
+  description: The Transfers API from Airwallex — 2 operation(s) for transfers.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Transfers
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-transfers-api-openapi.yml
 name: Airwallex
 tags:
   - Cross-Border Payments
@@ -134,7 +216,20 @@ tags:
   - Embedded Finance
   - Multi-Currency
 type: Index
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: freemium
+  onboarding: self-serve
+  trial: false
+  try_now: true
+  public: false
+  label: Freemium · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/airwallex.png
 access: 3rd-Party
 created: '2025-02-17'
 modified: '2026-04-19'
@@ -152,6 +247,8 @@ maintainers:
     email: kin@apievangelist.com
 specificationVersion: '0.19'
 common:
+  - type: PostmanWorkspace
+    url: https://www.postman.com/kinlaneapi/airwallex/overview
   - type: AgenticAccess
     url: agentic-access/airwallex-agentic-access.yml
   - type: TrustCenter
