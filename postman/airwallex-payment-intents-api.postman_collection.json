@@ -1,0 +1,480 @@
+{
+  "info": {
+    "_postman_id": "444af97b-2c22-4ae1-ad11-3a5dea0ffaf3",
+    "name": "Airwallex Open Authentication Payment Intents API",
+    "description": "Best-effort OpenAPI 3.1 representation of the Airwallex REST API derived from\nhttps://www.airwallex.com/docs/api. Airwallex is a global payments and\nfinancial infrastructure platform. Coverage in this best-effort spec\nfocuses on the Payment Acceptance and related core resources: payment\nintents, customers, refunds, payouts, transfers, balances, beneficiaries\nand account authentication. Endpoints accept and return JSON.\n\n\nContact Support:\n Name: Airwallex",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T00:29:24.000Z",
+    "updatedAt": "2026-07-28T00:29:24.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-444af97b-2c22-4ae1-ad11-3a5dea0ffaf3"
+  },
+  "item": [
+    {
+      "name": "api",
+      "item": [
+        {
+          "name": "v1",
+          "item": [
+            {
+              "name": "payment_intents",
+              "item": [
+                {
+                  "name": "create",
+                  "item": [
+                    {
+                      "name": "Create a payment intent",
+                      "id": "3bbb3ed2-7521-4ae6-a0b6-ced4b24ef60f",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/payment_intents/create",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "payment_intents",
+                            "create"
+                          ]
+                        }
+                      },
+                      "response": [
+                        {
+                          "id": "69b3d5d4-745b-443e-9234-a8b1b01965ce",
+                          "name": "Created",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/payment_intents/create",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "payment_intents",
+                                "create"
+                              ]
+                            }
+                          },
+                          "status": "Created",
+                          "code": 201,
+                          "_postman_previewlanguage": "text",
+                          "header": [],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": null,
+                          "createdAt": "2026-07-28T00:29:25.000Z",
+                          "updatedAt": "2026-07-28T00:29:25.000Z",
+                          "uid": "35240-69b3d5d4-745b-443e-9234-a8b1b01965ce"
+                        }
+                      ],
+                      "createdAt": "2026-07-28T00:29:25.000Z",
+                      "updatedAt": "2026-07-28T00:29:25.000Z",
+                      "uid": "35240-3bbb3ed2-7521-4ae6-a0b6-ced4b24ef60f"
+                    }
+                  ],
+                  "id": "52450410-0e74-41ca-bb0d-28fbcd24ee69",
+                  "createdAt": "2026-07-28T00:29:25.000Z",
+                  "updatedAt": "2026-07-28T00:29:25.000Z",
+                  "uid": "35240-52450410-0e74-41ca-bb0d-28fbcd24ee69"
+                },
+                {
+                  "name": "{id}",
+                  "item": [
+                    {
+                      "name": "confirm",
+                      "item": [
+                        {
+                          "name": "Confirm payment intent",
+                          "id": "9c4c96c1-c351-4f67-b52b-f64e5733a4b5",
+                          "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                          },
+                          "request": {
+                            "method": "POST",
+                            "header": [],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/payment_intents/:id/confirm",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "payment_intents",
+                                ":id",
+                                "confirm"
+                              ],
+                              "variable": [
+                                {
+                                  "id": "f2451826-c7c1-4bf4-bf2d-7ee47b24de3b",
+                                  "key": "id",
+                                  "value": "<string>",
+                                  "description": "(Required) "
+                                }
+                              ]
+                            }
+                          },
+                          "response": [
+                            {
+                              "id": "7d4e28a1-a672-4860-9f8c-2dec2bb38041",
+                              "name": "OK",
+                              "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "url": {
+                                  "raw": "{{baseUrl}}/api/v1/payment_intents/:id/confirm",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "api",
+                                    "v1",
+                                    "payment_intents",
+                                    ":id",
+                                    "confirm"
+                                  ],
+                                  "variable": [
+                                    {
+                                      "key": "id"
+                                    }
+                                  ]
+                                }
+                              },
+                              "status": "OK",
+                              "code": 200,
+                              "_postman_previewlanguage": "text",
+                              "header": [],
+                              "cookie": [],
+                              "responseTime": null,
+                              "body": null,
+                              "createdAt": "2026-07-28T00:29:25.000Z",
+                              "updatedAt": "2026-07-28T00:29:25.000Z",
+                              "uid": "35240-7d4e28a1-a672-4860-9f8c-2dec2bb38041"
+                            }
+                          ],
+                          "createdAt": "2026-07-28T00:29:25.000Z",
+                          "updatedAt": "2026-07-28T00:29:25.000Z",
+                          "uid": "35240-9c4c96c1-c351-4f67-b52b-f64e5733a4b5"
+                        }
+                      ],
+                      "id": "6f12211e-48d9-40c9-8104-59ffc093f3e7",
+                      "createdAt": "2026-07-28T00:29:25.000Z",
+                      "updatedAt": "2026-07-28T00:29:25.000Z",
+                      "uid": "35240-6f12211e-48d9-40c9-8104-59ffc093f3e7"
+                    },
+                    {
+                      "name": "capture",
+                      "item": [
+                        {
+                          "name": "Capture payment intent",
+                          "id": "e6b56e95-3d45-4315-951a-0dc589abb89e",
+                          "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                          },
+                          "request": {
+                            "method": "POST",
+                            "header": [],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/payment_intents/:id/capture",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "payment_intents",
+                                ":id",
+                                "capture"
+                              ],
+                              "variable": [
+                                {
+                                  "id": "2dd7a9ea-9a5d-40b0-b4b5-e224d0609a3d",
+                                  "key": "id",
+                                  "value": "<string>",
+                                  "description": "(Required) "
+                                }
+                              ]
+                            }
+                          },
+                          "response": [
+                            {
+                              "id": "f796f15f-9b31-4fe0-b732-1c73e503ba56",
+                              "name": "OK",
+                              "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "url": {
+                                  "raw": "{{baseUrl}}/api/v1/payment_intents/:id/capture",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "api",
+                                    "v1",
+                                    "payment_intents",
+                                    ":id",
+                                    "capture"
+                                  ],
+                                  "variable": [
+                                    {
+                                      "key": "id"
+                                    }
+                                  ]
+                                }
+                              },
+                              "status": "OK",
+                              "code": 200,
+                              "_postman_previewlanguage": "text",
+                              "header": [],
+                              "cookie": [],
+                              "responseTime": null,
+                              "body": null,
+                              "createdAt": "2026-07-28T00:29:25.000Z",
+                              "updatedAt": "2026-07-28T00:29:25.000Z",
+                              "uid": "35240-f796f15f-9b31-4fe0-b732-1c73e503ba56"
+                            }
+                          ],
+                          "createdAt": "2026-07-28T00:29:25.000Z",
+                          "updatedAt": "2026-07-28T00:29:25.000Z",
+                          "uid": "35240-e6b56e95-3d45-4315-951a-0dc589abb89e"
+                        }
+                      ],
+                      "id": "331861c7-ea89-466f-8ed4-1b85678ad287",
+                      "createdAt": "2026-07-28T00:29:25.000Z",
+                      "updatedAt": "2026-07-28T00:29:25.000Z",
+                      "uid": "35240-331861c7-ea89-466f-8ed4-1b85678ad287"
+                    },
+                    {
+                      "name": "cancel",
+                      "item": [
+                        {
+                          "name": "Cancel payment intent",
+                          "id": "0e32f9dd-0562-4bc3-a51b-c620f94dfc23",
+                          "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                          },
+                          "request": {
+                            "method": "POST",
+                            "header": [],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/payment_intents/:id/cancel",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "payment_intents",
+                                ":id",
+                                "cancel"
+                              ],
+                              "variable": [
+                                {
+                                  "id": "6184ec4c-a9f4-46de-afca-2d4622e86fb7",
+                                  "key": "id",
+                                  "value": "<string>",
+                                  "description": "(Required) "
+                                }
+                              ]
+                            }
+                          },
+                          "response": [
+                            {
+                              "id": "10a81588-536b-470b-b887-f4d8748f1af1",
+                              "name": "OK",
+                              "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "url": {
+                                  "raw": "{{baseUrl}}/api/v1/payment_intents/:id/cancel",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "api",
+                                    "v1",
+                                    "payment_intents",
+                                    ":id",
+                                    "cancel"
+                                  ],
+                                  "variable": [
+                                    {
+                                      "key": "id"
+                                    }
+                                  ]
+                                }
+                              },
+                              "status": "OK",
+                              "code": 200,
+                              "_postman_previewlanguage": "text",
+                              "header": [],
+                              "cookie": [],
+                              "responseTime": null,
+                              "body": null,
+                              "createdAt": "2026-07-28T00:29:25.000Z",
+                              "updatedAt": "2026-07-28T00:29:25.000Z",
+                              "uid": "35240-10a81588-536b-470b-b887-f4d8748f1af1"
+                            }
+                          ],
+                          "createdAt": "2026-07-28T00:29:25.000Z",
+                          "updatedAt": "2026-07-28T00:29:25.000Z",
+                          "uid": "35240-0e32f9dd-0562-4bc3-a51b-c620f94dfc23"
+                        }
+                      ],
+                      "id": "48022604-1449-489c-9388-682b04b81e22",
+                      "createdAt": "2026-07-28T00:29:25.000Z",
+                      "updatedAt": "2026-07-28T00:29:25.000Z",
+                      "uid": "35240-48022604-1449-489c-9388-682b04b81e22"
+                    },
+                    {
+                      "name": "Retrieve payment intent",
+                      "id": "b8e89c81-c556-43e0-b3d2-64847a28fe03",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/payment_intents/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "payment_intents",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "id": "5166b796-0daa-426d-a5f4-4186d300985a",
+                              "key": "id",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            }
+                          ]
+                        }
+                      },
+                      "response": [
+                        {
+                          "id": "fac0374b-eebb-4a0a-a952-49aed5cf14b2",
+                          "name": "OK",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/payment_intents/:id",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "payment_intents",
+                                ":id"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": null,
+                          "createdAt": "2026-07-28T00:29:25.000Z",
+                          "updatedAt": "2026-07-28T00:29:25.000Z",
+                          "uid": "35240-fac0374b-eebb-4a0a-a952-49aed5cf14b2"
+                        }
+                      ],
+                      "createdAt": "2026-07-28T00:29:25.000Z",
+                      "updatedAt": "2026-07-28T00:29:25.000Z",
+                      "uid": "35240-b8e89c81-c556-43e0-b3d2-64847a28fe03"
+                    }
+                  ],
+                  "id": "b60bfd53-a255-40d5-82f1-c04a3c849e4e",
+                  "createdAt": "2026-07-28T00:29:25.000Z",
+                  "updatedAt": "2026-07-28T00:29:25.000Z",
+                  "uid": "35240-b60bfd53-a255-40d5-82f1-c04a3c849e4e"
+                }
+              ],
+              "id": "be2c1bbc-e710-4ac1-a090-92b74f585244",
+              "createdAt": "2026-07-28T00:29:25.000Z",
+              "updatedAt": "2026-07-28T00:29:25.000Z",
+              "uid": "35240-be2c1bbc-e710-4ac1-a090-92b74f585244"
+            }
+          ],
+          "id": "d91c7e3f-7854-4e13-a85f-88922c6e9f08",
+          "createdAt": "2026-07-28T00:29:25.000Z",
+          "updatedAt": "2026-07-28T00:29:25.000Z",
+          "uid": "35240-d91c7e3f-7854-4e13-a85f-88922c6e9f08"
+        }
+      ],
+      "id": "f7cb19b9-f36e-4fa0-8f60-f0ec9f7d8378",
+      "createdAt": "2026-07-28T00:29:25.000Z",
+      "updatedAt": "2026-07-28T00:29:25.000Z",
+      "uid": "35240-f7cb19b9-f36e-4fa0-8f60-f0ec9f7d8378"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://api.airwallex.com"
+    }
+  ]
+}

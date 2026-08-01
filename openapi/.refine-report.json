@@ -1,0 +1,28 @@
+{
+  "provider": "airwallex",
+  "sources": [
+    "airwallex-authentication-api-openapi.yml",
+    "airwallex-balances-api-openapi.yml",
+    "airwallex-beneficiaries-api-openapi.yml",
+    "airwallex-customers-api-openapi.yml",
+    "airwallex-payment-intents-api-openapi.yml",
+    "airwallex-payouts-api-openapi.yml",
+    "airwallex-refunds-api-openapi.yml",
+    "airwallex-transfers-api-openapi.yml"
+  ],
+  "outputs": [
+    "airwallex-authentication-api-openapi.yml",
+    "airwallex-balances-api-openapi.yml",
+    "airwallex-beneficiaries-api-openapi.yml",
+    "airwallex-customers-api-openapi.yml",
+    "airwallex-payment-intents-api-openapi.yml",
+    "airwallex-payouts-api-openapi.yml",
+    "airwallex-refunds-api-openapi.yml",
+    "airwallex-transfers-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

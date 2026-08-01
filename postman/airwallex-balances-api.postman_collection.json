@@ -1,0 +1,130 @@
+{
+  "info": {
+    "_postman_id": "24cdefbb-490e-4663-aa1e-cdb24b00cad1",
+    "name": "Airwallex Open Authentication Balances API",
+    "description": "Best-effort OpenAPI 3.1 representation of the Airwallex REST API derived from\nhttps://www.airwallex.com/docs/api. Airwallex is a global payments and\nfinancial infrastructure platform. Coverage in this best-effort spec\nfocuses on the Payment Acceptance and related core resources: payment\nintents, customers, refunds, payouts, transfers, balances, beneficiaries\nand account authentication. Endpoints accept and return JSON.\n\n\nContact Support:\n Name: Airwallex",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T00:29:22.000Z",
+    "updatedAt": "2026-07-28T00:29:22.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-24cdefbb-490e-4663-aa1e-cdb24b00cad1"
+  },
+  "item": [
+    {
+      "name": "api",
+      "item": [
+        {
+          "name": "v1",
+          "item": [
+            {
+              "name": "balances",
+              "item": [
+                {
+                  "name": "current",
+                  "item": [
+                    {
+                      "name": "Get current account balances",
+                      "id": "22200520-ae75-493a-9282-5bc0a4083edd",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/balances/current",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "balances",
+                            "current"
+                          ]
+                        }
+                      },
+                      "response": [
+                        {
+                          "id": "b6593d09-e0ec-4e1d-8602-b6c4132a5fe1",
+                          "name": "OK",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/balances/current",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "balances",
+                                "current"
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": null,
+                          "createdAt": "2026-07-28T00:29:22.000Z",
+                          "updatedAt": "2026-07-28T00:29:22.000Z",
+                          "uid": "35240-b6593d09-e0ec-4e1d-8602-b6c4132a5fe1"
+                        }
+                      ],
+                      "createdAt": "2026-07-28T00:29:22.000Z",
+                      "updatedAt": "2026-07-28T00:29:22.000Z",
+                      "uid": "35240-22200520-ae75-493a-9282-5bc0a4083edd"
+                    }
+                  ],
+                  "id": "44cd4893-71f7-4806-81d7-97323a19bbd2",
+                  "createdAt": "2026-07-28T00:29:22.000Z",
+                  "updatedAt": "2026-07-28T00:29:22.000Z",
+                  "uid": "35240-44cd4893-71f7-4806-81d7-97323a19bbd2"
+                }
+              ],
+              "id": "ee153ad1-75a7-4c08-be38-43128a1c7bfb",
+              "createdAt": "2026-07-28T00:29:22.000Z",
+              "updatedAt": "2026-07-28T00:29:22.000Z",
+              "uid": "35240-ee153ad1-75a7-4c08-be38-43128a1c7bfb"
+            }
+          ],
+          "id": "742e7658-7260-4e81-849f-450c744fa035",
+          "createdAt": "2026-07-28T00:29:22.000Z",
+          "updatedAt": "2026-07-28T00:29:22.000Z",
+          "uid": "35240-742e7658-7260-4e81-849f-450c744fa035"
+        }
+      ],
+      "id": "d2c0a75a-e2cc-4a05-a3eb-3e6505366a80",
+      "createdAt": "2026-07-28T00:29:22.000Z",
+      "updatedAt": "2026-07-28T00:29:22.000Z",
+      "uid": "35240-d2c0a75a-e2cc-4a05-a3eb-3e6505366a80"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://api.airwallex.com"
+    }
+  ]
+}

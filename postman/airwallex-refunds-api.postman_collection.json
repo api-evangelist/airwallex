@@ -1,0 +1,229 @@
+{
+  "info": {
+    "_postman_id": "3d779cb6-755b-4cc8-b519-70052c1191fe",
+    "name": "Airwallex Open Authentication Refunds API",
+    "description": "Best-effort OpenAPI 3.1 representation of the Airwallex REST API derived from\nhttps://www.airwallex.com/docs/api. Airwallex is a global payments and\nfinancial infrastructure platform. Coverage in this best-effort spec\nfocuses on the Payment Acceptance and related core resources: payment\nintents, customers, refunds, payouts, transfers, balances, beneficiaries\nand account authentication. Endpoints accept and return JSON.\n\n\nContact Support:\n Name: Airwallex",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T00:29:26.000Z",
+    "updatedAt": "2026-07-28T00:29:26.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-3d779cb6-755b-4cc8-b519-70052c1191fe"
+  },
+  "item": [
+    {
+      "name": "api",
+      "item": [
+        {
+          "name": "v1",
+          "item": [
+            {
+              "name": "pa",
+              "item": [
+                {
+                  "name": "refunds",
+                  "item": [
+                    {
+                      "name": "create",
+                      "item": [
+                        {
+                          "name": "Create refund",
+                          "id": "33ce0685-3012-4148-836f-2af303a3fa48",
+                          "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                          },
+                          "request": {
+                            "method": "POST",
+                            "header": [],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/pa/refunds/create",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "pa",
+                                "refunds",
+                                "create"
+                              ]
+                            }
+                          },
+                          "response": [
+                            {
+                              "id": "b1a846a2-c85e-4fd6-b1c2-0b264b86ff2d",
+                              "name": "Created",
+                              "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "url": {
+                                  "raw": "{{baseUrl}}/api/v1/pa/refunds/create",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "api",
+                                    "v1",
+                                    "pa",
+                                    "refunds",
+                                    "create"
+                                  ]
+                                }
+                              },
+                              "status": "Created",
+                              "code": 201,
+                              "_postman_previewlanguage": "text",
+                              "header": [],
+                              "cookie": [],
+                              "responseTime": null,
+                              "body": null,
+                              "createdAt": "2026-07-28T00:29:27.000Z",
+                              "updatedAt": "2026-07-28T00:29:27.000Z",
+                              "uid": "35240-b1a846a2-c85e-4fd6-b1c2-0b264b86ff2d"
+                            }
+                          ],
+                          "createdAt": "2026-07-28T00:29:26.000Z",
+                          "updatedAt": "2026-07-28T00:29:26.000Z",
+                          "uid": "35240-33ce0685-3012-4148-836f-2af303a3fa48"
+                        }
+                      ],
+                      "id": "14496eaa-9904-49da-aa2b-87aeba9df6dd",
+                      "createdAt": "2026-07-28T00:29:26.000Z",
+                      "updatedAt": "2026-07-28T00:29:26.000Z",
+                      "uid": "35240-14496eaa-9904-49da-aa2b-87aeba9df6dd"
+                    },
+                    {
+                      "name": "{id}",
+                      "item": [
+                        {
+                          "name": "Retrieve refund",
+                          "id": "88f30498-b877-461f-96fb-443c5e548da1",
+                          "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                          },
+                          "request": {
+                            "method": "GET",
+                            "header": [],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/pa/refunds/:id",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "pa",
+                                "refunds",
+                                ":id"
+                              ],
+                              "variable": [
+                                {
+                                  "id": "5316a2fd-3310-47e7-96de-898ee8c5e388",
+                                  "key": "id",
+                                  "value": "<string>",
+                                  "description": "(Required) "
+                                }
+                              ]
+                            }
+                          },
+                          "response": [
+                            {
+                              "id": "a0c6f694-0693-41e3-ae45-579b79189a27",
+                              "name": "OK",
+                              "originalRequest": {
+                                "method": "GET",
+                                "header": [
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "url": {
+                                  "raw": "{{baseUrl}}/api/v1/pa/refunds/:id",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "api",
+                                    "v1",
+                                    "pa",
+                                    "refunds",
+                                    ":id"
+                                  ],
+                                  "variable": [
+                                    {
+                                      "key": "id"
+                                    }
+                                  ]
+                                }
+                              },
+                              "status": "OK",
+                              "code": 200,
+                              "_postman_previewlanguage": "text",
+                              "header": [],
+                              "cookie": [],
+                              "responseTime": null,
+                              "body": null,
+                              "createdAt": "2026-07-28T00:29:27.000Z",
+                              "updatedAt": "2026-07-28T00:29:27.000Z",
+                              "uid": "35240-a0c6f694-0693-41e3-ae45-579b79189a27"
+                            }
+                          ],
+                          "createdAt": "2026-07-28T00:29:26.000Z",
+                          "updatedAt": "2026-07-28T00:29:26.000Z",
+                          "uid": "35240-88f30498-b877-461f-96fb-443c5e548da1"
+                        }
+                      ],
+                      "id": "e64bcd15-2844-4b19-8f7f-0b57d2e9e704",
+                      "createdAt": "2026-07-28T00:29:26.000Z",
+                      "updatedAt": "2026-07-28T00:29:26.000Z",
+                      "uid": "35240-e64bcd15-2844-4b19-8f7f-0b57d2e9e704"
+                    }
+                  ],
+                  "id": "1673fece-626b-4508-b924-0059e188b108",
+                  "createdAt": "2026-07-28T00:29:26.000Z",
+                  "updatedAt": "2026-07-28T00:29:26.000Z",
+                  "uid": "35240-1673fece-626b-4508-b924-0059e188b108"
+                }
+              ],
+              "id": "fbba6599-c9e2-4fa0-9e11-93ef609be455",
+              "createdAt": "2026-07-28T00:29:26.000Z",
+              "updatedAt": "2026-07-28T00:29:26.000Z",
+              "uid": "35240-fbba6599-c9e2-4fa0-9e11-93ef609be455"
+            }
+          ],
+          "id": "20e83364-658f-41ff-a690-84026bc74c9a",
+          "createdAt": "2026-07-28T00:29:26.000Z",
+          "updatedAt": "2026-07-28T00:29:26.000Z",
+          "uid": "35240-20e83364-658f-41ff-a690-84026bc74c9a"
+        }
+      ],
+      "id": "ecb90c10-9ba3-4fae-8333-50b5db42720b",
+      "createdAt": "2026-07-28T00:29:26.000Z",
+      "updatedAt": "2026-07-28T00:29:26.000Z",
+      "uid": "35240-ecb90c10-9ba3-4fae-8333-50b5db42720b"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://api.airwallex.com"
+    }
+  ]
+}

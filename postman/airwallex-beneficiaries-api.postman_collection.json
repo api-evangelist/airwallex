@@ -1,0 +1,278 @@
+{
+  "info": {
+    "_postman_id": "da8293a8-5243-45fa-9367-73f6931dbfcf",
+    "name": "Airwallex Open Authentication Beneficiaries API",
+    "description": "Best-effort OpenAPI 3.1 representation of the Airwallex REST API derived from\nhttps://www.airwallex.com/docs/api. Airwallex is a global payments and\nfinancial infrastructure platform. Coverage in this best-effort spec\nfocuses on the Payment Acceptance and related core resources: payment\nintents, customers, refunds, payouts, transfers, balances, beneficiaries\nand account authentication. Endpoints accept and return JSON.\n\n\nContact Support:\n Name: Airwallex",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T00:29:23.000Z",
+    "updatedAt": "2026-07-28T00:29:23.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-da8293a8-5243-45fa-9367-73f6931dbfcf"
+  },
+  "item": [
+    {
+      "name": "api",
+      "item": [
+        {
+          "name": "v1",
+          "item": [
+            {
+              "name": "beneficiaries",
+              "item": [
+                {
+                  "name": "create",
+                  "item": [
+                    {
+                      "name": "Create beneficiary",
+                      "id": "c214e4d6-426d-49d4-8870-e861cbd7faa4",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/beneficiaries/create",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "beneficiaries",
+                            "create"
+                          ]
+                        }
+                      },
+                      "response": [
+                        {
+                          "id": "3c38df9c-e0a4-4591-9dbd-4bf817132756",
+                          "name": "Created",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/beneficiaries/create",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "beneficiaries",
+                                "create"
+                              ]
+                            }
+                          },
+                          "status": "Created",
+                          "code": 201,
+                          "_postman_previewlanguage": "text",
+                          "header": [],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": null,
+                          "createdAt": "2026-07-28T00:29:23.000Z",
+                          "updatedAt": "2026-07-28T00:29:23.000Z",
+                          "uid": "35240-3c38df9c-e0a4-4591-9dbd-4bf817132756"
+                        }
+                      ],
+                      "createdAt": "2026-07-28T00:29:23.000Z",
+                      "updatedAt": "2026-07-28T00:29:23.000Z",
+                      "uid": "35240-c214e4d6-426d-49d4-8870-e861cbd7faa4"
+                    }
+                  ],
+                  "id": "5d90f92b-8e4d-4034-9eac-2f73e773bcb3",
+                  "createdAt": "2026-07-28T00:29:23.000Z",
+                  "updatedAt": "2026-07-28T00:29:23.000Z",
+                  "uid": "35240-5d90f92b-8e4d-4034-9eac-2f73e773bcb3"
+                },
+                {
+                  "name": "{id}",
+                  "item": [
+                    {
+                      "name": "Retrieve beneficiary",
+                      "id": "d135380e-affc-4fc7-ae1c-939737409879",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/beneficiaries/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "beneficiaries",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "id": "672e9b6b-7140-48a6-952f-c2257361a49d",
+                              "key": "id",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            }
+                          ]
+                        }
+                      },
+                      "response": [
+                        {
+                          "id": "ca67f50b-449f-4585-83b3-c1f72732a5c6",
+                          "name": "OK",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/beneficiaries/:id",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "beneficiaries",
+                                ":id"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": null,
+                          "createdAt": "2026-07-28T00:29:23.000Z",
+                          "updatedAt": "2026-07-28T00:29:23.000Z",
+                          "uid": "35240-ca67f50b-449f-4585-83b3-c1f72732a5c6"
+                        }
+                      ],
+                      "createdAt": "2026-07-28T00:29:23.000Z",
+                      "updatedAt": "2026-07-28T00:29:23.000Z",
+                      "uid": "35240-d135380e-affc-4fc7-ae1c-939737409879"
+                    }
+                  ],
+                  "id": "0ddf2b84-7798-4e99-b1ce-ef926fa03d35",
+                  "createdAt": "2026-07-28T00:29:23.000Z",
+                  "updatedAt": "2026-07-28T00:29:23.000Z",
+                  "uid": "35240-0ddf2b84-7798-4e99-b1ce-ef926fa03d35"
+                },
+                {
+                  "name": "List beneficiaries",
+                  "id": "134659e8-5ac8-4ed7-83b9-bcd8649d38c9",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/v1/beneficiaries",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "beneficiaries"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "id": "158f7692-cada-4067-9437-f530e3342af2",
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/beneficiaries",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "beneficiaries"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": null,
+                      "createdAt": "2026-07-28T00:29:23.000Z",
+                      "updatedAt": "2026-07-28T00:29:23.000Z",
+                      "uid": "35240-158f7692-cada-4067-9437-f530e3342af2"
+                    }
+                  ],
+                  "createdAt": "2026-07-28T00:29:23.000Z",
+                  "updatedAt": "2026-07-28T00:29:23.000Z",
+                  "uid": "35240-134659e8-5ac8-4ed7-83b9-bcd8649d38c9"
+                }
+              ],
+              "id": "5ad6e6f2-b4e6-4aea-b326-627041139553",
+              "createdAt": "2026-07-28T00:29:23.000Z",
+              "updatedAt": "2026-07-28T00:29:23.000Z",
+              "uid": "35240-5ad6e6f2-b4e6-4aea-b326-627041139553"
+            }
+          ],
+          "id": "6499f338-b0e1-4baa-a94d-e1a73e1aab79",
+          "createdAt": "2026-07-28T00:29:23.000Z",
+          "updatedAt": "2026-07-28T00:29:23.000Z",
+          "uid": "35240-6499f338-b0e1-4baa-a94d-e1a73e1aab79"
+        }
+      ],
+      "id": "63d8392e-8c08-4241-85f1-f67ca5036f0a",
+      "createdAt": "2026-07-28T00:29:23.000Z",
+      "updatedAt": "2026-07-28T00:29:23.000Z",
+      "uid": "35240-63d8392e-8c08-4241-85f1-f67ca5036f0a"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://api.airwallex.com"
+    }
+  ]
+}

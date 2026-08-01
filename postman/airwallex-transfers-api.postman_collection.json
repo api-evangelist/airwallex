@@ -1,0 +1,216 @@
+{
+  "info": {
+    "_postman_id": "91c66a4c-8d2b-4649-9cf1-77224ff98511",
+    "name": "Airwallex Open Authentication Transfers API",
+    "description": "Best-effort OpenAPI 3.1 representation of the Airwallex REST API derived from\nhttps://www.airwallex.com/docs/api. Airwallex is a global payments and\nfinancial infrastructure platform. Coverage in this best-effort spec\nfocuses on the Payment Acceptance and related core resources: payment\nintents, customers, refunds, payouts, transfers, balances, beneficiaries\nand account authentication. Endpoints accept and return JSON.\n\n\nContact Support:\n Name: Airwallex",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T00:29:27.000Z",
+    "updatedAt": "2026-07-28T00:29:27.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-91c66a4c-8d2b-4649-9cf1-77224ff98511"
+  },
+  "item": [
+    {
+      "name": "api",
+      "item": [
+        {
+          "name": "v1",
+          "item": [
+            {
+              "name": "transfers",
+              "item": [
+                {
+                  "name": "create",
+                  "item": [
+                    {
+                      "name": "Create transfer",
+                      "id": "d9d74b68-6d24-46b3-99a0-415d65f4e6a6",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/transfers/create",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "transfers",
+                            "create"
+                          ]
+                        }
+                      },
+                      "response": [
+                        {
+                          "id": "483e4aa4-3bc1-4698-a85e-dacdd16774f0",
+                          "name": "Created",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/transfers/create",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "transfers",
+                                "create"
+                              ]
+                            }
+                          },
+                          "status": "Created",
+                          "code": 201,
+                          "_postman_previewlanguage": "text",
+                          "header": [],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": null,
+                          "createdAt": "2026-07-28T00:29:27.000Z",
+                          "updatedAt": "2026-07-28T00:29:27.000Z",
+                          "uid": "35240-483e4aa4-3bc1-4698-a85e-dacdd16774f0"
+                        }
+                      ],
+                      "createdAt": "2026-07-28T00:29:27.000Z",
+                      "updatedAt": "2026-07-28T00:29:27.000Z",
+                      "uid": "35240-d9d74b68-6d24-46b3-99a0-415d65f4e6a6"
+                    }
+                  ],
+                  "id": "d3a85731-df2a-4cf3-93fc-6ee91d427c00",
+                  "createdAt": "2026-07-28T00:29:27.000Z",
+                  "updatedAt": "2026-07-28T00:29:27.000Z",
+                  "uid": "35240-d3a85731-df2a-4cf3-93fc-6ee91d427c00"
+                },
+                {
+                  "name": "{id}",
+                  "item": [
+                    {
+                      "name": "Retrieve transfer",
+                      "id": "3c75c889-12e1-4d0f-8452-75362c6a2f85",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/transfers/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "transfers",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "id": "cb62452b-84eb-4168-a927-26b1a8318853",
+                              "key": "id",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            }
+                          ]
+                        }
+                      },
+                      "response": [
+                        {
+                          "id": "a47aa9d2-c431-4193-b9c6-0a3cc078694f",
+                          "name": "OK",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/transfers/:id",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "transfers",
+                                ":id"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": null,
+                          "createdAt": "2026-07-28T00:29:27.000Z",
+                          "updatedAt": "2026-07-28T00:29:27.000Z",
+                          "uid": "35240-a47aa9d2-c431-4193-b9c6-0a3cc078694f"
+                        }
+                      ],
+                      "createdAt": "2026-07-28T00:29:27.000Z",
+                      "updatedAt": "2026-07-28T00:29:27.000Z",
+                      "uid": "35240-3c75c889-12e1-4d0f-8452-75362c6a2f85"
+                    }
+                  ],
+                  "id": "dc19d297-b819-456d-b6eb-71c58174f039",
+                  "createdAt": "2026-07-28T00:29:27.000Z",
+                  "updatedAt": "2026-07-28T00:29:27.000Z",
+                  "uid": "35240-dc19d297-b819-456d-b6eb-71c58174f039"
+                }
+              ],
+              "id": "7c0faa40-0d30-498c-b5c4-04cde50a5460",
+              "createdAt": "2026-07-28T00:29:27.000Z",
+              "updatedAt": "2026-07-28T00:29:27.000Z",
+              "uid": "35240-7c0faa40-0d30-498c-b5c4-04cde50a5460"
+            }
+          ],
+          "id": "4b2c7176-f17b-411f-9faf-7a452b62e278",
+          "createdAt": "2026-07-28T00:29:27.000Z",
+          "updatedAt": "2026-07-28T00:29:27.000Z",
+          "uid": "35240-4b2c7176-f17b-411f-9faf-7a452b62e278"
+        }
+      ],
+      "id": "fceaddaf-9087-4b66-b2b2-d71e6541f351",
+      "createdAt": "2026-07-28T00:29:27.000Z",
+      "updatedAt": "2026-07-28T00:29:27.000Z",
+      "uid": "35240-fceaddaf-9087-4b66-b2b2-d71e6541f351"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://api.airwallex.com"
+    }
+  ]
+}

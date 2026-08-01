@@ -1,0 +1,131 @@
+{
+  "info": {
+    "_postman_id": "fda996ee-256f-4b2a-92a8-6e1b59970351",
+    "name": "Airwallex Open Authentication API",
+    "description": "Best-effort OpenAPI 3.1 representation of the Airwallex REST API derived from\nhttps://www.airwallex.com/docs/api. Airwallex is a global payments and\nfinancial infrastructure platform. Coverage in this best-effort spec\nfocuses on the Payment Acceptance and related core resources: payment\nintents, customers, refunds, payouts, transfers, balances, beneficiaries\nand account authentication. Endpoints accept and return JSON.\n\n\nContact Support:\n Name: Airwallex",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T00:29:21.000Z",
+    "updatedAt": "2026-07-28T00:29:21.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-fda996ee-256f-4b2a-92a8-6e1b59970351"
+  },
+  "item": [
+    {
+      "name": "api",
+      "item": [
+        {
+          "name": "v1",
+          "item": [
+            {
+              "name": "authentication",
+              "item": [
+                {
+                  "name": "login",
+                  "item": [
+                    {
+                      "name": "Obtain access token",
+                      "id": "c431504f-c60d-448b-962d-32ab22a03d10",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/authentication/login",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "authentication",
+                            "login"
+                          ]
+                        },
+                        "description": "Exchange the client_id and api_key (sent as `x-client-id` and `x-api-key`\nheaders) for a short-lived bearer access token used in subsequent calls.\n"
+                      },
+                      "response": [
+                        {
+                          "id": "6606f22c-e6de-4c4d-a7cc-35f8ee25a429",
+                          "name": "Access token returned",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/authentication/login",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "authentication",
+                                "login"
+                              ]
+                            }
+                          },
+                          "status": "Created",
+                          "code": 201,
+                          "_postman_previewlanguage": "text",
+                          "header": [],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": null,
+                          "createdAt": "2026-07-28T00:29:22.000Z",
+                          "updatedAt": "2026-07-28T00:29:22.000Z",
+                          "uid": "35240-6606f22c-e6de-4c4d-a7cc-35f8ee25a429"
+                        }
+                      ],
+                      "createdAt": "2026-07-28T00:29:22.000Z",
+                      "updatedAt": "2026-07-28T00:29:22.000Z",
+                      "uid": "35240-c431504f-c60d-448b-962d-32ab22a03d10"
+                    }
+                  ],
+                  "id": "eae1bd43-0977-4256-9a88-e0cbe832b2bf",
+                  "createdAt": "2026-07-28T00:29:21.000Z",
+                  "updatedAt": "2026-07-28T00:29:21.000Z",
+                  "uid": "35240-eae1bd43-0977-4256-9a88-e0cbe832b2bf"
+                }
+              ],
+              "id": "99d2d8a5-dad6-411f-9510-bc4dd2d74e19",
+              "createdAt": "2026-07-28T00:29:21.000Z",
+              "updatedAt": "2026-07-28T00:29:21.000Z",
+              "uid": "35240-99d2d8a5-dad6-411f-9510-bc4dd2d74e19"
+            }
+          ],
+          "id": "37fc0a97-1a37-474a-8345-8cee37023be2",
+          "createdAt": "2026-07-28T00:29:21.000Z",
+          "updatedAt": "2026-07-28T00:29:21.000Z",
+          "uid": "35240-37fc0a97-1a37-474a-8345-8cee37023be2"
+        }
+      ],
+      "id": "1962de01-da38-4b89-9bca-4968e7f58aec",
+      "createdAt": "2026-07-28T00:29:21.000Z",
+      "updatedAt": "2026-07-28T00:29:21.000Z",
+      "uid": "35240-1962de01-da38-4b89-9bca-4968e7f58aec"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://api.airwallex.com"
+    }
+  ]
+}
