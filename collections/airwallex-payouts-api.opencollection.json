@@ -1,0 +1,53 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Airwallex Open Authentication Payouts API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Payouts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create payout",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.airwallex.com/api/v1/payouts/create"
+          },
+          "docs": "Create payout"
+        },
+        {
+          "info": {
+            "name": "Retrieve payout",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.airwallex.com/api/v1/payouts/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve payout"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

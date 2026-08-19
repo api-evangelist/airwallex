@@ -1,0 +1,53 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Airwallex Open Authentication Refunds API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Refunds",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create refund",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.airwallex.com/api/v1/pa/refunds/create"
+          },
+          "docs": "Create refund"
+        },
+        {
+          "info": {
+            "name": "Retrieve refund",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.airwallex.com/api/v1/pa/refunds/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve refund"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

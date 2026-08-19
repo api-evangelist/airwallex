@@ -1,0 +1,64 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Airwallex Open Authentication Beneficiaries API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Beneficiaries",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List beneficiaries",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.airwallex.com/api/v1/beneficiaries"
+          },
+          "docs": "List beneficiaries"
+        },
+        {
+          "info": {
+            "name": "Create beneficiary",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.airwallex.com/api/v1/beneficiaries/create"
+          },
+          "docs": "Create beneficiary"
+        },
+        {
+          "info": {
+            "name": "Retrieve beneficiary",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.airwallex.com/api/v1/beneficiaries/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve beneficiary"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,107 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Airwallex Open Authentication Payment Intents API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Payment Intents",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a payment intent",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.airwallex.com/api/v1/payment_intents/create"
+          },
+          "docs": "Create a payment intent"
+        },
+        {
+          "info": {
+            "name": "Retrieve payment intent",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.airwallex.com/api/v1/payment_intents/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve payment intent"
+        },
+        {
+          "info": {
+            "name": "Confirm payment intent",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.airwallex.com/api/v1/payment_intents/:id/confirm",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Confirm payment intent"
+        },
+        {
+          "info": {
+            "name": "Capture payment intent",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.airwallex.com/api/v1/payment_intents/:id/capture",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Capture payment intent"
+        },
+        {
+          "info": {
+            "name": "Cancel payment intent",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.airwallex.com/api/v1/payment_intents/:id/cancel",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Cancel payment intent"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
