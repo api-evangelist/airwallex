@@ -36,6 +36,11 @@ apis:
 - aid: airwallex:global-accounts
   name: Airwallex Global Accounts API
   tags:
+  - Account
+  - Multi-Currency
+  - Banking
+  - FX
+  tags_raw:
   - Accounts
   - Multi-Currency
   - Banking
@@ -208,6 +213,14 @@ apis:
     url: openapi/airwallex-transfers-api-openapi.yml
 name: Airwallex
 tags:
+  - Cross-Border Payments
+  - Fintech
+  - Foreign Exchange
+  - Payments
+  - Global
+  - Embedded Finance
+  - Multi-Currency
+tags_raw:
   - Cross-Border Payments
   - FinTech
   - Foreign Exchange
