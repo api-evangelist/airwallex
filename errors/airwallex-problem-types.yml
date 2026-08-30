@@ -1,0 +1,238 @@
+generated: '2026-08-30'
+method: searched
+source: https://www.airwallex.com/docs/api/errors
+format: proprietary
+format_note: Airwallex does NOT use RFC 9457 application/problem+json. Errors are a plain JSON object with code
+  / source / message / details, returned as application/json. Recorded as-is rather than mapped into a problem+json
+  shape it does not use.
+envelope:
+  content_type: application/json
+  fields:
+  - name: code
+    description: machine-readable error code
+  - name: source
+    description: name of the request parameter that caused the error
+  - name: message
+    description: human-readable description of the error
+  - name: details
+    description: conditional key-value object carrying additional context
+  - name: trace_id
+    description: request trace identifier (present on at least the 429 response)
+example:
+  code: invalid_argument
+  source: first_name
+  message: Value is too short
+  details:
+    reason: First name must contain at least three characters.
+status_codes:
+- status: 200
+  title: OK
+  description: The request was processed successfully
+- status: 201
+  title: Created
+  description: The request was processed successfully
+- status: 400
+  title: Bad request
+  description: The request contains missing parameters, is in an incorrect shape, or failed another validation test
+- status: 401
+  title: Unauthorized
+  description: The authentication token is invalid
+- status: 403
+  title: Forbidden
+  description: The authentication token is not provided, or the request was denied due to insufficient permissions
+- status: 404
+  title: Not found
+  description: The requested endpoint does not exist
+- status: 409
+  title: Conflict
+  description: The request could not be completed due to a conflict with another request
+- status: 429
+  title: Too Many Requests
+  description: The user has sent too many requests in a given amount of time
+  code: too_many_requests
+  example:
+    code: too_many_requests
+    message: Rate Limit Exceeded.
+    trace_id: <trace id>
+    details: {}
+- status: 500
+  title: Server error
+  description: Something went wrong on our end
+known_codes:
+- code: 3ds_not_supported
+  status: 400
+  message: 3DS is required, but 3DS is not supported by the card.
+  product: Payments
+  source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+- code: amount_above_limit
+  status: 400
+  message: The operating amount $amount is above the limit $limit.
+  product: Payments
+  source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+- code: amount_below_limit
+  status: 400
+  message: The operating amount $amount is below the limit $limit.
+  product: Payments
+  source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+- code: authentication_declined
+  status: 400
+  message: The user failed authentication.
+  product: Payments
+  source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+- code: card_brand_not_supported
+  status: 400
+  message: The card brand $card_brand is not supported.
+  product: Payments
+  source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+- code: configuration_error
+  status: 400
+  message: Invalid request against merchant configuration. Please contact your account manager.
+  product: Payments
+  source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+- code: currency_not_supported
+  status: 400
+  message: The currency $currency is not supported.
+  product: Payments
+  source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+- code: duplicate_request
+  status: 400
+  message: The request ID $id has been used previously.
+  product: Payments
+  source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+- code: frequency_above_limit
+  status: 400
+  message: The frequency limit of $resource is reached for operation $operation.
+  product: Payments
+  source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+- code: invalid_status_for_operation
+  status: 400
+  message: The $resource status $status is invalid for operation $operation.
+  product: Payments
+  source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+- code: issuer_declined
+  status: 400
+  message: The card issuer declined this transaction. Please refer to the original response code.
+  product: Payments
+  source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+- code: issuer_unavailable
+  status: 400
+  message: The card issuer is temporarily unavailable. Please try again later.
+  product: Payments
+  source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+- code: no_3ds_liability_shift
+  status: 400
+  message: Transaction declined since Liability shift couldn't be achieved due to network outage or Issuer unavailability.
+  product: Payments
+  source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+- code: operation_not_supported
+  status: 400
+  message: The operation $operation is not supported.
+  product: Payments
+  source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+- code: payment_method_not_allowed
+  status: 400
+  message: The payment method is not enabled. Please contact your account manager.
+  product: Payments
+  source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+- code: provider_declined
+  status: 400
+  message: The payment provider declined this transaction. Please refer to the original response code.
+  product: Payments
+  source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+- code: provider_unavailable
+  status: 400
+  message: The payment provider is temporarily unavailable. Please try again later.
+  product: Payments
+  source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+- code: quote_expired
+  status: 400
+  message: The quote has expired. Please create new quote and try again.
+  product: Payments
+  source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+- code: rejected_by_routing_rules
+  status: 400
+  message: The transaction is rejected by merchant routing rules. Please contact your account manager.
+  product: Payments
+  source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+- code: resource_already_exists
+  status: 400
+  message: The $resource with ID $id already exists.
+  product: Payments
+  source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+- code: resource_not_found
+  status: 400
+  message: The $resource with ID $id cannot be found.
+  product: Payments
+  source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+- code: risk_declined
+  status: 400
+  message: The transaction is blocked because of risk concern.
+  product: Payments
+  source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+- code: suspended_from_online_payments
+  status: 400
+  message: The operating account has been suspended from processing online payments. Please contact your account
+    manager.
+  product: Payments
+  source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+- code: validation_error
+  status: 400
+  message: Message varies by validation rule; `source` names the offending request parameter.
+  product: Payments
+  source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+- code: unauthorized
+  status: 401
+  message: Access denied
+  product: Payments
+  source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+- code: not_found
+  status: 404
+  message: The requested endpoint does not exist
+  product: Payments
+  source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+- code: internal_error
+  status: 500
+  message: An internal error was encountered. Please try again later
+  product: Payments
+  source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+- code: too_many_requests
+  status: 429
+  message: Rate Limit Exceeded.
+  product: platform-wide
+  source: https://www.airwallex.com/docs/developer-tools/api/rate-limits
+product_error_references:
+  note: Airwallex publishes a separate per-product error-code reference rather than one global registry. These pages
+    are the authoritative per-domain catalogues; they are linked rather than copied.
+  references:
+  - product: Payments
+    url: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+  - product: Payouts (transfers)
+    url: https://www.airwallex.com/docs/payouts/errors/transfer-error-codes
+  - product: Payouts (batch transfers)
+    url: https://www.airwallex.com/docs/payouts/errors/batch-transfer-error-codes
+  - product: Issuing
+    url: https://www.airwallex.com/docs/issuing/troubleshooting/error-codes
+  - product: Spend
+    url: https://www.airwallex.com/docs/spend/troubleshooting/error-codes
+  - product: Transactional FX
+    url: https://www.airwallex.com/docs/transactional-fx/troubleshooting/error-codes
+  - product: Connected Accounts (move funds)
+    url: https://www.airwallex.com/docs/connected-accounts/move-funds/error-codes
+conventions: conventions/airwallex-conventions.yml
+idempotency_signal:
+  code: duplicate_request
+  status: 400
+  note: A replayed request_id is rejected with duplicate_request, which is the observable proof that request_id
+    is the idempotency key.
+decline_passthrough:
+  code: issuer_declined
+  note: Issuer declines carry the raw scheme response code through to the caller.
+  fields:
+  - provider_original_response_code
+  - details.original_response_code
+  - details.card_brand
+  - details.card_type
+  - details.is_commercial
+  - details.issuing_bank_name
+  catalog: errors/airwallex-decline-codes.yml
+code_count: 28

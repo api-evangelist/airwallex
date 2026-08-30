@@ -141,6 +141,8 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/airwallex-authentication-api-openapi.yml
+  - type: Overlay
+    url: overlays/airwallex-authentication-api-overlay.yaml
 - aid: airwallex:airwallex-balances-api
   name: Airwallex Balances API
   description: The Balances API from Airwallex — 1 operation(s) for balances.
@@ -151,6 +153,8 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/airwallex-balances-api-openapi.yml
+  - type: Overlay
+    url: overlays/airwallex-balances-api-overlay.yaml
 - aid: airwallex:airwallex-beneficiaries-api
   name: Airwallex Beneficiaries API
   description: The Beneficiaries API from Airwallex — 3 operation(s) for beneficiaries.
@@ -161,6 +165,8 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/airwallex-beneficiaries-api-openapi.yml
+  - type: Overlay
+    url: overlays/airwallex-beneficiaries-api-overlay.yaml
 - aid: airwallex:airwallex-customers-api
   name: Airwallex Customers API
   description: The Customers API from Airwallex — 2 operation(s) for customers.
@@ -171,6 +177,8 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/airwallex-customers-api-openapi.yml
+  - type: Overlay
+    url: overlays/airwallex-customers-api-overlay.yaml
 - aid: airwallex:airwallex-payment-intents-api
   name: Airwallex Payment Intents API
   description: The Payment Intents API from Airwallex — 5 operation(s) for payment intents.
@@ -181,6 +189,8 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/airwallex-payment-intents-api-openapi.yml
+  - type: Overlay
+    url: overlays/airwallex-payment-intents-api-overlay.yaml
 - aid: airwallex:airwallex-payouts-api
   name: Airwallex Payouts API
   description: The Payouts API from Airwallex — 2 operation(s) for payouts.
@@ -191,6 +201,8 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/airwallex-payouts-api-openapi.yml
+  - type: Overlay
+    url: overlays/airwallex-payouts-api-overlay.yaml
 - aid: airwallex:airwallex-refunds-api
   name: Airwallex Refunds API
   description: The Refunds API from Airwallex — 2 operation(s) for refunds.
@@ -201,6 +213,8 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/airwallex-refunds-api-openapi.yml
+  - type: Overlay
+    url: overlays/airwallex-refunds-api-overlay.yaml
 - aid: airwallex:airwallex-transfers-api
   name: Airwallex Transfers API
   description: The Transfers API from Airwallex — 2 operation(s) for transfers.
@@ -211,6 +225,8 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/airwallex-transfers-api-openapi.yml
+  - type: Overlay
+    url: overlays/airwallex-transfers-api-overlay.yaml
 name: Airwallex
 tags:
   - Cross-Border Payments
@@ -272,6 +288,8 @@ maintainers:
     email: kin@apievangelist.com
 specificationVersion: '0.23'
 common:
+  - type: Website
+    url: https://www.airwallex.com/
   - type: PostmanWorkspace
     url: https://www.postman.com/kinlaneapi/airwallex/overview
   - type: AgenticAccess
@@ -298,7 +316,7 @@ common:
     type: Pricing
   - url: https://www.airwallex.com/terms
     type: TermsOfService
-  - url: https://www.airwallex.com/privacy
+  - url: https://www.airwallex.com/terms/privacy-policy
     type: PrivacyPolicy
   - url: https://www.airwallex.com/blog
     type: Blog
@@ -369,3 +387,79 @@ common:
     type: Vocabulary
   - type: Integrations
     url: https://www.airwallex.com/integrations
+  - type: Packages
+    url: packages/airwallex-packages.yml
+  - type: SDKs
+    url: packages/airwallex-packages.yml
+    title: Airwallex first-party SDKs
+  - type: WellKnown
+    url: well-known/airwallex-well-known.yml
+  - type: SecurityTxt
+    url: well-known/airwallex-security.txt
+  - type: Security
+    url: https://help.airwallex.com/hc/en-gb/articles/900004502526-Bug-Bounty-Program-Rules
+    title: Bug Bounty Program Rules
+  - type: Compliance
+    url: https://security.airwallex.com/
+    title: Airwallex Trust Center
+  - type: MCPServer
+    url: mcp/airwallex-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/airwallex-tool-crosswalk.yml
+  - type: LLMsTxt
+    url: llms/airwallex-llms.txt
+  - type: AgentSkill
+    url: skills/_index.yml
+  - type: Conformance
+    url: conformance/airwallex-conformance.yml
+  - type: ErrorCatalog
+    url: errors/airwallex-problem-types.yml
+  - type: DeclineCodes
+    url: errors/airwallex-decline-codes.yml
+  - type: Lifecycle
+    url: lifecycle/airwallex-lifecycle.yml
+  - type: StatusPage
+    url: https://status.airwallex.com
+  - type: Deprecation
+    url: https://www.airwallex.com/docs/api/versioning
+    title: Airwallex API versioning and migration policy
+  - type: ChangeLog
+    url: changelog/airwallex-changelog.yml
+  - type: OAuthScopes
+    url: scopes/airwallex-scopes.yml
+  - type: Conventions
+    url: conventions/airwallex-conventions.yml
+  - type: Idempotency
+    url: conventions/airwallex-conventions.yml
+    title: request_id idempotency contract
+  - type: Sandbox
+    url: sandbox/airwallex-sandbox.yml
+  - type: Components
+    url: components/airwallex-components.yml
+  - type: DataModel
+    url: data-model/airwallex-data-model.yml
+  - type: Webhooks
+    url: asyncapi/airwallex-webhooks.yml
+  - type: RateLimits
+    url: rate-limits/airwallex-rate-limits.yml
+  - type: Plans
+    url: plans/airwallex-plans-pricing.yml
+  - type: Examples
+    url: examples/
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: Quickstart
+    url: https://www.airwallex.com/docs/api/getting_started
+  - type: Support
+    url: https://help.airwallex.com/hc/en-gb
+  - type: SignUp
+    url: https://www.airwallex.com/signup
+  - type: Login
+    url: https://www.airwallex.com/app/login
+  - type: Postman
+    url: https://www.postman.com/kinlaneapi/airwallex/overview
+x-enrichment:
+  date: '2026-08-30'
+  status: enriched
+  artifacts_added: 41
+  pass: local-v1

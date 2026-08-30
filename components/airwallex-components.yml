@@ -1,0 +1,134 @@
+generated: '2026-08-30'
+method: searched
+source: https://www.airwallex.com/docs/developer-tools/sdks/airwallex.js
+docs: https://www.airwallex.com/docs/developer-tools/sdks/airwallex.js
+reference: https://www.airwallex.com/js
+note: >-
+  Airwallex ships a large client-side embeddable surface under one loader library, Airwallex.js
+  (@airwallex/components-sdk). Every Element mounts in an iframe, which is what keeps the merchant
+  out of PCI scope. Distinct from the server-side SDKs in packages/.
+loaders:
+  - name: Airwallex.js
+    package: '@airwallex/components-sdk'
+    registry: npm
+    version: 1.35.1
+    published: '2026-08-04'
+    init: "await init({ env, enabledElements: ['payments'] })"
+    init_note: >-
+      init() must RESOLVE before any createElement() call, and enabledElements must name the family
+      being used or the returned object is undefined. Airwallex's own agent skills call this out as
+      the single most common integration failure.
+    styling: https://www.airwallex.com/docs/developer-tools/sdks/airwallex.js/customization-options
+    browsers:
+      desktop: [Chrome 85+, Safari 15+, Firefox 100+, Edge 85+, Opera 100+]
+      ios: iOS Safari 15+ and WebKit-based browsers/web views
+      android: [Chrome 85+, Firefox 100+, Samsung 25+, Opera 80+]
+families:
+  - family: Payments
+    description: >-
+      Embed payment collection in a checkout flow, either as individual method Elements or as a
+      single multi-method Drop-in.
+    components:
+      - name: dropIn
+        type: element
+        description: pre-built multi-method checkout element (cards + local methods, Apple Pay, Google Pay)
+        docs: https://www.airwallex.com/docs/payments/integration-options/web-checkout/drop-in-element
+        skill: skills/airwallex-dev-dropin.md
+      - name: card
+        type: element
+        description: single combined card element
+        docs: https://www.airwallex.com/docs/payments/integration-options/web-checkout/embedded-elements/card-element
+      - name: cardNumber / expiry / cvc
+        type: element
+        description: split card elements - three separate inputs for full control of the card form
+        docs: https://www.airwallex.com/docs/payments/integration-options/web-checkout/embedded-elements/split-card-element
+        skill: skills/airwallex-dev-split-card.md
+      - name: applePay
+        type: element
+        docs: https://www.airwallex.com/docs/payments/integration-options/web-checkout/embedded-elements/apple-pay-element
+      - name: googlePay
+        type: element
+        docs: https://www.airwallex.com/docs/payments/integration-options/web-checkout/embedded-elements/google-pay-element
+      - name: Korean local card elements
+        type: element
+        docs: https://www.airwallex.com/docs/payments/integration-options/web-checkout/embedded-elements/korean-local-cards-split-card-element/guest-user-checkout
+      - name: Hosted Payment Page
+        type: hosted-redirect
+        method: payments.redirectToCheckout()
+        description: >-
+          redirect-based checkout hosted entirely by Airwallex; Airwallex collects and stores the
+          payment details, which reduces the merchant's PCI DSS scope
+        docs: https://www.airwallex.com/docs/payments/integration-options/web-checkout/hosted-payment-page
+        skill: skills/airwallex-dev-hpp.md
+  - family: Payouts
+    description: Beneficiary and transfer elements for embedding an international payout flow.
+    components:
+      - name: Embedded Beneficiary component
+        docs: https://www.airwallex.com/docs/payouts/beneficiaries/embedded-beneficiary-component
+      - name: Embedded Transfer component
+        docs: https://www.airwallex.com/docs/payouts/transfers/embedded-transfer-component
+      - name: Embedded Tax Form component
+        docs: https://www.airwallex.com/docs/payouts/tax-filing/embedded-tax-form-component
+  - family: Onboarding
+    description: >-
+      Onboarding verification and KYB elements so a platform can collect the information required
+      to activate a connected account.
+    components:
+      - name: kyc
+        type: element
+        description: embedded KYC element, or a hosted onboarding flow
+        skill: skills/airwallex-dev-kyc.md
+        demo: https://github.com/airwallex/platform-onboarding-sdk-demo
+  - family: Risk
+    description: Elements for risk assessment, including RFI (Request for Information) during account activation.
+    components:
+      - name: RFI element
+        docs: https://www.airwallex.com/docs/connected-accounts/handle-rfis/handle-kyc-rfi
+      - name: Risk SDK (device tracking)
+        type: sdk
+        description: device fingerprinting for fraud prevention; also shipped as native iOS/Android SDKs
+        docs: https://www.airwallex.com/docs/payments/payment-operations/fraud-prevention/device-tracking
+  - family: Compliance support
+    description: Elements for Strong Customer Authentication (SCA) regulatory requirements.
+    components:
+      - name: SCA element
+        docs: https://www.airwallex.com/docs/banking-as-a-service/compliance-support/strong-customer-authentication-(sca)
+  - family: Billing
+    description: Hosted billing surfaces for subscriptions and one-off/setup payments.
+    components:
+      - name: Hosted Billing Checkout
+        type: hosted-redirect
+        modes: [SUBSCRIPTION, PAYMENT, SETUP]
+        docs: https://www.airwallex.com/docs/billing/billing-components/checkout/hosted-billing-checkout
+        skill: skills/airwallex-dev-billing-checkout.md
+  - family: Point of sale
+    description: In-person acceptance surfaces.
+    components:
+      - name: SoftPOS SDK
+        platform: Android
+        description: accept in-person card payments on an Android device
+        docs: https://www.airwallex.com/docs/payments/integration-options/pos-payments/softpos-quickstart
+      - name: Integrated terminal SDK
+        description: connect a POS to Airwallex terminals in cloud mode
+        docs: https://www.airwallex.com/docs/payments/integration-options/pos-payments/integrated-terminal-sdk
+native_mobile:
+  note: >-
+    The same Elements exist as native pre-built UI on iOS, Android, Flutter and React Native, with
+    a low-level API path for fully custom UI. Those packages are catalogued in
+    packages/airwallex-packages.yml.
+  docs: https://www.airwallex.com/docs/developer-tools/sdks/mobile-sdks
+deprecated:
+  - name: airwallex-payment-elements
+    replaced_by: '@airwallex/components-sdk'
+    upgrade_docs: https://www.airwallex.com/docs/developer-tools/sdks/airwallex.js/upgrade-to-airwallex.js
+  - name: payouts-web-sdk
+    replaced_by: '@airwallex/components-sdk'
+    upgrade_docs: https://www.airwallex.com/docs/developer-tools/sdks/airwallex.js/upgrade-to-airwallex.js
+demos:
+  repository: https://github.com/airwallex/airwallex-payment-demo
+  integrations: https://github.com/airwallex/airwallex-payment-demo/tree/master/integrations
+  codesandbox:
+    - https://codesandbox.io/p/sandbox/github/airwallex/airwallex-payment-demo/tree/master/integrations/cdn
+    - https://codesandbox.io/p/sandbox/github/airwallex/airwallex-payment-demo/tree/master/integrations/react-ts
+    - https://codesandbox.io/p/sandbox/github/airwallex/airwallex-payment-demo/tree/master/integrations/node
+component_count: 20

@@ -1,0 +1,1483 @@
+generated: '2026-08-30'
+method: searched
+source: https://www.airwallex.com/docs/developer-tools/partner-connections/oauth-scopes.md
+docs: https://www.airwallex.com/docs/developer-tools/partner-connections/oauth-scopes
+note: Airwallex exposes TWO distinct OAuth scope vocabularies and both are real. (1) The partner-connections scope
+  reference documents 98 `<resource>:<read|write>` scopes for third-party applications, each row mapping the scope
+  to the REST operations it authorizes and the webhook events it may subscribe to. (2) The hosted MCP servers advertise
+  a different, coarser `<r|w>:<awx_action|org_action>:<permission>` vocabulary in their RFC 9728 protected-resource
+  metadata — 35 scopes on production, 48 in sandbox — fetched anonymously and saved verbatim under well-known/.
+  No oauth2 securityScheme appears in the OpenAPI held in this repo, so none of this is derivable from the spec;
+  every scope below was read off a provider surface.
+schemes:
+- name: Airwallex Partner Connections OAuth
+  source: https://www.airwallex.com/docs/developer-tools/partner-connections/oauth-scopes
+  audience: third-party applications connecting to a merchant Airwallex account
+  consent_roles:
+  - Owner
+  - Admin
+  - Finance Admin
+  scope_count: 98
+- name: Airwallex AgentOS MCP (production)
+  source: https://mcp.airwallex.com/.well-known/oauth-protected-resource/mcp/
+  resource: https://mcp.airwallex.com/mcp
+  authorization_servers:
+  - https://mcp.airwallex.com/mcp
+  bearer_methods_supported:
+  - header
+  scope_count: 35
+- name: Airwallex Developer MCP (sandbox)
+  source: https://mcp.sandbox.airwallex.com/.well-known/oauth-protected-resource/developer/
+  resource: https://mcp.sandbox.airwallex.com/developer
+  authorization_servers:
+  - https://mcp.sandbox.airwallex.com/developer
+  bearer_methods_supported:
+  - header
+  scope_count: 47
+scopes:
+- scope: account_details:read
+  group: Accounts
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Retrieve account details
+  webhook_events:
+  - account.active
+  - account.connected
+  - account.suspended
+  - account.action_required
+  - account.submitted
+- scope: billing.checkout:read
+  group: Billing
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Retrieve a Billing Checkout
+  - Get list of Billing Checkouts
+  webhook_events:
+  - billing_checkout.cancelled
+  - billing_checkout.completed
+  - billing_checkout.created
+- scope: billing.checkout:write
+  group: Billing
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Create a Billing Checkout
+  - Retrieve a Billing Checkout
+  - Get list of Billing Checkouts
+  - Update a Billing Checkout
+  - Cancel a Billing Checkout
+  webhook_events:
+  - billing_checkout.cancelled
+  - billing_checkout.completed
+  - billing_checkout.created
+- scope: billing.customer:read
+  group: Billing
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Retrieve a Billing Customer
+  - Get list of Billing Customers
+- scope: billing.customer:write
+  group: Billing
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Create a Billing Customer
+  - Retrieve a Billing Customer
+  - Update a Billing Customer
+  - Get list of Billing Customers
+- scope: billing.transaction:read
+  group: Billing
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Retrieve a Billing Transaction
+  - Get list of Billing Transactions
+  webhook_events:
+  - billing_transaction.cancelled
+  - billing_transaction.created
+  - billing_transaction.succeeded
+- scope: billing.credit_note:read
+  group: Billing
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Retrieve a Credit Note
+  - Get list of Credit Notes
+  - Retrieve a Credit Note Line Item
+  - Get list of Credit Note Line Items
+  webhook_events:
+  - credit_note.created
+  - credit_note.finalized
+  - credit_note.voided
+- scope: billing.credit_note:write
+  group: Billing
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Create a Credit Note
+  - Retrieve a Credit Note
+  - Get list of Credit Notes
+  - Update a Credit Note
+  - Finalize a Credit Note
+  - Delete a Credit Note
+  - Void a Credit Note
+  - Create Credit Note Line Items and add them to a Credit Note
+  - Retrieve a Credit Note Line Item
+  - Get list of Credit Note Line Items
+  - Update Credit Note Line Items in a Credit Note
+  - Delete Credit Note Line Items from a Credit Note
+  webhook_events:
+  - credit_note.created
+  - credit_note.finalized
+  - credit_note.voided
+- scope: billing.discount:read
+  group: Billing
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Retrieve a Coupon
+  - Get list of Coupons
+- scope: billing.discount:write
+  group: Billing
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Create a Coupon
+  - Update a Coupon
+  - Retrieve a Coupon
+  - Get list of Coupons
+- scope: billing.invoice:read
+  group: Billing
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Retrieve an Invoice
+  - Get list of Invoices
+  - Retrieve an Invoice Line Item
+  - Get list of Invoice Line Items
+  webhook_events:
+  - invoice.created
+  - invoice.finalized
+  - invoice.paid
+  - invoice.payment.paid
+  - invoice.payment_attempt_failed
+  - invoice.payment_failed
+  - invoice.sent
+  - invoice.voided
+- scope: billing.invoice:write
+  group: Billing
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Create an Invoice
+  - Preview an Invoice
+  - Update an Invoice
+  - Delete a draft Invoice
+  - Retrieve an Invoice
+  - Get list of Invoices
+  - Finalize an Invoice
+  - Mark an Invoice as paid
+  - Void an Invoice
+  - Create Invoice Line Items and add them to an Invoice
+  - Retrieve an Invoice Line Item
+  - Get list of Invoice Line Items
+  - Update Invoice Line Items in an Invoice
+  - Delete Invoice Line Items within an Invoice
+  webhook_events:
+  - invoice.created
+  - invoice.finalized
+  - invoice.paid
+  - invoice.payment.paid
+  - invoice.payment_attempt_failed
+  - invoice.payment_failed
+  - invoice.sent
+  - invoice.voided
+- scope: billing.payment_source:read
+  group: Billing
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Retrieve a Payment Source
+  - Get List of Payment Sources
+- scope: billing.payment_source:write
+  group: Billing
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Create a Payment Source
+  - Retrieve a Payment Source
+  - Get List of Payment Sources
+- scope: billing.price:read
+  group: Billing
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Retrieve a Price
+  - Get list of Prices
+- scope: billing.price:write
+  group: Billing
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Create a Price
+  - Retrieve a Price
+  - Update a Price
+  - Get list of Prices
+- scope: billing.product:read
+  group: Billing
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Retrieve a Product
+  - Get list of Products
+- scope: billing.product:write
+  group: Billing
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Create a Product
+  - Retrieve a Product
+  - Update a Product
+  - Get list of Products
+- scope: billing.subscription:read
+  group: Billing
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Retrieve a Subscription
+  - Get list of Subscriptions
+  - Retrieve a Subscription Item
+  - Get list of Subscription Items
+  webhook_events:
+  - subscription.active
+  - subscription.cancelled
+  - subscription.created
+  - subscription.in_trial
+  - subscription.modified
+  - subscription.unpaid
+  - subscription.updated
+- scope: billing.subscription:write
+  group: Billing
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Create a Subscription
+  - Retrieve a Subscription
+  - Update a Subscription
+  - Cancel a Subscription
+  - Get list of Subscriptions
+  - Retrieve a Subscription Item
+  - Get list of Subscription Items
+  webhook_events:
+  - subscription.active
+  - subscription.cancelled
+  - subscription.created
+  - subscription.in_trial
+  - subscription.modified
+  - subscription.unpaid
+  - subscription.updated
+- scope: billing.usage_metering:read
+  group: Billing
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Retrieve a Meter
+  - Get list of Meters
+  - Get summaries of a Meter
+- scope: billing.usage_metering:write
+  group: Billing
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Create a Meter
+  - Retrieve a Meter
+  - Update a Meter
+  - Archive a Meter
+  - Restore a Meter
+  - Get list of Meters
+  - Get summaries of a Meter
+  - Ingest a Usage Event
+  - Batch Ingest Usage Events
+  - Void a Usage Event
+  webhook_events:
+  - usage_event.aggregation_failed
+- scope: balance:read
+  group: Business Accounts
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Get current balances
+  - Get balance history
+  webhook_events:
+  - balance.va.top_up
+  - balance.ga.top_up
+  - balance.adjustment
+- scope: global_account:read
+  group: Business Accounts
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Get a list of global accounts
+  - Get a List of Direct Debit Payout Mandates
+  - Get a Direct Debit Payout Mandate by ID
+  - Get global account by ID
+  - Generate global account statement
+  - Get global account transactions
+  webhook_events:
+  - ga.new
+- scope: global_account:write
+  group: Business Accounts
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Get a list of global accounts
+  - Create a global account
+  - Get a List of Direct Debit Payout Mandates
+  - Get a Direct Debit Payout Mandate by ID
+  - Cancel a Direct Debit Payout Mandate by ID
+  - Get global account by ID
+  - Close a global account
+  - Generate global account statement
+  - Get global account transactions
+  - Update existing global account
+  webhook_events:
+  - ga.new
+- scope: issuing.card:read
+  group: Cards
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Get all cards
+  - Get card remaining limits
+  - Get issuing config
+  - Get card details
+  - Get sensitive card details
+  webhook_events:
+  - issuing.card_notification.created
+  - issuing.card_notification.physical_activated
+  - issuing.card.modified
+  - issuing.card.pending
+  - issuing.card.failed
+  - issuing.card.inactive
+  - issuing.card.active
+  - issuing.card.lost
+  - issuing.card.stolen
+  - issuing.card.closed
+  - issuing.card.blocked
+  - issuing.card.expired
+  - issuing.card.low_remaining_transaction_limit
+- scope: issuing.card:write
+  group: Cards
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Create a card
+  - Update a card
+  - Activate a card
+- scope: issuing.cardholder:read
+  group: Cards
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Get all cardholders
+  - Get cardholder details
+  webhook_events:
+  - issuing.cardholder.deleted
+  - issuing.cardholder.disabled
+  - issuing.cardholder.incomplete
+  - issuing.cardholder.pending
+  - issuing.cardholder.ready
+- scope: issuing.cardholder:write
+  group: Cards
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Create a cardholder
+  - Update a cardholder
+  - Delete cardholder
+- scope: issuing.transaction:read
+  group: Cards
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Get transactions
+  - Get single transaction
+  - Get authorization status
+  - Get single authorization status
+  - Get card transactions
+  - Get single card transaction
+  - Get card transaction events
+  - Get single card transaction event
+  - Get card transaction lifecycles
+  - Get single card transaction lifecycle
+  webhook_events:
+  - issuing.transaction.succeeded
+  - issuing.transaction.failed
+- scope: issuing.merchant_brand:read
+  group: Cards
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Get single Merchant Brand by id
+  - Get all Merchant Brands matching query
+- scope: financial_report:read
+  group: Finance
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Get list of financial reports
+  - Get financial report by ID
+  - Get contents of a financial report
+- scope: financial_report:write
+  group: Finance
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Get list of financial reports
+  - Create a financial report
+  - Get financial report by ID
+  - Get contents of a financial report
+- scope: financial_transaction:read
+  group: Finance
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Get list of financial transactions
+  - Get a financial transaction by ID
+- scope: payment_link:read
+  group: Payments
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Retrieve a PaymentLink
+  - Get list of PaymentLinks
+- scope: payment_link:write
+  group: Payments
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Retrieve a PaymentLink
+  - Get list of PaymentLinks
+  - Create a PaymentLink
+  - Update a PaymentLink
+  - Send a PaymentLink
+  - Activate a PaymentLink
+  - Deactivate a PaymentLink
+- scope: payment_acceptance:read
+  group: Payments
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Get list of PaymentIntents
+  - Retrieve a PaymentIntent
+  - Retrieve list of PaymentAttempts
+  - Retrieve a PaymentAttempt by ID
+  - Get list of settlements
+  - Get a settlement by ID
+  - Get a settlement report by ID
+  - Get list of Refunds
+  - Retrieve a Refund
+  - Get available bank names
+  - Get available payment method types
+  - Get list of PaymentConsents
+  - Retrieve a PaymentConsent
+  - Get list of PaymentMethods
+  - Retrieve a PaymentMethod
+  - Get list of Customers
+  - Retrieve a Customer
+  - Generate a client secret for a Customer
+  - Get list of PaymentLinks
+  - Retrieve a PaymentLink
+  - Get convertible shopper currencies
+  - Get Apple Pay Domains
+  - Retrieve a Conversion Quote
+  - Retrieve BIN Info
+  webhook_events:
+  - payment_intent.created
+  - payment_intent.cancelled
+  - payment_intent.pending
+  - payment_intent.succeeded
+  - payment_intent.requires_payment_method
+  - payment_intent.requires_customer_action
+  - payment_intent.requires_capture
+  - payment_intent.payment_failed
+  - payment_attempt.received
+  - payment_attempt.risk_declined
+  - payment_attempt.pending_authorization
+  - payment_attempt.authorized
+  - payment_attempt.authorization_failed
+  - payment_attempt.capture_requested
+  - payment_attempt.capture_failed
+  - payment_attempt.authentication_redirected
+  - payment_attempt.authentication_failed
+  - payment_attempt.failed_to_process
+  - payment_attempt.cancelled
+  - payment_attempt.expired
+  - payment_attempt.settled
+  - payment_attempt.paid
+  - payment_method.created
+  - payment_method.updated
+  - payment_method.attached
+  - payment_method.detached
+  - payment_method.disabled
+  - customer.created
+  - customer.updated
+  - refund.received
+  - refund.accepted
+  - refund.settled
+  - refund.failed
+  - payment_consent.created
+  - payment_consent.updated
+  - payment_consent.pending
+  - payment_consent.verified
+  - payment_consent.disabled
+- scope: payment_acceptance:write
+  group: Payments
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Create a PaymentIntent
+  - Cancel a PaymentIntent
+  - Capture a PaymentIntent
+  - Confirm a PaymentIntent
+  - Continue to confirm a PaymentIntent
+  - Create a Refund
+  - Add PaymentMethod to Customer
+  - Remove PaymentMethod from Customer
+  - Update a Customer
+  - Create a Customer
+  - Disable a PaymentConsent
+  - Update a PaymentConsent
+  - Verify a PaymentConsent
+  - Create a PaymentConsent
+  - Continue to verify a PaymentConsent
+  - Update a PaymentIntent
+  - Increment Authorization for a PaymentIntent
+  - Create a PaymentLink
+  - Update a PaymentLink
+  - Send a PaymentLink
+  - Activate a PaymentLink
+  - Deactivate a PaymentLink
+  - Create a Conversion Quote
+  - Add Apple Pay Domains
+  - Remove Apple Pay Domains
+  webhook_events:
+  - payment_intent.created
+  - payment_intent.cancelled
+  - payment_intent.pending
+  - payment_intent.succeeded
+  - payment_intent.requires_payment_method
+  - payment_intent.requires_customer_action
+  - payment_intent.requires_capture
+  - payment_intent.payment_failed
+  - payment_attempt.received
+  - payment_attempt.risk_declined
+  - payment_attempt.pending_authorization
+  - payment_attempt.authorized
+  - payment_attempt.authorization_failed
+  - payment_attempt.capture_requested
+  - payment_attempt.capture_failed
+  - payment_attempt.authentication_redirected
+  - payment_attempt.authentication_failed
+  - payment_attempt.failed_to_process
+  - payment_attempt.cancelled
+  - payment_attempt.expired
+  - payment_attempt.settled
+  - payment_attempt.paid
+  - payment_method.created
+  - payment_method.updated
+  - payment_method.attached
+  - payment_method.detached
+  - payment_method.disabled
+  - customer.created
+  - customer.updated
+  - refund.received
+  - refund.accepted
+  - refund.settled
+  - refund.failed
+  - payment_consent.created
+  - payment_consent.updated
+  - payment_consent.pending
+  - payment_consent.verified
+  - payment_consent.disabled
+- scope: payment_dispute:read
+  group: Payments
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Retrieve a PaymentDispute
+  - Get list of PaymentDisputes
+  - Get list of Related Payment Intents
+  webhook_events:
+  - payment_dispute.requires_response
+  - payment_dispute.expired
+  - payment_dispute.accepted
+  - payment_dispute.challenged
+  - payment_dispute.reversed
+  - payment_dispute.pending_decision
+  - payment_dispute.pending_closure
+  - payment_dispute.won
+  - payment_dispute.lost
+- scope: payment_dispute:write
+  group: Payments
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Accept a PaymentDispute
+  - Challenge a PaymentDispute
+  - Retrieve a PaymentDispute
+  - Get list of PaymentDisputes
+  - Get list of Related Payment Intents
+  webhook_events:
+  - payment_dispute.requires_response
+  - payment_dispute.expired
+  - payment_dispute.accepted
+  - payment_dispute.challenged
+  - payment_dispute.reversed
+  - payment_dispute.pending_decision
+  - payment_dispute.pending_closure
+  - payment_dispute.won
+  - payment_dispute.lost
+- scope: pos_terminal:read
+  group: Payments
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Retrieve a Terminal
+  - Get list of Terminals
+- scope: pos_terminal:write
+  group: Payments
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Create a Terminal
+  - Activate a Terminal
+  - Deactivate a Terminal
+  - Terminate a Terminal
+  - Update a Terminal
+  - Reset a Terminal password
+  - Process a PaymentIntent in a Terminal
+- scope: funds_split:write
+  group: Payments
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Create a FundsSplitReversal
+  - Create a FundsSplit
+  - Release a FundsSplit
+- scope: funds_split:read
+  group: Payments
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Retrieve a FundsSplitReversal
+  - Get list of FundsSplitReversals
+  - Retrieve a FundsSplit
+  - Get list of FundsSplits
+  webhook_events:
+  - funds_split.created
+  - funds_split.failed
+  - funds_split.released
+  - funds_split.settled
+- scope: beneficiary:read
+  group: Payouts
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Get list of beneficiaries
+  - Get a beneficiary by ID
+- scope: beneficiary:write
+  group: Payouts
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Get list of beneficiaries
+  - Get a beneficiary by ID
+  - Create a new beneficiary
+  - Delete existing beneficiary
+  - Update existing beneficiary
+  - Validate beneficiary
+  - Get the API schema
+  - Get the form schema
+  - Get supported financial institutions
+- scope: transfer:read
+  group: Payouts
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Get list of transfers
+  - Get transfer by ID
+  - Supported currencies
+  - Retrieve a current rate
+  - Get list of wallet transfers
+  - Get a wallet transfer with transfer ID
+  - List all batch transfers
+  - Retrieve a batch transfer
+  - List all items within a batch
+  webhook_events:
+  - payout.transfer.in_approval
+  - payout.transfer.approval_rejected
+  - payout.transfer.approval_blocked
+  - payout.transfer.approval_recalled
+  - payout.transfer.scheduled
+  - payout.transfer.overdue
+  - payout.transfer.processing
+  - payout.transfer.sent
+  - payout.transfer.paid
+  - payout.transfer.failed
+  - payout.transfer.cancellation_requested
+  - payout.transfer.cancelled
+  - payout.transfer.funding.requires_funding_confirmation
+  - payout.transfer.funding.scheduled
+  - payout.transfer.funding.processing
+  - payout.transfer.funding.funded
+  - payout.transfer.funding.reversed
+  - payout.transfer.funding.failed
+  - wallet_transfer.created
+  - wallet_transfer.processing
+  - wallet_transfer.sent
+  - wallet_transfer.settled
+  - wallet_transfer.failed
+  - batch_transfers.drafting
+  - batch_transfers.in_approval
+  - batch_transfers.approval_rejected
+  - batch_transfers.approval_blocked
+  - batch_transfers.approval_recalled
+  - batch_transfers.scheduled
+  - batch_transfers.funding.requires_funding_confirmation
+  - batch_transfers.funding.scheduled
+  - batch_transfers.funding.processing
+  - batch_transfers.funding.funded
+  - batch_transfers.funding.reversed
+  - batch_transfers.funding.failed
+  - batch_transfers.overdue
+  - batch_transfers.booking
+  - batch_transfers.partially_booked
+  - batch_transfers.booked
+  - batch_transfers.failed
+  - batch_transfers.cancellation_requested
+  - batch_transfers.cancelled
+- scope: transfer:write
+  group: Payouts
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Get list of transfers
+  - Get transfer by ID
+  - Cancel a transfer
+  - Confirm funding for a transfer
+  - Create a new transfer
+  - Validate transfer
+  - Supported currencies
+  - Retrieve a current rate
+  - Get list of wallet transfers
+  - Get a wallet transfer with transfer ID
+  - Create a new wallet transfer
+  - List all batch transfers
+  - Retrieve a batch transfer
+  - List all items within a batch
+  - Create a batch transfer
+  - Add items to a batch
+  - Delete a batch transfer
+  - Delete items within a batch
+  - Quote a batch transfer
+  - Submit a batch transfer
+  webhook_events:
+  - payout.transfer.in_approval
+  - payout.transfer.approval_rejected
+  - payout.transfer.approval_blocked
+  - payout.transfer.approval_recalled
+  - payout.transfer.scheduled
+  - payout.transfer.overdue
+  - payout.transfer.processing
+  - payout.transfer.sent
+  - payout.transfer.paid
+  - payout.transfer.failed
+  - payout.transfer.cancellation_requested
+  - payout.transfer.cancelled
+  - payout.transfer.funding.requires_funding_confirmation
+  - payout.transfer.funding.scheduled
+  - payout.transfer.funding.processing
+  - payout.transfer.funding.funded
+  - payout.transfer.funding.reversed
+  - payout.transfer.funding.failed
+  - wallet_transfer.created
+  - wallet_transfer.processing
+  - wallet_transfer.sent
+  - wallet_transfer.settled
+  - wallet_transfer.failed
+  - batch_transfers.drafting
+  - batch_transfers.in_approval
+  - batch_transfers.approval_rejected
+  - batch_transfers.approval_blocked
+  - batch_transfers.approval_recalled
+  - batch_transfers.scheduled
+  - batch_transfers.funding.requires_funding_confirmation
+  - batch_transfers.funding.scheduled
+  - batch_transfers.funding.processing
+  - batch_transfers.funding.funded
+  - batch_transfers.funding.reversed
+  - batch_transfers.funding.failed
+  - batch_transfers.overdue
+  - batch_transfers.booking
+  - batch_transfers.partially_booked
+  - batch_transfers.booked
+  - batch_transfers.failed
+  - batch_transfers.cancellation_requested
+  - batch_transfers.cancelled
+- scope: risk.rfi:read
+  group: Risk
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - List all RFIs
+  - Retrieve an RFI
+  webhook_events:
+  - rfi.action_required
+  - rfi.answered
+  - rfi.closed
+- scope: risk.rfi:write
+  group: Risk
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - List all RFIs
+  - Retrieve an RFI
+  - Respond to an RFI
+  webhook_events:
+  - rfi.action_required
+  - rfi.answered
+  - rfi.closed
+- scope: simulation:write
+  group: Simulations
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Accounts
+  - Billing
+  - Deposits
+  - Issuing
+  - Linked Accounts
+  - Payment Acceptance
+  - Request for Information (RFI)
+  - Transfers
+- scope: spend.bill:read
+  group: Spend
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - List bills
+  - Get bill
+  webhook_events:
+  - spend.bill.awaiting_approval
+  - spend.bill.updated
+  - spend.bill.awaiting_payment
+  - spend.bill.payment_in_progress
+  - spend.bill.paid
+  - spend.bill.rejected
+  - spend.bill.scheduled
+  - spend.bill.deleted
+- scope: spend.bill:write
+  group: Spend
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Create bill
+  - Update bill sync status
+  - Mark bill as paid
+- scope: spend.expense:read
+  group: Spend
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - List expenses
+  - Get expense
+  - List reimbursement reports
+  - Get reimbursement report
+  - List reimbursements
+  - Get reimbursement
+  - Get reimbursement report transfer
+  webhook_events:
+  - spend.expense.draft
+  - spend.expense.awaiting_approval
+  - spend.expense.updated
+  - spend.expense.rejected
+  - spend.expense.approved
+  - spend.expense.archived
+  - spend.expense.deleted
+  - spend.reimbursement_report.draft
+  - spend.reimbursement_report.awaiting_approval
+  - spend.reimbursement_report.awaiting_payment
+  - spend.reimbursement_report.rejected
+  - spend.reimbursement_report.payment_in_progress
+  - spend.reimbursement_report.paid
+  - spend.reimbursement_report.mark_as_paid
+  - spend.reimbursement_report.deleted
+  - spend.reimbursement_report.updated
+- scope: spend.expense:write
+  group: Spend
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Update expense sync status
+  - Update reimbursement report transfer sync status
+  - Update reimbursement report sync status
+  - Mark reimbursement report as paid
+- scope: spend.purchase_order:read
+  group: Spend
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - List purchase orders
+  - Get purchase order
+- scope: spend.purchase_order:write
+  group: Spend
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Create purchase order
+  - Update purchase order sync status
+- scope: spend.vendor:read
+  group: Spend
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - List vendors
+  - Get vendor
+- scope: spend.vendor:write
+  group: Spend
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Create vendor
+  - Update vendor sync status
+- scope: reference.order_item:read
+  group: Supporting Services
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Get expiring transfer or deposit limit
+  - Get transfer or deposit limit
+- scope: reference.order_item:write
+  group: Supporting Services
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Increase transfer or deposit limit
+- scope: commerce_store:read
+  group: Supporting Services
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Get a list of e-commerce stores
+  - Get an e-commerce store by id
+- scope: file:upload
+  group: Supporting Services
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+  operations:
+  - Upload a file
+- scope: fx.conversion:read
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: read
+  operations:
+  - Retrieve a conversion
+  - List all conversions
+  - Retrieve an amendment
+  - List all amendments
+  - Retrieve a quote
+  - Retrieve a current rate
+  webhook_events:
+  - conversion.scheduled
+  - conversion.overdue
+  - conversion.settled
+  - conversion.cancelled
+- scope: fx.conversion:write
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: write
+  operations:
+  - Retrieve a conversion
+  - List all conversions
+  - Create a conversion
+  - Create an amendment quote
+  - Create an amendment
+  - Retrieve an amendment
+  - List all amendments
+  - Retrieve a quote
+  - Create a quote
+  - Retrieve a current rate
+  webhook_events:
+  - conversion.scheduled
+  - conversion.overdue
+  - conversion.settled
+  - conversion.cancelled
+- scope: Product
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Accounts
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Business Accounts
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Business Accounts
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Business Accounts
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Cards
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Cards
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Cards
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Cards
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Cards
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Cards
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Finance
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Payments
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Payments
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Payments
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Payments
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Payments
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Payments
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Payments
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Payments
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Payments
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Payments
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Payouts
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Payouts
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Payouts
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Payouts
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Simulations
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Supporting Services
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Supporting Services
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Supporting Services
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Supporting Services
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Transactional FX
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: Transactional FX
+  group: Transactional FX
+  scheme: Airwallex Partner Connections OAuth
+  access: other
+- scope: r:awx_action:balances_view
+  scheme: Airwallex AgentOS MCP (production)
+  access: read
+  method: probed
+- scope: r:awx_action:contact_management_view
+  scheme: Airwallex AgentOS MCP (production)
+  access: read
+  method: probed
+- scope: r:awx_action:conversions_view
+  scheme: Airwallex AgentOS MCP (production)
+  access: read
+  method: probed
+- scope: r:awx_action:global_accounts_view
+  scheme: Airwallex AgentOS MCP (production)
+  access: read
+  method: probed
+- scope: r:awx_action:issuing_cardholders_view
+  scheme: Airwallex AgentOS MCP (production)
+  access: read
+  method: probed
+- scope: r:awx_action:issuing_cards_view
+  scheme: Airwallex AgentOS MCP (production)
+  access: read
+  method: probed
+- scope: r:awx_action:issuing_transactions_view
+  scheme: Airwallex AgentOS MCP (production)
+  access: read
+  method: probed
+- scope: r:awx_action:pa_view
+  scheme: Airwallex AgentOS MCP (production)
+  access: read
+  method: probed
+- scope: r:awx_action:payment_links_view
+  scheme: Airwallex AgentOS MCP (production)
+  access: read
+  method: probed
+- scope: r:awx_action:settings.account_details_view
+  scheme: Airwallex AgentOS MCP (production)
+  access: read
+  method: probed
+- scope: r:awx_action:transfers_view
+  scheme: Airwallex AgentOS MCP (production)
+  access: read
+  method: probed
+- scope: r:org_action:billing.customer_view
+  scheme: Airwallex AgentOS MCP (production)
+  access: read
+  method: probed
+- scope: r:org_action:billing.discount_view
+  scheme: Airwallex AgentOS MCP (production)
+  access: read
+  method: probed
+- scope: r:org_action:billing.invoice_view
+  scheme: Airwallex AgentOS MCP (production)
+  access: read
+  method: probed
+- scope: r:org_action:billing.payment_source_view
+  scheme: Airwallex AgentOS MCP (production)
+  access: read
+  method: probed
+- scope: r:org_action:billing.price_view
+  scheme: Airwallex AgentOS MCP (production)
+  access: read
+  method: probed
+- scope: r:org_action:billing.product_view
+  scheme: Airwallex AgentOS MCP (production)
+  access: read
+  method: probed
+- scope: r:org_action:billing.subscription_view
+  scheme: Airwallex AgentOS MCP (production)
+  access: read
+  method: probed
+- scope: r:org_action:billing.transaction_view
+  scheme: Airwallex AgentOS MCP (production)
+  access: read
+  method: probed
+- scope: r:org_action:billing.usage_metering_view
+  scheme: Airwallex AgentOS MCP (production)
+  access: read
+  method: probed
+- scope: r:org_action:expense_management.expense:api_view
+  scheme: Airwallex AgentOS MCP (production)
+  access: read
+  method: probed
+- scope: r:org_action:spend.bills:api_view
+  scheme: Airwallex AgentOS MCP (production)
+  access: read
+  method: probed
+- scope: r:org_action:spend.vendors:api_view
+  scheme: Airwallex AgentOS MCP (production)
+  access: read
+  method: probed
+- scope: w:awx_action:contact_management_edit
+  scheme: Airwallex AgentOS MCP (production)
+  access: write
+  method: probed
+- scope: w:awx_action:devx.feedback_write
+  scheme: Airwallex AgentOS MCP (production)
+  access: write
+  method: probed
+- scope: w:awx_action:issuing_cardholders_edit
+  scheme: Airwallex AgentOS MCP (production)
+  access: write
+  method: probed
+- scope: w:awx_action:issuing_cards_edit
+  scheme: Airwallex AgentOS MCP (production)
+  access: write
+  method: probed
+- scope: w:awx_action:payment_links_edit
+  scheme: Airwallex AgentOS MCP (production)
+  access: write
+  method: probed
+- scope: w:org_action:billing.customer_edit
+  scheme: Airwallex AgentOS MCP (production)
+  access: write
+  method: probed
+- scope: w:org_action:billing.discount_edit
+  scheme: Airwallex AgentOS MCP (production)
+  access: write
+  method: probed
+- scope: w:org_action:billing.invoice_edit
+  scheme: Airwallex AgentOS MCP (production)
+  access: write
+  method: probed
+- scope: w:org_action:billing.price_edit
+  scheme: Airwallex AgentOS MCP (production)
+  access: write
+  method: probed
+- scope: w:org_action:billing.product_edit
+  scheme: Airwallex AgentOS MCP (production)
+  access: write
+  method: probed
+- scope: w:org_action:billing.subscription_edit
+  scheme: Airwallex AgentOS MCP (production)
+  access: write
+  method: probed
+- scope: w:org_action:billing.usage_metering_edit
+  scheme: Airwallex AgentOS MCP (production)
+  access: write
+  method: probed
+- scope: r:awx_action:balances_view
+  scheme: Airwallex Developer MCP (sandbox)
+  access: read
+  method: probed
+- scope: r:awx_action:contact_management_view
+  scheme: Airwallex Developer MCP (sandbox)
+  access: read
+  method: probed
+- scope: r:awx_action:conversions_view
+  scheme: Airwallex Developer MCP (sandbox)
+  access: read
+  method: probed
+- scope: r:awx_action:deposits_view
+  scheme: Airwallex Developer MCP (sandbox)
+  access: read
+  method: probed
+- scope: r:awx_action:direct_debits_view
+  scheme: Airwallex Developer MCP (sandbox)
+  access: read
+  method: probed
+- scope: r:awx_action:global_accounts_view
+  scheme: Airwallex Developer MCP (sandbox)
+  access: read
+  method: probed
+- scope: r:awx_action:issuing_cardholders_view
+  scheme: Airwallex Developer MCP (sandbox)
+  access: read
+  method: probed
+- scope: r:awx_action:issuing_cards_view
+  scheme: Airwallex Developer MCP (sandbox)
+  access: read
+  method: probed
+- scope: r:awx_action:issuing_transactions_view
+  scheme: Airwallex Developer MCP (sandbox)
+  access: read
+  method: probed
+- scope: r:awx_action:linked_accounts_view
+  scheme: Airwallex Developer MCP (sandbox)
+  access: read
+  method: probed
+- scope: r:awx_action:pa_view
+  scheme: Airwallex Developer MCP (sandbox)
+  access: read
+  method: probed
+- scope: r:awx_action:payment_dispute_view
+  scheme: Airwallex Developer MCP (sandbox)
+  access: read
+  method: probed
+- scope: r:awx_action:payment_links_view
+  scheme: Airwallex Developer MCP (sandbox)
+  access: read
+  method: probed
+- scope: r:awx_action:settings.account_details_view
+  scheme: Airwallex Developer MCP (sandbox)
+  access: read
+  method: probed
+- scope: r:awx_action:transfers_view
+  scheme: Airwallex Developer MCP (sandbox)
+  access: read
+  method: probed
+- scope: r:org_action:billing.customer_view
+  scheme: Airwallex Developer MCP (sandbox)
+  access: read
+  method: probed
+- scope: r:org_action:billing.discount_view
+  scheme: Airwallex Developer MCP (sandbox)
+  access: read
+  method: probed
+- scope: r:org_action:billing.invoice_view
+  scheme: Airwallex Developer MCP (sandbox)
+  access: read
+  method: probed
+- scope: r:org_action:billing.payment_source_view
+  scheme: Airwallex Developer MCP (sandbox)
+  access: read
+  method: probed
+- scope: r:org_action:billing.price_view
+  scheme: Airwallex Developer MCP (sandbox)
+  access: read
+  method: probed
+- scope: r:org_action:billing.product_view
+  scheme: Airwallex Developer MCP (sandbox)
+  access: read
+  method: probed
+- scope: r:org_action:billing.subscription_view
+  scheme: Airwallex Developer MCP (sandbox)
+  access: read
+  method: probed
+- scope: r:org_action:billing.transaction_view
+  scheme: Airwallex Developer MCP (sandbox)
+  access: read
+  method: probed
+- scope: r:org_action:billing.usage_metering_view
+  scheme: Airwallex Developer MCP (sandbox)
+  access: read
+  method: probed
+- scope: r:org_action:expense_management.expense:api_view
+  scheme: Airwallex Developer MCP (sandbox)
+  access: read
+  method: probed
+- scope: r:org_action:spend.bills:api_view
+  scheme: Airwallex Developer MCP (sandbox)
+  access: read
+  method: probed
+- scope: r:org_action:spend.vendors:api_view
+  scheme: Airwallex Developer MCP (sandbox)
+  access: read
+  method: probed
+- scope: w:awx_action:contact_management_edit
+  scheme: Airwallex Developer MCP (sandbox)
+  access: write
+  method: probed
+- scope: w:awx_action:conversions_edit
+  scheme: Airwallex Developer MCP (sandbox)
+  access: write
+  method: probed
+- scope: w:awx_action:deposits_create
+  scheme: Airwallex Developer MCP (sandbox)
+  access: write
+  method: probed
+- scope: w:awx_action:devx.feedback_write
+  scheme: Airwallex Developer MCP (sandbox)
+  access: write
+  method: probed
+- scope: w:awx_action:issuing_cardholders_edit
+  scheme: Airwallex Developer MCP (sandbox)
+  access: write
+  method: probed
+- scope: w:awx_action:issuing_cards_edit
+  scheme: Airwallex Developer MCP (sandbox)
+  access: write
+  method: probed
+- scope: w:awx_action:linked_accounts_edit
+  scheme: Airwallex Developer MCP (sandbox)
+  access: write
+  method: probed
+- scope: w:awx_action:pa_edit
+  scheme: Airwallex Developer MCP (sandbox)
+  access: write
+  method: probed
+- scope: w:awx_action:payment_dispute_edit
+  scheme: Airwallex Developer MCP (sandbox)
+  access: write
+  method: probed
+- scope: w:awx_action:payment_links_edit
+  scheme: Airwallex Developer MCP (sandbox)
+  access: write
+  method: probed
+- scope: w:awx_action:simulation_edit
+  scheme: Airwallex Developer MCP (sandbox)
+  access: write
+  method: probed
+- scope: w:awx_action:transfers_edit
+  scheme: Airwallex Developer MCP (sandbox)
+  access: write
+  method: probed
+- scope: w:org_action:billing.checkout_edit
+  scheme: Airwallex Developer MCP (sandbox)
+  access: write
+  method: probed
+- scope: w:org_action:billing.customer_edit
+  scheme: Airwallex Developer MCP (sandbox)
+  access: write
+  method: probed
+- scope: w:org_action:billing.discount_edit
+  scheme: Airwallex Developer MCP (sandbox)
+  access: write
+  method: probed
+- scope: w:org_action:billing.invoice_edit
+  scheme: Airwallex Developer MCP (sandbox)
+  access: write
+  method: probed
+- scope: w:org_action:billing.price_edit
+  scheme: Airwallex Developer MCP (sandbox)
+  access: write
+  method: probed
+- scope: w:org_action:billing.product_edit
+  scheme: Airwallex Developer MCP (sandbox)
+  access: write
+  method: probed
+- scope: w:org_action:billing.subscription_edit
+  scheme: Airwallex Developer MCP (sandbox)
+  access: write
+  method: probed
+- scope: w:org_action:billing.usage_metering_edit
+  scheme: Airwallex Developer MCP (sandbox)
+  access: write
+  method: probed
+coverage:
+  total: 180
+  partner_connections: 98
+  mcp_production: 35
+  mcp_sandbox: 47

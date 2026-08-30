@@ -1,0 +1,87 @@
+generated: '2026-08-30'
+method: searched
+source: https://www.airwallex.com/.well-known/security.txt
+note: >-
+  Probed every apis.yml baseURL host, the docs/marketing host, the sandbox API host and both hosted
+  MCP hosts. One classic well-known document is served: an RFC 9116 security.txt on the marketing
+  host. In addition, both MCP hosts serve RFC 9728 OAuth protected-resource metadata at
+  path-scoped well-known URLs (/.well-known/oauth-protected-resource/<mcp-path>/) — the unscoped
+  /.well-known/oauth-authorization-server and /.well-known/oauth-protected-resource paths 404 on
+  those hosts, and the resource_metadata value in the 401 WWW-Authenticate challenge is what points
+  at the served location. No api-catalog and no ai-plugin.json anywhere.
+hosts:
+  - host: https://www.airwallex.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        file: airwallex-security.txt
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+  - host: https://api.airwallex.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+  - host: https://api.sandbox.airwallex.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+  - host: https://mcp.airwallex.com
+    documents:
+      - path: /.well-known/oauth-protected-resource/mcp/
+        status: 200
+        file: airwallex-oauth-protected-resource-mcp.json
+        note: RFC 9728 protected-resource metadata, 35 scopes_supported, bearer header
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+  - host: https://mcp.sandbox.airwallex.com
+    documents:
+      - path: /.well-known/oauth-protected-resource/developer/
+        status: 200
+        file: airwallex-oauth-protected-resource-developer.json
+        note: RFC 9728 protected-resource metadata, 48 scopes_supported, bearer header
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+hit_count: 3
+soft_404_control:
+  note: >-
+    www.airwallex.com answers unknown /.well-known/* paths with an HTTP 404 carrying a 4,859-byte
+    Next.js not-found page, and api.airwallex.com answers with a 36-byte JSON
+    {"error_msg":"404 Route Not Found"} — both correctly 404, so this host set is NOT an SPA
+    catch-all and the 200s recorded above are real documents.
+  probe: https://www.airwallex.com/.well-known/agent-card.json
+  status: 404
+  bytes: 4859

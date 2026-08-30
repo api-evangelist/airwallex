@@ -1,0 +1,96 @@
+generated: '2026-08-30'
+method: searched
+source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+note: >-
+  Airwallex is a card acquirer, and it handles declines by PASSING THE SCHEME'S OWN RESPONSE CODE
+  THROUGH rather than by publishing its own decline-code table. There is therefore no Airwallex
+  decline-code registry to capture; what exists is the API-level decline envelope below, plus the
+  raw ISO 8583 issuer response code the network returned. That is a real and useful finding for an
+  agent: it must read the passthrough field, not look up an Airwallex code. Recorded as an honest
+  absence of a proprietary table rather than filled in with a generic ISO 8583 list Airwallex does
+  not publish.
+envelope_field: code
+decline_codes:
+  - code: issuer_declined
+    meaning: The card issuer declined this transaction.
+    action: >-
+      Read provider_original_response_code (and details.original_response_code) for the scheme's own
+      reason; do not retry blindly.
+    masked_to_buyer: true
+    passthrough: true
+  - code: provider_declined
+    meaning: The payment provider (non-card local method) declined this transaction.
+    action: Refer to the original response code returned by the provider.
+    masked_to_buyer: true
+    passthrough: true
+  - code: risk_declined
+    meaning: Airwallex risk engine blocked the transaction.
+    action: Do not retry; the decision is Airwallex-side.
+    masked_to_buyer: true
+    passthrough: false
+  - code: authentication_declined
+    meaning: The cardholder failed 3DS authentication.
+    action: Re-attempt authentication or offer another payment method.
+    masked_to_buyer: false
+    passthrough: false
+  - code: no_3ds_liability_shift
+    meaning: >-
+      Declined because liability shift could not be achieved due to a network outage or issuer
+      unavailability.
+    action: Retry later or accept the transaction without liability shift where policy allows.
+    masked_to_buyer: true
+    passthrough: false
+  - code: 3ds_not_supported
+    meaning: 3DS is required for this transaction but the card does not support it.
+    action: Offer another payment method.
+    masked_to_buyer: false
+    passthrough: false
+  - code: issuer_unavailable
+    meaning: The card issuer is temporarily unavailable.
+    action: Retry later with backoff.
+    masked_to_buyer: true
+    passthrough: false
+  - code: provider_unavailable
+    meaning: The payment provider is temporarily unavailable.
+    action: Retry later with backoff.
+    masked_to_buyer: true
+    passthrough: false
+  - code: rejected_by_routing_rules
+    meaning: The merchant's own routing rules rejected the transaction.
+    action: Merchant configuration change; contact the Airwallex account manager.
+    masked_to_buyer: true
+    passthrough: false
+  - code: suspended_from_online_payments
+    meaning: The operating account has been suspended from processing online payments.
+    action: Account-level block; contact the Airwallex account manager.
+    masked_to_buyer: true
+    passthrough: false
+passthrough_contract:
+  fields:
+    provider_original_response_code: raw scheme response code at the top level of the error body
+    details.original_response_code: the same code inside details
+    details.card_brand: e.g. mastercard
+    details.card_type: e.g. DEBIT
+    details.is_commercial: boolean
+    details.issuing_bank_name: issuing bank name
+  example:
+    code: issuer_declined
+    message: The card issuer declined this transaction. Please refer to the original response code.
+    provider_original_response_code: '05'
+    details:
+      card_brand: mastercard
+      card_type: DEBIT
+      is_commercial: false
+      original_response_code: '05'
+  note: >-
+    "05" is the ISO 8583 "do not honour" response code, returned verbatim by the issuer. Airwallex
+    does not restate scheme codes in its own docs, so no scheme code table is copied here.
+issuing_side:
+  note: >-
+    On the Issuing (card-issuing) side of the business Airwallex publishes its own decline reasons
+    per transaction event in the Issuing error-code and transaction-lifecycle references, which are
+    a separate surface from acquiring declines above.
+  references:
+    - https://www.airwallex.com/docs/issuing/troubleshooting/error-codes
+    - https://www.airwallex.com/docs/issuing/transactions/transaction-lifecycle/transaction-scenarios
+complements: errors/airwallex-problem-types.yml

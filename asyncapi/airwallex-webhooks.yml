@@ -1,0 +1,243 @@
+generated: '2026-08-30'
+method: searched
+source: https://www.airwallex.com/docs/developer-tools/webhooks/webhooks-overview.md
+spec_type: null
+note: 'Airwallex publishes NO AsyncAPI document — probed /asyncapi.yaml and /asyncapi.json on every baseURL and
+  docs host, and searched the github.com/airwallex org: nothing. It does publish a first-class webhook surface,
+  and the full event catalogue is enumerated in the OAuth scopes reference, where every scope row lists the webhook
+  events it may subscribe to. The 178 event names below were extracted from that provider-published table; no event
+  name here was invented. Emitted as type: Webhooks, not AsyncAPI.'
+webhooks:
+  docs: https://www.airwallex.com/docs/developer-tools/webhooks/webhooks-overview
+  setup_docs: https://www.airwallex.com/docs/developer-tools/webhooks/listen-for-webhook-events
+  replay_docs: https://www.airwallex.com/docs/developer-tools/webhooks/view-and-re-trigger-webhook-events
+  transport: HTTPS POST, JSON payload
+  subscription_model: per-subscription notification URL plus a selected event set, configured in the Airwallex web
+    app
+  expected_response: 200 OK
+  retry_policy: exponential back-off for approximately three days until the endpoint returns 200
+  ordering_guarantee: none - use the payload created_at field when ordering matters
+  duplicate_delivery: at-least-once; the event id is stable across retries so handlers must be idempotent on it
+  signature:
+    scheme: HMAC over the request timestamp and body, compared against the signature request header
+    secret_scope: one secret key per subscription, shown in the Airwallex web app
+    docs: https://www.airwallex.com/docs/developer-tools/webhooks/listen-for-webhook-events#check-webhook-signatures
+  source_ip_allowlist:
+    required: true
+    docs: https://www.airwallex.com/docs/developer-tools/webhooks/listen-for-webhook-events#whitelist-ip-addresses
+    note: separate production and sandbox IP ranges are published; the sandbox list must be allowlisted to receive
+      sandbox events
+  replay: events can be inspected (success/queued/failed) and re-delivered from the Airwallex web app
+  connected_accounts: platforms receive connected-account events on the platform subscription
+event_count: 178
+event_domains:
+  account: 5
+  balance: 3
+  batch_transfers: 19
+  billing_checkout: 3
+  billing_transaction: 3
+  conversion: 4
+  credit_note: 3
+  customer: 2
+  funds_split: 4
+  ga: 1
+  invoice: 8
+  issuing: 20
+  payment_attempt: 14
+  payment_consent: 5
+  payment_dispute: 9
+  payment_intent: 8
+  payment_method: 5
+  payout: 18
+  refund: 4
+  rfi: 3
+  spend: 24
+  subscription: 7
+  usage_event: 1
+  wallet_transfer: 5
+events:
+- account.action_required
+- account.active
+- account.connected
+- account.submitted
+- account.suspended
+- balance.adjustment
+- balance.ga.top_up
+- balance.va.top_up
+- batch_transfers.approval_blocked
+- batch_transfers.approval_recalled
+- batch_transfers.approval_rejected
+- batch_transfers.booked
+- batch_transfers.booking
+- batch_transfers.cancellation_requested
+- batch_transfers.cancelled
+- batch_transfers.drafting
+- batch_transfers.failed
+- batch_transfers.funding.failed
+- batch_transfers.funding.funded
+- batch_transfers.funding.processing
+- batch_transfers.funding.requires_funding_confirmation
+- batch_transfers.funding.reversed
+- batch_transfers.funding.scheduled
+- batch_transfers.in_approval
+- batch_transfers.overdue
+- batch_transfers.partially_booked
+- batch_transfers.scheduled
+- billing_checkout.cancelled
+- billing_checkout.completed
+- billing_checkout.created
+- billing_transaction.cancelled
+- billing_transaction.created
+- billing_transaction.succeeded
+- conversion.cancelled
+- conversion.overdue
+- conversion.scheduled
+- conversion.settled
+- credit_note.created
+- credit_note.finalized
+- credit_note.voided
+- customer.created
+- customer.updated
+- funds_split.created
+- funds_split.failed
+- funds_split.released
+- funds_split.settled
+- ga.new
+- invoice.created
+- invoice.finalized
+- invoice.paid
+- invoice.payment.paid
+- invoice.payment_attempt_failed
+- invoice.payment_failed
+- invoice.sent
+- invoice.voided
+- issuing.card.active
+- issuing.card.blocked
+- issuing.card.closed
+- issuing.card.expired
+- issuing.card.failed
+- issuing.card.inactive
+- issuing.card.lost
+- issuing.card.low_remaining_transaction_limit
+- issuing.card.modified
+- issuing.card.pending
+- issuing.card.stolen
+- issuing.card_notification.created
+- issuing.card_notification.physical_activated
+- issuing.cardholder.deleted
+- issuing.cardholder.disabled
+- issuing.cardholder.incomplete
+- issuing.cardholder.pending
+- issuing.cardholder.ready
+- issuing.transaction.failed
+- issuing.transaction.succeeded
+- payment_attempt.authentication_failed
+- payment_attempt.authentication_redirected
+- payment_attempt.authorization_failed
+- payment_attempt.authorized
+- payment_attempt.cancelled
+- payment_attempt.capture_failed
+- payment_attempt.capture_requested
+- payment_attempt.expired
+- payment_attempt.failed_to_process
+- payment_attempt.paid
+- payment_attempt.pending_authorization
+- payment_attempt.received
+- payment_attempt.risk_declined
+- payment_attempt.settled
+- payment_consent.created
+- payment_consent.disabled
+- payment_consent.pending
+- payment_consent.updated
+- payment_consent.verified
+- payment_dispute.accepted
+- payment_dispute.challenged
+- payment_dispute.expired
+- payment_dispute.lost
+- payment_dispute.pending_closure
+- payment_dispute.pending_decision
+- payment_dispute.requires_response
+- payment_dispute.reversed
+- payment_dispute.won
+- payment_intent.cancelled
+- payment_intent.created
+- payment_intent.payment_failed
+- payment_intent.pending
+- payment_intent.requires_capture
+- payment_intent.requires_customer_action
+- payment_intent.requires_payment_method
+- payment_intent.succeeded
+- payment_method.attached
+- payment_method.created
+- payment_method.detached
+- payment_method.disabled
+- payment_method.updated
+- payout.transfer.approval_blocked
+- payout.transfer.approval_recalled
+- payout.transfer.approval_rejected
+- payout.transfer.cancellation_requested
+- payout.transfer.cancelled
+- payout.transfer.failed
+- payout.transfer.funding.failed
+- payout.transfer.funding.funded
+- payout.transfer.funding.processing
+- payout.transfer.funding.requires_funding_confirmation
+- payout.transfer.funding.reversed
+- payout.transfer.funding.scheduled
+- payout.transfer.in_approval
+- payout.transfer.overdue
+- payout.transfer.paid
+- payout.transfer.processing
+- payout.transfer.scheduled
+- payout.transfer.sent
+- refund.accepted
+- refund.failed
+- refund.received
+- refund.settled
+- rfi.action_required
+- rfi.answered
+- rfi.closed
+- spend.bill.awaiting_approval
+- spend.bill.awaiting_payment
+- spend.bill.deleted
+- spend.bill.paid
+- spend.bill.payment_in_progress
+- spend.bill.rejected
+- spend.bill.scheduled
+- spend.bill.updated
+- spend.expense.approved
+- spend.expense.archived
+- spend.expense.awaiting_approval
+- spend.expense.deleted
+- spend.expense.draft
+- spend.expense.rejected
+- spend.expense.updated
+- spend.reimbursement_report.awaiting_approval
+- spend.reimbursement_report.awaiting_payment
+- spend.reimbursement_report.deleted
+- spend.reimbursement_report.draft
+- spend.reimbursement_report.mark_as_paid
+- spend.reimbursement_report.paid
+- spend.reimbursement_report.payment_in_progress
+- spend.reimbursement_report.rejected
+- spend.reimbursement_report.updated
+- subscription.active
+- subscription.cancelled
+- subscription.created
+- subscription.in_trial
+- subscription.modified
+- subscription.unpaid
+- subscription.updated
+- usage_event.aggregation_failed
+- wallet_transfer.created
+- wallet_transfer.failed
+- wallet_transfer.processing
+- wallet_transfer.sent
+- wallet_transfer.settled
+asyncapi:
+  published: false
+  probes:
+  - url: https://www.airwallex.com/asyncapi.yaml
+    status: 404
+  - url: https://api.airwallex.com/asyncapi.json
+    status: 404

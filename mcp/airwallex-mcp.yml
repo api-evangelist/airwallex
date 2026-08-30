@@ -1,0 +1,107 @@
+generated: '2026-08-30'
+method: searched
+source: https://www.airwallex.com/docs/developer-tools/ai/agentos.md
+status: published
+note: >-
+  Airwallex ships THREE hosted MCP servers plus a first-party stdio package. Two are OAuth-gated
+  (AgentOS production, Developer sandbox) and one — the Docs MCP — is fully anonymous, so its
+  tools/list below was captured live rather than read off a docs page.
+deployment:
+  mode: both
+  endpoint: https://mcp.airwallex.com/mcp
+  install: 'claude mcp add-json airwallex ''{ "type": "http", "url": "https://mcp.airwallex.com/mcp" }'''
+  package: https://www.npmjs.com/package/@airwallex/developer-mcp
+  auth: oauth
+  verified: probed
+  note: >-
+    mode is `both` because Airwallex publishes remote HTTPS endpoints an MCP client POSTs to AND a
+    first-party npm package (@airwallex/developer-mcp, npm owner `airwallex`). The remote endpoints
+    are the documented default in every install path in the AgentOS and developer-connector guides;
+    the package is the local option.
+servers:
+  - name: airwallex-agentos
+    title: Airwallex AgentOS MCP
+    transport: http
+    url: https://mcp.airwallex.com/mcp
+    environment: production
+    auth: oauth
+    gated: true
+    probe:
+      method: 'POST tools/list'
+      http_status: 401
+      www_authenticate: 'Bearer error="invalid_token", resource_metadata="https://mcp.airwallex.com/.well-known/oauth-protected-resource/mcp/"'
+      note: >-
+        Live and reachable; the tool list requires an authenticated session. The anonymous
+        RFC 9728 protected-resource document IS served and is saved at
+        well-known/airwallex-oauth-protected-resource-mcp.json (35 scopes).
+    docs: https://www.airwallex.com/docs/developer-tools/ai/agentos.md
+    guardrails:
+      - No money-out actions (transfers, FX conversions, payouts) by default.
+      - Write tools (create/update/delete) are annotated so clients can prompt for confirmation.
+      - Access is revocable at https://www.airwallex.com/app/integrations/home
+  - name: airwallex-developer
+    title: Airwallex Developer MCP
+    transport: http
+    url: https://mcp.sandbox.airwallex.com/developer
+    environment: sandbox
+    auth: oauth
+    gated: true
+    probe:
+      method: 'POST tools/list'
+      http_status: 401
+      www_authenticate: 'Bearer error="invalid_token", resource_metadata="https://mcp.sandbox.airwallex.com/.well-known/oauth-protected-resource/developer/"'
+    docs: https://www.airwallex.com/docs/developer-tools/ai/developer-connector.md
+    capability: Documentation tools + sandbox simulation tools + sandbox endpoint access. Never touches production.
+  - name: airwallex-docs
+    title: Airwallex Docs MCP
+    transport: http
+    url: https://mcp.sandbox.airwallex.com/docs
+    environment: documentation
+    auth: none
+    gated: false
+    probe:
+      method: 'POST initialize + tools/list'
+      http_status: 200
+      protocol_version: '2025-06-18'
+      server_info: {name: Docs MCP Server, version: 1.0.0}
+      capabilities: [tools, prompts, resources, logging, 'io.modelcontextprotocol/ui']
+      prompts: 0
+      resources: 0
+      raw: mcp/airwallex-docs-mcp-tools.json
+    docs: https://www.airwallex.com/docs/developer-tools/ai/developer-connector.md
+packages:
+  - registry: npm
+    name: '@airwallex/developer-mcp'
+    version: 0.3.0-beta.12
+    published: '2026-01-05'
+    official: true
+    owner: airwallex
+tools:
+  - name: read_integration_best_practices
+    title: Read Airwallex integration best practices
+    server: airwallex-docs
+    description: >-
+      Must be called once per conversation before any other Airwallex tool, but only when the user
+      intent is code generation or a payment dispute flow.
+    parameters: []
+    method: probed
+  - name: search_public_docs
+    title: Search Airwallex Product, API & SDK documentation
+    server: airwallex-docs
+    parameters: [question, source]
+    method: probed
+tools_gated:
+  note: >-
+    The AgentOS (production) and Developer (sandbox) servers did not return a tool list anonymously.
+    Their real capability envelope IS published anonymously as OAuth scopes in the RFC 9728
+    protected-resource documents — 35 on production, 48 on sandbox — captured in
+    scopes/airwallex-scopes.yml. Input schemas require an authenticated tools/list.
+plugins:
+  marketplace: https://github.com/airwallex/airwallex-marketplace
+  install:
+    claude_code: claude plugin install airwallex-agentos@claude-plugins-official
+    codex: |-
+      codex plugin marketplace add https://github.com/airwallex/airwallex-marketplace
+      codex plugin add airwallex-agentos@airwallex-marketplace
+    cursor: Settings > Plugins > Marketplace > search "airwallex"
+  skills: skills/_index.yml

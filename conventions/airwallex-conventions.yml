@@ -1,0 +1,215 @@
+generated: '2026-08-30'
+method: searched
+source: https://www.airwallex.com/docs/api/getting_started
+docs:
+  errors: https://www.airwallex.com/docs/api/errors
+  versioning: https://www.airwallex.com/docs/api/versioning
+  data_types: https://www.airwallex.com/docs/api/data_types
+  rate_limits: https://www.airwallex.com/docs/developer-tools/api/rate-limits
+  api_keys: https://www.airwallex.com/docs/developer-tools/api/manage-api-keys
+  webhooks: https://www.airwallex.com/docs/developer-tools/webhooks/webhooks-overview
+  agent_guardrails: https://www.airwallex.com/docs/developer-tools/ai/agentos
+note: >-
+  Cross-cutting request/response semantics for the Airwallex REST API, read from the provider's own
+  API-reference support pages and from the Airwallex-published awx-best-practices agent skill
+  (github.com/airwallex/airwallex-marketplace). Not derived from the OpenAPI in this repo.
+
+authentication:
+  style: short-lived bearer token exchanged from a key pair
+  token_endpoint: POST https://api.airwallex.com/api/v1/authentication/login
+  credential_headers: [x-client-id, x-api-key]
+  call_header: 'Authorization: Bearer <token>'
+  token_lifetime: 30 minutes
+  token_expiry_field: expires_at
+  reuse_required: true
+  reuse_note: >-
+    The login endpoint has its own fixed limit of 100 requests per minute per API key. Tokens must be
+    cached and reused until expiry; authenticating per request will exhaust the limit.
+  delegation:
+    header: x-on-behalf-of
+    value: connected account id
+    note: >-
+      A platform calls any endpoint for a connected account with its own platform credentials plus
+      this header. No per-account credentials are issued.
+  oauth:
+    supported: true
+    audience: third-party applications and the hosted MCP servers
+    scopes: scopes/airwallex-scopes.yml
+
+idempotency:
+  supported: true
+  mechanism: request-body field
+  field: request_id
+  applies_to: >-
+    most create, update and validate write operations across the API (the field's `required` flag on
+    each operation's schema is authoritative)
+  value_format: UUIDv4, freshly generated per distinct logical operation
+  retry_semantics: >-
+    reuse the SAME request_id only when retrying the same logical operation after a transient
+    failure; never use sequential or patterned values
+  known_exceptions:
+    - operation: beneficiary verify
+      note: does not take request_id - it validates a candidate payload before any record exists
+  header_based: false
+  header_note: >-
+    Airwallex does NOT use an Idempotency-Key request header. Idempotency is carried in the request
+    body as request_id, which is why a header-shaped check misses it.
+  webhook_side:
+    note: >-
+      Webhook consumers must be idempotent too - delivery is at-least-once and the event `id` is
+      stable across retries, so handlers should dedupe on it.
+  source: https://github.com/airwallex/airwallex-marketplace/blob/master/plugins/airwallex-agentos/skills/awx-best-practices/references/api_traps.md
+
+versioning:
+  scheme: date-version selected per account, overridable per call
+  header: x-api-version
+  current: '2026-08-21'
+  url_version: /api/v1
+  url_version_note: >-
+    The URL "v1" is expected to remain v1 for the foreseeable future and is not the versioning
+    mechanism; the date version is.
+  account_default: >-
+    the version is stored on the account and applied automatically; the header is for testing,
+    migration, or calling on behalf of another account
+  compatible_changes:
+    - new endpoints
+    - new optional request fields
+    - new response fields
+    - new required request fields tied to a new payment corridor or method
+    - changed content of unstructured text such as error messages and field labels
+  incompatible_change_policy: >-
+    backwards-incompatible changes (renaming or splitting a field) get a NEW date version; existing
+    versions are unaffected. Clients must tolerate unknown response fields.
+  docs: https://www.airwallex.com/docs/api/versioning
+  catalog: lifecycle/airwallex-lifecycle.yml
+
+error_envelope:
+  shape: proprietary JSON object
+  format: not rfc9457
+  fields:
+    code: machine-readable error code
+    source: name of the request parameter that caused the error
+    message: human-readable description
+    details: conditional key-value object with additional context
+  trace_field: trace_id
+  trace_note: >-
+    the 429 rate-limit response carries a trace_id; use it when contacting support
+  example:
+    code: invalid_argument
+    source: first_name
+    message: Value is too short
+    details:
+      reason: First name must contain at least three characters.
+  catalog: errors/airwallex-problem-types.yml
+
+rate_limit_signaling:
+  status_on_exhaustion: 429
+  error_code: too_many_requests
+  response_headers_documented: false
+  response_headers_note: >-
+    Airwallex documents the numeric limits and the 429 body but does NOT document any
+    X-RateLimit-*, RateLimit-* or Retry-After response header. An agent must infer remaining budget
+    from its own accounting, not from a runtime signal.
+  guidance: exponential backoff with jitter, 1s / 2s / 4s doubling to a ~16s ceiling
+  catalog: rate-limits/airwallex-rate-limits.yml
+
+pagination:
+  documented_globally: false
+  note: >-
+    Airwallex does not publish one global pagination contract on its API-reference support pages;
+    list endpoints document their own paging parameters in the operation reference. Not asserted
+    here rather than guessed.
+
+metadata:
+  documented_globally: false
+
+request_tracing:
+  response_field: trace_id
+  note: present on error responses; no documented request-id request header
+
+reversibility:
+  grade: verified
+  applicable: true
+  note: >-
+    Airwallex is a write-heavy money-movement API, so reversibility is the load-bearing question for
+    an agent. Reversal paths and their windows below are taken from Airwallex's own product docs;
+    where the docs state no window, that is recorded as unstated rather than filled in.
+  surfaces:
+    - surface: Payment Intent (authorization)
+      reversal: cancel
+      operation: POST /api/v1/pa/payment_intents/{id}/cancel
+      window: >-
+        before capture - a PaymentIntent can be cancelled while it is in REQUIRES_PAYMENT_METHOD,
+        REQUIRES_CUSTOMER_ACTION or REQUIRES_CAPTURE; once captured it must be refunded instead
+      docs: https://www.airwallex.com/docs/payments/payment-operations/manage-payments/cancellations
+      reversible: true
+    - surface: Captured payment
+      reversal: refund
+      operation: POST /api/v1/pa/refunds/create
+      window: >-
+        after capture, while the payment method is still within ITS OWN refund time limit - Airwallex
+        states that card schemes and local payment methods impose maximum refund ages and does not
+        publish a single global number. A refund past that limit fails with refund.failed.
+      window_stated: partial
+      window_note: >-
+        This is the one reversal window on the platform an agent cannot compute from Airwallex docs
+        alone; it is set by the scheme behind the payment method.
+      docs: https://www.airwallex.com/docs/payments/payment-operations/manage-payments/refunds
+      reversible: true
+    - surface: FX conversion
+      reversal: cancel a conversion
+      operation: POST /api/v1/conversion_amendments/create (type CANCEL)
+      window: >-
+        while the conversion is UNSETTLED - only cancellations of an existing unsettled (typically
+        future-dated) conversion are supported, and an indicative amendment quote can be taken first
+        via POST /api/v1/conversion_amendments/quote
+      docs: https://www.airwallex.com/docs/transactional-fx/amendments/cancel-a-conversion
+      reversible: true
+    - surface: Issued card
+      reversal: cancel or freeze
+      window: freeze is reversible at any time; cancel is terminal
+      docs: https://www.airwallex.com/docs/issuing/manage-cards/cancel-or-freeze-a-card
+      reversible: partial
+    - surface: Card authorization
+      reversal: automatic release / reversal clearing
+      window: >-
+        an approved authorization is automatically released after the documented authorization
+        expiration period if not cleared or reversed by the merchant
+      docs: https://www.airwallex.com/docs/issuing/transactions/authorization-expiration
+      reversible: true
+    - surface: Batch transfer
+      reversal: cancellation request
+      window: >-
+        while the batch is in a pre-booked state - the event catalogue carries
+        batch_transfers.cancellation_requested and batch_transfers.cancelled
+      docs: https://www.airwallex.com/docs/payouts/errors/batch-transfer-error-codes
+      reversible: partial
+    - surface: Finalized invoice
+      reversal: credit note
+      window: >-
+        a credit note reduces or refunds amounts on an already-finalized invoice; invoices are not
+        deleted after finalization
+      docs: https://www.airwallex.com/docs/billing/invoicing/credit-notes
+      reversible: true
+    - surface: Connected account
+      reversal: none within 30-day grace
+      window: >-
+        after offboarding an account enters pending closure and is permanently CLOSED after a 30-day
+        grace period; closure is not reversible after that
+      docs: https://www.airwallex.com/docs/api/changelog
+      reversible: partial
+  agent_guardrail:
+    note: >-
+      Airwallex's own AgentOS connectors do NOT initiate money-out actions (transfers, FX
+      conversions, payouts) by default, precisely because those are the least reversible operations
+      on the platform.
+    source: https://www.airwallex.com/docs/developer-tools/ai/agentos
+
+dry_run_mode:
+  supported: partial
+  mechanism: a fully separate sandbox environment plus validate-style operations
+  note: >-
+    Airwallex has no in-production dry-run flag. It ships a separate sandbox host
+    (api.sandbox.airwallex.com) with its own keys, plus pre-flight validation operations such as the
+    beneficiary verify endpoint, which validates a candidate payload before any record is created.
+  catalog: sandbox/airwallex-sandbox.yml

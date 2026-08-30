@@ -1,0 +1,325 @@
+generated: '2026-08-30'
+method: searched
+source: https://www.airwallex.com/docs/api/changelog
+url: https://www.airwallex.com/docs/api/changelog
+scheme: date-version
+current_version: '2026-08-21'
+preview_version: '2026-12-01'
+format: one changelog section per dated API version, each listing affected endpoints, field-level changes and affected
+  webhook events
+note: Airwallex keys its changelog to the same dated API versions the x-api-version header selects, so every entry
+  is both a release note and a migration guide. The recent window is captured below (most recent first); the live
+  page is authoritative for full history. Entry-level `breaking` is derived from remove/replace/rename/no-longer
+  language in the entry body.
+entry_count_captured: 24
+entries:
+- version: '2026-08-21'
+  date: '2026-08-21'
+  breaking: true
+  change_count: 6
+  affected_endpoints: 28
+  highlights:
+  - The account `status` field now exposes two additional values, `DORMANT` and `CLOSED`, providing a more granular
+    view of inactive accounts. On earlier API versions, dormant accounts were returned as `ACTIVE`, and closed accounts
+    were returned as `SUSPENDED`.
+  - 'New account webhook events for the added statuses:'
+  - Spend accounting field selections now use `source_id` as the internal accounting-value identifier. For Bills
+    and Purchase Orders, create requests replace the legacy `identifier_type`, `field_id`, and `field_value_id`
+    fields with required `type` and `source_id`
+  - Spend Bill and Expense webhook payloads now include `source_id` for populated accounting field selections.
+  - The Card Transaction Event response field `transaction_date_time` is renamed to `transacted_at`.
+  - Transaction Disputes now use Card Transaction Event identifiers.
+- version: '2026-07-17'
+  date: '2026-07-17'
+  breaking: true
+  change_count: 3
+  affected_endpoints: 7
+  highlights:
+  - '`country_code` is now required in the account address objects below. Previously `country_code` was optional
+    in these addresses; requests that omit it in the cases described are now rejected with a validation error, ensuring
+    a country can always be determined f'
+  - The standalone `lifecycle_id` is removed from the Issuing Authorizations and Transactions APIs. Its value is
+    now provided by the `card_transaction_data` object — which is available across all API versions — as its `card_transaction_lifecycle_id`
+    child, alongsi
+  - 'Issuing webhook events now carry a `card_transaction_data` object with the card transaction identifiers, so
+    you can correlate webhook payloads with the Card Transactions model (Lifecycle → Card Transaction → Transaction
+    Event) without subscribing to new event '
+- version: '2026-06-30'
+  date: '2026-06-30'
+  breaking: true
+  change_count: 10
+  affected_endpoints: 19
+  highlights:
+  - 'Specific `risk_declined` cases are now returned with more accurate error codes:'
+  - '`terminal_id` in `terminal_info` (under both `payment_method.card` and `payment_method.card_present`) is renamed
+    to `terminal_identifier`. The field represents the 8-digit alphanumeric identifier sent to the card scheme,
+    not the Airwallex Terminal resource ID;'
+  - The `payment_method.card.three_ds` node is removed from API requests. `payment_method.card.three_ds.return_url`
+    is replaced by the top-level `return_url`; all other fields in the node were already deprecated and unused.
+  - Timestamp fields in responses now use the ISO-8601 standard timezone offset format `+00:00` instead of the legacy
+    `+0000`. For example, `2024-06-15T10:30:00+0000` is now returned as `2024-06-15T10:30:00+00:00`. Date-only fields
+    (`YYYY-MM-DD`) are unaffected.
+  - The settlement `id` response field is renamed to `settlement_id`.
+  - The `version` query parameter is removed from the Get a settlement report endpoint, as the old version is deprecated.
+    The report is always generated using the latest report version.
+- version: '2026-05-29'
+  date: '2026-05-29'
+  breaking: true
+  change_count: 1
+  affected_endpoints: 5
+  highlights:
+  - '`customer_data_collection.enabled` is removed from Billing Checkout APIs. New enum fields `customer_data_collection.tax_id`
+    and `customer_data_collection.billing_address` are added.'
+- version: '2026-02-27'
+  date: '2026-02-27'
+  breaking: false
+  change_count: 1
+  affected_endpoints: 3
+  highlights:
+  - Updated `status` of financial reports to indicate `FAILED` when report generation process had failed. This is
+    distinct from the previous `PENDING` state, which now indicates that the report generation is still in progress.
+- version: '2025-11-11'
+  date: '2025-11-11'
+  breaking: false
+  change_count: 1
+  affected_endpoints: 3
+  highlights:
+  - In this version, the meaning of the field `external_id` on the **Payment Source** resource has changed from
+    referencing a **Payment Consent ID** to referencing a **Payment Method ID**.
+- version: '2025-09-30'
+  date: '2025-09-30'
+  breaking: true
+  change_count: 5
+  affected_endpoints: 2
+  highlights:
+  - This version includes major changes to the Account Capability resource, notably relating to the querying of
+    available funding limit or Faster Direct Debit limit.
+  - Introduced new parameters to allow querying for future funding limits and funding limits of specific mandate
+    types.
+  - Updated response to include more details on funding limit.
+  - Renamed pagination parameters.
+  - 'Updated `source` and `amount` for balance activity where `source_type` is `ISSUING`:'
+- version: '2025-08-29'
+  date: '2025-08-29'
+  breaking: true
+  change_count: 8
+  affected_endpoints: 30
+  highlights:
+  - 'In this version, we introduce several improvements to the Billing APIs, including enhanced pagination, a new
+    subscription duration parameter, and clearer representation of tiered invoice line items. We also add new features,
+    such as:'
+  - Pagination update for search endpoints of Billing.
+  - 'Subscription model and API updates: we have updated the representation of subscription duration to make it
+    clearer and easier to use.'
+  - Introduce a new simulation API to simulate auto-charge behaviors in the sandbox environment.
+  - Introduced enhancements to Invoice APIs to support creating one-off invoices with automatic charging using existing
+    Payment Sources.
+  - Improved Invoice Line Item APIs to provide more detailed price information.
+- version: '2025-06-30'
+  date: '2025-06-30'
+  breaking: true
+  change_count: 7
+  affected_endpoints: 18
+  highlights:
+  - 'This version includes major changes to the [Transfers](https://www.airwallex.com/docs/api/payouts/transfers)
+    resources, notably relating to the new scheduled transfer experience for the pre-funding settlement model, and
+    an update to the beneficiary schema for '
+  - Introduced a new `lock_rate_on_create` field to denote whether to lock the conversion rate for a scheduled transfer
+    upon creation.
+  - Introduced new `conversion` and `prepayment` objects.
+  - Updated **Transfer** webhooks (refer to webhook [payload examples](/docs/developer-tools/webhooks/listen-for-webhook-events)
+    for more details)
+  - Introduced `bank_account_category` for US ACH transfers to specify bank account type.
+  - Beneficiaries created using POST `/api/v1/beneficiaries/create` on a previous API version will be compatible
+    with this version by defaulting to CHECKING without updating to the new schema. However, to update an existing
+    beneficiary by calling POST `/api/v1/ben
+- version: '2025-06-16'
+  date: '2025-06-16'
+  breaking: true
+  change_count: 13
+  affected_endpoints: 54
+  highlights:
+  - 'This version includes major changes to Billing APIs via the following new resources:'
+  - This version includes major changes to Billing APIs. It introduces new resources like **Billing Customers**,
+    **Payment Sources**, and **Billing Transactions** to better abstract the payment provider resources from the
+    billing software resources, and a new reso
+  - Introduced new **Billing Customers** resource – A new resource representing customers in Billing, separate from
+    the Payment Acceptance customers. Billing Customers store customer data for billing purposes and link to invoices
+    and subscriptions.
+  - Introduced **Payment Source** resource – A new resource for managing a customer’s saved funding source for billing.
+    A **Payment Source** can be created from a verified payment consent and used for future charges in subscriptions
+    or invoices.
+  - Introduced **Billing Transactions** resource – A new read-only resource that records transactions related to
+    invoices.
+  - Introduced new **Billing Checkouts** resource – A new resource manages the setup and lifecycle of an Airwallex-hosted
+    customer checkout experience, enabling customers to confirm and pay for line items or set up payment details
+    for future transactions.
+- version: '2025-04-25'
+  date: '2025-04-25'
+  breaking: true
+  change_count: 14
+  affected_endpoints: 19
+  highlights:
+  - This version includes major changes to the **Transfers**, **Beneficiaries**, **Global Accounts**, and **Deposits**
+    resources. The previously beta-released **Wallet Transfers** resource has been deprecated and replaced by the
+    unified **Transfers** resource, whi
+  - Introduced a new Digital Wallet beneficiary type to **Transfers** and **Beneficiaries** under Payouts.
+  - Updated parameters according to Bank Account and Digital Wallet beneficiary types.
+  - Introduced a new interim status for in-progress Global Account creations to Global Accounts under Core Resources.
+  - Introduced a new reason field for failed Global Account creations.
+  - Introduced and updated reason fields for closed Global Accounts.
+- version: '2025-02-14'
+  date: '2025-02-14'
+  breaking: true
+  change_count: 5
+  affected_endpoints: 18
+  highlights:
+  - Renamed the status `SUCCEEDED` to `SETTLED` under **Refund**.
+  - Moved channel specific data to a unified `additional_info` field under **PaymentIntent**.
+  - Removed deprecated fields from API requests.
+  - Removed deprecated fields from API responses.
+  - Enhanced AVS result in API responses.
+- version: '2024-09-27'
+  date: '2024-09-27'
+  breaking: true
+  change_count: 6
+  affected_endpoints: 27
+  highlights:
+  - This version introduces major changes to the **Payments**, **Batch Transfers**, **Beneficiaries**, and **Transfers**
+    resources, notably relating to the renaming of the resources, as well as related endpoints, fields, error codes,
+    and webhook events.
+  - Modified field namings in requests and responses.
+  - Modified pagination to align with the latest Airwallex API convention
+  - Updated **Transfer**, **Batch Transfer**, and **Connected Account Transfer** webhooks (refer to webhook [event
+    types](/docs/developer-tools/webhooks/listen-for-webhook-events) for more details)
+  - Updated **Transfer**, **Batch Transfer**, **Beneficiary**, and **Payer** error code format (refer to [transfer
+    error codes](/docs/payouts/errors/transfer-error-codes) and [batch transfer error codes](/docs/payouts/errors/batch-transfer-error-codes)
+    for more de
+  - Supported HTTP status code **409 (Conflict)** if a request with the same `request_id` is currently being processed
+- version: '2024-08-07'
+  date: '2024-08-07'
+  breaking: true
+  change_count: 12
+  affected_endpoints: 19
+  highlights:
+  - Introduced new versions of the [Transaction Reconciliation Report](/docs/global-treasury/reporting/financial-reports/transaction-reconciliation-report)
+    and [Balance Activity Report](/docs/global-treasury/reporting/financial-reports/balance-activity-report). Th
+  - Modified request and response for create and get financial report(s) endpoints.
+  - Modified responses for [Financial Transactions](https://www.airwallex.com/docs/api/finance/financial_transactions)
+    resources.
+  - Modified response for **Get balance history** endpoint.
+  - 'This version introduces major changes to the [Global Accounts](https://www.airwallex.com/docs/api/core_resources/global_accounts/aliases)
+    resource, notably relating to the opening and querying of Global Accounts due to:'
+  - Introduction of Multi-currency Global Accounts which can now receive funds in multiple currencies
+- version: '2024-06-30'
+  date: '2024-06-30'
+  breaking: true
+  change_count: 3
+  affected_endpoints: 7
+  highlights:
+  - Replaced **Retrieve an indicative MarketFX quote** with **Retrieve an indicative rate**.
+  - Replaced **Create a LockFX quote** with **Create a quote**.
+  - Modified **request and response** for conversion **create and get** endpoints.
+- version: '2024-06-14'
+  date: '2024-06-14'
+  breaking: true
+  change_count: 2
+  affected_endpoints: 2
+  highlights:
+  - Modified the `next_action` payload of card `confirm` response.
+  - Modified the `three_ds` and `type` payload of card `confirm_continue` request.
+- version: '2024-04-30'
+  date: '2024-04-30'
+  breaking: true
+  change_count: 7
+  affected_endpoints: 13
+  highlights:
+  - This version introduces major changes to the [Payments](https://www.airwallex.com/docs/api/payments/config/add_items_registered_domains)
+    and [Beneficiaries](https://www.airwallex.com/docs/api/payouts/beneficiaries/create) resources, notably relating
+    to the pay
+  - 'Added `PAID` to payout statuses beyond `SENT` for better visibility after it has been dispatched by Airwallex
+    for the following endpoints (refer to [payout statuses](/docs/payouts/transfers/create-a-transfer/transfer-statuses)
+    for details):'
+  - Updated payment webhooks (refer to [payout webhook](/docs/developer-tools/webhooks/listen-for-webhook-events/transfers)
+    for details).
+  - 'For both beneficiaries and payments endpoints, beneficiary name and address parameters are no longer relevant
+    for certain payout scenarios (see detailed conditions below). Impacted endpoints:'
+  - 'When a parameter is not relevant, values specified in requests will be ignored, and NOT validated, saved, or
+    returned. For existing resources created with names and addresses under previous API versions:'
+  - 'For domestic payout scenarios in which the beneficiary `bank_country_code` is the same as the onboarding entity
+    country/region, the following beneficiary address parameters will NOT be relevant for requests nor returned
+    in responses:'
+- version: '2024-04-04'
+  date: '2024-04-04'
+  breaking: false
+  change_count: 2
+  affected_endpoints: 2
+  highlights:
+  - Exposed new failed card transactions with transaction failure reasons through the Issuing Transactions APIs.
+  - Updated the names of some existing card transaction failure reasons for clarity.
+- version: '2024-03-31'
+  date: '2024-03-31'
+  breaking: true
+  change_count: 2
+  affected_endpoints: 8
+  highlights:
+  - Please note, this API version is incompatible with any Airwallex Business Account Products such as "Borderless
+    Cards" or "Expense Management" via Airwallex web or mobile applications. If you're using any of these products,
+    please use API version 2024-02-22. Co
+  - Revamps the Card and Cardholder experience.
+- version: '2024-02-22'
+  date: '2024-02-22'
+  breaking: true
+  change_count: 5
+  affected_endpoints: 7
+  highlights:
+  - With a subscribed webhook version greater than or equal to `2024-02-22`, the naming convention of all webhook
+    payloads will be unified as `snake_case`.
+  - Renamed payment method flows and modified the `next_action` payloads.
+  - Split the **Payment Consent** status from `PENDING_VERIFICATION` to `REQUIRES_PAYMENT_METHOD` and
+  - Reorganized fields under `payment_method` and `payment_method_options`.
+  - Reorganized fields under `payment_method` and `verification_options`.
+- version: '2024-01-31'
+  date: '2024-01-31'
+  breaking: true
+  change_count: 10
+  affected_endpoints: 6
+  highlights:
+  - This version introduces [Batch Transfers](https://www.airwallex.com/docs/api/payouts/batch_transfers/add_items)
+    resource and major changes to the [Payments](https://www.airwallex.com/docs/api/payments/config/add_items_registered_domains)
+    resource, notably rela
+  - 'Updated payout statuses for better visibility on the state of the payment for the following endpoints (refer
+    to [payout statuses](/docs/payouts/transfers/create-a-transfer/transfer-statuses) for further details):'
+  - 'Introduced the following endpoint to confirm funding for payments under the post-funding settlement model (refer
+    to [fund deduction](/docs/payouts/transfers/create-a-transfer) for further details):'
+  - 'Added `batch_transfer_id` for payments created via batch transfer to the following endpoints:'
+  - 'Added `remarks` for including additional payment information (not passed to the beneficiary) to the following
+    endpoints:'
+  - Updated payment error codes (refer to [payout error codes](/docs/payouts/errors/transfer-error-codes) for details)
+- version: '2023-10-01'
+  date: '2023-10-01'
+  breaking: true
+  change_count: 2
+  affected_endpoints: 8
+  highlights:
+  - Payment Acceptance notification webhook changes. The payload of new webhooks are aligned with **PaymentDispute**
+  - 'Added an optional field `store_details` to `account_details` in the requests and responses of the following
+    endpoints:'
+- version: '2023-08-31'
+  date: '2023-08-31'
+  breaking: true
+  change_count: 3
+  affected_endpoints: 5
+  highlights:
+  - Added `country_code` and `language` fields to create a Linked Account authentication.
+  - Added `request_id` to create a Linked Account for idempotency check.
+  - Replaced **Delete a Linked Account** with **Suspend a Linked Account**.
+- version: '2023-06-30'
+  date: '2023-06-30'
+  breaking: true
+  change_count: 2
+  affected_endpoints: 10
+  highlights:
+  - This version introduces major changes to the request and response for **creating, updating, submitting, retrieving
+    Accounts** of `legal_entity_type = INDIVIDUAL`.
+  - 'Updated the success response from `OK` to `"OK"` for the following endpoints:'

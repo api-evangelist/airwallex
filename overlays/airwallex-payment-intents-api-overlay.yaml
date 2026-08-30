@@ -1,0 +1,48 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Airwallex Open Authentication Payment Intents API
+  version: 1.0.0
+extends: openapi/airwallex-payment-intents-api-openapi.yml
+x-provenance:
+  generated: '2026-08-30'
+  method: generated
+  source: https://www.airwallex.com/docs/api
+  note: 'Captures the cross-cutting semantics Airwallex publishes on its API-reference support pages but that the
+    reconstructed spec in openapi/ does not carry: the dated version header, the request_id idempotency contract,
+    the sandbox server, and the 429 envelope. Applied as an Overlay so the underlying spec is never mutated.'
+actions:
+- target: $.info
+  update:
+    x-apievangelist-enrichment:
+      pass: local-v1
+      date: '2026-08-30'
+      conventions: conventions/airwallex-conventions.yml
+      errors: errors/airwallex-problem-types.yml
+      authentication: authentication/airwallex-authentication.yml
+      scopes: scopes/airwallex-scopes.yml
+      rate_limits: rate-limits/airwallex-rate-limits.yml
+      webhooks: asyncapi/airwallex-webhooks.yml
+    x-api-version-current: '2026-08-21'
+    x-api-version-header: x-api-version
+    x-idempotency:
+      style: body-field
+      field: request_id
+      replay_error: duplicate_request
+      docs: https://www.airwallex.com/docs/api/versioning
+- target: $.servers
+  update:
+  - url: https://api.airwallex.com
+    description: Airwallex production
+  - url: https://api.sandbox.airwallex.com
+    description: Airwallex sandbox
+- target: $.components.securitySchemes
+  update:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: Bearer access token from POST /api/v1/authentication/login. Valid 30 minutes; cache and reuse.
+- target: $.paths.*.*.responses
+  update:
+    '429':
+      description: Too Many Requests - code too_many_requests. No rate-limit response headers are published; back
+        off exponentially with jitter.

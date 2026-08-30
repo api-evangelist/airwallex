@@ -1,0 +1,230 @@
+generated: '2026-08-30'
+method: searched
+source: https://www.airwallex.com/docs/developer-tools/sandbox-environment
+docs:
+  overview: https://www.airwallex.com/docs/developer-tools/sandbox-environment
+  test_cards: https://www.airwallex.com/docs/payments/test-and-go-live/test-card-numbers
+  signup: https://www.sandbox.airwallex.com/global/signup
+  web_app: https://www.sandbox.airwallex.com/app/
+note: >-
+  Airwallex separates test from live by ENVIRONMENT, not by key prefix. There is a completely
+  separate sandbox host with its own account, its own API keys and its own web app; the same
+  credential shape (Client ID + API key) is used in both, so a key cannot be identified as test or
+  live by looking at it. Switching to production means changing the host, not the key format.
+
+environment_separation:
+  model: separate-host
+  key_prefix_separation: false
+  key_prefix_note: >-
+    No test/live key prefix. This is worth knowing before an agent acts: nothing in an Airwallex
+    credential tells you which environment it belongs to.
+  environments:
+    - name: sandbox
+      api_base: https://api.sandbox.airwallex.com/api/v1
+      web_app: https://www.sandbox.airwallex.com/app/
+      signup: https://www.sandbox.airwallex.com/global/signup
+      mcp: https://mcp.sandbox.airwallex.com/developer
+      self_serve: true
+      instant: true
+    - name: production
+      api_base: https://api.airwallex.com/api/v1
+      web_app: https://www.airwallex.com/app/
+      mcp: https://mcp.airwallex.com/mcp
+
+access:
+  self_serve: true
+  onboarding: >-
+    Business email, name, business country and a password creates a sandbox account instantly - no
+    sales contact required.
+  api_keys: 'Account > Developer > API keys in the sandbox web app'
+  gotcha:
+    entity_name: >-
+      Additional sandbox accounts created after registration MUST use "New Business Sandbox" or
+      "Sandbox Business" as the entity name. Any other entity name leaves the account stuck in
+      "In review" and it never activates. This is a published, load-bearing magic value.
+  exclusions:
+    - product: Connected Accounts APIs
+      note: not available in self-serve sandbox; requires contacting Airwallex sales
+  retention:
+    files: 90 days
+    note: Files generated or uploaded in sandbox are deleted after 90 days.
+
+funding:
+  note: The sandbox Wallet is pre-credited with funds in each currency so test transactions can run.
+
+test_cards:
+  note: >-
+    Published test PANs. CVC/CVV and expiry year can be anything. Amounts in the $8x.xx range are
+    the trigger mechanism for error cases - the cents encode the issuer response code (80.05 -> 05
+    Do not Honor, 80.51 -> 51 Insufficient Funds, 80.14 -> 14 Invalid Card Number, 80.59 -> 59
+    Suspected fraud, 80.07 -> 07 Pick up Card, 81.00 -> 100 Deny). Values below are copied verbatim
+    from the provider's test-card reference; none were invented.
+  amount_trigger:
+    pattern: '$8x.xx'
+    mechanism: the cents of the amount select the simulated issuer response code
+  always_succeeds:
+    - pan: '4035501000000008'
+      brand: Visa
+      type: Debit
+      issuer_country: US
+    - pan: '2223000048410010'
+      brand: Mastercard
+      type: Credit
+      issuer_country: US
+    - pan: '5354563134257854'
+      brand: Mastercard
+      type: Debit
+      issuer_country: US
+    - pan: '370636803809394'
+      brand: American Express
+      type: Credit
+      issuer_country: US
+    - pan: '3569599999097585'
+      brand: JCB
+      type: Credit
+      issuer_country: TH
+    - pan: '6580070000000008'
+      brand: Discover
+      type: Credit
+      issuer_country: US
+    - pan: '36000700000001'
+      brand: Diners
+      type: Credit
+      issuer_country: US
+    - pan: '6250941006528599'
+      brand: UnionPay
+      type: Debit
+      issuer_country: PK
+    - pan: '6252470144444939'
+      brand: UnionPay
+      type: Credit
+      issuer_country: PK
+  decline_scenarios:
+    - pan: '4012000300001003'
+      brand: Visa
+      amount: '80.59'
+      issuer_response_code: '59'
+      issuer_response: Suspected fraud
+      error_code: issuer_declined
+    - pan: '4012000300001003'
+      brand: Visa
+      amount: '80.07'
+      issuer_response_code: '07'
+      issuer_response: Pick up Card
+      error_code: issuer_declined
+    - pan: '2223000010181375'
+      brand: Mastercard
+      amount: '80.05'
+      issuer_response_code: '05'
+      issuer_response: Do not Honor
+      error_code: issuer_declined
+    - pan: '2223000010181375'
+      brand: Mastercard
+      amount: '80.14'
+      issuer_response_code: '14'
+      issuer_response: Invalid Card Number
+      error_code: issuer_declined
+    - pan: '2223000010181375'
+      brand: Mastercard
+      amount: '80.51'
+      issuer_response_code: '51'
+      issuer_response: Insufficient Funds
+      error_code: issuer_declined
+    - pan: '5307837360544518'
+      brand: Mastercard
+      amount: '80.05'
+      issuer_response_code: '05'
+      issuer_response: Do not Honor
+      error_code: issuer_declined
+    - pan: '5307837360544518'
+      brand: Mastercard
+      amount: '80.14'
+      issuer_response_code: '14'
+      issuer_response: Invalid card number
+      error_code: issuer_declined
+    - pan: '5307837360544518'
+      brand: Mastercard
+      amount: '80.51'
+      issuer_response_code: '51'
+      issuer_response: Insufficient Funds
+      error_code: issuer_declined
+    - pan: '370353687686779'
+      brand: American Express
+      amount: '81.00'
+      issuer_response_code: '100'
+      issuer_response: Deny
+      error_code: issuer_declined
+    - pan: '4646464646464644'
+      brand: Visa
+      amount: Any
+      error_code: risk_declined
+      note: always declined by the fraud risk engine
+    - pan: '1111111111111111'
+      brand: Invalid
+      amount: Any
+      error_code: validation_error
+      note: invalid card number, fails validation before the network
+  additional_scenario_sets:
+    - name: 3DS authentication scenarios
+      url: https://www.airwallex.com/docs/payments/test-and-go-live/test-card-numbers#3ds-authentication-scenarios
+    - name: Network token payment scenarios (Visa, Mastercard)
+      url: https://www.airwallex.com/docs/payments/test-and-go-live/test-card-numbers#network-token-payment-scenarios
+    - name: Apple Pay payment scenarios
+      url: https://www.airwallex.com/docs/payments/test-and-go-live/test-card-numbers#apple-pay-payment-scenarios
+    - name: Google Pay payment scenarios
+      url: https://www.airwallex.com/docs/payments/test-and-go-live/test-card-numbers#google-pay-payment-scenarios
+    - name: AVS scenarios
+      url: https://www.airwallex.com/docs/payments/test-and-go-live/test-card-numbers#avs-scenarios
+    - name: Registered user checkout scenarios
+      url: https://www.airwallex.com/docs/payments/test-and-go-live/test-card-numbers#registered-user-checkout-scenarios
+
+simulation_apis:
+  note: >-
+    Airwallex ships real simulation ENDPOINTS in sandbox - not just magic values - so a state
+    machine can be driven forward deliberately. A platform can run them for a connected account
+    with the x-on-behalf-of header.
+  on_behalf_of_header: x-on-behalf-of
+  surfaces:
+    - product: Payments
+      capabilities: [simulate shopper action, simulate payment disputes]
+      url: https://www.airwallex.com/docs/developer-tools/sandbox-environment/payments
+    - product: Payouts
+      capabilities: [simulate transfer status transitions]
+      url: https://www.airwallex.com/docs/developer-tools/sandbox-environment/payouts
+    - product: Issuing
+      capabilities:
+        - simulate an authorization (including failed, incremental, and single-message auth+capture)
+        - simulate a capture (full or partial)
+      url: https://www.airwallex.com/docs/developer-tools/sandbox-environment/issuing
+    - product: Deposits
+      url: https://www.airwallex.com/docs/developer-tools/sandbox-environment/deposits
+    - product: Linked Accounts
+      url: https://www.airwallex.com/docs/developer-tools/sandbox-environment/linked-accounts
+    - product: Connected Accounts
+      url: https://www.airwallex.com/docs/developer-tools/sandbox-environment/connected-accounts
+    - product: Risk
+      url: https://www.airwallex.com/docs/developer-tools/sandbox-environment/risk
+  oauth_scope: 'w:awx_action:simulation_edit (sandbox MCP scope, absent from the production scope set)'
+
+test_clock:
+  supported: false
+  note: No test-clock / time-simulation facility is documented.
+
+webhooks:
+  note: >-
+    Sandbox webhooks are configurable in the sandbox web app, but the SANDBOX webhook source IP
+    ranges must be allowlisted separately from production or events will not arrive.
+  url: https://www.airwallex.com/docs/developer-tools/webhooks/listen-for-webhook-events#whitelist-ip-addresses
+
+load_testing:
+  permitted: false
+  note: >-
+    Airwallex explicitly discourages load testing in sandbox - lower limits plus mock mechanisms
+    make the results misleading. It recommends mocking the API with production-measured latency.
+
+agent_access:
+  mcp: https://mcp.sandbox.airwallex.com/developer
+  docs_mcp: https://mcp.sandbox.airwallex.com/docs
+  note: >-
+    The sandbox is directly reachable by an agent through the Airwallex Developer MCP server, which
+    bundles the simulation tools. See mcp/airwallex-mcp.yml.

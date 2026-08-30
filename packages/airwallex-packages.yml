@@ -1,0 +1,251 @@
+generated: '2026-08-30'
+method: searched
+source: https://www.airwallex.com/docs/developer-tools/sdks/mobile-sdks
+note: >-
+  Every entry below was resolved against the registry's own metadata endpoint on 2026-08-30 -
+  registry.npmjs.org, repo1.maven.org, pub.dev, trunk.cocoapods.org, repo.packagist.org and the
+  GitHub releases API - so version/published are read values, not prose. `official: true` means the
+  package is owned by the `airwallex` registry account or published from the github.com/airwallex
+  organization. Third-party lookalikes that are NOT Airwallex are recorded at the bottom, because
+  three of them squat the obvious names (npm `airwallex`, PyPI `airwallex`, RubyGems `airwallex`)
+  and an agent picking by name alone would install the wrong thing.
+packages:
+  - language: javascript
+    registry: npm
+    name: '@airwallex/components-sdk'
+    url: https://www.npmjs.com/package/@airwallex/components-sdk
+    install: npm install @airwallex/components-sdk
+    official: true
+    version: 1.35.1
+    published: '2026-08-04'
+    role: Airwallex.js - browser UI Elements (payments, payouts, onboarding, risk, SCA)
+    docs: https://www.airwallex.com/docs/developer-tools/sdks/airwallex.js
+    dist_tags: {latest: 1.35.1, experimental: 1.36.0-alpha.3}
+  - language: javascript
+    registry: npm
+    name: '@airwallex/node-sdk'
+    url: https://www.npmjs.com/package/@airwallex/node-sdk
+    install: npm install @airwallex/node-sdk@beta
+    official: true
+    version: 2.0.0-beta.4
+    published: '2025-07-31'
+    role: server-side TypeScript SDK covering payment acceptance, issuing, accounts, payouts
+    status: beta
+    dist_tags: {latest: 2.0.0-beta.4, beta: 2.1.0-beta.5}
+    decay_note: >-
+      Airwallex's only server-side SDK is still beta and its `latest` tag has not moved since
+      2025-07-31; the `beta` tag last moved 2025-12-31. Meanwhile the API itself has shipped six
+      dated versions in 2026 (2026-02-27 through 2026-08-21). The SDK is more than a year behind the
+      contract it wraps.
+  - language: javascript
+    registry: npm
+    name: '@airwallex/developer-mcp'
+    url: https://www.npmjs.com/package/@airwallex/developer-mcp
+    install: npx -y @airwallex/developer-mcp
+    official: true
+    version: 0.3.0-beta.12
+    published: '2026-01-05'
+    role: local stdio MCP server for agents integrating with Airwallex (sandbox + docs)
+    status: beta
+    note: the remote endpoint https://mcp.sandbox.airwallex.com/developer is the documented default
+  - language: javascript
+    registry: npm
+    name: airwallex-payment-react-native
+    url: https://www.npmjs.com/package/airwallex-payment-react-native
+    install: npm install airwallex-payment-react-native
+    official: true
+    version: 0.4.0
+    published: '2026-08-26'
+    repository: https://github.com/airwallex/airwallex-payment-react-native
+    role: React Native checkout SDK (RN 0.79.3+, iOS 13+, Android API 21+)
+  - language: javascript
+    registry: npm
+    name: '@airwallex/airtracker'
+    url: https://www.npmjs.com/package/@airwallex/airtracker
+    official: true
+    version: 3.2.0
+    published: '2025-10-27'
+    role: client-side logging/telemetry library
+  - language: javascript
+    registry: npm
+    name: '@airwallex/payouts-web-sdk'
+    url: https://www.npmjs.com/package/@airwallex/payouts-web-sdk
+    official: true
+    version: 1.5.0
+    published: '2024-01-15'
+    repository: https://github.com/airwallex/payouts-web-sdk
+    status: superseded
+    note: superseded by @airwallex/components-sdk (Airwallex.js); last release 2024-01-15
+  - language: javascript
+    registry: npm
+    name: airwallex-payment-elements
+    url: https://www.npmjs.com/package/airwallex-payment-elements
+    official: true
+    version: 1.160.0
+    published: '2026-03-25'
+    status: superseded
+    note: >-
+      the package README itself carries an "IMPORTANT NOTICE - being superseded" banner; the
+      replacement is @airwallex/components-sdk
+  - language: swift
+    registry: cocoapods
+    name: Airwallex
+    url: https://cocoapods.org/pods/Airwallex
+    install: "pod 'Airwallex'"
+    official: true
+    version: 6.7.0
+    published: '2026-08-25'
+    repository: https://github.com/airwallex/airwallex-payment-ios
+    role: iOS payment SDK (iOS 13+, Xcode 15.4+); also distributed via Swift Package Manager
+    versions_published: 63
+  - language: swift
+    registry: swift-package-manager
+    name: airwallex-payment-ios
+    url: https://github.com/airwallex/airwallex-payment-ios
+    official: true
+    version: 6.7.0
+    published: '2026-08-25'
+    note: SPM has no central metadata endpoint; version read from the GitHub releases API
+  - language: kotlin
+    registry: maven
+    name: io.github.airwallex:payment
+    url: https://repo1.maven.org/maven2/io/github/airwallex/payment/
+    install: "implementation 'io.github.airwallex:payment:6.11.0'"
+    official: true
+    version: 6.11.0
+    published: '2026-08-25'
+    repository: https://github.com/airwallex/airwallex-payment-android
+    role: Android payment SDK (API 21+)
+    siblings:
+      - io.github.airwallex:payment-card
+      - io.github.airwallex:payment-3ds
+      - io.github.airwallex:payment-googlepay
+      - io.github.airwallex:payment-wechat
+      - io.github.airwallex:payment-redirect
+      - io.github.airwallex:payment-ui-core
+      - io.github.airwallex:payment-components-core
+      - io.github.airwallex:airwallex-core
+      - io.github.airwallex:AirTracker
+  - language: kotlin
+    registry: maven
+    name: io.github.airwallex:RiskSdk
+    url: https://repo1.maven.org/maven2/io/github/airwallex/RiskSdk/
+    official: true
+    version: 1.1.2
+    published: '2026-04-17'
+    repository: https://github.com/airwallex/airwallex-risk-android
+    role: Android device-tracking / fraud-prevention SDK
+  - language: swift
+    registry: github-release
+    name: airwallex-risk-ios
+    url: https://github.com/airwallex/airwallex-risk-ios
+    official: true
+    version: 1.2.3
+    published: '2026-05-25'
+    role: iOS device-tracking / fraud-prevention SDK
+  - language: dart
+    registry: pub.dev
+    name: airwallex_payment_flutter
+    url: https://pub.dev/packages/airwallex_payment_flutter
+    install: 'flutter pub add airwallex_payment_flutter'
+    official: true
+    version: 0.4.0
+    published: '2026-08-26'
+    repository: https://github.com/airwallex/airwallex-payment-flutter
+    role: Flutter checkout plugin (Flutter 3.24.3+)
+  - language: php
+    registry: packagist
+    name: airwallex/payments-plugin-magento
+    url: https://packagist.org/packages/airwallex/payments-plugin-magento
+    install: composer require airwallex/payments-plugin-magento
+    official: true
+    version: 1.23.0
+    published: '2026-07-08'
+    repository: https://github.com/airwallex/paymentacceptance-plugin-magento
+    role: Magento / Adobe Commerce payment plugin
+  - language: shell
+    registry: cdn
+    name: airwallex-cli
+    url: https://static.airwallex.com/developer-tools/airwallex-cli/install.sh
+    install: curl -fsSL https://static.airwallex.com/developer-tools/airwallex-cli/install.sh | sh
+    official: true
+    version: 0.3.1
+    published: '2026-07-22'
+    repository: https://github.com/airwallex/airwallex-cli
+    role: first-party CLI; the broadest-coverage AgentOS connector
+    note: >-
+      Distributed from a CDN install script, not a package registry, so there is no metadata
+      endpoint. The install URL is UNPINNED - it always resolves to whatever the current build is,
+      and a consumer cannot tell from the URL what they are about to install. Version read from the
+      GitHub releases API instead.
+    surface: cli/airwallex-cli.yml
+  - language: javascript
+    registry: github
+    name: airwallex-salesforce-commerce-cloud-cartridge
+    url: https://github.com/airwallex/airwallex-salesforce-commerce-cloud-cartridge
+    official: true
+    version: null
+    published: null
+    note: >-
+      Distributed as a Salesforce Commerce Cloud cartridge from the GitHub repository; no registry
+      and no tagged GitHub release, so there is no published version to record.
+  - language: javascript
+    registry: github
+    name: platform-onboarding-sdk
+    url: https://github.com/airwallex/platform-onboarding-sdk
+    official: true
+    version: null
+    published: null
+    note: >-
+      Checked: no npm package @airwallex/platform-onboarding-sdk exists (registry returns Not
+      found), and the repo has no tagged release. The onboarding widget now ships inside
+      @airwallex/components-sdk.
+package_count: 17
+official_count: 17
+languages: [javascript, typescript, swift, kotlin, dart, php, shell]
+registries: [npm, maven, cocoapods, swift-package-manager, pub.dev, packagist, cdn, github]
+gaps:
+  - language: python
+    note: >-
+      No first-party Airwallex Python SDK on PyPI. The PyPI package named `airwallex` (0.2.1,
+      2026-07-02) is a community project by Cyvid7-Darus10, not Airwallex.
+  - language: ruby
+    note: >-
+      No first-party Ruby gem. RubyGems `airwallex` (0.7.0, 2026-08-28) is published by Sentia
+      (sentia.com.au), not Airwallex.
+  - language: go
+    note: No first-party Go module found on pkg.go.dev or in the GitHub organization.
+  - language: java
+    note: >-
+      The Maven artifacts are Android client SDKs under io.github.airwallex, not a server-side Java
+      SDK. There is no server-side Java, C#/.NET or PHP API client - only a Magento plugin.
+  - area: server-side
+    note: >-
+      Node is the ONLY first-party server-side SDK, and it is still beta. Everything else in the
+      list is a client/mobile/UI library or a storefront plugin.
+not_first_party:
+  note: >-
+    These carry the Airwallex name but are not published by Airwallex. Listed so they are not
+    mistaken for official clients.
+  packages:
+    - registry: npm
+      name: airwallex
+      version: 2.1.0
+      published: '2025-12-01'
+      owner: nswbmw
+      repository: https://github.com/nswbmw/airwallex-node
+    - registry: pypi
+      name: airwallex
+      version: 0.2.1
+      published: '2026-07-02'
+      owner: Cyvid7-Darus10
+    - registry: rubygems
+      name: airwallex
+      version: 0.7.0
+      published: '2026-08-28'
+      owner: Sentia (sentia.com.au)
+    - registry: npm
+      name: '@codespar/mcp-airwallex'
+      version: 0.2.2
+      published: '2026-06-22'
+      note: third-party MCP server; the official ones are in mcp/airwallex-mcp.yml

@@ -4,165 +4,112 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: Airwallex
 providerId: airwallex
 created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-04'
-tags:
-  - Cross-Border Payments
-  - FinTech
-  - Foreign Exchange
-  - Payments
-  - Global
-  - Embedded Finance
-  - Multi-Currency
-description: Machine-readable plans and pricing scaffold for this API provider. Conforms to the API Commons
-  Plans schema. Tier limits and prices are scaffold defaults; replace with provider-published values.
+modified: '2026-08-30'
+generated: '2026-08-30'
+method: searched
+source: https://www.airwallex.com/us/pricing
+note: >-
+  REPLACES the 2026-05-04 scaffold, which invented API-request quota tiers (free 1,000/month,
+  professional 100,000/month, enterprise uncapped) with TBD prices. Airwallex sells nothing of the
+  kind. It publishes three per-seat platform plans and prices the money movement itself as
+  per-transaction fees; there is no metered API-call product and no API-request quota anywhere in
+  its pricing. The Platform API / Embedded Finance surface - the part this catalog entry is about -
+  is explicitly "contact us for custom pricing".
+currency: USD
+billing_period: month
+pricing_model: per-seat platform subscription plus per-transaction fees
+api_metered: false
+api_quota_published: false
+plan_count: 4
 plans:
-  - id: airwallex-free
-    name: Free
+  - id: airwallex-explore
+    name: Explore
     type: freemium
-    description: Free entry tier for the Airwallex API surface. Intended for evaluation, prototyping,
-      and low-volume integrations. Real limits and pricing must be reconciled with the provider's published
-      plan documentation.
-    entries:
-      - label: API Requests
-        description: Monthly API request quota across all included endpoints
-        name: api_requests
-        type: quota
-        metric: requests
-        limit: 1000
-        timeFrame: month
-        geo: global
-        domains:
-          - https://api.airwallex.com/api/v1
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-      - label: Rate Limit
-        description: Maximum requests per minute on the free tier
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 10
-        timeFrame: minute
-        geo: global
-        domains:
-          - https://api.airwallex.com/api/v1
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
+    price: '0.00'
+    currency: USD
+    billing_period: month
+    unit: per user/month
+    audience: businesses managing funds and finances globally
+    included_users: 10 free Spend users
     elements:
-      - name: Public Documentation
-      - name: Community Support
-      - name: Sandbox Access
-      - name: Airwallex Payment Acceptance API
-      - name: Airwallex Global Accounts API
-      - name: Airwallex Payouts API
-      - name: Airwallex FX API
-      - name: Airwallex Issuing API
-      - name: Airwallex Platform API
-  - id: airwallex-pro
-    name: Professional
+      - name: Business Accounts
+        description: Multiple accounts per entity, collect and hold in 20+ currencies, interbank FX rates
+      - name: Free batch transfers to 120+ countries
+      - name: Yield on USD
+        description: 3.22% on USD (rate as published; subject to change)
+      - name: Spend
+        description: Unlimited multi-currency corporate cards with zero international fees, card controls, expense management, bill pay
+      - name: Payments
+        description: Online card and local payment method acceptance globally, like-for-like settlement in 20+ currencies
+      - name: Billing
+        description: Invoicing, subscriptions and usage-based billing
+      - name: Integrations
+        description: Xero and QuickBooks bank feed / expense / bill sync
+  - id: airwallex-grow
+    name: Grow
     type: paid
-    description: Production tier for Airwallex. Provides higher quotas, priority support, and access to
-      the broader API portfolio. Pricing placeholder; align with the provider's pricing page.
-    entries:
-      - label: API Requests
-        description: Monthly API request quota
-        name: api_requests
-        type: quota
-        metric: requests
-        limit: 100000
-        timeFrame: month
-        geo: global
-        domains:
-          - https://api.airwallex.com/api/v1
-        unit: 1
-        price: TBD
-        userMultiplied: false
-      - label: Rate Limit
-        description: Maximum requests per minute on the professional tier
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 100
-        timeFrame: minute
-        geo: global
-        domains:
-          - https://api.airwallex.com/api/v1
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-      - label: Overage
-        description: Per-request price after monthly quota is exceeded
-        name: overage
-        type: metered
-        metric: requests
-        limit: -1
-        timeFrame: month
-        geo: global
-        domains:
-          - https://api.airwallex.com/api/v1
-        unit: 1000
-        price: TBD
-        userMultiplied: false
+    price: '12.00'
+    currency: USD
+    billing_period: month
+    unit: per user/month
+    additional_fee: platform fee based on team size
+    max_users: 250 Spend users
+    audience: growing businesses managing funds and spend with precision
     elements:
-      - name: All Production Endpoints
-      - name: Email Support
-      - name: SLA Targets
-      - name: Webhook Subscriptions
-      - name: Airwallex Payment Acceptance API
-      - name: Airwallex Global Accounts API
-      - name: Airwallex Payouts API
-      - name: Airwallex FX API
-      - name: Airwallex Issuing API
-      - name: Airwallex Platform API
-  - id: airwallex-enterprise
-    name: Enterprise
+      - name: Everything in Explore
+      - name: Yield on USD
+        description: 3.37% on USD
+      - name: Approvals and automation
+        description: Customizable multi-conditional approvals, rules-based automation for expenses and bills
+      - name: Integrations
+        description: NetSuite, Dynamics 365 Business Central, HRIS platforms
+      - name: Single sign-on
+        status: coming soon
+  - id: airwallex-accelerate
+    name: Accelerate
     type: enterprise
-    description: Custom-negotiated tier for Airwallex. Includes dedicated capacity, contractual SLAs,
-      security review, data residency options, and named technical account management.
-    entries:
-      - label: API Requests
-        description: Negotiated request volume; -1 indicates uncapped subject to fair use
-        name: api_requests
-        type: quota
-        metric: requests
-        limit: -1
-        timeFrame: month
-        geo: configurable
-        domains:
-          - https://api.airwallex.com/api/v1
-        unit: 1
-        price: custom
-        userMultiplied: false
-      - label: Rate Limit
-        description: Negotiated burst and steady-state rate
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 1000
-        timeFrame: minute
-        geo: configurable
-        domains:
-          - https://api.airwallex.com/api/v1
-        unit: 1
-        price: custom
-        userMultiplied: false
+    price: custom
+    currency: USD
+    audience: large businesses needing customized financial workflows and support
+    contact: https://www.airwallex.com/signup/contact-sales
     elements:
-      - name: Unlimited / Negotiated Volume
-      - name: 24/7 Dedicated Support
-      - name: Contractual SLA
-      - name: Security & Compliance Review
-      - name: Dedicated Account Manager
-      - name: Custom Data Residency
-      - name: Airwallex Payment Acceptance API
-      - name: Airwallex Global Accounts API
-      - name: Airwallex Payouts API
-      - name: Airwallex FX API
-      - name: Airwallex Issuing API
-      - name: Airwallex Platform API
+      - name: Everything in Grow
+      - name: Yield on USD
+        description: 3.49% on USD
+      - name: Purchase orders and 3-way matching
+      - name: Custom direct Spend API integration with ERP
+      - name: Centralized management across global entities
+        description: up to 3 entities included; custom fees per additional entity
+      - name: Dedicated account manager and onboarding support
+  - id: airwallex-platform-api
+    name: Platform APIs & Embedded Finance
+    type: enterprise
+    price: custom
+    currency: USD
+    audience: platforms and marketplaces embedding Airwallex financial services
+    contact: https://www.airwallex.com/signup/contact-sales
+    note: >-
+      This is the plan that covers the Connected Accounts, Accounts, Payments, Transactional FX,
+      Payouts and Issuing APIs catalogued in this repo. Airwallex publishes NO price for it - the
+      pricing page says only "For Platform API & Embedded Finance use cases get in touch with us to
+      discuss custom pricing". Recorded as a published sales gate, not as an unknown.
+    elements:
+      - name: Connected Accounts
+      - name: Accounts
+      - name: Payments
+      - name: Transactional FX
+      - name: Payouts
+      - name: Issuing
+transaction_fees:
+  published_separately: true
+  note: >-
+    In addition to any monthly plan fee, per-transaction fees apply to FX, transfers and payments
+    processing. Airwallex publishes a detailed fee schedule per region rather than one global table,
+    and the plan fee is charged per business legal entity (one entity may hold many accounts).
+  regional: true
+  regional_note: >-
+    Pricing is region-scoped - www.airwallex.com/<region>/pricing. The figures above are from the
+    United States page.
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com

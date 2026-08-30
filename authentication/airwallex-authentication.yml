@@ -1,30 +1,109 @@
-generated: '2026-07-11'
-method: derived
-source: openapi/airwallex-openapi.yml
+generated: '2026-08-30'
+method: searched
+source: https://www.airwallex.com/docs/api/getting_started
 summary:
   types:
   - apiKey
   - http
+  - oauth2
   api_key_in:
   - header
+  oauth2_flows:
+  - authorizationCode
+  token_lifetime: 30 minutes
+  token_endpoint: POST /api/v1/authentication/login
 schemes:
 - name: BearerAuth
   type: http
   scheme: bearer
-  description: |-
-    Bearer access token obtained via POST /api/v1/authentication/login using
-    `x-client-id` and `x-api-key` request headers.
+  description: 'Bearer access token obtained via POST /api/v1/authentication/login using
+
+    `x-client-id` and `x-api-key` request headers.'
   sources:
-  - openapi/airwallex-openapi.yml
+  - openapi/airwallex-authentication-api-openapi.yml
+  - openapi/airwallex-balances-api-openapi.yml
+  - openapi/airwallex-beneficiaries-api-openapi.yml
+  - openapi/airwallex-customers-api-openapi.yml
+  - openapi/airwallex-payment-intents-api-openapi.yml
+  - openapi/airwallex-payouts-api-openapi.yml
+  - openapi/airwallex-refunds-api-openapi.yml
+  - openapi/airwallex-transfers-api-openapi.yml
 - name: ClientIdHeader
   type: apiKey
   in: header
   parameter: x-client-id
   sources:
-  - openapi/airwallex-openapi.yml
+  - openapi/airwallex-authentication-api-openapi.yml
+  - openapi/airwallex-balances-api-openapi.yml
+  - openapi/airwallex-beneficiaries-api-openapi.yml
+  - openapi/airwallex-customers-api-openapi.yml
+  - openapi/airwallex-payment-intents-api-openapi.yml
+  - openapi/airwallex-payouts-api-openapi.yml
+  - openapi/airwallex-refunds-api-openapi.yml
+  - openapi/airwallex-transfers-api-openapi.yml
 - name: ApiKeyHeader
   type: apiKey
   in: header
   parameter: x-api-key
   sources:
-  - openapi/airwallex-openapi.yml
+  - openapi/airwallex-authentication-api-openapi.yml
+  - openapi/airwallex-balances-api-openapi.yml
+  - openapi/airwallex-beneficiaries-api-openapi.yml
+  - openapi/airwallex-customers-api-openapi.yml
+  - openapi/airwallex-payment-intents-api-openapi.yml
+  - openapi/airwallex-payouts-api-openapi.yml
+  - openapi/airwallex-refunds-api-openapi.yml
+  - openapi/airwallex-transfers-api-openapi.yml
+- name: AirwallexOAuth
+  type: oauth2
+  flows:
+  - flow: authorizationCode
+    scopes: 98
+    consent_roles:
+    - Owner
+    - Admin
+    - Finance Admin
+  audience: third-party partner applications, the Airwallex CLI, and the hosted MCP servers
+  sources:
+  - https://www.airwallex.com/docs/developer-tools/partner-connections/oauth-scopes
+  - https://mcp.airwallex.com/.well-known/oauth-protected-resource/mcp/
+  scopes_artifact: scopes/airwallex-scopes.yml
+  revocation: https://www.airwallex.com/app/integrations/home
+docs:
+  getting_started: https://www.airwallex.com/docs/api/getting_started
+  manage_api_keys: https://www.airwallex.com/docs/developer-tools/api/manage-api-keys
+  api_key_best_practices: https://www.airwallex.com/docs/developer-tools/api/api-key-best-practices
+  oauth_scopes: https://www.airwallex.com/docs/developer-tools/partner-connections/oauth-scopes
+note: Upgraded from derived to searched. The three schemes below were confirmed against the provider's own Get started
+  page, and the OAuth model - which the OpenAPI in this repo does not carry at all - was added from the partner-connections
+  scope reference and the live RFC 9728 metadata on the hosted MCP servers.
+token:
+  endpoint: POST https://api.airwallex.com/api/v1/authentication/login
+  sandbox_endpoint: POST https://api.sandbox.airwallex.com/api/v1/authentication/login
+  request_headers:
+  - x-client-id
+  - x-api-key
+  - 'Content-Type: application/json'
+  response_fields:
+  - token
+  - expires_at
+  lifetime: 30 minutes
+  call_header: 'Authorization: Bearer <token>'
+  rate_limit: 100 requests per minute per API key (fixed, environment-independent)
+  reuse_required: true
+delegation:
+  header: x-on-behalf-of
+  value: connected account id
+  note: platform credentials plus this header call any endpoint for a connected account; no per-account credentials
+    are issued
+key_management:
+  location: Account > Developer > API keys in the Airwallex web app
+  environment_separation: separate keys per environment; NO test/live key prefix
+  best_practices: https://www.airwallex.com/docs/developer-tools/api/api-key-best-practices
+environments:
+- name: production
+  base: https://api.airwallex.com/api/v1
+- name: sandbox
+  base: https://api.sandbox.airwallex.com/api/v1
+sources:
+- https://www.airwallex.com/docs/api/getting_started

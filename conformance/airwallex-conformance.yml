@@ -1,0 +1,179 @@
+generated: '2026-08-30'
+method: searched
+source: https://www.airwallex.com/docs/api/errors
+note: >-
+  Standards posture read from Airwallex's own published surfaces (API reference support pages,
+  developer-tools docs, security.txt, security.airwallex.com trust center, and the live RFC 9728
+  metadata on the hosted MCP servers). Only asserted where there is evidence; `conforms: false`
+  rows are recorded because their absence is a real, useful finding for a payments API.
+standards:
+  - id: oauth2
+    conforms: true
+    evidence: >-
+      OAuth is the authorization model for partner connections, the Airwallex CLI and all three
+      hosted MCP servers; 98 partner-connection scopes are published and the MCP servers advertise
+      35/48 scopes in their protected-resource metadata.
+    source: https://www.airwallex.com/docs/developer-tools/partner-connections/oauth-scopes
+  - id: rfc9728-oauth-protected-resource-metadata
+    conforms: true
+    evidence: >-
+      Both hosted MCP servers return a WWW-Authenticate challenge with a resource_metadata pointer
+      and serve a valid protected-resource document at that path-scoped location, with
+      scopes_supported and bearer_methods_supported.
+    source: https://mcp.airwallex.com/.well-known/oauth-protected-resource/mcp/
+    artifact: well-known/airwallex-oauth-protected-resource-mcp.json
+  - id: rfc6750-bearer-token
+    conforms: true
+    evidence: 'API calls authenticate with Authorization: Bearer <access token>; MCP bearer_methods_supported is ["header"].'
+  - id: rfc9116-security-txt
+    conforms: true
+    evidence: https://www.airwallex.com/.well-known/security.txt with Policy, Contact, Expires, Preferred-Languages, Hiring
+    artifact: well-known/airwallex-security.txt
+  - id: mcp
+    conforms: true
+    version: '2025-06-18'
+    evidence: >-
+      Live MCP handshake against https://mcp.sandbox.airwallex.com/docs returned protocolVersion
+      2025-06-18 and serverInfo {name: Docs MCP Server, version: 1.0.0}; tools/list returned two
+      real tools anonymously.
+    artifact: mcp/airwallex-docs-mcp-tools.json
+  - id: agent-skills
+    conforms: true
+    evidence: >-
+      11 SKILL.md files published under Apache-2.0 in github.com/airwallex/airwallex-marketplace,
+      distributed as plugins to the Claude, Cursor, Codex and Grok plugin marketplaces.
+    artifact: skills/_index.yml
+  - id: openapi
+    conforms: partial
+    evidence: >-
+      Airwallex maintains 48 dated OpenAPI documents (airwallex-openapi-<date>.yaml, each with a
+      published md5) and its docs application is generated from them, but none is served at a
+      fetchable URL. It has the artifact and does not publish it.
+    source: https://www.airwallex.com/docs/api
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: >-
+      Errors are a proprietary JSON object (code/source/message/details/trace_id) returned as
+      application/json; no application/problem+json anywhere in the published error reference.
+  - id: rfc8594-sunset-header
+    conforms: false
+    evidence: >-
+      No Sunset or Deprecation response header is documented. Deprecation is handled by additive
+      date-versioning plus a support-mediated account switch.
+  - id: idempotency
+    conforms: true
+    style: body-field
+    evidence: >-
+      request_id is required on most create/update/validate operations; a replayed value is rejected
+      with the documented `duplicate_request` 400. Note this is a request BODY field, not an
+      Idempotency-Key header, so header-shaped conformance checks will miss it.
+    artifact: conventions/airwallex-conventions.yml
+  - id: idempotency-key-header
+    conforms: false
+    evidence: Airwallex does not implement the IETF Idempotency-Key header draft.
+  - id: webhooks-hmac-signing
+    conforms: true
+    evidence: >-
+      Each webhook request is signed with an HMAC over the request timestamp and body, verified
+      against a per-subscription secret.
+    artifact: asyncapi/airwallex-webhooks.yml
+  - id: asyncapi
+    conforms: false
+    evidence: No AsyncAPI document published; probed /asyncapi.yaml and /asyncapi.json on the docs and API hosts (404).
+  - id: graphql
+    conforms: false
+    evidence: No GraphQL surface documented or discovered.
+  - id: grpc
+    conforms: false
+    evidence: No .proto published in github.com/airwallex or on buf.build.
+  - id: soap-wsdl
+    conforms: false
+    evidence: ?wsdl and ?singleWsdl on api.airwallex.com return 404.
+  - id: a2a-agent-card
+    conforms: false
+    evidence: >-
+      /.well-known/agent-card.json and /.well-known/agent.json return 404 on every Airwallex host
+      probed (www, api, api.sandbox, mcp, mcp.sandbox).
+  - id: pci-dss
+    conforms: true
+    scope: certification
+    evidence: PCI DSS named on the Airwallex trust center; hosted/iframe Elements are positioned as reducing merchant PCI scope.
+    source: https://security.airwallex.com/
+  - id: soc2
+    conforms: true
+    scope: certification
+    source: https://security.airwallex.com/
+  - id: iso-27001
+    conforms: true
+    scope: certification
+    source: https://security.airwallex.com/
+  - id: gdpr
+    conforms: true
+    scope: regulatory
+    source: https://security.airwallex.com/
+  - id: psd2-sca
+    conforms: true
+    scope: regulatory
+    evidence: >-
+      Airwallex publishes Strong Customer Authentication support as a documented compliance-support
+      element family, and ships 3D Secure across acquiring and issuing.
+    source: https://www.airwallex.com/docs/banking-as-a-service/compliance-support/strong-customer-authentication-(sca)
+domain_standards:
+  note: >-
+    Cross-border payments is a market with real domain standards. Below is what the Airwallex
+    CONTRACT and its published references actually declare - not what a marketing page claims.
+    Reward-only: nothing is invented to fill the slot.
+  standards:
+    - id: iso-8583
+      conforms: true
+      role: consumed-and-passed-through
+      evidence: >-
+        Card declines return the raw ISO 8583 issuer response code to the caller in
+        provider_original_response_code and details.original_response_code (e.g. "05" Do not Honor,
+        "51" Insufficient Funds, "14" Invalid Card Number, "59" Suspected fraud, "07" Pick up Card).
+        The sandbox test-card reference documents the code-to-amount trigger mapping explicitly.
+      source: https://www.airwallex.com/docs/payments/troubleshooting/error-response-codes
+      artifact: errors/airwallex-decline-codes.yml
+    - id: emv-3ds
+      conforms: true
+      evidence: >-
+        3D Secure authentication is a first-class documented capability on both the acquiring side
+        (3ds_not_supported / no_3ds_liability_shift error codes, 3DS test scenarios) and the issuing
+        side (3D Secure authentication for issued cards).
+      source: https://www.airwallex.com/docs/issuing/card-controls/3d-secure-authentication
+    - id: card-network-tokenization
+      conforms: true
+      evidence: Network token payment scenarios are published for both Visa and Mastercard in the test-card reference.
+      source: https://www.airwallex.com/docs/payments/test-and-go-live/test-card-numbers
+    - id: avs
+      conforms: true
+      evidence: Address Verification Service scenarios published for acquiring, and address verification documented for issuing.
+      source: https://www.airwallex.com/docs/issuing/transactions/address-verification
+    - id: iso-20022
+      conforms: unknown
+      evidence: >-
+        Airwallex settles into local clearing rails in 120+ countries, but publishes no ISO 20022
+        message type, no pacs/pain/camt reference and no MX message schema in its developer
+        documentation. Not asserted.
+    - id: iso-4217
+      conforms: true
+      evidence: Currency codes throughout the API and docs are ISO 4217 alpha-3 (USD, HKD, AUD, CNY...).
+    - id: iso-3166
+      conforms: true
+      evidence: country_code fields use ISO 3166 alpha-2; the 2026-07-17 version made country_code required in account addresses.
+    - id: fdx
+      conforms: false
+      evidence: No Financial Data Exchange API surface; Airwallex is not a data-aggregation provider.
+    - id: open-banking-obie
+      conforms: false
+      evidence: No OBIE/UK Open Banking read-write API surface published.
+compliance_program:
+  published: true
+  url: https://security.airwallex.com/
+  certifications: [SOC 2, ISO 27001, PCI DSS, GDPR]
+  artifact: security/airwallex-trust-center.yml
+  vulnerability_disclosure:
+    bug_bounty: true
+    policy: https://help.airwallex.com/hc/en-gb/articles/900004502526-Bug-Bounty-Program-Rules
+    contact: bugbounty@airwallex.com
+    artifact: security/airwallex-vulnerability-disclosure.yml

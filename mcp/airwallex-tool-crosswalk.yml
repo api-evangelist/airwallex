@@ -1,0 +1,167 @@
+generated: '2026-08-30'
+method: derived
+source: mcp/airwallex-mcp.yml
+note: >-
+  Airwallex has BOTH an MCP surface and an OpenAPI, so this crosswalk is emitted - but the honest
+  shape of it is unusual and worth stating plainly. The only anonymously-enumerable tool list is the
+  two-tool Docs MCP, and neither of those tools maps to a REST operation: they are documentation
+  retrieval, not account actions. The production AgentOS and sandbox Developer servers DO expose
+  account operations, but their tools/list is OAuth-gated, so their tool NAMES are not public. What
+  IS public for those servers is their OAuth scope set (RFC 9728), and a scope is the closest
+  public proxy for a capability. The scope-to-capability rows below are therefore recorded as
+  `capability_crosswalk`, at low-to-medium confidence, and are NOT presented as tool names.
+  Nothing here was invented; where a mapping could not be established it is left in rest_only or
+  marked gated.
+surfaces:
+  openapi:
+    files:
+      - openapi/airwallex-authentication-api-openapi.yml
+      - openapi/airwallex-balances-api-openapi.yml
+      - openapi/airwallex-beneficiaries-api-openapi.yml
+      - openapi/airwallex-customers-api-openapi.yml
+      - openapi/airwallex-payment-intents-api-openapi.yml
+      - openapi/airwallex-payouts-api-openapi.yml
+      - openapi/airwallex-refunds-api-openapi.yml
+      - openapi/airwallex-transfers-api-openapi.yml
+    gated: false
+    provenance_warning: >-
+      These specs derive from openapi/_original/airwallex-openapi.yml, which describes itself as a
+      "best-effort OpenAPI 3.1 representation ... derived from https://www.airwallex.com/docs/api".
+      They are an API Evangelist reconstruction, not an Airwallex-published contract. Airwallex's
+      own 48 dated OpenAPI documents are named in its docs application but are not downloadable
+      (see lifecycle/airwallex-lifecycle.yml contract_discovery). Confidence on every rest[] binding
+      below is capped accordingly.
+  graphql:
+    present: false
+  mcp:
+    - url: https://mcp.sandbox.airwallex.com/docs
+      gated: false
+      tools_enumerated: true
+      tool_count: 2
+    - url: https://mcp.airwallex.com/mcp
+      gated: true
+      tools_enumerated: false
+      scopes_public: 35
+    - url: https://mcp.sandbox.airwallex.com/developer
+      gated: true
+      tools_enumerated: false
+      scopes_public: 47
+  cli:
+    binary: airwallex
+    note: >-
+      The CLI is the third agent surface and the only one that self-describes without auth on the
+      user's own machine - `airwallex --tree` enumerates every command and
+      `airwallex <cmd> --api-schema-only` prints the backing endpoint's schema. For an agent that
+      can shell out, that is a richer crosswalk than anything published on the web.
+    artifact: cli/airwallex-cli.yml
+crosswalk:
+  - tool: read_integration_best_practices
+    category: documentation
+    server: airwallex-docs
+    rest: []
+    binding: none
+    confidence: high
+    note: Documentation retrieval tool; no backing REST operation by design.
+  - tool: search_public_docs
+    category: documentation
+    server: airwallex-docs
+    rest: []
+    binding: none
+    confidence: high
+    note: >-
+      Documentation search over Airwallex product, API and SDK docs. Parameters question, source.
+      No backing REST operation.
+mcp_only:
+  - tool: read_integration_best_practices
+    reason: documentation tool, deliberately not an API operation
+  - tool: search_public_docs
+    reason: documentation search over the docs corpus, not the account API
+capability_crosswalk:
+  note: >-
+    Public OAuth scopes on the gated MCP servers, mapped to the OpenAPI operations in this repo that
+    fall inside them. This is a capability mapping, not a tool mapping - the scope grants access to
+    a family of operations, and the server's actual tool names are unknown until an authenticated
+    tools/list is run.
+  rows:
+    - scope: r:awx_action:balances_view
+      servers: [production, sandbox]
+      rest: [getCurrentBalances]
+      confidence: high
+    - scope: r:awx_action:pa_view
+      servers: [production, sandbox]
+      rest: [getPaymentIntent, getRefund]
+      confidence: medium
+      note: pa = payment acceptance; the read side of payment intents, refunds, disputes and payment methods
+    - scope: w:awx_action:pa_edit
+      servers: [sandbox]
+      rest: [createPaymentIntent, confirmPaymentIntent, capturePaymentIntent, cancelPaymentIntent, createRefund]
+      confidence: medium
+      note: >-
+        SANDBOX ONLY. The production scope set has no pa_edit, which is the machine-readable form of
+        Airwallex's stated "no money-out actions by default" guardrail.
+    - scope: r:awx_action:transfers_view
+      servers: [production, sandbox]
+      rest: [getTransfer, getPayout]
+      confidence: medium
+    - scope: w:awx_action:transfers_edit
+      servers: [sandbox]
+      rest: [createTransfer, createPayout]
+      confidence: medium
+      note: SANDBOX ONLY - absent from the production scope set.
+    - scope: r:awx_action:contact_management_view
+      servers: [production, sandbox]
+      rest: [listBeneficiaries, getBeneficiary]
+      confidence: medium
+      note: beneficiaries/payees are managed under contact management
+    - scope: w:awx_action:contact_management_edit
+      servers: [production, sandbox]
+      rest: [createBeneficiary]
+      confidence: medium
+    - scope: r:org_action:billing.customer_view
+      servers: [production, sandbox]
+      rest: [getCustomer]
+      confidence: low
+      note: >-
+        The Billing customer object and the payment-acceptance Customer object are different
+        entities in Airwallex; this row is low confidence for exactly that reason.
+    - scope: w:org_action:billing.customer_edit
+      servers: [production, sandbox]
+      rest: [createCustomer]
+      confidence: low
+    - scope: r:awx_action:conversions_view
+      servers: [production, sandbox]
+      rest: []
+      confidence: high
+      note: Transactional FX conversions - no operation for this in the reconstructed spec (rest_only gap in reverse).
+    - scope: r:awx_action:issuing_cards_view
+      servers: [production, sandbox]
+      rest: []
+      confidence: high
+      note: Issuing is entirely absent from the reconstructed spec.
+    - scope: w:awx_action:simulation_edit
+      servers: [sandbox]
+      rest: []
+      confidence: high
+      note: >-
+        Sandbox simulation APIs (drive a transfer/authorization/dispute state machine forward). No
+        equivalent exists in production, and none in the reconstructed spec.
+rest_only:
+  - capability: Authentication
+    operations: [login]
+    reason: >-
+      Token exchange is handled by the connector itself (CLI/MCP OAuth), so it is never exposed as
+      an agent tool.
+uncovered_products:
+  note: >-
+    Products Airwallex documents and prices, that the OpenAPI in this repo does not describe at all.
+    Recorded so the gap is visible rather than implied.
+  products: [Issuing, Transactional FX, Billing, Spend, Connected Accounts, Global Treasury, Banking as a Service, Linked Accounts, Deposits, Disputes, Payment Links]
+coverage:
+  tools_named: 2
+  tools_bound_to_rest: 0
+  mcp_only: 2
+  mcp_servers_gated: 2
+  scopes_public_total: 82
+  capability_rows: 12
+  rest_operations_total: 18
+  rest_operations_with_a_capability_row: 17

@@ -1,0 +1,117 @@
+generated: '2026-08-30'
+method: searched
+source: https://github.com/airwallex/airwallex-marketplace
+note: >-
+  Airwallex publishes its own Agent Skills in a public repository, distributed as agent plugins
+  (airwallex-agentos and airwallex-dev) through the Claude, Cursor, Codex and Grok plugin
+  marketplaces. Every file below is saved VERBATIM from
+  https://github.com/airwallex/airwallex-marketplace (branch master, Apache-2.0) — none were
+  authored by API Evangelist. Reference-file bundles that ship alongside each SKILL.md
+  (references/*.md) were not copied; the upstream repo is authoritative for those.
+publisher:
+  name: Airwallex
+  repository: https://github.com/airwallex/airwallex-marketplace
+  license: Apache-2.0
+  docs: https://www.airwallex.com/docs/developer-tools/ai/agentos.md
+plugins:
+  - name: airwallex-agentos
+    version: 0.2.4
+    description: >-
+      Production connectors + finance workflow skills. Runs against a production Airwallex account
+      via the Airwallex CLI or the Airwallex AgentOS MCP server.
+    connectors: [Airwallex CLI, Airwallex AgentOS MCP]
+    status: beta
+  - name: airwallex-dev
+    version: 0.1.0
+    description: >-
+      Integration code-generation skills for coding agents. Runs against the Airwallex sandbox via
+      the Airwallex Developer MCP / Docs MCP.
+    connectors: [Airwallex Developer MCP, Airwallex Docs MCP]
+skills:
+  - file: airwallex-agentos-awx-best-practices.md
+    name: awx-best-practices
+    plugin: airwallex-agentos
+    category: Foundation
+    version: 0.1.0
+    description: >-
+      Always-on guardrail skill for ad-hoc operations, troubleshooting, and domains not covered by a
+      workflow skill (payment links, refunds, disputes, spend management, financial reports).
+    source: https://github.com/airwallex/airwallex-marketplace/tree/master/plugins/airwallex-agentos/skills/awx-best-practices
+  - file: airwallex-agentos-beneficiary-creation.md
+    name: beneficiary-creation
+    plugin: airwallex-agentos
+    category: Payouts
+    version: 0.1.0
+    description: >-
+      Extract bank details from supplier documents, validate against per-country beneficiary schemas,
+      and create beneficiaries. Money movement is explicitly out of scope.
+    source: https://github.com/airwallex/airwallex-marketplace/tree/master/plugins/airwallex-agentos/skills/beneficiary-creation
+  - file: airwallex-agentos-card-provisioning.md
+    name: card-provisioning
+    plugin: airwallex-agentos
+    category: Issuing
+    version: 0.1.0
+    description: Create cardholders and provision virtual or physical corporate cards with spend limits.
+    source: https://github.com/airwallex/airwallex-marketplace/tree/master/plugins/airwallex-agentos/skills/card-provisioning
+  - file: airwallex-agentos-contract-to-billing.md
+    name: contract-to-billing
+    plugin: airwallex-agentos
+    category: Billing
+    version: 0.1.0
+    description: >-
+      Extract billing details from purchase orders, contracts or quotes; match against existing
+      customers/products/prices; create invoices and subscriptions.
+    source: https://github.com/airwallex/airwallex-marketplace/tree/master/plugins/airwallex-agentos/skills/contract-to-billing
+  - file: airwallex-agentos-manage-cashflow.md
+    name: manage-cashflow
+    plugin: airwallex-agentos
+    category: Treasury
+    version: 0.1.0
+    description: >-
+      Aggregate multi-currency balances, receivables and obligations; analyze FX exposure; manage
+      indicative quotes.
+    source: https://github.com/airwallex/airwallex-marketplace/tree/master/plugins/airwallex-agentos/skills/manage-cashflow
+  - file: airwallex-dev-hpp.md
+    name: airwallex-hpp
+    plugin: airwallex-dev
+    category: Payments
+    description: Generate Hosted Payment Page (redirect checkout) integration code.
+    source: https://github.com/airwallex/airwallex-marketplace/tree/master/plugins/airwallex-dev/skills/airwallex-hpp
+  - file: airwallex-dev-dropin.md
+    name: airwallex-dropin
+    plugin: airwallex-dev
+    category: Payments
+    description: Generate Drop-in Element integration code (multi-method embedded UI, Apple Pay, Google Pay).
+    source: https://github.com/airwallex/airwallex-marketplace/tree/master/plugins/airwallex-dev/skills/airwallex-dropin
+  - file: airwallex-dev-split-card.md
+    name: airwallex-split-card
+    plugin: airwallex-dev
+    category: Payments
+    description: Generate Split Card Element integration code (separate number/expiry/CVC inputs).
+    source: https://github.com/airwallex/airwallex-marketplace/tree/master/plugins/airwallex-dev/skills/airwallex-split-card
+  - file: airwallex-dev-billing-checkout.md
+    name: airwallex-billing-checkout
+    plugin: airwallex-dev
+    category: Billing
+    description: >-
+      Generate Hosted Billing Checkout integration code for subscriptions, one-off payments and
+      card-saving, including free trials, coupons and webhooks.
+    source: https://github.com/airwallex/airwallex-marketplace/tree/master/plugins/airwallex-dev/skills/airwallex-billing-checkout
+  - file: airwallex-dev-kyc.md
+    name: airwallex-kyc
+    plugin: airwallex-dev
+    category: Connected Accounts
+    description: Generate Connected Account KYC onboarding code (embedded KYC element or hosted flow).
+    source: https://github.com/airwallex/airwallex-marketplace/tree/master/plugins/airwallex-dev/skills/airwallex-kyc
+  - file: airwallex-dev-ai-provider-card-mit.md
+    name: airwallex-ai-provider-card-mit
+    plugin: airwallex-dev
+    category: Payments
+    description: >-
+      Produce an implementation plan for card-on-file, merchant-initiated flows used by AI providers —
+      top-ups, auto-recharge and subscriptions.
+    source: https://github.com/airwallex/airwallex-marketplace/tree/master/plugins/airwallex-dev/skills/airwallex-ai-provider-card-mit
+coverage:
+  skills_published: 11
+  skills_saved: 11
+  authored_by_api_evangelist: 0

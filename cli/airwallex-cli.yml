@@ -1,0 +1,111 @@
+generated: '2026-08-30'
+method: searched
+source: https://www.airwallex.com/docs/developer-tools/cli
+name: airwallex
+repository: https://github.com/airwallex/airwallex-cli
+docs: https://www.airwallex.com/docs/developer-tools/cli
+description: >-
+  First-party Airwallex CLI. Exposes a broad slice of the Airwallex API as terminal commands for
+  reading and writing production and sandbox resources. Airwallex positions it as the BROADEST-
+  coverage connector of the three AgentOS connectors and the recommended one for scripts, CI and
+  terminal-based AI agents.
+platforms: [macOS, Linux]
+platform_note: No Windows build is published.
+install:
+  - method: install script
+    command: curl -fsSL https://static.airwallex.com/developer-tools/airwallex-cli/install.sh | sh
+    target: ~/.local/bin/airwallex
+    note: auto-detects OS and architecture
+uninstall: rm ~/.local/bin/airwallex
+prerequisites:
+  - macOS or Linux
+  - curl available on PATH
+  - write access to ~/.local/bin
+authentication:
+  scheme: OAuth
+  sandbox_default: true
+  commands:
+    login_sandbox: airwallex auth login
+    login_production: airwallex auth login --prod
+    login_scoped: airwallex auth login --prod --scope=balance:read
+    whoami: airwallex auth whoami
+    logout: airwallex auth logout
+  scopes: scopes/airwallex-scopes.yml
+  roles_required: [Owner, Admin, Finance Admin]
+  roles_note: >-
+    Only these roles can complete the OAuth consent flow, so a lesser-privileged user cannot
+    authorize the CLI at all.
+  credential_storage: one credential set at a time; login replaces the previous one
+  revocation:
+    local: airwallex auth logout (clears local tokens only, does not revoke)
+    full: https://www.airwallex.com/app/integrations/home
+agent_affordances:
+  note: >-
+    Unusually, this CLI is explicitly designed for agent consumption, and the flags below are the
+    reason. Self-description (--tree), rehearsal (--dry-run), schema introspection
+    (--api-schema-only) and machine output (--compact) are the four things an agent needs and
+    almost no vendor CLI ships together.
+  discovery:
+    - flag: --tree
+      command: airwallex --tree
+      description: list every command and sub-command with a short description
+    - flag: --tree <resource>
+      command: airwallex --tree invoices
+      description: list only the commands under one resource
+  dry_run:
+    flag: --dry-run
+    command: airwallex --dry-run products list
+    description: preview the API request a resource command would issue, without executing it
+  schema_introspection:
+    flag: --api-schema-only
+    command: airwallex products update --api-schema-only
+    description: >-
+      print the schema of the API endpoint a resource command invokes. This is the only
+      machine-readable contract surface Airwallex exposes to an unauthenticated-to-the-web caller,
+      since the OpenAPI itself is not downloadable.
+  machine_output:
+    flag: --compact
+    command: airwallex --compact meters list --page-size=1
+    description: compact JSON for scripts and agents
+  stdin_input:
+    flag: --data-stdin
+    description: pipe a JSON body into a write command
+  confirmation:
+    default: write actions require interactive confirmation
+    override_flag: --confirm
+    note: >-
+      Even with --confirm, money-out actions (transfers, FX conversions, payouts) are not initiated
+      on the user's behalf by default.
+  help: airwallex -h
+commands:
+  note: >-
+    Airwallex does not publish a flat command list in the docs; `airwallex --tree` is the
+    authoritative enumeration. Groups confirmed from the published examples and the AgentOS skills
+    are listed below rather than a guessed full surface.
+  groups:
+    - group: auth
+      commands: [login, logout, whoami]
+    - group: products
+      commands: [list, create, update]
+    - group: invoices
+    - group: meters
+      commands: [list]
+    - group: feedback
+      commands: ['airwallex feedback "<message>"']
+  pagination_flag: --page-size
+global_options:
+  - flag: --tree
+  - flag: --dry-run
+  - flag: --compact
+  - flag: --confirm
+  - flag: --no-telemetry
+  - flag: --data-stdin
+  - flag: --api-schema-only
+telemetry:
+  enabled_by_default: true
+  opt_out_env: DISABLE_TELEMETRY
+  opt_out_flag: --no-telemetry
+shell_completion: airwallex completion zsh --help
+known_limitations:
+  - Card and Issuing commands require additional account permissions; a 403 there means support must enable access.
+  - No Windows support.

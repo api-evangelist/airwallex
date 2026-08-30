@@ -4,116 +4,130 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: Airwallex
 providerId: airwallex
 created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-04'
+modified: '2026-08-30'
+generated: '2026-08-30'
+method: searched
+source: https://www.airwallex.com/docs/developer-tools/api/rate-limits
+note: >-
+  REPLACES the 2026-05-04 scaffold, which invented free / professional / enterprise tiers with
+  10 / 100 / 1000 requests-per-minute and X-RateLimit-* response headers. Airwallex publishes none
+  of those: limits are per environment (not per plan), they are expressed per SECOND, and no
+  rate-limit response header is documented at all. Every figure below is read off the provider's
+  published rate-limits page.
 tags:
   - Cross-Border Payments
   - FinTech
-  - Foreign Exchange
   - Payments
-  - Global
-  - Embedded Finance
-  - Multi-Currency
   - Rate Limiting
-  - Quotas
   - Throttling
-description: Machine-readable rate limit definitions for the Airwallex API surface. Captures per-tier
-  quotas, burst behavior, response signaling, and recovery semantics. Defaults are scaffold values to
-  be replaced with published provider limits.
+description: >-
+  Published Airwallex API rate and concurrency limits. Airwallex enforces two distinct controls -
+  a rate limit (requests over a rolling window) and a concurrency limit (in-flight requests) - at
+  three levels: global (all endpoints for an account/org), endpoint (one operation across all
+  resources), and resource (one specific resource id). The authentication endpoint is carved out
+  with its own fixed limit.
 headers:
-  limit: X-RateLimit-Limit
-  remaining: X-RateLimit-Remaining
-  reset: X-RateLimit-Reset
-  retryAfter: Retry-After
-  policy: RateLimit-Policy
+  documented: false
+  note: >-
+    Airwallex documents NO rate-limit response headers. There is no X-RateLimit-Limit,
+    X-RateLimit-Remaining, X-RateLimit-Reset, RateLimit-Policy or Retry-After in the published
+    contract. An agent cannot read its remaining budget from a response; it must track its own rate
+    and back off on 429. This is a real gap, recorded rather than papered over.
 responseCodes:
   throttled: 429
   quotaExceeded: 429
-  serviceUnavailable: 503
+errorEnvelope:
+  code: too_many_requests
+  message: Rate Limit Exceeded.
+  trace_id: '<trace id>'
+  details: {}
 limits:
-  - tier: free
-    name: Free Tier Default
-    scope: api-key
-    metric: requests_per_minute
+  - name: Production global rate limit
+    scope: account-or-organization
+    level: global
+    environment: production
+    metric: requests_per_second
+    limit: 100
+    timeFrame: second
+    applies: [all public Airwallex API endpoints]
+  - name: Production per-endpoint rate limit
+    scope: endpoint
+    level: endpoint
+    environment: production
+    metric: requests_per_second
+    limit: 20
+    timeFrame: second
+    note: counted separately per operation, but every call also counts toward the global limit
+  - name: Production global concurrency limit
+    scope: account-or-organization
+    level: global
+    environment: production
+    metric: concurrent_requests
+    limit: 50
+    note: in-flight requests awaiting a response
+  - name: Sandbox global rate limit
+    scope: account-or-organization
+    level: global
+    environment: sandbox
+    metric: requests_per_second
+    limit: 20
+    timeFrame: second
+  - name: Sandbox per-endpoint rate limit
+    scope: endpoint
+    level: endpoint
+    environment: sandbox
+    metric: requests_per_second
     limit: 10
-    burst: 20
-    timeFrame: minute
-    applies:
-      - Airwallex Payment Acceptance API
-      - Airwallex Global Accounts API
-      - Airwallex Payouts API
-      - Airwallex FX API
-      - Airwallex Issuing API
-      - Airwallex Platform API
-  - tier: free
-    name: Free Tier Monthly Quota
+    timeFrame: second
+  - name: Sandbox global concurrency limit
+    scope: account-or-organization
+    level: global
+    environment: sandbox
+    metric: concurrent_requests
+    limit: 10
+  - name: Authentication endpoint limit
     scope: api-key
-    metric: requests_per_month
-    limit: 1000
-    timeFrame: month
-    applies:
-      - Airwallex Payment Acceptance API
-      - Airwallex Global Accounts API
-      - Airwallex Payouts API
-      - Airwallex FX API
-      - Airwallex Issuing API
-      - Airwallex Platform API
-  - tier: professional
-    name: Professional Tier Default
-    scope: api-key
+    level: endpoint
+    environment: all
     metric: requests_per_minute
     limit: 100
-    burst: 200
     timeFrame: minute
-    applies:
-      - Airwallex Payment Acceptance API
-      - Airwallex Global Accounts API
-      - Airwallex Payouts API
-      - Airwallex FX API
-      - Airwallex Issuing API
-      - Airwallex Platform API
-  - tier: professional
-    name: Professional Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 100000
-    timeFrame: month
-    applies:
-      - Airwallex Payment Acceptance API
-      - Airwallex Global Accounts API
-      - Airwallex Payouts API
-      - Airwallex FX API
-      - Airwallex Issuing API
-      - Airwallex Platform API
-  - tier: enterprise
-    name: Enterprise Negotiated Limit
-    scope: contract
-    metric: requests_per_minute
-    limit: 1000
-    burst: 5000
-    timeFrame: minute
-    applies:
-      - Airwallex Payment Acceptance API
-      - Airwallex Global Accounts API
-      - Airwallex Payouts API
-      - Airwallex FX API
-      - Airwallex Issuing API
-      - Airwallex Platform API
+    endpoint: POST /api/v1/authentication/login
+    note: >-
+      A separate fixed limit that does not follow the structure above and applies regardless of
+      account or environment. Access tokens are valid for 30 minutes and are meant to be cached and
+      reused; authenticating per request will exhaust this limit.
+  - name: Resource-level limits
+    scope: resource
+    level: resource
+    environment: all
+    metric: requests_per_second
+    limit: null
+    note: >-
+      Certain resources carry their own rate and concurrency limits on a single resource id (for
+      example POST /api/v1/pa/payment_intents/{id}/confirm on one intent). Airwallex documents these
+      per operation in the API Reference and publishes no global number, so this is recorded as
+      present-but-unquantified rather than guessed.
+limit_count: 8
 policies:
-  - name: Backoff Strategy
-    description: Clients should implement exponential backoff with jitter, honoring the Retry-After header
-      when present.
-  - name: Burst Handling
-    description: Short bursts above the steady-state limit are tolerated up to the documented burst ceiling
-      before throttling engages.
-  - name: Quota Reset
-    description: Monthly quotas reset at the start of each calendar month in UTC. Per-minute and per-second
-      windows reset on a sliding-window basis.
-  - name: Fair Use
-    description: Even on uncapped enterprise tiers, sustained usage that materially impacts shared infrastructure
-      may be subject to fair-use throttling.
+  - name: Backoff strategy
+    description: >-
+      On a 429, retry with exponential backoff plus random jitter - 1s, 2s, 4s, doubling to a
+      ceiling of roughly 16s. Jitter is explicitly called for so clients do not synchronize retries.
+  - name: Client-side throttling
+    description: >-
+      For scheduled batch tasks and high-volume operations, implement client-side throttling to stay
+      within the account and endpoint limits rather than relying on 429s.
+  - name: Uplift
+    description: >-
+      Higher production limits, including temporary uplifts for events such as a flash sale, are
+      arranged through Airwallex support rather than self-serve.
+    contact: https://help.airwallex.com/hc/en-gb/requests/new
+  - name: Load testing
+    description: >-
+      Airwallex discourages load testing in the sandbox - its lower limits and mock mechanisms
+      produce misleading results. It recommends mocking the Airwallex API with production-measured
+      latency instead.
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com

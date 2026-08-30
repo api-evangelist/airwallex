@@ -1,4 +1,4 @@
-generated: '2026-07-11'
+generated: '2026-08-30'
 method: searched
 probe: true
 source: https://security.airwallex.com/
@@ -14,6 +14,5 @@ evidence:
   - soc 2
   - iso/iec 27001
   - pci dss
-  - pci-dss
   - trust center
   - gdpr

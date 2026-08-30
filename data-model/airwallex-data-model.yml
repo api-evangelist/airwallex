@@ -1,0 +1,132 @@
+generated: '2026-08-30'
+method: derived
+source: openapi/
+docs: https://www.airwallex.com/docs/api
+note: >-
+  Entity graph for the Airwallex money-movement core. Derived from the operation surface in
+  openapi/ and cross-checked against Airwallex's own product documentation and the id prefixes that
+  appear verbatim in its published examples. Entities Airwallex documents but that the spec in this
+  repo does not cover (Issuing, Billing, Spend, Connected Accounts, Transactional FX) are listed
+  under uncovered_entities rather than modeled from guesswork.
+id_prefixes:
+  note: >-
+    Airwallex uses typed, prefixed identifiers on the payment-acceptance side and bare UUIDs on the
+    treasury/FX side. Prefixes below appear in published documentation examples.
+  observed:
+    - prefix: int_
+      entity: PaymentIntent
+      example: int_hkpdp4tjth9mt2both9
+      source: https://www.airwallex.com/docs/developer-tools/api/rate-limits
+    - prefix: tr_
+      entity: Transfer
+      example: tr_wn7uEO-YPxmPr2w5JNKb1A
+      source: https://www.airwallex.com/docs/developer-tools/api/rate-limits
+  untyped:
+    - entity: Conversion
+      format: UUID
+      example: a74317c0-ed25-4e6e-82b2-82baa5cd9c20
+      source: https://www.airwallex.com/docs/transactional-fx/amendments/cancel-a-conversion
+entities:
+  - name: Account
+    description: >-
+      An Airwallex account (or a connected account under a platform). Carries a status lifecycle of
+      ACTIVE / SUSPENDED / DORMANT / CLOSED as of API version 2026-08-21.
+    operations: []
+    statuses: [ACTIVE, SUSPENDED, DORMANT, CLOSED]
+    events: [account.active, account.connected, account.submitted, account.suspended, account.dormant, account.closed]
+  - name: Balance
+    description: Current multi-currency wallet balance for an account.
+    operations: [getCurrentBalances]
+    events: [balance.adjustment, balance.ga.top_up, balance.va.top_up]
+  - name: Customer
+    description: A shopper record that can hold saved payment methods and consents.
+    operations: [createCustomer, getCustomer]
+  - name: PaymentIntent
+    description: >-
+      The central payment-acceptance object. Created, confirmed, optionally captured, and either
+      cancelled (pre-capture) or refunded (post-capture).
+    operations: [createPaymentIntent, getPaymentIntent, confirmPaymentIntent, capturePaymentIntent, cancelPaymentIntent]
+    id_prefix: int_
+    events: [payment_intent.created, payment_intent.succeeded, payment_intent.cancelled]
+    reversal: conventions/airwallex-conventions.yml
+  - name: Refund
+    description: A full or partial return of a captured payment.
+    operations: [createRefund, getRefund]
+    events: [refund.succeeded, refund.failed]
+  - name: Beneficiary
+    description: >-
+      A payee with country-specific bank details. Validated against per-country schemas; a verify
+      operation checks a candidate payload before the record exists.
+    operations: [listBeneficiaries, createBeneficiary, getBeneficiary]
+  - name: Transfer
+    description: An outbound payment to a beneficiary.
+    operations: [createTransfer, getTransfer]
+    id_prefix: tr_
+  - name: Payout
+    description: A cross-border payout; batch payouts group many transfers under one funding event.
+    operations: [createPayout, getPayout]
+    events: [payout.created, payout.succeeded, payout.failed]
+  - name: AccessToken
+    description: Short-lived bearer token (30 minutes) exchanged from Client ID + API key.
+    operations: [login]
+relationships:
+  - from: Account
+    to: Balance
+    type: has_many
+    via: currency
+  - from: Account
+    to: Beneficiary
+    type: has_many
+  - from: Customer
+    to: PaymentIntent
+    type: has_many
+    via: customer_id
+  - from: PaymentIntent
+    to: Refund
+    type: has_many
+    via: payment_intent_id
+  - from: Refund
+    to: PaymentIntent
+    type: belongs_to
+    via: payment_intent_id
+  - from: Beneficiary
+    to: Transfer
+    type: has_many
+    via: beneficiary_id
+  - from: Transfer
+    to: Beneficiary
+    type: belongs_to
+    via: beneficiary_id
+  - from: Payout
+    to: Transfer
+    type: has_many
+    via: batch
+  - from: Transfer
+    to: Balance
+    type: debits
+    via: source_currency
+  - from: PaymentIntent
+    to: Balance
+    type: credits
+    via: settlement_currency
+  - from: Account
+    to: Account
+    type: has_many
+    via: x-on-behalf-of
+    note: a platform account owns connected accounts and calls their endpoints with the x-on-behalf-of header
+uncovered_entities:
+  note: >-
+    Airwallex documents these entities; they are absent from the OpenAPI held in this repo, so they
+    are NAMED here rather than modeled. Their real shapes live in Airwallex's own 48 dated OpenAPI
+    documents, which are not publicly downloadable.
+  entities:
+    - {product: Issuing, entities: [Cardholder, Card, Authorization, CardTransaction, TransactionLifecycle, TransactionEvent]}
+    - {product: Billing, entities: [Product, Price, Subscription, Invoice, CreditNote, Coupon, PaymentSource, UsageMeter, BillingCheckout]}
+    - {product: Spend, entities: [Bill, PurchaseOrder, Expense, ReimbursementReport, Vendor]}
+    - {product: 'Transactional FX', entities: [Quote, Conversion, ConversionAmendment]}
+    - {product: 'Connected Accounts', entities: [ConnectedAccount, Charge, CATransfer, RFI]}
+    - {product: Accounts, entities: [GlobalAccount, Deposit, LinkedAccount, DirectDebit]}
+    - {product: Payments, entities: [PaymentMethod, PaymentConsent, PaymentAttempt, PaymentDispute, PaymentLink, FundsSplit]}
+entity_count: 9
+relationship_count: 11
+event_catalog: asyncapi/airwallex-webhooks.yml

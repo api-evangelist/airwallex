@@ -1,0 +1,231 @@
+generated: '2026-08-30'
+method: searched
+source: https://www.airwallex.com/docs/api/versioning
+versioning:
+  scheme: date-version
+  current: '2026-08-21'
+  preview: '2026-12-01'
+  selector: x-api-version request header, defaulting to the version pinned on the account
+  url_path_version: v1
+  docs: https://www.airwallex.com/docs/api/versioning
+  version_count: 48
+  first_version: '2017-01-01'
+  note: 'Airwallex ships one dated API version per breaking change and keeps every one of them documented and selectable.
+    The docs application enumerates all of them - version, spec filename and an md5 of that spec - in its own page
+    data. That version list is the strongest available evidence of a real versioning discipline, and it is reproduced
+    below verbatim. The referenced airwallex-openapi-<date>.yaml files are NOT publicly downloadable: every path
+    under /docs/api/ that is not a built asset returns a 307 to /docs/api/introduction with an S3 NoSuchKey body,
+    and /docs/api-spec/<anything> returns the docs SPA shell. See contract_discovery below.'
+versions:
+- version: '2017-01-01'
+  spec_file: airwallex-openapi-2017-01-01.yaml
+  md5: fb055f3470c40ad12551cc300ac6d289
+- version: '2019-09-09'
+  spec_file: airwallex-openapi-2019-09-09.yaml
+  md5: 4b8f57e8c33ca4fc53205cc51b99b5a1
+- version: '2020-04-30'
+  spec_file: airwallex-openapi-2020-04-30.yaml
+  md5: 633bf936af0b639db5cefdf9045048b3
+- version: '2020-09-28'
+  spec_file: airwallex-openapi-2020-09-28.yaml
+  md5: 911aaa96793a40e7015bd269764d4168
+- version: '2020-11-08'
+  spec_file: airwallex-openapi-2020-11-08.yaml
+  md5: a7c2942c28d9fa995f97d44821a7c57b
+- version: '2020-12-06'
+  spec_file: airwallex-openapi-2020-12-06.yaml
+  md5: f6c9ba4056afa51bfe47db6e5ccd45c5
+- version: '2021-02-28'
+  spec_file: airwallex-openapi-2021-02-28.yaml
+  md5: 7d65c148a2fc07871297c41c3f6d7b85
+- version: '2021-07-01'
+  spec_file: airwallex-openapi-2021-07-01.yaml
+  md5: 5ba245ea25fb2b89feed4d15a30902ff
+- version: '2021-08-06'
+  spec_file: airwallex-openapi-2021-08-06.yaml
+  md5: 9863a8ff0d987bd843f4f1b1bc34a90c
+- version: '2021-10-11'
+  spec_file: airwallex-openapi-2021-10-11.yaml
+  md5: 7560f31680c06b7bc9637f636bd910e3
+- version: '2021-11-25'
+  spec_file: airwallex-openapi-2021-11-25.yaml
+  md5: a97c1f401f0348ea5f86cf5ffed68efb
+- version: '2022-02-16'
+  spec_file: airwallex-openapi-2022-02-16.yaml
+  md5: dd5040e699533ff2744c1b80b71e1045
+- version: '2022-09-09'
+  spec_file: airwallex-openapi-2022-09-09.yaml
+  md5: 00a305b273906302b9c4555c18cdd638
+- version: '2022-10-04'
+  spec_file: airwallex-openapi-2022-10-04.yaml
+  md5: 035e7a8571f1718145b1ce96541d2c05
+- version: '2022-10-10'
+  spec_file: airwallex-openapi-2022-10-10.yaml
+  md5: 9c24ad59d7a24934bef0cbae2d267d18
+- version: '2022-10-14'
+  spec_file: airwallex-openapi-2022-10-14.yaml
+  md5: a180bfb6601293b905331298f6f46870
+- version: '2022-11-11'
+  spec_file: airwallex-openapi-2022-11-11.yaml
+  md5: 8c7cc5c81700706e3a42c38fe92d4694
+- version: '2022-11-14'
+  spec_file: airwallex-openapi-2022-11-14.yaml
+  md5: 2a8888473b7de43f81f62780e6a8f063
+- version: '2022-12-13'
+  spec_file: airwallex-openapi-2022-12-13.yaml
+  md5: c70600ea3199fb3c292f6828983baa13
+- version: '2023-04-15'
+  spec_file: airwallex-openapi-2023-04-15.yaml
+  md5: 948fb3af96c57910dfab6c7abe7314e4
+- version: '2023-06-01'
+  spec_file: airwallex-openapi-2023-06-01.yaml
+  md5: 29d87d364f650425562e01a0090180a8
+- version: '2023-06-15'
+  spec_file: airwallex-openapi-2023-06-15.yaml
+  md5: 67c6921756384072a59b04ab812ad168
+- version: '2023-06-30'
+  spec_file: airwallex-openapi-2023-06-30.yaml
+  md5: e402c6d186bf2dd10377d838846131df
+- version: '2023-08-31'
+  spec_file: airwallex-openapi-2023-08-31.yaml
+  md5: 071732579c8c8252f685c338a5c432a7
+- version: '2023-10-01'
+  spec_file: airwallex-openapi-2023-10-01.yaml
+  md5: 640367f1e7ca6b38077bbf010a3beb53
+- version: '2024-01-31'
+  spec_file: airwallex-openapi-2024-01-31.yaml
+  md5: a3bbb61bf6407581b40c12b38352cda3
+- version: '2024-02-22'
+  spec_file: airwallex-openapi-2024-02-22.yaml
+  md5: 2058121c94f1974684ebbc8bfa4c989d
+- version: '2024-03-31'
+  spec_file: airwallex-openapi-2024-03-31.yaml
+  md5: 3efbb433473dd6a6c02ae80a9412ed7f
+- version: '2024-04-04'
+  spec_file: airwallex-openapi-2024-04-04.yaml
+  md5: 8e7ff14c29889eebc1f47ef8325b6dcc
+- version: '2024-04-30'
+  spec_file: airwallex-openapi-2024-04-30.yaml
+  md5: 6d0cc969d10a54077e7d62dc44981540
+- version: '2024-06-14'
+  spec_file: airwallex-openapi-2024-06-14.yaml
+  md5: ee9718dc3ae6abd23fc8bb5efb96e838
+- version: '2024-06-30'
+  spec_file: airwallex-openapi-2024-06-30.yaml
+  md5: 73ea7f902105bacad03b79f45a917a4f
+- version: '2024-08-07'
+  spec_file: airwallex-openapi-2024-08-07.yaml
+  md5: 368f56b8962cae94145b8e115090e3fe
+- version: '2024-09-27'
+  spec_file: airwallex-openapi-2024-09-27.yaml
+  md5: 283ee78084c7006cbc53c2e29fc6fd04
+- version: '2025-01-07'
+  spec_file: airwallex-openapi-2025-01-07.yaml
+  md5: 6c0262941e22da282e7f4e6cac78bf74
+- version: '2025-02-14'
+  spec_file: airwallex-openapi-2025-02-14.yaml
+  md5: 370824b1213a60b757aca07def3776c9
+- version: '2025-04-25'
+  spec_file: airwallex-openapi-2025-04-25.yaml
+  md5: 7d968d38f67408916bd9e7337799bd25
+- version: '2025-06-16'
+  spec_file: airwallex-openapi-2025-06-16.yaml
+  md5: 75f9019adc028814c61e1b8d4481402e
+- version: '2025-06-30'
+  spec_file: airwallex-openapi-2025-06-30.yaml
+  md5: cd8cd1e8f72623a95df9d99d6e02dfec
+- version: '2025-08-29'
+  spec_file: airwallex-openapi-2025-08-29.yaml
+  md5: 5e63ce7249ba0a4a205f4e87d9f7cc9c
+- version: '2025-09-30'
+  spec_file: airwallex-openapi-2025-09-30.yaml
+  md5: 25330c97c1475393055ec626c29ced03
+- version: '2025-11-11'
+  spec_file: airwallex-openapi-2025-11-11.yaml
+  md5: 3fdc48fe262efc02062f18a3443888a7
+- version: '2026-02-27'
+  spec_file: airwallex-openapi-2026-02-27.yaml
+  md5: 2c92f71c601a97d695359c80fc1f7625
+- version: '2026-05-29'
+  spec_file: airwallex-openapi-2026-05-29.yaml
+  md5: a5e3cab51ca83c5157eb0d853fe48db2
+- version: '2026-06-30'
+  spec_file: airwallex-openapi-2026-06-30.yaml
+  md5: 61cefd385cad8d175c6a43201b9e90eb
+- version: '2026-07-17'
+  spec_file: airwallex-openapi-2026-07-17.yaml
+  md5: 19c99c7d2578221aeda512af6d5ebcfb
+- version: '2026-08-21'
+  spec_file: airwallex-openapi-2026-08-21.yaml
+  md5: 061708117a5e25f9777bc9c0e61b3246
+- version: '2026-12-01'
+  spec_file: airwallex-openapi-2026-12-01.yaml
+  md5: 3816a33f0f42b38633b418f2d7e102d7
+  stage: preview
+compatibility_policy:
+  backwards_compatible_without_new_version:
+  - adding new API endpoints
+  - adding new optional request fields
+  - adding new response fields
+  - adding new required request fields tied to a new payment corridor or method
+  - changing the content of unstructured text such as error messages and field labels
+  requires_new_version:
+  - renaming a field
+  - splitting a field
+  - any other backwards-incompatible contract change
+  client_obligation: tolerate unknown response fields; do not fail on additive changes
+  external_data_requirement_change: regulator- or third-party-mandated data requirements may be enforced across
+    ALL versions rather than gated behind a new one. Airwallex states this situation has not yet arisen.
+deprecation:
+  policy_url: https://www.airwallex.com/docs/api/versioning
+  sunset_header: false
+  deprecation_header: false
+  model: additive date-versioning - old versions remain selectable rather than being sunset on a clock
+  note: 'No RFC 8594 Sunset or Deprecation response header is documented, and no dated sunset schedule is published.
+    The stated migration path is: read the changelog, set x-api-version on the affected endpoints, test in sandbox,
+    then ask support to move the account default. Support moves the account and the header can be dropped roughly
+    an hour later.'
+  migration_steps:
+  - read the changelog for the target version
+  - set the x-api-version header on affected endpoints and adapt to the new contract
+  - test in the sandbox environment (or feature-flag traffic incrementally)
+  - notify Airwallex support to move the account default version
+  - remove the x-api-version header more than an hour after the account is moved
+status_page: https://status.airwallex.com
+status_page_probe:
+  url: https://status.airwallex.com
+  http_status: 200
+  platform: Atlassian Statuspage
+support:
+  help_center: https://help.airwallex.com
+  request_form: https://help.airwallex.com/hc/en-gb/requests/new
+  developer_support: developer.support@airwallex.com
+sla:
+  published: false
+  note: No public uptime SLA document found on the marketing or docs site.
+changelog:
+  url: https://www.airwallex.com/docs/api/changelog
+  artifact: changelog/airwallex-changelog.yml
+deprecated_operations: []
+contract_discovery:
+  note: 'Airwallex publishes a versioned OpenAPI internally - the docs app names 48 airwallex-openapi-<date>.yaml
+    files with md5 checksums - but serves none of them at a fetchable URL. This is the single highest-value thing
+    Airwallex could change: it already HAS the spec.'
+  probes:
+  - url: https://api.airwallex.com/openapi.json
+    status: 404
+  - url: https://api.airwallex.com/openapi.yaml
+    status: 404
+  - url: https://api.airwallex.com/swagger.json
+    status: 404
+  - url: https://api.airwallex.com/api-docs
+    status: 404
+  - url: https://www.airwallex.com/docs/api/airwallex-openapi-2026-08-21.yaml
+    status: 307
+    note: S3 NoSuchKey body, redirects to /docs/api/introduction
+  - url: https://www.airwallex.com/docs/api-spec/airwallex-openapi-2026-08-21.yaml
+    status: 200
+    note: HTML SPA shell, byte-identical to /docs/api-spec/nonexistent-xyz.yaml - a catch-all, not the spec
+  - url: https://www.airwallex.com/docs/api-spec/nonexistent-xyz.yaml
+    status: 200
+    note: 'soft-404 control: same 2,075-byte shell, which is how the candidate above was rejected'
