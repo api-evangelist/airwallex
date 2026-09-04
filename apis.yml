@@ -274,7 +274,7 @@ image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/airwallex.
 access: 3rd-Party
 created: '2025-02-17'
 modified: '2026-04-19'
-position: Consumer
+position: Consuming
 description: >-
   Airwallex is a financial technology company that specializes in providing global payment solutions for businesses.
   Their platform enables companies to accept payments, manage multi-currency accounts, convert currencies at competitive
