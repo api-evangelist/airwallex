@@ -1,23 +1,21 @@
 ---
 kin_checks:
   slug: airwallex
-  schema_version: 0.18.2
-  scored_at: '2026-09-04'
-  run_ts: 2026-09-04T062714
+  schema_version: 0.21.0
+  scored_at: '2026-09-12'
+  run_ts: 2026-09-12T080032
   note: Actionable checks only (missed + partial). earned/na are every other check
-    in rubric/scoring-0.18.2.yml; counts below let you verify that.
+    in rubric/scoring-0.21.0.yml; counts below let you verify that.
   counts:
-    total: 132
-    earned: 73
+    total: 136
+    earned: 75
     partial: 13
-    missed: 24
+    missed: 26
     na: 22
   checks:
   - id: multiple_apis
     status: missed
   - id: well_known_published
-    status: missed
-  - id: llms_txt_published
     status: missed
   - id: apis_json_self_hosted
     status: missed
@@ -50,9 +48,14 @@ kin_checks:
     status: missed
   - id: roadmap_present
     status: missed
-  - id: postman_present
+  - id: upsert_outcome_discriminator
     status: missed
-    detail: pointer liveness 0.0
+  - id: upsert_alternate_key
+    status: missed
+  - id: upsert_named
+    status: missed
+  - id: upsert_declared_conflict
+    status: missed
   - id: well_known_catalog
     status: missed
   - id: consent_identity
@@ -83,6 +86,10 @@ kin_checks:
   - id: balanced_severities
     status: partial
     earned: 0.75
+  - id: postman_present
+    status: partial
+    earned: 0.25
+    detail: pointer liveness 0.5
   - id: agentic_access
     status: partial
     earned: 2.5
@@ -90,10 +97,6 @@ kin_checks:
   - id: reversibility_documented
     status: partial
     earned: 2.4
-    detail: 'grade: documented'
-  - id: mcp_server
-    status: partial
-    earned: 4.8
     detail: 'grade: documented'
   - id: auth_clarity
     status: partial
