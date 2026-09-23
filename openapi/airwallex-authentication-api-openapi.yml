@@ -12,9 +12,7 @@ info:
 
     intents, customers, refunds, payouts, transfers, balances, beneficiaries
 
-    and account authentication. Endpoints accept and return JSON.
-
-    '
+    and account authentication. Endpoints accept and return JSON.'
   contact:
     name: Airwallex
     url: https://www.airwallex.com/docs/api
@@ -37,9 +35,7 @@ paths:
       summary: Obtain access token
       description: 'Exchange the client_id and api_key (sent as `x-client-id` and `x-api-key`
 
-        headers) for a short-lived bearer access token used in subsequent calls.
-
-        '
+        headers) for a short-lived bearer access token used in subsequent calls.'
       operationId: login
       responses:
         '201':

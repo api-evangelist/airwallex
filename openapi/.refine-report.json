@@ -1,14 +1,7 @@
 {
   "provider": "airwallex",
   "sources": [
-    "airwallex-authentication-api-openapi.yml",
-    "airwallex-balances-api-openapi.yml",
-    "airwallex-beneficiaries-api-openapi.yml",
-    "airwallex-customers-api-openapi.yml",
-    "airwallex-payment-intents-api-openapi.yml",
-    "airwallex-payouts-api-openapi.yml",
-    "airwallex-refunds-api-openapi.yml",
-    "airwallex-transfers-api-openapi.yml"
+    "_original/airwallex-openapi.yml"
   ],
   "outputs": [
     "airwallex-authentication-api-openapi.yml",
@@ -24,7 +17,18 @@
   "errors": [],
   "warnings": [],
   "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "airwallex-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
     "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "airwallex-authentication-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "airwallex-balances-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "airwallex-beneficiaries-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "airwallex-customers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "airwallex-payment-intents-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "airwallex-payouts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "airwallex-refunds-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "airwallex-transfers-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

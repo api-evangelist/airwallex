@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Airwallex Open Authentication Payouts API
+  title: Airwallex Open Payouts API
   version: v1
   description: 'Best-effort OpenAPI 3.1 representation of the Airwallex REST API derived from
 
@@ -12,9 +12,7 @@ info:
 
     intents, customers, refunds, payouts, transfers, balances, beneficiaries
 
-    and account authentication. Endpoints accept and return JSON.
-
-    '
+    and account authentication. Endpoints accept and return JSON.'
   contact:
     name: Airwallex
     url: https://www.airwallex.com/docs/api
