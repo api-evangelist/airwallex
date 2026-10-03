@@ -101,6 +101,11 @@ tools:
   - question
   - source
   method: probed
+  description: 'Retrieve relevant sections from the official Airwallex documentation matching the user''s
+    question.  NOTE: The required parameters is QUESTION instead of query.  USAGE STRATEGY:   DO: Prefer
+    to start with a broad search without specifying any source and then narrow down the search with a
+    specific source when needed   DO: For relevant API endpoints or SDK methods in the sections returned,
+    invoke thi…'
 tools_gated:
   note: The AgentOS (production) and Developer (sandbox) servers did not return a tool list anonymously.
     Their real capability envelope IS published anonymously as OAuth scopes in the RFC 9728 protected-resource
@@ -115,3 +120,5 @@ plugins:
       codex plugin add airwallex-agentos@airwallex-marketplace'
     cursor: Settings > Plugins > Marketplace > search "airwallex"
   skills: skills/_index.yml
+descriptions_source: live tools/list (authorship probe or saved capture); filled by backfill-tools-from-authorship.py
+  --descriptions, 2026-09-28
