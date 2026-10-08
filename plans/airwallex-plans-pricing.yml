@@ -113,3 +113,38 @@ transaction_fees:
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - free
+  - negotiated
+  - subscription
+  units: []
+  plans:
+  - name: Explore
+    access: freemium
+    model: free
+    model_how: derived
+    units:
+    - other
+    periods: []
+  - name: Grow
+    access: paid
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods: []
+  - name: Accelerate
+    access: enterprise
+    model: negotiated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Platform APIs & Embedded Finance
+    access: enterprise
+    model: negotiated
+    model_how: derived
+    units: []
+    periods: []
