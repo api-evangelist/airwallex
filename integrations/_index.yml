@@ -39,7 +39,7 @@
     app_slug: airwallex
     beta: false
     builder: unknown (not in the directory record)
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
 - slug: airwallex-fincen-msb-registration
   label: FinCEN (MSB registration)
