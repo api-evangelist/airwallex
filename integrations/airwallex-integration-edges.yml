@@ -1,7 +1,12 @@
 generated: '2026-10-15'
 method: searched
 checked:
+- https://kantarainitiative.org/trust-status-list/
+- https://msb.fincen.gov/
+- https://www.access-dvs-register.service.gov.uk/register/download-register
+- https://zapier.com/api/v4/apps/
 - woocommerce/integrations/woocommerce-integration-edges.yml
+- wordpress/integrations/wordpress-integration-edges.yml
 source:
 - woocommerce/integrations/woocommerce-integration-edges.yml
 edges:
@@ -22,3 +27,81 @@ edges:
   detected: '2026-10-15'
   detected_by: mirror-platform-listings.py
   category: extension
+- partner_name: Zapier
+  partner: zapier
+  partner_match: aggregator
+  type: marketplace
+  marketplace: zapier-directory
+  channel: ipaas-listing
+  relationship: ipaas-bridge
+  direction: third-party
+  evidence: https://zapier.com/apps/airwallex/integrations
+  category: null
+  contract_reference:
+    register: Zapier app directory (zapier.com/api/v4/apps)
+    spec_file: null
+    role: ipaas-connector:zapier
+    registered_name: Airwallex
+    matched_domain: airwallex.com
+    matched_by: domain
+    detected_by: sweep-workflow-automation.py
+    detected: '2026-10-15'
+    signal_note: one edge per (provider, platform); actions, triggers and usage counts are context, never read
+    app_slug: airwallex
+    beta: false
+    builder: unknown (not in the directory record)
+  detected_by: sweep-workflow-automation.py
+  first_seen: '2026-10-15'
+- partner_name: FinCEN (MSB registration)
+  partner: null
+  partner_match: register
+  type: contract
+  channel: regulator-register
+  relationship: standard-participant
+  direction: partner-built
+  evidence: https://msb.fincen.gov/
+  category: Money services business
+  contract_reference:
+    register: FinCEN MSB Registrant Search (msb.fincen.gov, full list export)
+    spec_file: null
+    standard: FinCEN MSB registration (US Bank Secrecy Act)
+    role: fincen-msb-registrant
+    registered_name: Airwallex (Hong Kong) Limited
+    dba_name: null
+    register_id: Airwallex (Hong Kong) Limited
+    matched_domain: airwallex.com
+    matched_by: domain
+    identity: wikidata Q112228127 'Airwallex' P856 http://www.airwallex.com/
+    identity_source: wikidata P856 (labelled provenance step; Kin 2026-10-15 decision 1)
+    msb_activities:
+    - 409 money transmitter
+    - 415 dealer in foreign exchange
+    states_of_activity: 59
+    received_date: 12/29/2025
+    signal_note: 'participation only: an MSB registration is not a licence or a certification; activities and states
+      are context, never counted'
+    detected_by: sweep-regtech-aml.py
+    detected: '2026-10-15'
+    other_registrations:
+    - Airwallex (UK) Limited
+    - Airwallex Pty Ltd
+    - Airwallex US, LLC
+  detected_by: sweep-regtech-aml.py
+  first_seen: '2026-10-15'
+- partner_name: WordPress (own)
+  partner: wordpress
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://wordpress.org/plugins/airwallex-online-payments-gateway/
+  mirror_of: wordpress/integrations/wordpress-integration-edges.yml
+  apps:
+  - Airwallex Online Payments Gateway
+  listing_count: 1
+  detected: '2026-10-15'
+  detected_by: mirror-platform-listings.py
+  category: WordPress plugin
