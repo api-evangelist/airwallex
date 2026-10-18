@@ -5,6 +5,7 @@ checked:
 - https://msb.fincen.gov/
 - https://www.access-dvs-register.service.gov.uk/register/download-register
 - https://zapier.com/api/v4/apps/
+- slack/integrations/slack-integration-edges.yml
 - woocommerce/integrations/woocommerce-integration-edges.yml
 - wordpress/integrations/wordpress-integration-edges.yml
 source:
@@ -105,3 +106,20 @@ edges:
   detected: '2026-10-15'
   detected_by: mirror-platform-listings.py
   category: WordPress plugin
+- partner_name: Slack (own)
+  partner: slack
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://slack.com/marketplace/A0AF68PCVUK-airwallex
+  mirror_of: slack/integrations/slack-integration-edges.yml
+  apps:
+  - Airwallex
+  listing_count: 1
+  detected: '2026-10-18'
+  detected_by: mirror-platform-listings.py
+  category: Slack app
