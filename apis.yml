@@ -39,7 +39,7 @@ apis:
   - Account
   - Multi-Currency
   - Banking
-  - FX
+  - Foreign Exchange
   tags_raw:
   - Accounts
   - Multi-Currency
@@ -79,6 +79,9 @@ apis:
 - aid: airwallex:fx
   name: Airwallex FX API
   tags:
+  - Foreign Exchange
+  - Currency Conversion
+  tags_raw:
   - Foreign Exchange
   - Currency Conversion
   - FX
