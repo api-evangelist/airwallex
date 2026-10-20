@@ -1,5 +1,9 @@
-generated: '2026-10-15'
+generated: '2026-10-20'
 method: searched
+source:
+- woocommerce/integrations/woocommerce-integration-edges.yml
+- https://zapier.com/apps/airwallex/integrations
+- https://composio.dev/toolkits/airwallex
 checked:
 - https://api.nuget.org/v3
 - https://crates.io/api/v1
@@ -19,8 +23,216 @@ checked:
 - slack/integrations/slack-integration-edges.yml
 - woocommerce/integrations/woocommerce-integration-edges.yml
 - wordpress/integrations/wordpress-integration-edges.yml
-source:
-- woocommerce/integrations/woocommerce-integration-edges.yml
+- https://composio.dev/toolkits/airwallex
+- https://monid.ai/tools/airwallex
+- https://n8n.io/integrations/airwallex/
+- https://zapier.com/apps/airwallex/integrations
+summary: null
+marketplace_apps:
+- marketplace: zapier
+  channel: ipaas-listing
+  app: airwallex
+  url: https://zapier.com/apps/airwallex/integrations
+  external_url: https://airwallex.com/
+  partner_tier: BRONZE
+  triggers:
+  - key: approaching_card_limit
+    label: Approaching Card Limit
+  - key: approaching_card_limit_webhook
+    label: Approaching Card Limit (Instant)
+  - key: billing_checkout_complete
+    label: Billing Checkout Completed
+  - key: billing_checkout_complete_webhook
+    label: Billing Checkout Completed (Instant)
+  - key: cancelled_subscription
+    label: Cancelled Subscription
+  - key: cancelled_subscription_webhook
+    label: Cancelled Subscription (Instant)
+  - key: card_transaction_failed
+    label: Card Transaction Failed
+  - key: card_transaction_failed_webhook
+    label: Card Transaction Failed (Instant)
+  - key: failed_invoice_payment
+    label: Invoice Payment Failed
+  - key: failed_payment
+    label: Failed Payment
+  - key: failed_payment_webhook
+    label: Failed Payment (Instant)
+  - key: low_account_balance_alert
+    label: Low Account Balance Alert
+  - key: new_beneficiary
+    label: New Beneficiary
+  - key: new_billing_checkout
+    label: New Billing Checkout
+  - key: new_billing_checkout_webhook
+    label: New Billing Checkout (Instant)
+  - key: new_billing_customer
+    label: New Billing Customer
+  - key: new_billing_transaction
+    label: New Billing Transaction
+  - key: new_card
+    label: New Card
+  - key: new_cardholder
+    label: New Cardholder
+  - key: new_cardholder_webhook
+    label: New Cardholder (Instant)
+  - key: new_card_webhook
+    label: New Card (Instant)
+  - key: new_expense_on_card
+    label: New Card Transaction
+  - key: new_expense_on_card_webhook
+    label: New Card Transaction (Instant)
+  - key: new_invoice
+    label: New Invoice
+  - key: new_invoice_webhook
+    label: New Invoice (Instant)
+  - key: new_payment
+    label: New Payment
+  - key: new_payment_source
+    label: New Payment Source
+  - key: new_payment_webhook
+    label: New Payment (Instant)
+  - key: new_pa_customer
+    label: New Payment Acceptance Customer
+  - key: new_pa_customer_webhook
+    label: New Payment Acceptance Customer (Instant)
+  - key: new_price
+    label: New Price
+  - key: new_product
+    label: New Product
+  - key: new_subscription
+    label: New Subscription
+  - key: new_subscription_webhook
+    label: New Subscription (Instant)
+  - key: new_transaction
+    label: New Transaction
+  - key: updated_subscription
+    label: Updated Subscription
+  actions:
+  - key: add_invoice_line_items
+    label: Add Invoice Line Items
+  - key: cancel_billing_checkout
+    label: Cancel Billing Checkout
+  - key: cancel_subscription
+    label: Cancel Subscription
+  - key: create_beneficiary
+    label: Create Beneficiary
+  - key: create_billing_checkout
+    label: Create Billing Checkout
+  - key: create_billing_customer
+    label: Create Billing Customer
+  - key: create_card
+    label: Create Card
+  - key: create_cardholder
+    label: Create Cardholder
+  - key: create_invoice
+    label: Create Invoice
+  - key: create_payment_source
+    label: Create Payment Source
+  - key: create_pa_customer
+    label: Create Payment Acceptance Customer
+  - key: create_price
+    label: Create Price
+  - key: create_product
+    label: Create Product
+  - key: create_subscription
+    label: Create Subscription
+  - key: delete_invoice
+    label: Delete Draft Invoice
+  - key: delete_invoice_line_items
+    label: Delete Invoice Line Items
+  - key: finalize_invoice
+    label: Finalize Invoice
+  - key: mark_invoice_as_paid
+    label: Mark Invoice as Paid
+  - key: preview_subscription_invoice
+    label: Preview Subscription Invoice
+  - key: update_beneficiary
+    label: Update Beneficiary
+  - key: update_billing_checkout
+    label: Update Billing Checkout
+  - key: update_billing_customer
+    label: Update Billing Customer
+  - key: update_invoice
+    label: Update Invoice
+  - key: update_invoice_line_items
+    label: Update Invoice Line Items
+  - key: update_pa_customer
+    label: Update Payment Acceptance Customer
+  - key: update_price
+    label: Update Price
+  - key: update_product
+    label: Update Product
+  - key: update_subscription
+    label: Update Subscription
+  - key: void_invoice
+    label: Void Invoice
+  searches:
+  - key: get_beneficiary
+    label: Get Beneficiary
+  - key: get_billing_checkout
+    label: Get Billing Checkout
+  - key: get_billing_customer
+    label: Get Billing Customer
+  - key: get_billing_transaction
+    label: Get Billing Transaction
+  - key: get_invoice
+    label: Get Invoice
+  - key: get_invoice_line_item
+    label: Get Invoice Line Item
+  - key: get_payment
+    label: Get Payment
+  - key: get_payment_source
+    label: Get Payment Source
+  - key: get_pa_customer
+    label: Get Payment Acceptance Customer
+  - key: get_price
+    label: Get Price
+  - key: get_product
+    label: Get Product
+  - key: get_subscription
+    label: Get Subscription
+  - key: get_subscription_item
+    label: Get Subscription Item
+  - key: list_beneficiaries
+    label: List Beneficiaries
+  - key: list_billing_checkouts
+    label: List Billing Checkouts
+  - key: list_billing_customers
+    label: List Billing Customers
+  - key: list_billing_transactions
+    label: List Billing Transactions
+  - key: list_draft_invoices
+    label: List Draft Invoices
+  - key: list_invoices
+    label: List Invoices
+  - key: list_invoice_line_items
+    label: List Invoice Line Items
+  - key: list_payments
+    label: List Payments
+  - key: list_payment_sources
+    label: List Payment Sources
+  - key: list_pa_customers
+    label: List Payment Acceptance Customers
+  - key: list_prices
+    label: List Prices
+  - key: list_products
+    label: List Products
+  - key: list_subscriptions
+    label: List Subscriptions
+- marketplace: composio
+  channel: agent-gateway
+  app: airwallex
+  url: https://composio.dev/toolkits/airwallex
+  identity: action-prefix
+  actions:
+  - key: AIRWALLEX_GET_CURRENT_ACCOUNT
+  - key: AIRWALLEX_GET_CURRENT_BALANCES
+  - key: AIRWALLEX_GET_SUPPORTED_CONVERSION_CURRENCIES
+  - key: AIRWALLEX_LIST_BENEFICIARIES
+  - key: AIRWALLEX_LIST_CONVERSIONS
+  - key: AIRWALLEX_LIST_GLOBAL_ACCOUNTS
+  - key: AIRWALLEX_LIST_TRANSFERS
 edges:
 - partner_name: WooCommerce (own)
   partner: woocommerce
@@ -134,33 +346,6 @@ edges:
   detected: '2026-10-18'
   detected_by: mirror-platform-listings.py
   category: Slack app
-- partner_name: MAS Financial Institutions Directory
-  partner: null
-  partner_match: register
-  type: register
-  channel: regulator-register
-  relationship: standard-participant
-  direction: partner-built
-  evidence: https://eservices.mas.gov.sg/fid
-  category: open finance (Singapore)
-  contract_reference:
-    register: MAS Financial Institutions Directory
-    spec_file: null
-    standard: MAS licensing (Banking Act / Payment Services Act, Singapore)
-    role: licensed-participant
-    registrations:
-    - registered_name: AIRWALLEX (SINGAPORE) PTE. LTD.
-      licences:
-      - Major Payment Institution
-      matched_domain: airwallex.com
-      matched_by: domain
-      evidence: https://eservices.mas.gov.sg/fid/institution/detail/230232-AIRWALLEX-SINGAPORE-PTE-LTD
-      register_id: 230232-AIRWALLEX-SINGAPORE-PTE-LTD
-    signal_note: 'participation only: a regulator licence; no API conformance is published by this register'
-    detected_by: sweep-gulf-asean-open-finance.py
-    detected: '2026-10-18'
-  detected_by: sweep-gulf-asean-open-finance.py
-  first_seen: '2026-10-18'
 - partner_name: Maven Central
   partner: maven-central
   partner_match: register
@@ -239,3 +424,452 @@ edges:
     detected: '2026-10-18'
   detected_by: sweep-official-sdks.py
   first_seen: '2026-10-18'
+- partner_name: MAS Financial Institutions Directory
+  partner: null
+  partner_match: register
+  type: register
+  channel: regulator-register
+  relationship: standard-participant
+  direction: partner-built
+  evidence: https://eservices.mas.gov.sg/fid
+  category: open finance (Singapore)
+  contract_reference:
+    register: MAS Financial Institutions Directory
+    spec_file: null
+    standard: MAS licensing (Banking Act / Payment Services Act, Singapore)
+    role: licensed-participant
+    registrations:
+    - registered_name: AIRWALLEX (SINGAPORE) PTE. LTD.
+      licences:
+      - Major Payment Institution
+      matched_domain: airwallex.com
+      matched_by: domain
+      evidence: https://eservices.mas.gov.sg/fid/institution/detail/230232-AIRWALLEX-SINGAPORE-PTE-LTD
+      register_id: 230232-AIRWALLEX-SINGAPORE-PTE-LTD
+    signal_note: 'participation only: a regulator licence; no API conformance is published by this register'
+    detected_by: sweep-gulf-asean-open-finance.py
+    detected: '2026-10-18'
+  detected_by: sweep-gulf-asean-open-finance.py
+  first_seen: '2026-10-18'
+- partner_name: Slack
+  partner: slack
+  partner_match: name-exact
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/slack
+  direction: third-party
+  category: Team Chat
+  partner_url: https://slack.com/
+- partner_name: eSignAnyWhere
+  partner: null
+  partner_match: null
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/esignanywhere
+  direction: third-party
+  category: Documents
+  partner_url: https://www.esignanywhere.net/
+- partner_name: Xero
+  partner: xero
+  partner_match: name-exact
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/xero
+  direction: third-party
+  category: Accounting
+  partner_url: https://xero5440.partnerlinks.io/uvwuuwrxyoi8
+- partner_name: Gmail
+  partner: gmail
+  partner_match: domain+name-among-holders
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/gmail
+  direction: third-party
+  category: Email
+  partner_url: https://mail.google.com/
+- partner_name: ClickUp
+  partner: clickup
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/clickup
+  direction: third-party
+  category: Project Management
+  partner_url: https://clickup.com/zapier
+- partner_name: Microsoft Excel
+  partner: null
+  partner_match: null
+  partner_candidate: zapier
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/excel
+  direction: third-party
+  category: Microsoft
+  partner_url: https://zapier.com/office.com
+- partner_name: Zoho Books
+  partner: zoho-books
+  partner_match: domain+name-among-holders
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/zoho-books
+  direction: third-party
+  category: Accounting
+  partner_url: https://go.zoho.com/3Al
+- partner_name: Hireflix
+  partner: null
+  partner_match: null
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/hireflix
+  direction: third-party
+  category: HR Talent & Recruitment
+  partner_url: https://hireflix.com/
+- partner_name: SegMetrics
+  partner: segmetrics
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/segmetrics
+  direction: third-party
+  category: Analytics
+  partner_url: https://segmetrics.io/
+- partner_name: Colligso WalletIn
+  partner: null
+  partner_match: null
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/colligso-walletin
+  direction: third-party
+  category: Ads & Conversion
+  partner_url: https://www.colligso.com/walletin.html
+- partner_name: Stripe
+  partner: stripe
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/stripe
+  direction: third-party
+  category: Payment Processing
+  partner_url: https://stripe.com/
+- partner_name: Trello
+  partner: trello
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/trello
+  direction: third-party
+  category: Project Management
+  partner_url: https://trello.com/
+- partner_name: Jotform
+  partner: jotform
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/jotform
+  direction: third-party
+  category: Forms & Surveys
+  partner_url: http://www.jotform.com/
+- partner_name: ChatGPT (OpenAI)
+  partner: openai
+  partner_match: domain+name-among-holders
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/chatgpt
+  direction: third-party
+  category: AI Assistants
+  partner_url: https://chat.openai.com/chat
+- partner_name: Squarespace Forms
+  partner: squarespace
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/squarespace-forms
+  direction: third-party
+  category: Forms & Surveys
+  partner_url: https://www.squarespace.com/
+- partner_name: Shopify
+  partner: shopify
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/shopify
+  direction: third-party
+  category: eCommerce
+  partner_url: https://www.shopify.com/
+- partner_name: QuickBooks Online
+  partner: quickbooks
+  partner_match: domain+name-among-holders
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/quickbooks
+  direction: third-party
+  category: Accounting
+  partner_url: http://intuit.com/
+- partner_name: Wix
+  partner: wix
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/wix
+  direction: third-party
+  category: Website Builders
+  partner_url: https://www.wix.com/
+- partner_name: Square
+  partner: square
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/square
+  direction: third-party
+  category: eCommerce
+  partner_url: https://squareup.com/t/cmtp_performance/pr_developers/d_partnerships/p_zapier/?route=
+- partner_name: Skool
+  partner: skool
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/skool
+  direction: third-party
+  category: Education
+  partner_url: https://skool.com/
+- partner_name: WooCommerce
+  partner: woocommerce
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/woocommerce
+  direction: third-party
+  category: eCommerce
+  partner_url: https://woocommerce.com/products/woocommerce-zapier/?utm_source=zapier&utm_medium=website&utm_campaign=integration
+- partner_name: systeme.io
+  partner: null
+  partner_match: null
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/systemeio
+  direction: third-party
+  category: Marketing
+  partner_url: https://systeme.io/
+- partner_name: Wave
+  partner: wave-financial
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/wave
+  direction: third-party
+  category: Accounting
+  partner_url: https://www.waveapps.com/
+- partner_name: MySQL
+  partner: mysql
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/mysql
+  direction: third-party
+  category: Databases
+  partner_url: https://www.mysql.com/
+- partner_name: Setmore Appointments
+  partner: null
+  partner_match: null
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/setmore-appointment
+  direction: third-party
+  category: Scheduling & Booking
+  partner_url: http://setmore.com/
+- partner_name: Zoho Invoice
+  partner: zoho-invoice
+  partner_match: domain+name-among-holders
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/zoho-invoice
+  direction: third-party
+  category: Proposal & Invoice Management
+  partner_url: https://go.zoho.com/STD
+- partner_name: DocuSeal
+  partner: docuseal
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/docuseal
+  direction: third-party
+  category: Signatures
+  partner_url: https://docuseal.com/sign_up
+- partner_name: BookFunnel
+  partner: null
+  partner_match: null
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/bookfunnel
+  direction: third-party
+  category: Content & Files
+  partner_url: https://bookfunnel.com/
+- partner_name: WorkflowMax
+  partner: null
+  partner_match: null
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/workflowmax
+  direction: third-party
+  category: Project Management
+  partner_url: https://www.workflowmax.com/
+- partner_name: Magento
+  partner: magento
+  partner_match: name-exact
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  relationship: ipaas-bridge
+  evidence: https://zapier.com/apps/airwallex/integrations/magento
+  direction: third-party
+  category: eCommerce
+  partner_url: https://magento.com/
+templates:
+- title: Create spreadsheet rows in Google Sheets for new Airwallex transactions (payouts, deposits, and conversions)
+  url: https://zapier.com/apps/airwallex/integrations/google-sheets/1220342/create-spreadsheet-rows-in-google-sheets-for-new-airwallex-transactions-payouts-deposits-and-conversions
+  apps:
+  - airwallex
+  - google-sheets
+- title: Send Slack channel messages for new Airwallex transactions
+  url: https://zapier.com/apps/airwallex/integrations/slack/976857/send-slack-channel-messages-for-new-airwallex-transactions
+  apps:
+  - airwallex
+  - slack
+- title: Send Slack notifications for new transactions in Airwallex
+  url: https://zapier.com/apps/airwallex/integrations/slack/976814/send-slack-notifications-for-new-transactions-in-airwallex
+  apps:
+  - airwallex
+  - slack
+- title: Create beneficiaries in Airwallex from new or updated Google Sheets rows
+  url: https://zapier.com/apps/airwallex/integrations/google-sheets/976842/create-beneficiaries-in-airwallex-from-new-or-updated-google-sheets-rows
+  apps:
+  - google-sheets
+  - airwallex
+- title: Create Airwallex cardholders from new Google Forms responses
+  url: https://zapier.com/apps/airwallex/integrations/google-forms/976847/create-airwallex-cardholders-from-new-google-forms-responses
+  apps:
+  - google-forms
+  - airwallex
+- title: Send Slack channel messages for new low account balance alerts in Airwallex
+  url: https://zapier.com/apps/airwallex/integrations/slack/976871/send-slack-channel-messages-for-new-low-account-balance-alerts-in-airwallex
+  apps:
+  - airwallex
+  - slack
+- title: Create beneficiaries in Airwallex from new Typeform entries
+  url: https://zapier.com/apps/airwallex/integrations/typeform/976991/create-beneficiaries-in-airwallex-from-new-typeform-entries
+  apps:
+  - typeform
+  - airwallex
+- title: Send Slack channel messages for newly approaching card limits in Airwallex
+  url: https://zapier.com/apps/airwallex/integrations/slack/976993/send-slack-channel-messages-for-newly-approaching-card-limits-in-airwallex
+  apps:
+  - airwallex
+  - slack
+- title: Post Slack notifications for new failed card transactions in Airwallex
+  url: https://zapier.com/apps/airwallex/integrations/slack/977204/post-slack-notifications-for-new-failed-card-transactions-in-airwallex
+  apps:
+  - airwallex
+  - slack
+- title: Create beneficiaries in Airwallex from new Google Forms entries
+  url: https://zapier.com/apps/airwallex/integrations/google-forms/983832/create-beneficiaries-in-airwallex-from-new-google-forms-entries
+  apps:
+  - google-forms
+  - airwallex
+- title: Create Airwallex cardholders from new or updated Google Sheets rows
+  url: https://zapier.com/apps/airwallex/integrations/google-sheets/983963/create-airwallex-cardholders-from-new-or-updated-google-sheets-rows
+  apps:
+  - google-sheets
+  - airwallex
+- title: Create beneficiaries in Airwallex from new Microsoft Excel rows
+  url: https://zapier.com/apps/airwallex/integrations/excel/987780/create-beneficiaries-in-airwallex-from-new-microsoft-excel-rows
+  apps:
+  - excel
+  - airwallex
+template_total: 36
