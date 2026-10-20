@@ -27,6 +27,12 @@ checked:
 - https://monid.ai/tools/airwallex
 - https://n8n.io/integrations/airwallex/
 - https://zapier.com/apps/airwallex/integrations
+- https://api.github.com
+- https://claude-plugins.dev/sitemap.xml
+- https://github.com/VoltAgent/awesome-agent-skills
+- https://officialskills.sh/sitemap.xml
+- https://skillsmp.com/sitemap.xml
+- https://www.skills.sh/sitemap.xml
 summary: null
 marketplace_apps:
 - marketplace: zapier
@@ -811,6 +817,38 @@ edges:
   direction: third-party
   category: eCommerce
   partner_url: https://magento.com/
+- partner_name: Agent Skills (own GitHub org)
+  partner: null
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: Agent Skills package
+  evidence: https://github.com/airwallex/airwallex-marketplace
+  channel: provider-built
+  relationship: compatible
+  shape: agent-skills
+  evidence_kind: own-repo
+  degree: skill-repo
+  report_only: true
+  agent_skills:
+    org: airwallex
+    current: true
+    repos:
+    - repo: airwallex/airwallex-marketplace
+      archived: false
+      lapsed: false
+      pushed: '2026-10-14'
+  contract_reference:
+    register: 'provider''s own GitHub org (GitHub REST API: repo + git tree holds SKILL.md)'
+    spec_file: null
+    standard: Agent Skills (agentskills.io)
+    role: agent-skills-repo
+    matched_org: airwallex
+    matched_by: org-profile-domain:airwallex.com
+    detected_by: sweep-agent-skills.py
+    detected: '2026-10-20'
+  detected_by: sweep-agent-skills.py
+  first_seen: '2026-10-20'
 templates:
 - title: Create spreadsheet rows in Google Sheets for new Airwallex transactions (payouts, deposits, and conversions)
   url: https://zapier.com/apps/airwallex/integrations/google-sheets/1220342/create-spreadsheet-rows-in-google-sheets-for-new-airwallex-transactions-payouts-deposits-and-conversions
