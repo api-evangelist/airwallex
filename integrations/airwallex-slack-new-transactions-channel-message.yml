@@ -1,0 +1,77 @@
+arazzo: 1.0.1
+info:
+  title: Send Slack channel messages for new Airwallex transactions
+  version: 1.0.0
+  description: Recreates the Zapier template "Send Slack channel messages for new Airwallex transactions". listFinancialTransactions polled with from_created_at stands in for the Zapier "new transaction"
+    trigger. The result is then posted to a Slack channel with chat.postMessage.
+sourceDescriptions:
+- name: airwallex
+  url: https://raw.githubusercontent.com/api-evangelist/airwallex/refs/heads/main/openapi/airwallex-openapi.yml
+  type: openapi
+- name: slackChat
+  url: https://raw.githubusercontent.com/api-evangelist/slack/refs/heads/main/openapi/slack-chat-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: newTransactionsChannelMessage
+  summary: Send Slack channel messages for new Airwallex transactions
+  inputs:
+    type: object
+    required:
+    - since
+    - slackToken
+    - channel
+    - text
+    properties:
+      since:
+        type: string
+        description: ISO-8601 timestamp of the last poll.
+      slackToken:
+        type: string
+        description: Slack token with chat:write.
+      channel:
+        type: string
+        description: Slack channel id.
+      text:
+        type: string
+        description: Message text the caller renders from the first step's output.
+  steps:
+  - stepId: listNewTransactions
+    operationId: $sourceDescriptions.airwallex.listFinancialTransactions
+    parameters:
+    - name: from_created_at
+      in: query
+      value: $inputs.since
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      items: $response.body#/items
+  - stepId: postToSlack
+    operationId: $sourceDescriptions.slackChat.postChatPostmessage
+    parameters:
+    - name: token
+      in: header
+      value: $inputs.slackToken
+    requestBody:
+      contentType: application/x-www-form-urlencoded
+      payload:
+        channel: $inputs.channel
+        text: $inputs.text
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      ts: $response.body#/ts
+  outputs:
+    items: $steps.listNewTransactions.outputs.items
+    slackTs: $steps.postToSlack.outputs.ts
+x-integration:
+  partner: slack
+  template: https://zapier.com/apps/airwallex/integrations/slack/976857/send-slack-channel-messages-for-new-airwallex-transactions
+  edge_evidence: https://zapier.com/apps/airwallex/integrations/slack/976857/send-slack-channel-messages-for-new-airwallex-transactions
+  edge_type: marketplace
+  method: generated
+  generated: '2026-10-20'
+  generator: provider-integrations-arazzo
+  guessed_steps:
+  - step: postToSlack
+    cause: catalog
+    why: Rendering the Airwallex result into message text is caller-side; the workflow passes the caller-formatted text input, since Arazzo has no templating.

@@ -1,0 +1,77 @@
+arazzo: 1.0.1
+info:
+  title: Send Slack channel messages for newly approaching card limits in Airwallex
+  version: 1.0.0
+  description: Recreates the Zapier template "Send Slack channel messages for newly approaching card limits in Airwallex". listLimits returns the card's remaining limits; deciding that a limit is "approaching"
+    is caller-side. The result is then posted to a Slack channel with chat.postMessage.
+sourceDescriptions:
+- name: airwallex
+  url: https://raw.githubusercontent.com/api-evangelist/airwallex/refs/heads/main/openapi/airwallex-openapi.yml
+  type: openapi
+- name: slackChat
+  url: https://raw.githubusercontent.com/api-evangelist/slack/refs/heads/main/openapi/slack-chat-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: cardLimitAlert
+  summary: Send Slack channel messages for newly approaching card limits in Airwallex
+  inputs:
+    type: object
+    required:
+    - cardId
+    - slackToken
+    - channel
+    - text
+    properties:
+      cardId:
+        type: string
+        description: Airwallex Issuing card id.
+      slackToken:
+        type: string
+        description: Slack token with chat:write.
+      channel:
+        type: string
+        description: Slack channel id.
+      text:
+        type: string
+        description: Message text the caller renders from the first step's output.
+  steps:
+  - stepId: getCardRemainingLimits
+    operationId: $sourceDescriptions.airwallex.listLimits
+    parameters:
+    - name: id
+      in: path
+      value: $inputs.cardId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      limits: $response.body#/limits
+  - stepId: postToSlack
+    operationId: $sourceDescriptions.slackChat.postChatPostmessage
+    parameters:
+    - name: token
+      in: header
+      value: $inputs.slackToken
+    requestBody:
+      contentType: application/x-www-form-urlencoded
+      payload:
+        channel: $inputs.channel
+        text: $inputs.text
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      ts: $response.body#/ts
+  outputs:
+    limits: $steps.getCardRemainingLimits.outputs.limits
+    slackTs: $steps.postToSlack.outputs.ts
+x-integration:
+  partner: slack
+  template: https://zapier.com/apps/airwallex/integrations/slack/976993/send-slack-channel-messages-for-newly-approaching-card-limits-in-airwallex
+  edge_evidence: https://zapier.com/apps/airwallex/integrations/slack/976993/send-slack-channel-messages-for-newly-approaching-card-limits-in-airwallex
+  edge_type: marketplace
+  method: generated
+  generated: '2026-10-20'
+  generator: provider-integrations-arazzo
+  guessed_steps:
+  - step: postToSlack
+    cause: catalog
+    why: Rendering the Airwallex result into message text is caller-side; the workflow passes the caller-formatted text input, since Arazzo has no templating.

@@ -15,9 +15,15 @@
   evidence: https://zapier.com/apps/airwallex/integrations/slack/976857/send-slack-channel-messages-for-new-airwallex-transactions
   template: https://zapier.com/apps/airwallex/integrations/slack/976857/send-slack-channel-messages-for-new-airwallex-transactions
   source: template
+  related_arazzo:
+  - airwallex-slack-card-limit-alert.yml
+  - airwallex-slack-failed-card-transactions.yml
+  - airwallex-slack-low-balance-alert.yml
+  - airwallex-slack-new-transactions-notification.yml
   relationship: ipaas-bridge
-  status: pending-generation
-  arazzo: null
+  arazzo: airwallex-slack-new-transactions-channel-message.yml
+  status: arazzo-broken
+  broken_reason: 'source url->missing local spec: https://raw.githubusercontent.com/api-evangelist/airwallex/refs/heads/main/openapi/airwallex-openapi.yml'
 - slug: airwallex-send-slack-notifications-for-new-transactions-in-airwallex
   label: Send Slack notifications for new transactions in Airwallex
   partner: slack
@@ -30,9 +36,15 @@
   evidence: https://zapier.com/apps/airwallex/integrations/slack/976814/send-slack-notifications-for-new-transactions-in-airwallex
   template: https://zapier.com/apps/airwallex/integrations/slack/976814/send-slack-notifications-for-new-transactions-in-airwallex
   source: template
+  related_arazzo:
+  - airwallex-slack-card-limit-alert.yml
+  - airwallex-slack-failed-card-transactions.yml
+  - airwallex-slack-low-balance-alert.yml
+  - airwallex-slack-new-transactions-channel-message.yml
   relationship: ipaas-bridge
-  status: pending-generation
-  arazzo: null
+  arazzo: airwallex-slack-new-transactions-notification.yml
+  status: arazzo-broken
+  broken_reason: 'source url->missing local spec: https://raw.githubusercontent.com/api-evangelist/airwallex/refs/heads/main/openapi/airwallex-openapi.yml'
 - slug: airwallex-send-slack-channel-messages-for-new-low-account-balance-alerts-in-airwallex
   label: Send Slack channel messages for new low account balance alerts in Airwallex
   partner: slack
@@ -45,9 +57,15 @@
   evidence: https://zapier.com/apps/airwallex/integrations/slack/976871/send-slack-channel-messages-for-new-low-account-balance-alerts-in-airwallex
   template: https://zapier.com/apps/airwallex/integrations/slack/976871/send-slack-channel-messages-for-new-low-account-balance-alerts-in-airwallex
   source: template
+  related_arazzo:
+  - airwallex-slack-card-limit-alert.yml
+  - airwallex-slack-failed-card-transactions.yml
+  - airwallex-slack-new-transactions-channel-message.yml
+  - airwallex-slack-new-transactions-notification.yml
   relationship: ipaas-bridge
-  status: pending-generation
-  arazzo: null
+  arazzo: airwallex-slack-low-balance-alert.yml
+  status: arazzo-broken
+  broken_reason: 'source url->missing local spec: https://raw.githubusercontent.com/api-evangelist/airwallex/refs/heads/main/openapi/airwallex-openapi.yml'
 - slug: airwallex-send-slack-channel-messages-for-newly-approaching-card-limits-in-airwallex
   label: Send Slack channel messages for newly approaching card limits in Airwallex
   partner: slack
@@ -60,9 +78,15 @@
   evidence: https://zapier.com/apps/airwallex/integrations/slack/976993/send-slack-channel-messages-for-newly-approaching-card-limits-in-airwallex
   template: https://zapier.com/apps/airwallex/integrations/slack/976993/send-slack-channel-messages-for-newly-approaching-card-limits-in-airwallex
   source: template
+  related_arazzo:
+  - airwallex-slack-failed-card-transactions.yml
+  - airwallex-slack-low-balance-alert.yml
+  - airwallex-slack-new-transactions-channel-message.yml
+  - airwallex-slack-new-transactions-notification.yml
   relationship: ipaas-bridge
-  status: pending-generation
-  arazzo: null
+  arazzo: airwallex-slack-card-limit-alert.yml
+  status: arazzo-broken
+  broken_reason: 'source url->missing local spec: https://raw.githubusercontent.com/api-evangelist/airwallex/refs/heads/main/openapi/airwallex-openapi.yml'
 - slug: airwallex-post-slack-notifications-for-new-failed-card-transactions-in-airwallex
   label: Post Slack notifications for new failed card transactions in Airwallex
   partner: slack
@@ -75,9 +99,15 @@
   evidence: https://zapier.com/apps/airwallex/integrations/slack/977204/post-slack-notifications-for-new-failed-card-transactions-in-airwallex
   template: https://zapier.com/apps/airwallex/integrations/slack/977204/post-slack-notifications-for-new-failed-card-transactions-in-airwallex
   source: template
+  related_arazzo:
+  - airwallex-slack-card-limit-alert.yml
+  - airwallex-slack-low-balance-alert.yml
+  - airwallex-slack-new-transactions-channel-message.yml
+  - airwallex-slack-new-transactions-notification.yml
   relationship: ipaas-bridge
-  status: pending-generation
-  arazzo: null
+  arazzo: airwallex-slack-failed-card-transactions.yml
+  status: arazzo-broken
+  broken_reason: 'source url->missing local spec: https://raw.githubusercontent.com/api-evangelist/airwallex/refs/heads/main/openapi/airwallex-openapi.yml'
 - slug: airwallex-create-beneficiaries-in-airwallex-from-new-microsoft-excel-rows
   label: Create beneficiaries in Airwallex from new Microsoft Excel rows
   partner_name: Microsoft Excel
@@ -91,19 +121,6 @@
   source: template
   relationship: ipaas-bridge
   status: pending-partner-spec
-  arazzo: null
-- slug: airwallex-woocommerce-own
-  label: WooCommerce (own)
-  partner: woocommerce
-  partner_name: WooCommerce (own)
-  category: extension
-  type: marketplace
-  marketplace: own
-  channel: partner-built
-  evidence: https://woocommerce.com/products/airwallexpayments/
-  source: edge
-  relationship: platform-app
-  status: not-a-workflow
   arazzo: null
 - slug: airwallex-zapier
   label: Zapier
@@ -164,32 +181,6 @@
     - Airwallex (UK) Limited
     - Airwallex Pty Ltd
     - Airwallex US, LLC
-  status: not-a-workflow
-  arazzo: null
-- slug: airwallex-wordpress-own
-  label: WordPress (own)
-  partner: wordpress
-  partner_name: WordPress (own)
-  category: WordPress plugin
-  type: marketplace
-  marketplace: own
-  channel: partner-built
-  evidence: https://wordpress.org/plugins/airwallex-online-payments-gateway/
-  source: edge
-  relationship: platform-app
-  status: not-a-workflow
-  arazzo: null
-- slug: airwallex-slack-own
-  label: Slack (own)
-  partner: slack
-  partner_name: Slack (own)
-  category: Slack app
-  type: marketplace
-  marketplace: own
-  channel: partner-built
-  evidence: https://slack.com/marketplace/A0AF68PCVUK-airwallex
-  source: edge
-  relationship: platform-app
   status: not-a-workflow
   arazzo: null
 - slug: airwallex-maven-central
@@ -674,5 +665,71 @@
     matched_by: org-profile-domain:airwallex.com
     detected_by: sweep-agent-skills.py
     detected: '2026-10-20'
+  status: not-a-workflow
+  arazzo: null
+- slug: airwallex-woocommerce-own
+  label: WooCommerce (own)
+  partner: woocommerce
+  partner_name: WooCommerce (own)
+  category: extension
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://woocommerce.com/products/airwallexpayments/
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
+- slug: airwallex-wordpress-own
+  label: WordPress (own)
+  partner: wordpress
+  partner_name: WordPress (own)
+  category: WordPress plugin
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://wordpress.org/plugins/airwallex-online-payments-gateway/
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
+- slug: airwallex-slack-own
+  label: Slack (own)
+  partner: slack
+  partner_name: Slack (own)
+  category: Slack app
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://slack.com/marketplace/A0AF68PCVUK-airwallex
+  source: edge
+  relationship: platform-app
+  arazzo: airwallex-slack-card-limit-alert.yml
+  status: arazzo-broken
+  broken_reason: 'source url->missing local spec: https://raw.githubusercontent.com/api-evangelist/airwallex/refs/heads/main/openapi/airwallex-openapi.yml'
+- slug: airwallex-bigcommerce-own
+  label: BigCommerce (own)
+  partner: bigcommerce
+  partner_name: BigCommerce (own)
+  category: Payments & Security, Payment Processors & Gateways
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://www.bigcommerce.com/apps/airwallex-online-payments/
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
+- slug: airwallex-salesforce-commerce-cloud-own
+  label: Salesforce Commerce Cloud (own)
+  partner: salesforce-commerce-cloud
+  partner_name: Salesforce Commerce Cloud (own)
+  category: sales, commerce
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://appexchange.salesforce.com/appxListingDetail?listingId=03514dde-0735-4ba2-be32-998570b5563a
+  source: edge
+  relationship: platform-app
   status: not-a-workflow
   arazzo: null

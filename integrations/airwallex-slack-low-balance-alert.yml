@@ -1,0 +1,69 @@
+arazzo: 1.0.1
+info:
+  title: Send Slack channel messages for new low account balance alerts in Airwallex
+  version: 1.0.0
+  description: Recreates the Zapier template "Send Slack channel messages for new low account balance alerts in Airwallex". listCurrent returns current wallet balances (available_amount per currency); the
+    low-balance threshold comparison is caller-side because the contract exposes no balance-alert filter. The result is then posted to a Slack channel with chat.postMessage.
+sourceDescriptions:
+- name: airwallex
+  url: https://raw.githubusercontent.com/api-evangelist/airwallex/refs/heads/main/openapi/airwallex-openapi.yml
+  type: openapi
+- name: slackChat
+  url: https://raw.githubusercontent.com/api-evangelist/slack/refs/heads/main/openapi/slack-chat-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: lowBalanceAlert
+  summary: Send Slack channel messages for new low account balance alerts in Airwallex
+  inputs:
+    type: object
+    required:
+    - slackToken
+    - channel
+    - text
+    properties:
+      slackToken:
+        type: string
+        description: Slack token with chat:write.
+      channel:
+        type: string
+        description: Slack channel id.
+      text:
+        type: string
+        description: Message text the caller renders from the first step's output.
+  steps:
+  - stepId: getCurrentBalances
+    operationId: $sourceDescriptions.airwallex.listCurrent
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      balances: $response.body
+  - stepId: postToSlack
+    operationId: $sourceDescriptions.slackChat.postChatPostmessage
+    parameters:
+    - name: token
+      in: header
+      value: $inputs.slackToken
+    requestBody:
+      contentType: application/x-www-form-urlencoded
+      payload:
+        channel: $inputs.channel
+        text: $inputs.text
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      ts: $response.body#/ts
+  outputs:
+    balances: $steps.getCurrentBalances.outputs.balances
+    slackTs: $steps.postToSlack.outputs.ts
+x-integration:
+  partner: slack
+  template: https://zapier.com/apps/airwallex/integrations/slack/976871/send-slack-channel-messages-for-new-low-account-balance-alerts-in-airwallex
+  edge_evidence: https://zapier.com/apps/airwallex/integrations/slack/976871/send-slack-channel-messages-for-new-low-account-balance-alerts-in-airwallex
+  edge_type: marketplace
+  method: generated
+  generated: '2026-10-20'
+  generator: provider-integrations-arazzo
+  guessed_steps:
+  - step: postToSlack
+    cause: catalog
+    why: Rendering the Airwallex result into message text is caller-side; the workflow passes the caller-formatted text input, since Arazzo has no templating.
