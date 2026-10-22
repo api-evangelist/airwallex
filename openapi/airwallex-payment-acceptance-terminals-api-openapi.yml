@@ -1,0 +1,925 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Payment Acceptance > Terminals API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Payment Acceptance > Terminals
+  description: 'A **Terminal** represents a physical device that can process payments. This API allows you to manage terminals, including creating, retrieving, updating, activating, deactivating, terminating, and processing payment intents in terminals.
+
+
+    A Terminal can be in one of the following states: 1. **ACTIVE**: The Terminal is activated and ready to use. 2. **INACTIVE**: The Terminal is deactivated for any reason. 3. **TERMINATED**: The Terminal is terminated and can''t be used anymore.'
+  x-domain: Payment Acceptance
+  x-resource: Terminals
+  x-urlPath: payments/terminals
+paths:
+  /api/v1/pa/pos/terminals/create:
+    post:
+      tags:
+      - Payment Acceptance > Terminals
+      summary: 1|Create a Terminal
+      description: Create a new Terminal. The `activation_code` must be provided in the request body. The `nickname` is optional and can be used to identify the terminal.
+      operationId: createTerminal
+      x-oboSupported: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - activation_code
+              - request_id
+              properties:
+                activation_code:
+                  type: string
+                  description: The activation code read from the terminal.
+                connected_account_id:
+                  type: string
+                  description: 'Airwallex assigned account identifier of the connected entity(another account which is linked with platform). It is to be used by the platform to indicate the connected entity in the transaction where platform is the owner of transaction. Notice: This can not be used with x-on-behalf-of header together.'
+                nickname:
+                  type: string
+                  description: Nickname of the Terminal.
+                request_id:
+                  type: string
+                  description: Unique request identifier specified by the merchant. Maximum length is 64.
+        description: Create request.
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Terminal'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/pos/terminals/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          activation_code: MEFCMSBC
+          connected_account_id: acct_dk_FmEGnOSeoCCg3RpmJBA
+          nickname: cloth store
+          request_id: ee939540-3203-4a2c-9172-89a566485dd9
+        response_body:
+          admin_password_status: ACTIVE
+          connected_account_id: acct_dk_FmEGnOSeoCCg3RpmJBA
+          id: ter_st8szlkh4z0nbfikx
+          model: morefun_m90
+          nickname: cloth store
+          refund_password_status: ACTIVE
+          serial_number: '19250220790001'
+          status: ACTIVE
+      x-scope:
+      - scope: pos_terminal:write
+        group: Payment Acceptance
+        resource_name: POS Terminals
+      x-domain: Payment Acceptance
+      x-resource: Terminals
+      x-urlPath: create
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/pos/terminals/{id}:
+    get:
+      tags:
+      - Payment Acceptance > Terminals
+      summary: 2|Retrieve a Terminal
+      description: Retrieve a Terminal by unique identifier.
+      operationId: retrieveTerminal
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: Terminal unique identifier.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Terminal'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/pos/terminals/terminal_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          admin_password_status: ACTIVE
+          connected_account_id: acct_dk_FmEGnOSeoCCg3RpmJBA
+          id: ter_st8szlkh4z0nbfikx
+          model: morefun_m90
+          nickname: cloth store
+          refund_password_status: ACTIVE
+          serial_number: '19250220790001'
+          status: ACTIVE
+      x-scope:
+      - scope: pos_terminal:read
+        group: Payment Acceptance
+        resource_name: POS Terminals
+      x-domain: Payment Acceptance
+      x-resource: Terminals
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/pos/terminals:
+    get:
+      tags:
+      - Payment Acceptance > Terminals
+      summary: 3|List all Terminals
+      description: List all Terminals.
+      operationId: listTerminals
+      x-oboSupported: false
+      parameters:
+      - name: connected_account_id
+        in: query
+        description: Optional Airwallex-assigned connected account identifier to filter by. Only applicable to platforms.
+        required: false
+        schema:
+          type: string
+      - name: device_model
+        in: query
+        description: Optional device model filter.
+        required: false
+        schema:
+          type: string
+      - name: nickname
+        in: query
+        description: Optional nickname filter of the Terminal.
+        required: false
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: Page for pagination.
+        required: false
+        schema:
+          type: string
+      - name: page_size
+        in: query
+        description: Number of Terminals to be listed per page. Default value is 10. Maximum is 1000. The value greater than the maximum will be capped to the maximum.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: serial_number
+        in: query
+        description: Optional serial number of the Terminal.
+        required: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: Optional operational status filter of the Terminal.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfTerminal'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/pos/terminals
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - admin_password_status: ACTIVE
+            connected_account_id: acct_dk_FmEGnOSeoCCg3RpmJBA
+            id: ter_st8szlkh4z0nbfikx
+            model: morefun_m90
+            nickname: cloth store
+            refund_password_status: ACTIVE
+            serial_number: '19250220790001'
+            status: ACTIVE
+          page_after: eyJrIjpbeyJuIjoiYXd4VGVybWluYWxJZCIsInYiOiJ0ZXJfc3Q4dnZmN2g0dGh0ZGVpcmQiLCJvIjoiYSIsInQiOiJqYXZhLmxhbmcuU3RyaW5nIn1dLCJkIjoiYWZ0ZXIiLCJmIjoibiIsInYiOjF9
+          page_before: eyJrIjpbeyJuIjoiYXd4VGVybWluYWxJZCIsInYiOiJ0ZXJfc3RoYjd0aGgycnEydHNvcnUiLCJvIjoiYSIsInQiOiJqYXZhLmxhbmcuU3RyaW5nIn1dLCJkIjoiYmVmb3JlIiwiZiI6Im4iLCJ2IjoxfQ==
+      x-scope:
+      - scope: pos_terminal:read
+        group: Payment Acceptance
+        resource_name: POS Terminals
+      x-domain: Payment Acceptance
+      x-resource: Terminals
+      x-urlPath: list
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/pos/terminals/{id}/update:
+    post:
+      tags:
+      - Payment Acceptance > Terminals
+      summary: 4|Update a Terminal
+      description: Update a Terminal.
+      operationId: updateTerminal
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: Terminal unique identifier.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              properties:
+                nickname:
+                  type: string
+                  description: Nickname of the Terminal.
+                request_id:
+                  type: string
+                  description: Unique request identifier specified by the merchant. Maximum length is 64.
+        description: Update request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Terminal'
+        '201':
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/pos/terminals/terminal_id/update
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          nickname: cloth store
+          request_id: ee939540-3203-4a2c-9172-89a566485dd9
+        response_body:
+          admin_password_status: ACTIVE
+          connected_account_id: acct_dk_FmEGnOSeoCCg3RpmJBA
+          id: ter_st8szlkh4z0nbfikx
+          model: morefun_m90
+          nickname: cloth store
+          refund_password_status: ACTIVE
+          serial_number: '19250220790001'
+          status: ACTIVE
+      x-scope:
+      - scope: pos_terminal:write
+        group: Payment Acceptance
+        resource_name: POS Terminals
+      x-domain: Payment Acceptance
+      x-resource: Terminals
+      x-urlPath: update
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/pos/terminals/{id}/activate:
+    post:
+      tags:
+      - Payment Acceptance > Terminals
+      summary: 5|Activate a Terminal
+      description: Activate a Terminal.
+      operationId: terminals_activate
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: Terminal unique identifier.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              properties:
+                request_id:
+                  type: string
+                  description: Unique request identifier specified by the merchant. Maximum length is 64.
+        description: Activate request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Terminal'
+        '201':
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `invalid_status_for_operation`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/pos/terminals/terminal_id/activate
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          request_id: ee939540-3203-4a2c-9172-89a566485dd9
+        response_body:
+          admin_password_status: ACTIVE
+          connected_account_id: acct_dk_FmEGnOSeoCCg3RpmJBA
+          id: ter_st8szlkh4z0nbfikx
+          model: morefun_m90
+          nickname: cloth store
+          refund_password_status: ACTIVE
+          serial_number: '19250220790001'
+          status: ACTIVE
+      x-scope:
+      - scope: pos_terminal:write
+        group: Payment Acceptance
+        resource_name: POS Terminals
+      x-domain: Payment Acceptance
+      x-resource: Terminals
+      x-urlPath: activate
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/pos/terminals/{id}/process_payment_intent:
+    post:
+      tags:
+      - Payment Acceptance > Terminals
+      summary: 6|Process a Payment Intent in a Terminal
+      description: Process a Payment Intent In a Terminal.
+      operationId: processPaymentIntent
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: Terminal unique identifier.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - payment_intent_id
+              - request_id
+              properties:
+                payment_intent_id:
+                  type: string
+                  description: Unique identifier of Payment Intent.
+                payment_method:
+                  type: object
+                  required:
+                  - type
+                  description: The Payment Method to use for the Payment Intent. If unfilled, the default payment method set on the terminal will be used.
+                  properties:
+                    type:
+                      type: string
+                      description: Type of the Payment Method (e.g. card_present, pay_now, wechatpay).
+                payment_method_options:
+                  type: object
+                  description: Options for Payment Method.
+                  properties:
+                    card:
+                      type: object
+                      description: The Payment Method options for card.
+                      properties:
+                        authorization_type:
+                          type: string
+                          description: The authorization type of the card payment. One of `final_auth`, `pre_auth`. Default to `final_auth`. Set it to `pre_auth` if you want to place a hold on your customer’s card for more than 7 days. Currently only available when the card brand is visa or mastercard. You must also set `auto_capture` to be `false` if you want to do pre-auth.
+                        auto_capture:
+                          type: boolean
+                          description: Specifies whether the funds should be requested automatically after the payment is authorized. Default to `true`. Set it to `false` if you want to capture the funds sometimes later.
+                request_id:
+                  type: string
+                  description: Unique request identifier specified by the merchant. Maximum length is 64.
+        description: Terminal process payment intent request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Terminal'
+        '201':
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `invalid_status_for_operation`, `terminal_busy`, `terminal_unavailable`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/pos/terminals/terminal_id/process_payment_intent
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          payment_intent_id: int_hkstskz7vg1xc7uscdj
+          payment_method:
+            type: card_present
+          payment_method_options:
+            card:
+              authorization_type: final_auth
+              auto_capture: true
+          request_id: ee939540-3203-4a2c-9172-89a566485dd9
+        response_body:
+          admin_password_status: ACTIVE
+          connected_account_id: acct_dk_FmEGnOSeoCCg3RpmJBA
+          id: ter_st8szlkh4z0nbfikx
+          model: morefun_m90
+          nickname: cloth store
+          refund_password_status: ACTIVE
+          serial_number: '19250220790001'
+          status: ACTIVE
+      x-scope:
+      - scope: pos_terminal:write
+        group: Payment Acceptance
+        resource_name: POS Terminals
+      x-domain: Payment Acceptance
+      x-resource: Terminals
+      x-urlPath: process_payment_intent
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/pos/terminals/{id}/reset_password:
+    post:
+      tags:
+      - Payment Acceptance > Terminals
+      summary: 7|Reset a Terminal Password
+      description: Reset a Terminal password.
+      operationId: resetPassword
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: Terminal unique identifier.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              properties:
+                password_type:
+                  type: string
+                  description: "Terminal password type \n\n**admin**\n- The terminal admin password.\n**refund**\n- The terminal refund password.\n"
+                request_id:
+                  type: string
+                  description: Unique request identifier specified by the merchant. Maximum length is 64.
+        description: Update request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Terminal'
+        '201':
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/pos/terminals/{id}/reset_password
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          password_type: admin
+          request_id: 962dbd83-5e7b-4185-b668-596834395c12
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          admin_password_status: RESET_REQUESTED
+          connected_account_id: acct_dk_FmEGnOSeoCCg3RpmJBA
+          id: ter_st8szlkh4z0nbfikx
+          model: morefun_m90
+          nickname: cloth store
+          refund_password_status: ACTIVE
+          serial_number: '19250220790001'
+          status: ACTIVE
+      x-scope:
+      - scope: pos_terminal:write
+        group: Payment Acceptance
+        resource_name: POS Terminals
+      x-domain: Payment Acceptance
+      x-resource: Terminals
+      x-urlPath: reset_password
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/pos/terminals/{id}/deactivate:
+    post:
+      tags:
+      - Payment Acceptance > Terminals
+      summary: 8|Deactivate a Terminal
+      description: Deactivate a Terminal.
+      operationId: terminals_deactivate
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: Terminal unique identifier.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              properties:
+                request_id:
+                  type: string
+                  description: Unique request identifier specified by the merchant. Maximum length is 64.
+        description: Deactivate request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Terminal'
+        '201':
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `invalid_status_for_operation`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/pos/terminals/{id}/deactivate
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          request_id: 962dbd83-5e7b-4185-b668-596834395c12
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          admin_password_status: ACTIVE
+          connected_account_id: acct_dk_FmEGnOSeoCCg3RpmJBA
+          id: ter_st8szlkh4z0nbfikx
+          model: morefun_m90
+          nickname: cloth store
+          refund_password_status: ACTIVE
+          serial_number: '19250220790001'
+          status: INACTIVE
+      x-scope:
+      - scope: pos_terminal:write
+        group: Payment Acceptance
+        resource_name: POS Terminals
+      x-domain: Payment Acceptance
+      x-resource: Terminals
+      x-urlPath: deactivate
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/pos/terminals/{id}/terminate:
+    post:
+      tags:
+      - Payment Acceptance > Terminals
+      summary: 9|Terminate a Terminal
+      description: Terminate a Terminal.
+      operationId: terminate
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: Terminal unique identifier.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              properties:
+                request_id:
+                  type: string
+                  description: Unique request identifier specified by the merchant. Maximum length is 64.
+        description: Terminate request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Terminal'
+        '201':
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `invalid_status_for_operation`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/pos/terminals/{id}/terminate
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          request_id: 962dbd83-5e7b-4185-b668-596834395c12
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          admin_password_status: ACTIVE
+          connected_account_id: acct_dk_FmEGnOSeoCCg3RpmJBA
+          id: ter_st8szlkh4z0nbfikx
+          model: morefun_m90
+          nickname: cloth store
+          refund_password_status: ACTIVE
+          serial_number: '19250220790001'
+          status: TERMINATED
+      x-scope:
+      - scope: pos_terminal:write
+        group: Payment Acceptance
+        resource_name: POS Terminals
+      x-domain: Payment Acceptance
+      x-resource: Terminals
+      x-urlPath: terminate
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/pos/terminals/{id}/cancel_current_operation:
+    post:
+      tags:
+      - Payment Acceptance > Terminals
+      summary: 10|Cancel Current Operation on a Terminal
+      description: Cancel current operation on a Terminal if possible.
+      operationId: cancelCurrentOperation
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: Terminal unique identifier.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Terminal'
+        '201':
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `invalid_status_for_operation`, `terminal_busy`, `terminal_unavailable`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/pos/terminals/terminal_id/cancel_current_operation
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          admin_password_status: ACTIVE
+          connected_account_id: acct_dk_FmEGnOSeoCCg3RpmJBA
+          id: ter_st8szlkh4z0nbfikx
+          model: morefun_m90
+          nickname: cloth store
+          refund_password_status: ACTIVE
+          serial_number: '19250220790001'
+          status: ACTIVE
+      x-scope:
+      - scope: pos_terminal:write
+        group: Payment Acceptance
+        resource_name: POS Terminals
+      x-domain: Payment Acceptance
+      x-resource: Terminals
+      x-urlPath: cancel_current_operation
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    ListOfTerminal:
+      type: object
+      properties:
+        items:
+          type: array
+          description: List items.
+          items:
+            $ref: '#/components/schemas/Terminal'
+        page_after:
+          type: string
+          description: A pointer to the end of the page list used in pagination to retrieve the next page of results. Provide this identifier in the page request parameter in a subsequent call to retrieve the next page of results. The value will be null for the last page.
+        page_before:
+          type: string
+          description: A pointer to the start of the page list used in pagination to retrieve the previous page of results. Provide this identifier in the page request parameter in a subsequent call to retrieve the previous page of results. The value will be null for the first page.
+    Terminal:
+      type: object
+      properties:
+        admin_password_status:
+          type: string
+          description: "The terminal admin password status \n\n- **ACTIVE**: The terminal admin password is active.\n- **LOCKED**: The terminal admin password is locked.\n- **RESET_REQUESTED**: The terminal admin password requires reset.\n"
+        connected_account_id:
+          type: string
+          description: Account identifier of the connected account.
+        id:
+          type: string
+          description: Terminal unique identifier.
+        model:
+          type: string
+          description: Model of the Terminal, possible values are `morefun_m90`.
+        nickname:
+          type: string
+          description: Nickname of the Terminal.
+        refund_password_status:
+          type: string
+          description: "The terminal refund password status \n\n- **ACTIVE**: The terminal refund password is active.\n- **LOCKED**: The terminal refund password is locked.\n- **RESET_REQUESTED**: The terminal refund password requires reset.\n- **OPT_OUT**: The terminal refund password is opted out.\n"
+        serial_number:
+          type: string
+          description: Serial number of the Terminal.
+        status:
+          type: string
+          description: "Operational status of the Terminal \n\n- **ACTIVE**: The Terminal is activated and ready to use.\n- **INACTIVE**: The Terminal is deactivated for any reason.\n- **TERMINATED**: The Terminal is terminated and can't be used anymore.\n"
+      description: Detailed information about the Terminal.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

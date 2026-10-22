@@ -1,0 +1,754 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Simulation (Sandbox Only) > Issuing API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Simulation (Sandbox Only) > Issuing
+  description: You can simulate transactions on cards issued by Airwallex and KYC processes of cardholders. Find out more about generating card issuing transactions and cardholder status.
+  x-domain: Simulation (Sandbox Only)
+  x-resource: Issuing
+  x-urlPath: simulation/issuing
+paths:
+  /api/v1/simulation/issuing/create:
+    post:
+      servers:
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+      tags:
+      - Simulation (Sandbox Only) > Issuing
+      summary: 1|Create a Transaction for the Provided Card
+      description: Creates a transaction for the card_id (or card_number) provided, but does not capture the transaction. This is only available in the sandbox environment.
+      operationId: simulation_createIssuing
+      parameters:
+      - name: x-api-version
+        in: header
+        description: x-api-version.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - transaction_amount
+              - transaction_currency
+              properties:
+                auth_code:
+                  type: string
+                  description: Authorization code.
+                card_id:
+                  type: string
+                  format: uuid
+                  description: Unique Identifier for card. Leave this blank if using card_number. If both card_number and card_id are provided, card_number will be used.
+                card_number:
+                  type: string
+                  description: Card Number.
+                merchant_category_code:
+                  type: string
+                  description: Merchant category code.
+                merchant_info:
+                  type: string
+                  description: Merchant description.
+                single_phase:
+                  type: boolean
+                  description: 'Set this to true to combine a single transaction that both authorizes and clears the transaction request. Defaults to false if not set. '
+                transaction_amount:
+                  type: number
+                  description: Transaction amount.
+                transaction_currency:
+                  type: string
+                  description: Currency of the transaction. Can only be one of USD, AUD, GBP, EUR, CAD, JPY, HKD, CNY, SGD, NZD, CHF.
+                transaction_failure_reason:
+                  type: string
+                  description: Set this field to simulate a failed transaction with the specific failure reason.
+                  enum:
+                  - CARDHOLDER_VERIFICATION_FAILED
+                  - CVV_INVALID
+                  - INVALID_EXPIRY_DATE
+                  - PIN_INVALID
+                  - PIN_RETRIES_EXCEEDED
+                  - TRANSACTION_BLOCKED
+                card_transaction_lifecycle_id:
+                  type: string
+                  format: uuid
+                  description: The unique identifier of a card transaction lifecycle to associate with the new authorization.
+        description: payload
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulationTransaction'
+        '400':
+          description: invalid_argument
+        '401':
+          description: credentials_invalid
+        '500':
+          description: service_unavailable
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/simulation/issuing/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+          x-api-version: '2026-08-21'
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          auth_code: '123312'
+          card_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          card_number: '4242424242424242'
+          merchant_category_code: '0742'
+          merchant_info: Example
+          single_phase: true
+          transaction_amount: 100
+          transaction_currency: AUD
+          transaction_failure_reason: CVV_INVALID
+          card_transaction_lifecycle_id: d8af1614-a6a1-4d45-aae7-6858fc6d9ede
+        response_body:
+          auth_code: '000001'
+          billing_amount: 100
+          billing_currency: USD
+          card_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          card_nickname: <string>
+          client_data: Some client data
+          masked_card_number: '************4242'
+          merchant:
+            category_code: '4829'
+            city: Melbourne
+            country: Australia
+            name: Merchant A
+          network_transaction_id: '3951729271768745'
+          process_result: APPROVED
+          retrieval_ref: '909916088001'
+          subtype: AUTHORIZATION
+          transaction_amount: 100
+          transaction_currency: USD
+          transacted_at: '2018-03-21T16:08:02+00:00'
+          card_transaction_event_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+          card_transaction_id: 7c2dc266-09ad-4235-b61a-767c7cd6d6ea
+          card_transaction_lifecycle_id: 3c2dc266-09ad-4235-b61a-767c7cd6d6ea
+          type: AUTHORIZATION
+          updated_at: '2018-03-22T16:08:02+00:00'
+      x-scope:
+      - scope: simulation:write
+        group: Simulations
+        resource_name: Simulations
+      x-domain: Simulation (Sandbox Only)
+      x-resource: Issuing
+      x-urlPath: create
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+  /api/v1/simulation/issuing/card_transaction_lifecycles/{card_transaction_lifecycle_id}/capture:
+    post:
+      servers:
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+      tags:
+      - Simulation (Sandbox Only) > Issuing
+      summary: 2|Capture the Card Transaction Lifecycle
+      description: Capture a card transaction lifecycle using the given lifecycle ID. This is only available in the sandbox environment.
+      operationId: simulation_captureTransaction
+      parameters:
+      - name: card_transaction_lifecycle_id
+        in: path
+        description: Unique identifier of the card transaction lifecycle to capture.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: d8af1614-a6a1-4d45-aae7-6858fc6d9ede
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                merchant_info:
+                  type: string
+                  description: Merchant description.
+                transaction_amount:
+                  type: number
+                  description: Amount to capture. Providing an amount smaller than the full authorised amount will result in a partial capture of the indicated amount only. When not present, the full authorised amount will be captured.
+        description: payload
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulationTransaction'
+        '400':
+          description: invalid_argument
+        '401':
+          description: credentials_invalid
+        '500':
+          description: service_unavailable
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/simulation/issuing/card_transaction_lifecycles/d8af1614-a6a1-4d45-aae7-6858fc6d9ede/capture
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          merchant_info: Example
+          transaction_amount: 100
+        response_body:
+          auth_code: '000001'
+          billing_amount: 100
+          billing_currency: USD
+          card_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          card_nickname: <string>
+          client_data: Some client data
+          masked_card_number: '************4242'
+          merchant:
+            category_code: '4829'
+            city: Melbourne
+            country: Australia
+            name: Merchant A
+          network_transaction_id: '3951729271768745'
+          process_result: APPROVED
+          retrieval_ref: '909916088001'
+          subtype: CLEARING
+          transaction_amount: 100
+          transaction_currency: USD
+          transacted_at: '2018-03-21T16:08:02+00:00'
+          card_transaction_event_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+          card_transaction_id: 7c2dc266-09ad-4235-b61a-767c7cd6d6ea
+          card_transaction_lifecycle_id: 3c2dc266-09ad-4235-b61a-767c7cd6d6ea
+          type: CLEARING
+          updated_at: '2018-03-22T16:08:02+00:00'
+      x-domain: Simulation (Sandbox Only)
+      x-resource: Issuing
+      x-urlPath: capture_card_transaction_lifecycles
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+  /api/v1/simulation/issuing/refund:
+    post:
+      servers:
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+      tags:
+      - Simulation (Sandbox Only) > Issuing
+      summary: 3|Refund a Transaction for the Provided Card
+      description: Refunds a transaction. This is only available in the sandbox environment.
+      operationId: simulation_refund
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - transaction_amount
+              - transaction_currency
+              properties:
+                card_id:
+                  type: string
+                  format: uuid
+                  description: Unique Identifier for card. Leave this blank if using card_number. If both card_number and card_id are provided, card_number will be used.
+                card_number:
+                  type: string
+                  description: Card Number.
+                merchant_category_code:
+                  type: string
+                  description: Merchant category code.
+                merchant_info:
+                  type: string
+                  description: Merchant description.
+                transaction_amount:
+                  type: number
+                  description: Transaction amount.
+                transaction_currency:
+                  type: string
+                  description: Currency of the transaction. Can only be one of USD, AUD, GBP, EUR, CAD, JPY, HKD, CNY, SGD, NZD, CHF.
+                card_transaction_lifecycle_id:
+                  type: string
+                  format: uuid
+                  description: The unique identifier of the original card transaction lifecycle to refund.
+        description: payload
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulationTransaction'
+        '400':
+          description: invalid_argument
+        '401':
+          description: credentials_invalid
+        '500':
+          description: service_unavailable
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/simulation/issuing/refund
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          card_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          card_number: '4242424242424242'
+          merchant_category_code: '0742'
+          merchant_info: Example
+          transaction_amount: 100
+          transaction_currency: AUD
+          card_transaction_lifecycle_id: d8af1614-a6a1-4d45-aae7-6858fc6d9ede
+        response_body:
+          auth_code: '000001'
+          billing_amount: 100
+          billing_currency: USD
+          card_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          card_nickname: <string>
+          client_data: Some client data
+          masked_card_number: '************4242'
+          merchant:
+            category_code: '4829'
+            city: Melbourne
+            country: Australia
+            name: Merchant A
+          network_transaction_id: '3951729271768745'
+          process_result: APPROVED
+          retrieval_ref: '909916088001'
+          subtype: CLEARING
+          transaction_amount: 100
+          transaction_currency: USD
+          transacted_at: '2018-03-21T16:08:02+00:00'
+          card_transaction_event_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+          card_transaction_id: 7c2dc266-09ad-4235-b61a-767c7cd6d6ea
+          card_transaction_lifecycle_id: 3c2dc266-09ad-4235-b61a-767c7cd6d6ea
+          type: CLEARING
+          updated_at: '2018-03-22T16:08:02+00:00'
+      x-scope:
+      - scope: simulation:write
+        group: Simulations
+        resource_name: Simulations
+      x-domain: Simulation (Sandbox Only)
+      x-resource: Issuing
+      x-urlPath: refund
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+  /api/v1/simulation/issuing/card_transaction_lifecycles/{card_transaction_lifecycle_id}/reverse:
+    post:
+      servers:
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+      tags:
+      - Simulation (Sandbox Only) > Issuing
+      summary: 4|Reverse the Card Transaction Lifecycle with the Provided Id
+      description: Reverse a card transaction lifecycle. This is only available in the sandbox environment.
+      operationId: simulation_reverseTransaction
+      parameters:
+      - name: card_transaction_lifecycle_id
+        in: path
+        description: Unique identifier of the card transaction lifecycle to reverse.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: d8af1614-a6a1-4d45-aae7-6858fc6d9ede
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                transaction_amount:
+                  type: number
+                  description: Amount to reverse. Providing an amount smaller than the full authorised amount will result in a partial reversal of the indicated amount only. When not present, the full authorised amount will be reversed.
+        description: payload
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulationTransaction'
+        '400':
+          description: invalid_argument
+        '401':
+          description: credentials_invalid
+        '500':
+          description: service_unavailable
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/simulation/issuing/card_transaction_lifecycles/d8af1614-a6a1-4d45-aae7-6858fc6d9ede/reverse
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          transaction_amount: 100
+        response_body:
+          auth_code: '000001'
+          billing_amount: 100
+          billing_currency: USD
+          card_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          card_nickname: <string>
+          client_data: Some client data
+          masked_card_number: '************4242'
+          merchant:
+            category_code: '4829'
+            city: Melbourne
+            country: Australia
+            name: Merchant A
+          network_transaction_id: '3951729271768745'
+          process_result: APPROVED
+          retrieval_ref: '909916088001'
+          subtype: REVERSAL
+          transaction_amount: 100
+          transaction_currency: USD
+          transacted_at: '2018-03-21T16:08:02+00:00'
+          card_transaction_event_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+          card_transaction_id: 7c2dc266-09ad-4235-b61a-767c7cd6d6ea
+          card_transaction_lifecycle_id: 3c2dc266-09ad-4235-b61a-767c7cd6d6ea
+          type: REVERSAL_AUTH
+          updated_at: '2018-03-22T16:08:02+00:00'
+      x-domain: Simulation (Sandbox Only)
+      x-resource: Issuing
+      x-urlPath: reverse_card_transaction_lifecycles
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+  /api/v1/simulation/issuing/cardholders/{id}/pass_review:
+    post:
+      servers:
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+      tags:
+      - Simulation (Sandbox Only) > Issuing
+      summary: 5|Pass Review Stage of a Cardholder
+      description: Use this endpoint to bypass the RFI process. Learn about the cardholder status and Handle Cardholder Request for Information (RFI). This is only available in the sandbox environment.
+      operationId: simulation_passReviewCardholder
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the cardholder.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: d8af1614-a6a1-4d45-aae7-6858fc6d9ede
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
+        '400':
+          description: not_found
+        '401':
+          description: credentials_invalid
+        '500':
+          description: service_unavailable
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/simulation/issuing/cardholders/issuing_id/pass_review
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body: false
+      x-scope:
+      - scope: simulation:write
+        group: Simulations
+        resource_name: Simulations
+      x-domain: Simulation (Sandbox Only)
+      x-resource: Issuing
+      x-urlPath: pass_review_cardholders
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+  /api/v1/simulation/issuing/threeds/notify:
+    post:
+      servers:
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+      tags:
+      - Simulation (Sandbox Only) > Issuing
+      summary: 6|Send Threeds Notification for the Provided Card
+      description: Use this endpoint to send a threeds delegation mode notification for the provided card. Please note that this account must enable threeds delegation mode in notification configuration. This is only available in sandbox environment.
+      operationId: simulation_notifyThreeds
+      x-oboSupported: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - card_number
+              properties:
+                card_number:
+                  type: string
+                  description: Card Number.
+                merchant_info:
+                  type: object
+                  description: Merchant Description.
+                  properties:
+                    acquirer_id:
+                      type: string
+                      description: Acquirer unique identifier.
+                    merchant_category_code:
+                      type: string
+                      description: Merchant Category Code.
+                    merchant_country_code:
+                      type: string
+                      description: Merchant Country Code.
+                    merchant_id:
+                      type: string
+                      description: Merchant unique identifier.
+                    merchant_name:
+                      type: string
+                      description: Merchant Name.
+                    merchant_url:
+                      type: string
+                      description: Merchant URL.
+        description: request
+        required: true
+      responses:
+        '200':
+          description: 3DS notification processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulationThreedsNotification'
+        '400':
+          description: configuration_error or card_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulationThreedsNotification'
+        '401':
+          description: credentials_invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulationError'
+        '500':
+          description: internal_error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulationThreedsNotification'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/simulation/issuing/threeds/notify
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          card_number: '4012000300000088'
+          merchant_info:
+            acquirer_id: '459535'
+            merchant_category_code: '1200'
+            merchant_country_code: US
+            merchant_id: 641025a8-5845-477e-b9da-06dcd28d0d28
+            merchant_name: happyPay
+            merchant_url: http://www.happypay.com/
+        response_body:
+          status: SUCCESS
+      x-scope:
+      - scope: simulation:write
+        group: Simulations
+        resource_name: Simulations
+      x-domain: Simulation (Sandbox Only)
+      x-resource: Issuing
+      x-urlPath: notify_threeds
+      x-oauthSupported: true
+      x-resourceLevel: account
+components:
+  schemas:
+    SimulationError:
+      type: object
+      required:
+      - code
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        source:
+          type: string
+    SimulationThreedsNotification:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Notification Status.
+    SimulationTransaction:
+      type: object
+      properties:
+        auth_code:
+          type: string
+          description: Authorization Code.
+        billing_amount:
+          type: number
+          description: Billing amount.
+        billing_currency:
+          type: string
+          description: Billing Currency.
+        card_id:
+          type: string
+          format: uuid
+          description: Unique Identifier for card.
+        card_transaction_event_id:
+          type: string
+          format: uuid
+          description: The unique identifier of the card transaction event created by the simulation operation.
+        card_transaction_id:
+          type: string
+          format: uuid
+          description: The unique identifier of the card transaction created or updated by the simulation operation.
+        card_transaction_lifecycle_id:
+          type: string
+          format: uuid
+          description: The unique identifier of the card transaction lifecycle created or updated by the simulation operation.
+        card_nickname:
+          type: string
+          description: The nickname of the card used.
+        client_data:
+          type: string
+          description: Client data stored against the card record.
+        failure_reason:
+          type: string
+          description: The reason the event was declined. Only present when `process_result` is `DECLINED`. Learn more about [transaction failure reasons](/docs/issuing/transactions/transaction-failure-reasons).
+          enum:
+          - ACCOUNT_INVALID
+          - CARDHOLDER_VERIFICATION_FAILED
+          - CARD_CLOSED
+          - CARD_INACTIVE
+          - CARD_INVALID
+          - CARD_LOST_STOLEN
+          - CARD_NOT_ACTIVATED
+          - CARD_REISSUED_TO_NEW_NUMBER
+          - CURRENCY_NOT_ALLOWED
+          - CVV_INVALID
+          - EXPIRY_MISSING
+          - INSUFFICIENT_AVAILABLE_CREDIT
+          - INSUFFICIENT_FUNDS
+          - INTERNAL_ERROR
+          - INVALID_EXPIRY_DATE
+          - LIMIT_EXCEEDED
+          - MERCHANT_CATEGORY_NOT_ALLOWED
+          - MERCHANT_COUNTRY_NOT_ALLOWED
+          - MERCHANT_BRAND_NOT_ALLOWED
+          - MERCHANT_BRAND_CATEGORY_NOT_ALLOWED
+          - MERCHANT_BRAND_SUBCATEGORY_NOT_ALLOWED
+          - NOT_SUPPORTED
+          - OUT_OF_ALLOWED_TIME_RANGE
+          - PIN_INVALID
+          - PIN_RETRIES_EXCEEDED
+          - REMOTE_AUTH_DECLINED
+          - RESTRICTED_COUNTRY
+          - SUSPECTED_FRAUD
+          - TRANSACTION_BLOCKED
+          - TRANSACTION_BLOCKED_AT_TERMINAL
+          - TRANSACTION_USAGE_DISABLED
+        masked_card_number:
+          type: string
+          description: Masked card number.
+        merchant:
+          $ref: '#/components/schemas/SimulationMerchant'
+          description: Merchant of the card transaction.
+        network_transaction_id:
+          type: string
+          description: The transaction unique identifier from VISA network.
+        process_result:
+          type: string
+          description: The processing result of the card transaction event.
+          enum:
+          - APPROVED
+          - DECLINED
+        retrieval_ref:
+          type: string
+          description: Transaction retrieval reference number. Data element 37 of an financial transaction message (https://en.wikipedia.org/wiki/ISO_8583).
+        subtype:
+          type: string
+          description: The card transaction event subtype.
+          enum:
+          - AUTHORIZATION
+          - INCREMENTAL_AUTHORIZATION
+          - VERIFICATION
+          - REVERSAL
+          - PARTIAL_REVERSAL
+          - EXPIRED_AUTHORIZATION
+          - CLEARING
+          - PARTIAL_CLEARING
+          - CLEARING_REVERSAL
+        transaction_amount:
+          type: number
+          description: Transaction amount.
+        transaction_currency:
+          type: string
+          description: Transaction currency.
+        transacted_at:
+          type: string
+          format: date-time
+          description: The network-reported transaction time.
+        type:
+          type: string
+          description: The card transaction event type.
+          enum:
+          - AUTHORIZATION
+          - CLEARING
+          - REVERSAL_AUTH
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time when the card transaction event was last updated, in ISO 8601 format.
+    SimulationMerchant:
+      type: object
+      properties:
+        category_code:
+          type: string
+          description: Merchant category code.
+        city:
+          type: string
+          description: Merchant city.
+        country:
+          type: string
+          description: Merchant country.
+        name:
+          type: string
+          description: Merchant Name.
+      description: Merchant of the card transaction.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

@@ -1,0 +1,182 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Scale Settlements > Scale Settlements API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Scale Settlements > Scale Settlements
+  x-urlPath: scalesettlements/scalesettlements
+  x-domain: Scale Settlements
+  x-resource: Scale Settlements
+paths:
+  /api/v1/settlement_reports/prepare:
+    post:
+      tags:
+      - Scale Settlements > Scale Settlements
+      summary: 1|Create a Batch Report
+      description: Create a new batch report. To create an batch transfer, must upload the attachment file of settlement ahead. Once the transfer is created, it will do correspond principle and commission between your account and merchants connected to your Airwallex account. Each file must follow our field structure to generate settlement.
+      operationId: settlementReportsPrepare
+      x-oboSupported: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - deposit_id
+              - file_id
+              properties:
+                deposit_id:
+                  type: string
+                  description: A specific deposit from the Airwallex.
+                file_id:
+                  type: string
+                  description: File-id that can identify settlement file through file-service.
+        description: createSettlementRequestDTO
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchSettlement'
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  details:
+                    type: object
+                  message:
+                    type: string
+                  source:
+                    type: string
+                title: ErrorResponse
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/settlement_reports/prepare
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          deposit_id: <string>
+          file_id: <string>
+        response_body:
+          create_at: <string>
+          file_id: <string>
+          settlement_report_id: <string>
+      x-oauthSupported: false
+      x-domain: Scale Settlements
+      x-resource: Scale Settlements
+      x-urlPath: prepare_settlement_reports
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/settlement_reports/{settlement_report_id}:
+    get:
+      tags:
+      - Scale Settlements > Scale Settlements
+      summary: 2|Retrieve a Settlement Report
+      description: Get settlement report file for batch settlement records.
+      operationId: retrieveSettlementReports
+      x-oboSupported: false
+      parameters:
+      - name: settlement_report_id
+        in: path
+        description: Settlement report id for specified settlement reports.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  details:
+                    type: object
+                  message:
+                    type: string
+                  source:
+                    type: string
+                title: ErrorResponse
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/settlement_reports/settlement_report_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+      x-oauthSupported: false
+      x-domain: Scale Settlements
+      x-resource: Scale Settlements
+      x-urlPath: retrieve
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    BatchSettlement:
+      type: object
+      properties:
+        create_at:
+          type: string
+          description: Create time of the batch settlement.
+        file_id:
+          type: string
+          description: Settlement file id.
+        settlement_report_id:
+          type: string
+          description: Settlement report id generated.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

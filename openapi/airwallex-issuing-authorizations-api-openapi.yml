@@ -1,0 +1,516 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Issuing > Authorizations API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Issuing > Authorizations
+  description: You can view authorizations such as pre auth and capture processed against individual cards or for all cards created within your organisation.
+  x-domain: Issuing
+  x-resource: Authorizations
+  x-urlPath: issuing/authorizations
+paths:
+  /api/v1/issuing/authorizations/{id}:
+    get:
+      tags:
+      - Issuing > Authorizations
+      summary: 1|Retrieve an Authorization
+      description: 'Retrieves details of an authorization performed on a card issued to your account.
+
+
+        *This endpoint uses the legacy transaction model. Use Transaction Events, Card Transactions, and Lifecycles for the three-level transaction model and more precise transaction status and event data.*'
+      operationId: retrieveAuthorization
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier for a transaction.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonPciAuthorization'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: true
+      x-stage: deprecated
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/issuing/authorizations/authorization_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          acquiring_institution_identifier: '123456'
+          auth_code: '000001'
+          billing_amount: 1000
+          billing_currency: USD
+          card_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+          card_nickname: <string>
+          client_data: Some client data
+          create_time: '2018-03-22T16:08:02+00:00'
+          digital_wallet_token_id: 91eb855a-8169-40ea-b428-8405372da9a5
+          expiry_date: '2018-03-22T16:08:02+00:00'
+          failure_reason: INSUFFICIENT_FUNDS
+          fee_details:
+          - amount: 500
+            currency: USD
+            type: ATM_ACCESS_FEE
+          card_transaction_data:
+            card_transaction_lifecycle_id: 95ede192-3a86-461e-96d9-f51b55aae79e
+            card_transaction_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+            card_transaction_event_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          masked_card_number: '************4242'
+          merchant:
+            additional_merchant_info:
+              merchant_category: Professional Services
+              merchant_full_name: Meta
+              merchant_logo_url: https://example.com/merchant-logo.png
+              merchant_sub_category: Advertising and Marketing
+            category_code: '4829'
+            city: San Francisco
+            country: USA
+            identifier: 012345678910123
+            name: Merchant A
+            postcode: '94111'
+            state: CA
+          network_transaction_id: '3951729271768745'
+          retrieval_ref: '909916088001'
+          risk_details:
+            risk_actions_performed:
+            - TRANSACTION_BLOCKED
+            risk_factors:
+            - Suspicious transaction velocity
+            three_dsecure_outcome: AUTHENTICATED
+          status: PENDING
+          transaction_amount: 100
+          transaction_currency: USD
+          transaction_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+          updated_by_transaction: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+      x-scope:
+      - scope: issuing.transaction:read
+        group: Issuing
+        resource_name: Authorizations and Transactions
+      x-domain: Issuing
+      x-resource: Authorizations
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/issuing/authorizations:
+    get:
+      tags:
+      - Issuing > Authorizations
+      summary: 2|List all Authorizations
+      description: 'Retrieves details of all card authorizations associated with your account. By default, authorizations created within the last 30 days are returned unless both *to* and *from* created_at request fields are populated.
+
+
+        *This endpoint uses the legacy transaction model. Use Transaction Events, Card Transactions, and Lifecycles for the three-level transaction model and more precise transaction status and event data.*'
+      operationId: listAuthorizations
+      parameters:
+      - name: billing_currency
+        in: query
+        description: Currency in which the transaction was billed, in 3-letter ISO-4217 code.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: card_id
+        in: query
+        description: Unique Identifier for the card.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          format: uuid
+      - name: digital_wallet_token_id
+        in: query
+        description: Unique Identifier for the digital token.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          format: uuid
+      - name: from_created_at
+        in: query
+        description: start of Transaction Date in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: to_created_at - 30 day
+      - name: page_num
+        in: query
+        description: Page number, starts from 0.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of results per page.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: retrieval_ref
+        in: query
+        description: Retrieval reference number.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: Authorization status, Can be one of `CLEARED`, `EXPIRED`, `FAILED`, `PENDING`, `REVERSED`.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: to_created_at
+        in: query
+        description: End of Transaction Date in ISO8601 format (exclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: current time
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - has_more
+                - items
+                properties:
+                  has_more:
+                    type: boolean
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NonPciAuthorization'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: true
+      x-stage: deprecated
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/issuing/authorizations
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - acquiring_institution_identifier: '123456'
+            auth_code: '000001'
+            billing_amount: 1000
+            billing_currency: USD
+            card_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+            client_data: Some client data
+            create_time: '2018-03-22T16:08:02+00:00'
+            digital_wallet_token_id: 91eb855a-8169-40ea-b428-8405372da9a5
+            expiry_date: '2018-03-22T16:08:02+00:00'
+            failure_reason: INSUFFICIENT_FUNDS
+            fee_details:
+            - amount: 500
+              currency: USD
+              type: ATM_ACCESS_FEE
+            card_transaction_data:
+              card_transaction_lifecycle_id: 95ede192-3a86-461e-96d9-f51b55aae79e
+              card_transaction_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+              card_transaction_event_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+            masked_card_number: '************4242'
+            merchant:
+              additional_merchant_info:
+                merchant_category: Professional Services
+                merchant_full_name: Meta
+                merchant_logo_url: https://example.com/merchant-logo.png
+                merchant_sub_category: Advertising and Marketing
+              category_code: '4829'
+              city: San Francisco
+              country: USA
+              identifier: 012345678910123
+              name: Merchant A
+              postcode: '94111'
+              state: CA
+            network_transaction_id: '3951729271768745'
+            retrieval_ref: '909916088001'
+            risk_details:
+              risk_actions_performed:
+              - TRANSACTION_BLOCKED
+              risk_factors:
+              - Suspicious transaction velocity
+              three_dsecure_outcome: AUTHENTICATED
+            status: PENDING
+            transaction_amount: 100
+            transaction_currency: USD
+            transaction_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+            updated_by_transaction: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+      x-scope:
+      - scope: issuing.transaction:read
+        group: Issuing
+        resource_name: Authorizations and Transactions
+      x-domain: Issuing
+      x-resource: Authorizations
+      x-urlPath: list
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    NonPciFeeDetail:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: Fee amount.
+        currency:
+          type: string
+          description: Currency in which the fee is charged (3-letter ISO-4217 code).
+        type:
+          type: string
+          description: 'Fee type. One of: `ATM_ACCESS_FEE`.'
+    NonPciAdditionalMerchantInfo:
+      type: object
+      properties:
+        merchant_category:
+          type: string
+          description: Merchant category.
+        merchant_full_name:
+          type: string
+          description: Merchant full name.
+        merchant_logo_url:
+          type: string
+          description: Merchant logo url.
+        merchant_sub_category:
+          type: string
+          description: Merchant sub category.
+      description: Merchant additional info.
+    NonPciRiskDetails:
+      type: object
+      properties:
+        risk_actions_performed:
+          type: array
+          description: Risk actions performed for a card transaction, triggered by rules in our risk engine.
+          items:
+            type: string
+        risk_factors:
+          type: array
+          description: Risk factors are conditions or variables that increase the likelihood of fraud or financial irregularities, assessed by our risk management system to determine the threat level of a transaction.
+          items:
+            type: string
+        three_dsecure_outcome:
+          type: string
+          description: 'The outcome of a 3D Secure authentication process, which verifies the identity of a cardholder during an online purchase. Can be one of: `ATTEMPTED`, `AUTHENTICATED`, `FAILED`, `NOT_APPLICABLE`, `NOT_REQUESTED`. Learn more about [3D Secure](/docs/issuing/card-controls/3d-secure-authentication).'
+      description: Risk details provides a comprehensive overview of the risk evaluation for a card transaction, including identified risk factors, actions taken by the risk engine, and the outcome of the 3D Secure authentication process. It encapsulates key elements that assess the potential threat level, safeguard the transaction, and ensure the cardholder’s identity is verified. N.b. this information will only be available for transactions on or after 1st Sept 2024.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    NonPciMerchant:
+      type: object
+      properties:
+        additional_merchant_info:
+          $ref: '#/components/schemas/NonPciAdditionalMerchantInfo'
+          description: Merchant additional info.
+        category_code:
+          type: string
+          description: Merchant category code.
+        city:
+          type: string
+          description: Merchant city.
+        country:
+          type: string
+          description: 'Merchant country. Note: this field might prefixed with state name for some countries, e.g. TXUSA, you should parse the last 3 characters for country code.'
+        identifier:
+          type: string
+          description: Unique identifier for the merchant.
+        name:
+          type: string
+          description: Merchant name.
+        postcode:
+          type: string
+          description: Merchant postcode (only for merchants within the US, Canada or Brazil).
+        state:
+          type: string
+          description: Merchant state (only for merchants within the US, Canada or Brazil).
+      description: merchant of the card transaction.
+    NonPciCardTransactionData:
+      type: object
+      description: Identifiers for the card transaction associated with this record, following the Lifecycle → Card Transaction → Transaction Event model. Omitted for transactions that have no associated card transaction lifecycle.
+      properties:
+        card_transaction_lifecycle_id:
+          type: string
+          format: uuid
+          description: Identifier that links related transactions belonging to the same card payment — such as authorizations, reversals, captures, and refunds — under a single lifecycle.
+        card_transaction_id:
+          type: string
+          format: uuid
+          description: Identifier of the card transaction. Retrieve its details via GET /api/v1/issuing/card_transactions/{id}.
+        card_transaction_event_id:
+          type: string
+          format: uuid
+          description: Identifier of the individual card transaction event within the lifecycle. The closest equivalent of the transaction_id field.
+    NonPciAuthorization:
+      type: object
+      properties:
+        acquiring_institution_identifier:
+          type: string
+          description: Unique Identifier for the acquiring institution.
+        auth_code:
+          type: string
+          description: Authorization Code.
+        billing_amount:
+          type: number
+          description: Billing Amount.
+        billing_currency:
+          type: string
+          description: Billing Currency.
+        card_id:
+          type: string
+          format: uuid
+          description: Unique Identifier for the card.
+        card_nickname:
+          type: string
+          description: The nickname of the card used.
+        client_data:
+          type: string
+          description: Client data stored against the card record.
+        create_time:
+          type: string
+          description: The time this outstanding authorization was created.
+        digital_wallet_token_id:
+          type: string
+          format: uuid
+          description: Unique Identifier for the digital token.
+        expiry_date:
+          type: string
+          description: The authorization will expire after this date if not posted.
+        failure_reason:
+          type: string
+          description: 'The reason why this authorization failed (if status is FAILED). Can be one of: `ACCOUNT_INVALID`, `CARD_CLOSED`, `CARD_INACTIVE`, `CARD_INVALID`, `CARD_LOST_STOLEN`, `CARD_NOT_ACTIVATED`, `CARD_REISSUED_TO_NEW_NUMBER`, `CARDHOLDER_VERIFICATION_FAILED`, `CURRENCY_NOT_ALLOWED`, `CVV_INVALID`, `EXPIRY_MISSING`, `INSUFFICIENT_AVAILABLE_CREDIT`,  `INSUFFICIENT_FUNDS`, `INTERNAL_ERROR`, `INVALID_EXPIRY_DATE`, `LIMIT_EXCEEDED`, `MERCHANT_CATEGORY_NOT_ALLOWED`, `NOT_SUPPORTED`,  `OUT_OF_ALLOWED_TIME_RANGE`, `PIN_INVALID`, `PIN_RETRIES_EXCEEDED`, `REMOTE_AUTH_DECLINED`, `RESTRICTED_COUNTRY`, `SUSPECTED_FRAUD`, `TRANSACTION_BLOCKED`, `TRANSACTION_BLOCKED_AT_TERMINAL`, `TRANSACTION_USAGE_DISABLED`, `MERCHANT_COUNTRY_NOT_ALLOWED`, `MERCHANT_BRAND_NOT_ALLOWED`, `MERCHANT_BRAND_CATEGORY_NOT_ALLOWED`, `MERCHANT_BRAND_SUBCATEGORY_NOT_ALLOWED`. Learn more about [transaction failure reasons](/docs/issuing/transactions/transaction-failure-reasons).'
+        fee_details:
+          type: array
+          description: List of fee details associated with the authorization.
+          items:
+            $ref: '#/components/schemas/NonPciFeeDetail'
+        card_transaction_data:
+          $ref: '#/components/schemas/NonPciCardTransactionData'
+          description: Card transaction identifiers associated with this authorization. Replaces the lifecycle_id field; card_transaction_lifecycle_id carries the same value as the old lifecycle_id. Omitted for transactions that have no associated card transaction lifecycle.
+        masked_card_number:
+          type: string
+          description: Masked card number.
+        merchant:
+          $ref: '#/components/schemas/NonPciMerchant'
+          description: merchant of the card transaction.
+        network_transaction_id:
+          type: string
+          description: The transaction unique identifier from VISA network.
+        retrieval_ref:
+          type: string
+          description: Transaction retrieval reference number. Data element 37 of a financial transaction message (https://en.wikipedia.org/wiki/ISO_8583).
+        risk_details:
+          $ref: '#/components/schemas/NonPciRiskDetails'
+          description: Risk details provides a comprehensive overview of the risk evaluation for a card transaction, including identified risk factors, actions taken by the risk engine, and the outcome of the 3D Secure authentication process. It encapsulates key elements that assess the potential threat level, safeguard the transaction, and ensure the cardholder’s identity is verified. N.b. this information will only be available for transactions on or after 1st Sept 2024.
+        status:
+          type: string
+          description: The status of this authorization. Can be one of `CLEARED`, `EXPIRED`, `FAILED`, `PENDING`, `REVERSED`.
+        transaction_amount:
+          type: number
+          description: Transaction amount.
+        transaction_currency:
+          type: string
+          description: Transaction currency.
+        transaction_id:
+          type: string
+          format: uuid
+          description: Unique id for the transaction.
+        updated_by_transaction:
+          type: string
+          format: uuid
+          description: 'Id of the transaction which updated status of this transaction. eg: capture.'
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

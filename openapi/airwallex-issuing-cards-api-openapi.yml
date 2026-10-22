@@ -1,0 +1,2218 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Issuing > Cards API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Issuing > Cards
+  description: 'You can create virtual cards associated with your organisation, these cards can be single or multi-usage and be restricted by merchant code, currency and transaction amount.
+
+
+    Please note, this API version is incompatible with any Airwallex Business Account Products such as "Borderless Cards" or "Expense Management" via Airwallex web or mobile applications. If you''re using any of these products, please use API version 2024-02-22. Contact your account manager for more information and to verify compatibility.'
+  x-domain: Issuing
+  x-resource: Cards
+  x-urlPath: issuing/cards
+paths:
+  /api/v1/issuing/cards/create:
+    post:
+      tags:
+      - Issuing > Cards
+      summary: 1|Create a Card
+      description: The card object is the actual resource associated with the card issued out by Airwallex. It holds details such as linked account, embossed name (for physical cards), shipping method and information (for physical cards), card based spend controls (eg. transaction limits, blocked merchant category codes etc.). The card object also determines who the card is for (ie for clients or their customers/employees), form factor (physical or virtual), and the number of uses (single or multiple).
+      operationId: createCard
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - authorization_controls
+              - cardholder_id
+              - created_by
+              - form_factor
+              - is_personalized
+              - program
+              - request_id
+              properties:
+                activate_on_issue:
+                  type: boolean
+                  description: Set this to `true` to activate the physical card when it is created. This will enable use of the card while it’s being delivered to the cardholder. Virtual cards will always be activated upon creation.
+                auto_close_date:
+                  type: string
+                  format: date
+                  description: If provided, the card is automatically closed at the start of the specified day (00:00 GMT). The date must be in the format YYYY-MM-DD and must be at least 1 day and no more than 5 years after the card is created. If not provided, the card is not automatically closed and follows the standard expiry and reissue behavior.
+                additional_cardholder_ids:
+                  type: array
+                  description: The IDs of additional cardholders to associate this card with. Only valid if `is_personalized` is `false`.
+                  items:
+                    type: string
+                    format: uuid
+                alert_settings:
+                  type: object
+                  description: Contains alert configuration settings for the card.
+                  properties:
+                    low_remaining_transaction_limit:
+                      type: object
+                      required:
+                      - enabled
+                      - percent
+                      description: 'Configures an alert for when the remaining spending limit dips below a specified percentage. When enabled, a webhook notification will be triggered if the remaining limit falls below the defined threshold. Note that:
+
+
+                        - Only one notification per spend limit interval will be sent. A webhook is triggered only when the threshold is crossed, and further spending below the threshold will not trigger additional notifications. Example: if the percent enabled is 10, a webhook will be sent once the remaining limit is at or less than 10%.
+
+                        - If the spend limit has been updated, a new notification will be sent when the new threshold is crossed.
+
+                        - This alert only applies to multiple use cards.
+
+                        - If not specified, this setting will be enabled by default with ``enabled`` set to ``true`` and ``percent`` set to an account specific default value.'
+                      properties:
+                        enabled:
+                          type: boolean
+                          description: Indicates whether the alert is active.
+                        percent:
+                          type: integer
+                          format: int32
+                          description: Specifies the percentage threshold for the alert.
+                authorization_controls:
+                  type: object
+                  required:
+                  - allowed_transaction_count
+                  - transaction_limits
+                  description: Spend controls that determine the rules and restrictions to check for transaction authorizations.
+                  properties:
+                    active_from:
+                      type: string
+                      description: If provided, authorizations prior to this time will be rejected.
+                    active_to:
+                      type: string
+                      description: If provided, authorizations after this time will be rejected.
+                    allowed_currencies:
+                      type: array
+                      description: Allowed Currencies for transactions. Please note if this field is absent from request payload, or has a value of `null` or empty array `[]`, then all transaction currencies will be allowed.
+                      items:
+                        type: string
+                    allowed_merchant_brands:
+                      type: object
+                      description: Allowed Merchant Brands rules for transactions. Please note if this field is absent from request payload, then transactions from all merchant brands will be allowed.
+                      properties:
+                        categories:
+                          type: array
+                          description: Allowed Merchant Brands Categories for transactions. These must be provided using the codes defined in the [Merchant Brands Controls product page](/docs/issuing/card-controls/authorization-controls/merchant-brand-transaction-categories). Please note if this field is absent from request payload, or has a value of `null` or empty array `[]`, then transactions from all merchant brand categories will be allowed.
+                          items:
+                            type: string
+                        ids:
+                          type: array
+                          description: Allowed Merchant Brand identifiers for transactions. Please note if this field is absent from request payload, or has a value of `null` or empty array `[]`, then transactions from all merchant brand ids will be allowed. You can search for Merchant Brands ids using the [Merchant Brands API](/docs/api/issuing/merchant_brands/retrieve).
+                          items:
+                            type: string
+                            format: uuid
+                        subcategories:
+                          type: array
+                          description: Allowed Merchant Brands Subcategories for transactions. These must be provided using the codes defined in the [Merchant Brands Controls product page](/docs/issuing/card-controls/authorization-controls/merchant-brand-transaction-categories). Please note if this field is absent from request payload, or has a value of `null` or empty array `[]`, then transactions from all merchant brand subcategories will be allowed.
+                          items:
+                            type: string
+                    allowed_merchant_categories:
+                      type: array
+                      description: Allowed Merchant Category Codes. Please note if this field is absent from request payload, or has a value of `null` or empty array `[]`, then all merchant categories will be allowed.
+                      items:
+                        type: string
+                    allowed_merchant_countries:
+                      type: array
+                      description: Allowed Merchant Countries for transactions. Please note if this field is absent from request payload, or has a value of `null` or empty array `[]`, then transactions from all merchant countries will be allowed (although some may still be blocked by our risk team).
+                      items:
+                        type: string
+                    allowed_transaction_count:
+                      type: string
+                      description: Specifies whether this card is a Single or Multiple Use card. Single Use means that the card can only be used for 1 successful debit transaction.
+                      enum:
+                      - SINGLE
+                      - MULTIPLE
+                    blocked_transaction_usages:
+                      type: array
+                      description: "List of disabled transaction usages, based on transaction_scope and usage_scope values. Please note if this field is absent from request payload or has a value of `null`, then all transaction usages will be allowed unless a default configration is added.  \n  \nYou can add multiple transaction_scope and usage_scope values. The most restrictive scope(s) would apply."
+                      items:
+                        type: object
+                        properties:
+                          transaction_scope:
+                            type: string
+                            description: 'Types of transaction scope. It can be one of: `ALL_TRANSACTIONS`, `ONLINE_TRANSACTION`, `CONTACTLESS_TRANSACTION`, `CONTACT_CHIP_TRANSACTION`, `MAGSTRIPE`, `CASH_WITHDRAWAL`, `BILL_PAYMENT`, `ACCOUNT_FUNDING`.'
+                          usage_scope:
+                            type: string
+                            description: 'Determines if a transaction can be made domestically and/or internationally. It can be one of: `ALL`, `INTERNATIONAL`, `DOMESTIC`.'
+                    transaction_limits:
+                      type: object
+                      required:
+                      - limits
+                      description: Transaction limits for the card. Multiple transaction limits can be configured based on single currency. Each transaction will be checked against the limits with interval after currency conversion rate applied.
+                      properties:
+                        cash_withdrawal_limits:
+                          type: array
+                          description: "Cash withdrawal transaction limits are based on interval and amount.  \n  \nIf the daily limit is not set, the default daily limit amount for the selected limit currency will be used. The default daily limit amount is part of the account setting. To change the default daily limit amount, please reach out to your account manager.  \n  \nPlease note that the cash withdrawal transaction limits apply exclusively to cash withdrawals and are imposed to help manage potential liability for the account holder and for Airwallex. The account holder may be liable for any unauthorised spending on the card, so please apply the limits responsibly.  \n  \n**Important**: This limit will only appear if you have cash withdrawals enabled. Please speak to your account manager if you would like to enable cash withdrawals."
+                          items:
+                            type: object
+                            required:
+                            - amount
+                            - interval
+                            properties:
+                              amount:
+                                type: number
+                                description: Transaction limit amount. This field is mandatory and must be greater than 0. Customer can set perTransaction limit up to a maximum amount (The maximum amount is part of account setting).
+                              interval:
+                                type: string
+                                description: 'Transaction limit interval. This field is mandatory and must be one of: `PER_TRANSACTION`, `DAILY`, `WEEKLY`, `MONTHLY`, `ALL_TIME`.'
+                        currency:
+                          type: string
+                          description: 'Currency for transaction limits (3-letter ISO-4217 code). Will use USD if not set. Examples of valid base currencies are USD, AUD, GBP, EUR, CNY, HKD, SGD, NZD, JPY, CAD, CHF. More currencies may be available for your account: you may query the full list by calling the [Get issuing config](/docs/api/issuing/config/retrieve) endpoint.'
+                        limits:
+                          type: array
+                          description: "Transaction limits are based on interval and amount.  \n  \nIf the per transaction limit is not set, the default per transaction limit amount for the selected limit currency will be used. The default per transaction amount is part of account settings. To change the default per transaction limit, please reach out to your account manager.  \n  \nThe account holder may be liable for any unauthorised spending on the card, so please apply limits responsibly."
+                          items:
+                            type: object
+                            required:
+                            - amount
+                            - interval
+                            properties:
+                              amount:
+                                type: number
+                                description: Transaction limit amount. This field is mandatory and must be greater than 0. Customer can set perTransaction limit up to a maximum amount (The maximum amount is part of account setting).
+                              interval:
+                                type: string
+                                description: 'Transaction limit interval. This field is mandatory and must be one of: `PER_TRANSACTION`, `DAILY`, `WEEKLY`, `MONTHLY`, `ALL_TIME`.'
+                brand:
+                  type: string
+                  description: Scheme for Issuance. Default `VISA`.
+                cardholder_id:
+                  type: string
+                  format: uuid
+                  description: The unique identifier of the cardholder to associate this card with.
+                client_data:
+                  type: string
+                  description: Client data which will be stored against the card record in Airwallex.
+                created_by:
+                  type: string
+                  description: Full legal name of user requesting new card.
+                delivery_details:
+                  type: object
+                  description: Delivery detail of the card. Only available for physical cards.
+                  properties:
+                    mobile_number:
+                      type: string
+                      description: Optional mobile number for physical card delivery in E.164 format (e.g., +6512345678). Defaults to the cardholder's registered number if not provided. Required for EXPRESS delivery or when the destination country is China.
+                    preferred_delivery_mode:
+                      type: string
+                      description: 'Customizable options that customers can specify for physical card delivery. The requested delivery mode will be provided on a best-effort basis. `MAIL`: Delivery of the card is delivered via mail shipment. `EXPRESS`: Delivery of the card is tracked and delivered via express shipment.'
+                form_factor:
+                  type: string
+                  description: Form of the card - `PHYSICAL` or `VIRTUAL`.
+                funding_source_id:
+                  type: string
+                  format: uuid
+                  description: A unique identifier that links a card to its designated funding source. This unique identifier determines which funding source will be accessed for the deduction of funds during transactions. The `funding_source_id` can be retrieved from the client's account manager. If `funding_source_id` is not provided, the default funding source would be the account's wallet.
+                is_personalized:
+                  type: boolean
+                  description: Determines whether the card should be assigned to a singular individual or to the business with multiple cardholders who are authorized to use the card. Note - only personalized cards can be created as physical and added to digital wallet providers.
+                metadata:
+                  type: object
+                  description: A set of key-value pairs that can be attached to the Card. You can specify up to 20 keys, with key names up to 20 characters long and values up to 150 characters long.
+                  additionalProperties:
+                    type: string
+                nick_name:
+                  type: string
+                  description: A nick name for the card.
+                note:
+                  type: string
+                  description: Notes that are to be stored against the card request (for client reference).
+                postal_address:
+                  type: object
+                  required:
+                  - city
+                  - country
+                  - line1
+                  - postcode
+                  description: Optional postal address of physical card delivery. The card will be issued to the cardholder's postal address if this value is not set. The cardholder's address will be used instead if cardholder's postal address does not exist.
+                  properties:
+                    city:
+                      type: string
+                      description: City of address.
+                    country:
+                      type: string
+                      description: ISO country code of address.
+                    line1:
+                      type: string
+                      description: Address line 1.
+                    line2:
+                      type: string
+                      description: Address line 2.
+                    postcode:
+                      type: string
+                      description: Address postcode or ZIP code.
+                    state:
+                      type: string
+                      description: Address state or region.
+                program:
+                  type: object
+                  required:
+                  - purpose
+                  description: Card program.
+                  properties:
+                    bin:
+                      type: string
+                      pattern: ^\d{6}(\d{2})?$
+                      description: Optional 6- or 8-digit network BIN. If provided, the requested BIN is used only if it is active, mapped to your program, and compatible with the card. Otherwise, the request is rejected with an `ineligible_bin` error. If omitted, Airwallex selects an eligible BIN automatically. Values that are not 6 or 8 digits return `invalid_bin_format`. This field is available only to accounts enabled for BIN selection. Contact your Airwallex Account Manager to request access.
+                    card_profile_id:
+                      type: string
+                      format: uuid
+                      description: Unique identifier of the card profile to use when creating the card. Card profiles are configured per account and define the card program, card art, and other defaults and limits for a specific card offering. If provided, the card's program and card art are resolved from this profile. If omitted, the card is resolved using the other program fields as usual.
+                      x-stage: preview
+                    interchange_percent:
+                      type: string
+                      description: Interchange percent of the card - This is only available for `sub_type="B2B_TRAVEL"` cards. Interchange can vary from 0.8 to 1.9, with increments of 0.1.
+                    purpose:
+                      type: string
+                      description: "`COMMERCIAL`: A card used for business purposes backed by funding belonging to a business.  \n`CONSUMER`: A card used for personal purposes backed by funding belonging to an individual."
+                    sub_type:
+                      type: string
+                      description: Sub type of the program - This is used for specific products under the defined program types. e.g `B2B_TRAVEL` which designates BINs for travel use cases (E.g OTAs).
+                    type:
+                      type: string
+                      description: Card type - `PREPAID`, `DEBIT`, `CREDIT` or `DEFERRED_DEBIT`. `DEFERRED_DEBIT` is Deferred Debit card available for OTA (Online Travel Agent) customers only in UK/Europe countries. If card type is not set, the default card type which is a part of your account setting will be used.
+                purpose:
+                  type: string
+                  description: Optional purpose for card's usage when card `issueTo` is `ORGANISATION`. Can be one of - `BUSINESS_EXPENSES`, `CLIENT_EXPENSES`, `MARKETING_EXPENSES`, `OFFICE_SUPPLIES`, `ONLINE_PURCHASING`, `OTHER`, `SUBSCRIPTIONS`, `TEAM_EXPENSES`, `TRAVEL_EXPENSES`. Default value is `BUSINESS_EXPENSES`.
+                request_id:
+                  type: string
+                  description: 'A unique request identifier specified by the client.  Requests with the same request_id will be ignored.  This allows requests to be replayed if client is unsure of the outcome, e.g. due to network issues, system failures, etc.  Note: Can be non-UUID as long as it is unique between requests.'
+        description: newCardRequest.
+        required: true
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonPciCard'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ,"invalid_bin_format"
+
+            ,"ineligible_bin"
+
+            ,"invalid_card_profile"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/issuing/cards/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 202
+        reason_phrase: Accepted
+        request_body:
+          activate_on_issue: false
+          additional_cardholder_ids:
+          - 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          - b0a1b145-4853-4456-b4b3-d690c7f3535c
+          auto_close_date: '2027-01-31'
+          alert_settings:
+            low_remaining_transaction_limit:
+              enabled: false
+              percent: 10
+          authorization_controls:
+            active_from: 2018-10-31T00:00:00+0000
+            active_to: 2018-10-31T00:00:00+0000
+            allowed_currencies:
+            - USD
+            - AUD
+            allowed_merchant_brands:
+              categories:
+              - '10000'
+              - '16000'
+              ids:
+              - 245e5003-58ec-540c-89a0-e148e54c2518
+              subcategories:
+              - '10001'
+              - '16003'
+            allowed_merchant_categories:
+            - '7531'
+            - '7534'
+            allowed_merchant_countries:
+            - US
+            - AU
+            allowed_transaction_count: SINGLE
+            blocked_transaction_usages:
+            - transaction_scope: MAGSTRIPE
+              usage_scope: INTERNATIONAL
+            - transaction_scope: ONLINE_TRANSACTION
+              usage_scope: ALL
+            transaction_limits:
+              cash_withdrawal_limits:
+              - amount: 1000
+                interval: PER_TRANSACTION
+              currency: USD
+              limits:
+              - amount: 1000
+                interval: PER_TRANSACTION
+          brand: VISA
+          cardholder_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          client_data: 20190817_dfelsflkj73494lksdfg9480ww
+          created_by: John Smith
+          delivery_details:
+            mobile_number: '+6512345678'
+            preferred_delivery_mode: MAIL
+          form_factor: VIRTUAL
+          funding_source_id: 6682111f-cb4a-47ce-8e95-5abcc5394727
+          is_personalized: true
+          metadata:
+            key1: value1
+            key2: value2
+          nick_name: travelling
+          note: This is my first card.
+          postal_address:
+            city: Melbourne
+            country: AU
+            line1: 44 Gillespie St
+            line2: Unit 2
+            postcode: '3121'
+            state: VIC
+          program:
+            interchange_percent: '1.0'
+            purpose: COMMERCIAL
+            sub_type: GOOD_FUNDS_CREDIT
+            type: PREPAID
+          purpose: <string>
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+        response_body:
+          activate_on_issue: false
+          additional_cardholder_ids:
+          - 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          - b0a1b145-4853-4456-b4b3-d690c7f3535c
+          auto_close_date: '2027-01-31'
+          alert_settings:
+            low_remaining_transaction_limit:
+              enabled: false
+              percent: 10
+          all_card_versions:
+          - card_number: '************4111'
+            card_status: ACTIVE
+            card_version: 1
+            created_at: 2024-01-09T00:00:00+0000
+          authorization_controls:
+            active_from: 2018-10-31T00:00:00+0000
+            active_to: 2018-10-31T00:00:00+0000
+            allowed_currencies:
+            - USD
+            - AUD
+            allowed_merchant_brands:
+              categories:
+              - '10000'
+              - '16000'
+              ids:
+              - 245e5003-58ec-540c-89a0-e148e54c2518
+              subcategories:
+              - '10001'
+              - '16003'
+            allowed_merchant_categories:
+            - '7531'
+            - '7534'
+            allowed_merchant_countries:
+            - US
+            - AU
+            allowed_transaction_count: SINGLE
+            blocked_transaction_usages:
+            - transaction_scope: MAGSTRIPE
+              usage_scope: INTERNATIONAL
+            - transaction_scope: ONLINE_TRANSACTION
+              usage_scope: ALL
+            transaction_limits:
+              cash_withdrawal_limits:
+              - amount: 1000
+                interval: PER_TRANSACTION
+              currency: USD
+              limits:
+              - amount: 1000
+                interval: PER_TRANSACTION
+          brand: visa
+          card_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          card_number: '************4111'
+          card_status: ACTIVE
+          card_version: 1
+          cardholder_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          client_data: 20190817_dfelsflkj73494lksdfg9480ww
+          created_at: 2024-01-09T00:00:00+0000
+          created_by: <string>
+          delivery_details:
+            delivery_mode: MAIL
+            delivery_vendor: DHL
+            mobile_number: '+6512345678'
+            preferred_delivery_mode: MAIL
+            status: DISPATCHED
+            status_description: The card has been printed.
+            tracked: true
+            tracking_link: https://www.dhl.com/global-en/home/tracking/tracking-parcel.html?submit=1&tracking-id=ABCD1234
+            tracking_number: ABCD1234
+            updated_at: 2024-01-09T00:00:00+0000
+          form_factor: VIRTUAL
+          funding_source_id: 6682111f-cb4a-47ce-8e95-5abcc5394727
+          is_personalized: true
+          issue_to: ORGANISATION
+          metadata:
+            key1: value1
+            key2: value2
+          name_on_card: John Smith
+          nick_name: travelling
+          note: This is my first card.
+          postal_address:
+            city: Melbourne
+            country: AU
+            line1: 44 Gillespie St
+            line2: Unit 2
+            postcode: '3121'
+            state: VIC
+          primary_contact_details:
+            email: john@example.com
+            full_name: John Smith
+            mobile_number: '619922334321'
+          program:
+            interchange_percent: '1.0'
+            purpose: COMMERCIAL
+            sub_type: GOOD_FUNDS_CREDIT
+            type: PREPAID
+          purpose: BUSINESS_EXPENSES
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          updated_at: 2024-01-09T00:00:00+0000
+      x-scope:
+      - scope: issuing.card:write
+        group: Issuing
+        resource_name: Cards
+      x-domain: Issuing
+      x-resource: Cards
+      x-urlPath: create
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/issuing/cards/{id}:
+    get:
+      tags:
+      - Issuing > Cards
+      summary: 2|Retrieve a Card
+      description: Retrieve Card details.
+      operationId: retrieveCard
+      parameters:
+      - name: id
+        in: path
+        description: Unique Identifier for the card.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonPciCard'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/issuing/cards/card_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          activate_on_issue: false
+          additional_cardholder_ids:
+          - 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          - b0a1b145-4853-4456-b4b3-d690c7f3535c
+          auto_close_date: '2027-01-31'
+          alert_settings:
+            low_remaining_transaction_limit:
+              enabled: false
+              percent: 10
+          all_card_versions:
+          - card_number: '************4111'
+            card_status: ACTIVE
+            card_version: 1
+            created_at: 2024-01-09T00:00:00+0000
+          authorization_controls:
+            active_from: 2018-10-31T00:00:00+0000
+            active_to: 2018-10-31T00:00:00+0000
+            allowed_currencies:
+            - USD
+            - AUD
+            allowed_merchant_brands:
+              categories:
+              - '10000'
+              - '16000'
+              ids:
+              - 245e5003-58ec-540c-89a0-e148e54c2518
+              subcategories:
+              - '10001'
+              - '16003'
+            allowed_merchant_categories:
+            - '7531'
+            - '7534'
+            allowed_merchant_countries:
+            - US
+            - AU
+            allowed_transaction_count: SINGLE
+            blocked_transaction_usages:
+            - transaction_scope: MAGSTRIPE
+              usage_scope: INTERNATIONAL
+            - transaction_scope: ONLINE_TRANSACTION
+              usage_scope: ALL
+            transaction_limits:
+              cash_withdrawal_limits:
+              - amount: 1000
+                interval: PER_TRANSACTION
+              currency: USD
+              limits:
+              - amount: 1000
+                interval: PER_TRANSACTION
+          brand: visa
+          card_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          card_number: '************4111'
+          card_status: ACTIVE
+          card_version: 1
+          cardholder_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          client_data: 20190817_dfelsflkj73494lksdfg9480ww
+          created_at: 2024-01-09T00:00:00+0000
+          created_by: <string>
+          delivery_details:
+            delivery_mode: MAIL
+            delivery_vendor: DHL
+            mobile_number: '+6512345678'
+            preferred_delivery_mode: MAIL
+            status: DISPATCHED
+            status_description: The card has been printed.
+            tracked: true
+            tracking_link: https://www.dhl.com/global-en/home/tracking/tracking-parcel.html?submit=1&tracking-id=ABCD1234
+            tracking_number: ABCD1234
+            updated_at: 2024-01-09T00:00:00+0000
+          form_factor: VIRTUAL
+          funding_source_id: 6682111f-cb4a-47ce-8e95-5abcc5394727
+          is_personalized: true
+          issue_to: ORGANISATION
+          metadata:
+            key1: value1
+            key2: value2
+          name_on_card: John Smith
+          nick_name: travelling
+          note: This is my first card.
+          postal_address:
+            city: Melbourne
+            country: AU
+            line1: 44 Gillespie St
+            line2: Unit 2
+            postcode: '3121'
+            state: VIC
+          primary_contact_details:
+            email: john@example.com
+            full_name: John Smith
+            mobile_number: '619922334321'
+          program:
+            interchange_percent: '1.0'
+            purpose: COMMERCIAL
+            sub_type: GOOD_FUNDS_CREDIT
+            type: PREPAID
+          purpose: BUSINESS_EXPENSES
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          updated_at: 2024-01-09T00:00:00+0000
+      x-scope:
+      - scope: issuing.card:read
+        group: Issuing
+        resource_name: Cards
+      x-domain: Issuing
+      x-resource: Cards
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/issuing/cards:
+    get:
+      tags:
+      - Issuing > Cards
+      summary: 3|List all Cards
+      description: Get cards issued under an account. Will default to a 30 day period unless both *to* and *from* created_at request fields are populated.
+      operationId: listCards
+      parameters:
+      - name: card_status
+        in: query
+        description: "Current card status  \nOne of `PENDING`, `FAILED`, `INACTIVE`, `ACTIVE`, `LOST`, `STOLEN`, `CLOSED`, `BLOCKED`, `EXPIRED`."
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          enum:
+          - PENDING
+          - FAILED
+          - INACTIVE
+          - ACTIVE
+          - LOST
+          - STOLEN
+          - CLOSED
+          - BLOCKED
+          - EXPIRED
+          - UNKNOWN
+          default: PENDING
+      - name: cardholder_id
+        in: query
+        description: The id of the cardholder for the card, if it is an employee card.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          format: uuid
+          default: 7f0216e7-0348-4a36-9871-d1ba82c13410
+      - name: from_created_at
+        in: query
+        description: Created_from_date in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: 2018-10-01T00:00:00+0000
+      - name: from_updated_at
+        in: query
+        description: Updated_from_date in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: 2023-12-30T00:00:00+0000
+      - name: nick_name
+        in: query
+        description: Will be used to return cards whose nickname exactly matches the value of this field.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: Travel
+      - name: page_num
+        in: query
+        description: Page number, starts from 0.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of results per page, between 10 and 200. The default is 100.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: to_created_at
+        in: query
+        description: Created_to_date in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: 2018-10-31T00:00:00+0000
+      - name: to_updated_at
+        in: query
+        description: Updated_to_date in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: 2023-12-31T00:00:00+0000
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - has_more
+                - items
+                properties:
+                  has_more:
+                    type: boolean
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NonPciCardSummary'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/issuing/cards
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - additional_cardholder_ids:
+            - 7f0216e7-0348-4a36-9871-d1ba82c13410
+            - b0a1b145-4853-4456-b4b3-d690c7f3535c
+            brand: visa
+            card_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+            card_number: '************4111'
+            card_status: ACTIVE
+            cardholder_id: 7f0216e7-0348-4a36-9871-d1ba82c13410
+            created_at: 2018-10-31T00:00:00+0000
+            nick_name: Travel
+            updated_at: 2024-01-09T00:00:00+0000
+      x-scope:
+      - scope: issuing.card:read
+        group: Issuing
+        resource_name: Cards
+      x-domain: Issuing
+      x-resource: Cards
+      x-urlPath: list
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/issuing/cards/{id}/update:
+    post:
+      tags:
+      - Issuing > Cards
+      summary: 4|Update a Card
+      description: Updates card details by setting the values of the included parameters. Parameters that are not included will be left unchanged.
+      operationId: updateCard
+      parameters:
+      - name: id
+        in: path
+        description: Unique Identifier for the card.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                additional_cardholder_ids:
+                  type: array
+                  description: The IDs of additional cardholders to associate this card with. Only valid if `is_personalized` is `false`.
+                  items:
+                    type: string
+                    format: uuid
+                alert_settings:
+                  type: object
+                  description: Contains alert configuration settings for the card.
+                  properties:
+                    low_remaining_transaction_limit:
+                      type: object
+                      required:
+                      - enabled
+                      - percent
+                      description: 'Configures an alert for when the remaining spending limit dips below a specified percentage. When enabled, a webhook notification will be triggered if the remaining limit falls below the defined threshold. Note that:
+
+
+                        - Only one notification per spend limit interval will be sent. A webhook is triggered only when the threshold is crossed, and further spending below the threshold will not trigger additional notifications. Example: if the percent enabled is 10, a webhook will be sent once the remaining limit is at or less than 10%.
+
+                        - If the spend limit has been updated, a new notification will be sent when the new threshold is crossed.
+
+                        - This alert only applies to multiple use cards.
+
+                        - If not specified, this setting will be enabled by default with ``enabled`` set to ``true`` and ``percent`` set to an account specific default value.'
+                      properties:
+                        enabled:
+                          type: boolean
+                          description: Indicates whether the alert is active.
+                        percent:
+                          type: integer
+                          format: int32
+                          description: Specifies the percentage threshold for the alert.
+                authorization_controls:
+                  type: object
+                  description: Spend controls that determine the rules and restrictions to check for transaction authorizations.
+                  properties:
+                    active_from:
+                      type: string
+                      description: If not provided, current value will be maintained. If provided, authorizations prior to this time will be rejected.
+                    active_to:
+                      type: string
+                      description: If not provided, current value will be maintained. If provided, authorizations after this time will be rejected.
+                    allowed_currencies:
+                      type: array
+                      description: Allowed Currencies for transactions.
+                      items:
+                        type: string
+                    allowed_merchant_brands:
+                      type: object
+                      description: Allowed Merchant Brands rules for transactions. Please note if this field is absent from request payload, then transactions from all merchant brands will be allowed.
+                      properties:
+                        categories:
+                          type: array
+                          description: Allowed Merchant Brands Categories for transactions. These must be provided using the codes defined in the [Merchant Brands Controls product page](/docs/issuing/card-controls/authorization-controls/merchant-brand-transaction-categories). Please note if this field is absent from request payload, or has a value of `null` or empty array `[]`, then transactions from all merchant brand categories will be allowed.
+                          items:
+                            type: string
+                        ids:
+                          type: array
+                          description: Allowed Merchant Brand identifiers for transactions. Please note if this field is absent from request payload, or has a value of `null` or empty array `[]`, then transactions from all merchant brand ids will be allowed. You can search for Merchant Brands ids using the [Merchant Brands API](/docs/api/issuing/merchant_brands/retrieve).
+                          items:
+                            type: string
+                            format: uuid
+                        subcategories:
+                          type: array
+                          description: Allowed Merchant Brands Subcategories for transactions. These must be provided using the codes defined in the [Merchant Brands Controls product page](/docs/issuing/card-controls/authorization-controls/merchant-brand-transaction-categories). Please note if this field is absent from request payload, or has a value of `null` or empty array `[]`, then transactions from all merchant brand subcategories will be allowed.
+                          items:
+                            type: string
+                    allowed_merchant_categories:
+                      type: array
+                      description: Allowed Merchant Category Codes. Please note if this field is absent from request payload, or has a value of `null` or empty array `[]`, then all merchant categories will be allowed. Default value is `[]`.
+                      items:
+                        type: string
+                    allowed_merchant_countries:
+                      type: array
+                      description: Allowed Merchant Countries for transactions. Please note if this field is absent from request payload, or has a value of `null` or empty array `[]`, then transactions from all merchant countries will be allowed (although some may still be blocked by our risk team).
+                      items:
+                        type: string
+                    blocked_transaction_usages:
+                      type: array
+                      description: List of disabled transaction usages, based on transaction_scope and usage_scope values. You can add multiple transaction_scope and usage_scope values. The most restrictive scope(s) would apply.
+                      items:
+                        type: object
+                        properties:
+                          transaction_scope:
+                            type: string
+                            description: 'Types of transaction scope. It can be one of: `ALL_TRANSACTIONS`, `ONLINE_TRANSACTION`, `CONTACTLESS_TRANSACTION`, `CONTACT_CHIP_TRANSACTION`, `MAGSTRIPE`, `CASH_WITHDRAWAL`, `BILL_PAYMENT`, `ACCOUNT_FUNDING`.'
+                          usage_scope:
+                            type: string
+                            description: 'Determines if a transaction can be made domestically and/or internationally. It can be one of: `ALL`, `INTERNATIONAL`, `DOMESTIC`.'
+                    transaction_limits:
+                      type: object
+                      required:
+                      - cash_withdrawal_limits
+                      - limits
+                      description: Transaction limits for the card. Multiple transaction limits can be configured based on single currency. Each transaction will be checked against the limits with interval after currency conversion rate applied.
+                      properties:
+                        cash_withdrawal_limits:
+                          type: array
+                          description: "Cash withdrawal transaction limits are based on interval and amount.  \n  \nIf the daily limit is not set, the default daily limit amount for the selected limit currency will be used. The default daily limit amount is part of the account setting. To change the default daily limit amount, please reach out to your account manager.  \n  \nPlease note that the cash withdrawal transaction limits apply exclusively to cash withdrawals and are imposed to help manage potential liability for the account holder and for Airwallex. The account holder may be liable for any unauthorised spending on the card, so please apply the limits responsibly.  \n  \n**Important**: This limit will only appear if you have cash withdrawals enabled. Please speak to your account manager if you would like to enable cash withdrawals."
+                          items:
+                            type: object
+                            required:
+                            - amount
+                            - interval
+                            properties:
+                              amount:
+                                type: number
+                                description: Transaction limit amount. This field is mandatory and must be greater than 0. Customer can set perTransaction limit up to a maximum amount (The maximum amount is part of account setting).
+                              interval:
+                                type: string
+                                description: 'Transaction limit interval. This field is mandatory and must be one of: `PER_TRANSACTION`, `DAILY`, `WEEKLY`, `MONTHLY`, `ALL_TIME`.'
+                        currency:
+                          type: string
+                          description: Currency for transaction limits (3-letter ISO-4217 code). Will keep current one if not provided.
+                        limits:
+                          type: array
+                          description: "Transaction limits are based on interval and amount.  \n  \nIf the per transaction limit is not set, the default per transaction limit amount for the selected limit currency will be used. The default per transaction amount is part of account settings. To change the default per transaction limit, please reach out to your account manager.  \n  \nThe account holder may be liable for any unauthorised spending on the card, so please apply limits responsibly."
+                          items:
+                            type: object
+                            required:
+                            - amount
+                            - interval
+                            properties:
+                              amount:
+                                type: number
+                                description: Transaction limit amount. This field is mandatory and must be greater than 0. Customer can set perTransaction limit up to a maximum amount (The maximum amount is part of account setting).
+                              interval:
+                                type: string
+                                description: 'Transaction limit interval. This field is mandatory and must be one of: `PER_TRANSACTION`, `DAILY`, `WEEKLY`, `MONTHLY`, `ALL_TIME`.'
+                auto_close_date:
+                  type: string
+                  format: date
+                  description: If provided, the card is automatically closed at the start of the specified day (00:00 GMT). The date must be in the format YYYY-MM-DD and must be at least 1 day and no more than 5 years after the update request is made. Set the field to null to clear the scheduled closure. If not provided, the current value is maintained.
+                card_status:
+                  type: string
+                  description: Card status, Allowed values are `INACTIVE`, `ACTIVE`, `CLOSED`.
+                cardholder_id:
+                  type: string
+                  format: uuid
+                  description: The unique identifier of the cardholder to associate this card with.
+                metadata:
+                  type: object
+                  description: A set of key-value pairs that can be attached to the Card. You can specify up to 20 keys, with key names up to 20 characters long and values up to 150 characters long.
+                  additionalProperties:
+                    type: string
+                nick_name:
+                  type: string
+                  description: A nick name for the card.
+                purpose:
+                  type: string
+                  description: Optional purpose for card's usage when card `issueTo` value is `ORGANISATION`. Can be one of - `BUSINESS_EXPENSES`, `CLIENT_EXPENSES`, `MARKETING_EXPENSES`, `OFFICE_SUPPLIES`, `ONLINE_PURCHASING`, `OTHER`, `SUBSCRIPTIONS`, `TEAM_EXPENSES`, `TRAVEL_EXPENSES`. Default value is `BUSINESS_EXPENSES`.
+        description: cardUpdateRequest.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonPciCard'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/issuing/cards/card_id/update
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          additional_cardholder_ids:
+          - 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          - b0a1b145-4853-4456-b4b3-d690c7f3535c
+          auto_close_date: '2027-01-31'
+          alert_settings:
+            low_remaining_transaction_limit:
+              enabled: false
+              percent: 10
+          authorization_controls:
+            active_from: 2018-10-31T00:00:00+0000
+            active_to: 2018-10-31T00:00:00+0000
+            allowed_currencies:
+            - USD
+            - AUD
+            allowed_merchant_brands:
+              categories:
+              - '10000'
+              - '16000'
+              ids:
+              - 245e5003-58ec-540c-89a0-e148e54c2518
+              subcategories:
+              - '10001'
+              - '16003'
+            allowed_merchant_categories:
+            - '7531'
+            - '7534'
+            allowed_merchant_countries:
+            - US
+            - AU
+            blocked_transaction_usages:
+            - transaction_scope: MAGSTRIPE
+              usage_scope: INTERNATIONAL
+            - transaction_scope: ONLINE_TRANSACTION
+              usage_scope: ALL
+            transaction_limits:
+              cash_withdrawal_limits:
+              - amount: 1000
+                interval: PER_TRANSACTION
+              currency: USD
+              limits:
+              - amount: 1000
+                interval: PER_TRANSACTION
+          card_status: INACTIVE
+          cardholder_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          metadata:
+            key1: value1
+            key2: value2
+          nick_name: travelling
+          purpose: <string>
+        response_body:
+          activate_on_issue: false
+          additional_cardholder_ids:
+          - 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          - b0a1b145-4853-4456-b4b3-d690c7f3535c
+          auto_close_date: '2027-01-31'
+          alert_settings:
+            low_remaining_transaction_limit:
+              enabled: false
+              percent: 10
+          all_card_versions:
+          - card_number: '************4111'
+            card_status: ACTIVE
+            card_version: 1
+            created_at: 2024-01-09T00:00:00+0000
+          authorization_controls:
+            active_from: 2018-10-31T00:00:00+0000
+            active_to: 2018-10-31T00:00:00+0000
+            allowed_currencies:
+            - USD
+            - AUD
+            allowed_merchant_categories:
+            - '7531'
+            - '7534'
+            allowed_transaction_count: SINGLE
+            allowed_merchant_countries:
+            - US
+            - AU
+            blocked_transaction_usages:
+            - transaction_scope: MAGSTRIPE
+              usage_scope: INTERNATIONAL
+            - transaction_scope: ONLINE_TRANSACTION
+              usage_scope: ALL
+            transaction_limits:
+              cash_withdrawal_limits:
+              - amount: 1000
+                interval: PER_TRANSACTION
+              currency: USD
+              limits:
+              - amount: 1000
+                interval: PER_TRANSACTION
+          brand: visa
+          card_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          card_number: '************4111'
+          card_status: ACTIVE
+          card_version: 1
+          cardholder_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          client_data: 20190817_dfelsflkj73494lksdfg9480ww
+          created_at: 2024-01-09T00:00:00+0000
+          created_by: <string>
+          delivery_details:
+            delivery_mode: MAIL
+            delivery_vendor: DHL
+            mobile_number: '+6512345678'
+            preferred_delivery_mode: MAIL
+            status: DISPATCHED
+            status_description: The card has been printed.
+            tracked: true
+            tracking_link: https://www.dhl.com/global-en/home/tracking/tracking-parcel.html?submit=1&tracking-id=ABCD1234
+            tracking_number: ABCD1234
+            updated_at: 2024-01-09T00:00:00+0000
+          form_factor: VIRTUAL
+          funding_source_id: 6682111f-cb4a-47ce-8e95-5abcc5394727
+          is_personalized: true
+          issue_to: ORGANISATION
+          metadata:
+            key1: value1
+            key2: value2
+          name_on_card: John Smith
+          nick_name: travelling
+          note: This is my first card.
+          postal_address:
+            city: Melbourne
+            country: AU
+            line1: 44 Gillespie St
+            line2: Unit 2
+            postcode: '3121'
+            state: VIC
+          primary_contact_details:
+            email: john@example.com
+            full_name: John Smith
+            mobile_number: '619922334321'
+          program:
+            interchange_percent: '1.0'
+            purpose: COMMERCIAL
+            sub_type: GOOD_FUNDS_CREDIT
+            type: PREPAID
+          purpose: BUSINESS_EXPENSES
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          updated_at: 2024-01-09T00:00:00+0000
+      x-scope:
+      - scope: issuing.card:write
+        group: Issuing
+        resource_name: Cards
+      x-domain: Issuing
+      x-resource: Cards
+      x-urlPath: update
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/issuing/cards/{id}/activate:
+    post:
+      tags:
+      - Issuing > Cards
+      summary: 5|Activate a Card
+      description: Activate a physical card for card payment authorizations.
+      operationId: cards_activate
+      parameters:
+      - name: id
+        in: path
+        description: Unique Identifier for the card.
+        required: true
+        schema:
+          type: string
+          default: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PciError'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/issuing/cards/card_id/activate
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+      x-scope:
+      - scope: issuing.card:write
+        group: Issuing
+        resource_name: Cards
+      x-domain: Issuing
+      x-resource: Cards
+      x-urlPath: activate
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/issuing/cards/{id}/provision_digital_token:
+    post:
+      tags:
+      - Issuing > Cards
+      summary: 6|Provision a Card to a Digital Wallet
+      description: 'Provisions a card into a digital wallet for in-app (push) provisioning. Available only to accounts with white-label digital wallets enabled.
+
+
+        The request body is wallet-specific and selected by the `type` field. The interactive form shows a single body shape, so the per-type request bodies are documented here:
+
+
+        **`apple_pay`** (Apple Wallet / PassKit provisioning):
+
+        - `device_certs` (array): device certificate chain, leaf certificate first
+
+        - `nonce_signature` (string): signature over the nonce
+
+        - `nonce` (string): one-time nonce
+
+
+        **`google_pay`** (Google Pay provisioning):
+
+        - `device_id` (string): stable device identifier from the Google Pay SDK
+
+        - `client_customer_id` (string): wallet account holder identifier
+
+
+        **`samsung_pay`** (Samsung Pay provisioning):
+
+        - `device_id` (string): stable device identifier from the Samsung Pay SDK
+
+        - `client_customer_id` (string): wallet account holder identifier.'
+      operationId: provisionDigitalToken
+      parameters:
+      - name: id
+        in: path
+        description: Unique Identifier for the card.
+        required: true
+        schema:
+          type: string
+          default: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - type
+              properties:
+                type:
+                  type: string
+                  description: Digital wallet type.
+                  enum:
+                  - apple_pay
+                  - google_pay
+                  - samsung_pay
+                device_certs:
+                  type: array
+                  description: Required when `type` is `apple_pay`. Device certificate chain from the Apple Wallet (PassKit) provisioning request, leaf certificate first.
+                  items:
+                    type: string
+                nonce:
+                  type: string
+                  description: Required when `type` is `apple_pay`. One-time nonce supplied by Apple PassKit.
+                nonce_signature:
+                  type: string
+                  description: Required when `type` is `apple_pay`. Signature over the nonce, supplied by Apple PassKit.
+                client_customer_id:
+                  type: string
+                  description: Required when `type` is `google_pay` or `samsung_pay`. Identifier for the wallet account holder, provided by the wallet SDK.
+                device_id:
+                  type: string
+                  description: Required when `type` is `google_pay` or `samsung_pay`. Stable device identifier provided by the wallet SDK.
+                server_session_id:
+                  type: string
+                  description: Optional. Used for push provisioning with Google Pay.
+        description: provisionDigitalTokenRequest.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PciApiProvisioning'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PciError'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/issuing/cards/card_id/provision_digital_token
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          type: apple_pay
+          device_certs: []
+          nonce: <string>
+          nonce_signature: <string>
+        response_body:
+          card_id: <string>
+          activation_data: <string>
+          encrypted_pass_data: <string>
+          ephemeral_public_key: <string>
+      x-scope:
+      - scope: issuing.card:write
+        group: Issuing
+        resource_name: Cards
+      x-domain: Issuing
+      x-resource: Cards
+      x-urlPath: provision_digital_token
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/issuing/cards/{id}/details:
+    get:
+      tags:
+      - Issuing > Cards
+      summary: 7|List all Sensitive Card Details
+      description: Get sensitive card information for virtual cards. This endpoint will only return data for active cards.
+      operationId: listDetails
+      parameters:
+      - name: id
+        in: path
+        description: Unique Identifier for the card.
+        required: true
+        schema:
+          type: string
+          default: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PciCardPci'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PciError'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/issuing/cards/card_id/details
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          card_number: '4111111111111111'
+          cvv: '123'
+          expiry_month: 1
+          expiry_year: 2022
+          name_on_card: John Smith
+      x-scope:
+      - scope: issuing.card:read
+        group: Issuing
+        resource_name: Cards
+      x-domain: Issuing
+      x-resource: Cards
+      x-urlPath: details
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/issuing/cards/{id}/limits:
+    get:
+      tags:
+      - Issuing > Cards
+      summary: 8|List all Card Remaining Limits
+      description: Retrieve remaining limits of a card.
+      operationId: listLimits
+      parameters:
+      - name: id
+        in: path
+        description: Unique Identifier for the card.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonPciRemainingLimits'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/issuing/cards/card_id/limits
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          cash_withdrawal_limits:
+          - amount: 1000
+            interval: PER_TRANSACTION
+            remaining: 1000
+          currency: USD
+          limits:
+          - amount: 1000
+            interval: PER_TRANSACTION
+            remaining: 1000
+      x-scope:
+      - scope: issuing.card:read
+        group: Issuing
+        resource_name: Cards
+      x-domain: Issuing
+      x-resource: Cards
+      x-urlPath: limits
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    PciError:
+      type: object
+      required:
+      - code
+      - source
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    NonPciAuthorizationControls:
+      type: object
+      required:
+      - allowed_transaction_count
+      - transaction_limits
+      properties:
+        active_from:
+          type: string
+          description: If provided, authorizations prior to this time will be rejected.
+        active_to:
+          type: string
+          description: If provided, authorizations after this time will be rejected.
+        allowed_currencies:
+          type: array
+          description: Allowed Currencies for transactions. Please note if this field is absent from request payload, or has a value of `null` or empty array `[]`, then all transaction currencies will be allowed.
+          items:
+            type: string
+        allowed_merchant_brands:
+          $ref: '#/components/schemas/NonPciAllowedMerchantBrands'
+          description: Allowed Merchant Brands rules for transactions. Please note if this field is absent from request payload, then transactions from all merchant brands will be allowed.
+        allowed_merchant_categories:
+          type: array
+          description: Allowed Merchant Category Codes. Please note if this field is absent from request payload, or has a value of `null` or empty array `[]`, then all merchant categories will be allowed.
+          items:
+            type: string
+        allowed_merchant_countries:
+          type: array
+          description: Allowed Merchant Countries for transactions. Please note if this field is absent from request payload, or has a value of `null` or empty array `[]`, then transactions from all merchant countries will be allowed (although some may still be blocked by our risk team).
+          items:
+            type: string
+        allowed_transaction_count:
+          type: string
+          description: Specifies whether this card is a Single or Multiple Use card. Single Use means that the card can only be used for 1 successful debit transaction.
+          enum:
+          - SINGLE
+          - MULTIPLE
+        blocked_transaction_usages:
+          type: array
+          description: "List of disabled transaction usages, based on transaction_scope and usage_scope values. Please note if this field is absent from request payload or has a value of `null`, then all transaction usages will be allowed unless a default configration is added.  \n  \nYou can add multiple transaction_scope and usage_scope values. The most restrictive scope(s) would apply."
+          items:
+            $ref: '#/components/schemas/NonPciTransactionUsage'
+        transaction_limits:
+          $ref: '#/components/schemas/NonPciTransactionLimits'
+          description: Transaction limits for the card. Multiple transaction limits can be configured based on single currency. Each transaction will be checked against the limits with interval after currency conversion rate applied.
+      description: Spend controls that determine the rules and restrictions to check for transaction authorizations.
+    NonPciPrimaryContactDetail:
+      type: object
+      properties:
+        email:
+          type: string
+          description: The email address of the primary contact of the new card.
+        full_name:
+          type: string
+          description: Full name of the primary contact of the new card.
+        mobile_number:
+          type: string
+          description: The mobile number of the primary contact of the new card.
+      description: Details of the primary contact of the card.
+    NonPciDeliveryDetails:
+      type: object
+      properties:
+        delivery_mode:
+          type: string
+          description: '`MAIL`: Delivery of the card is delivered via mail shipment. Tracking may or may not be provided.
+
+            `EXPRESS`: Delivery of the card is tracked and delivered via express shipment. A tracking_link will always be provided.
+
+            '
+          enum:
+          - MAIL
+          - EXPRESS
+          - UNKNOWN
+        delivery_vendor:
+          type: string
+          description: Delivery vendor of this card.
+          enum:
+          - UNKNOWN
+          - AU_POST
+          - EMS
+          - HK_POST
+          - CITY_LINK
+          - DHL
+          - CN_POST
+          - PL_POST
+          - USPS
+          - FEDEX
+        mobile_number:
+          type: string
+          description: The mobile number for the card delivery.
+        preferred_delivery_mode:
+          type: string
+          description: The delivery mode customer selected when the Create Card API is called.
+          enum:
+          - MAIL
+          - EXPRESS
+          - UNKNOWN
+        status:
+          type: string
+          description: See [Delivery Status](/docs/issuing/manage-cards/retrieve-physical-card-delivery-details) for definitions.
+          enum:
+          - PENDING
+          - PRINTED
+          - FAILED_TO_PRINT
+          - DISPATCHED
+          - IN_TRANSIT
+          - OUT_FOR_DELIVERY
+          - DELIVERED
+          - DELIVERY_FAILED
+          - DELIVERY_DELAYED
+          - UNKNOWN
+        status_description:
+          type: string
+          description: 'A brief description of the status.
+
+            '
+        tracked:
+          type: boolean
+          description: Specifies if the delivery of the card is tracked. If `true`, a tracking link will be provided when status becomes `DISPATCHED`.
+        tracking_link:
+          type: string
+          description: Tracking link of the card.
+        tracking_number:
+          type: string
+          description: Delivery tracking number of this card.
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update time of the delivery details.
+      description: Delivery detail of the card. Only available for physical cards.
+    NonPciAddress:
+      type: object
+      required:
+      - city
+      - country
+      - line1
+      - postcode
+      properties:
+        city:
+          type: string
+          description: City of address.
+        country:
+          type: string
+          description: ISO country code of address.
+        line1:
+          type: string
+          description: Address line 1.
+        line2:
+          type: string
+          description: Address line 2.
+        postcode:
+          type: string
+          description: Address postcode or ZIP code.
+        state:
+          type: string
+          description: Address state or region.
+      description: Optional postal address of physical card delivery.
+    NonPciTransactionUsage:
+      type: object
+      properties:
+        transaction_scope:
+          type: string
+          description: 'Types of transaction scope. It can be one of: `ALL_TRANSACTIONS`, `ONLINE_TRANSACTION`, `CONTACTLESS_TRANSACTION`, `CONTACT_CHIP_TRANSACTION`, `MAGSTRIPE`, `CASH_WITHDRAWAL`, `BILL_PAYMENT`, `ACCOUNT_FUNDING`.'
+        usage_scope:
+          type: string
+          description: 'Determines if a transaction can be made domestically and/or internationally. It can be one of: `ALL`, `INTERNATIONAL`, `DOMESTIC`.'
+    NonPciTransactionLimits:
+      type: object
+      required:
+      - limits
+      properties:
+        cash_withdrawal_limits:
+          type: array
+          description: "Cash withdrawal transaction limits are based on interval and amount.  \n  \nIf the daily limit is not set, the default daily limit amount for the selected limit currency will be used. The default daily limit amount is part of the account setting. To change the default daily limit amount, please reach out to your account manager.  \n  \nPlease note that the cash withdrawal transaction limits apply exclusively to cash withdrawals and are imposed to help manage potential liability for the account holder and for Airwallex. The account holder may be liable for any unauthorised spending on the card, so please apply the limits responsibly.  \n  \n**Important**: This limit will only appear if you have cash withdrawals enabled. Please speak to your account manager if you would like to enable cash withdrawals."
+          items:
+            $ref: '#/components/schemas/NonPciSpendingLimit'
+        currency:
+          type: string
+          description: 'Currency for transaction limits (3-letter ISO-4217 code). Will use USD if not set. Examples of valid base currencies are USD, AUD, GBP, EUR, CNY, HKD, SGD, NZD, JPY, CAD, CHF. More currencies may be available for your account: you may query the full list by calling the [Get issuing config](/docs/api/issuing/config/retrieve) endpoint.'
+        limits:
+          type: array
+          description: "Transaction limits are based on interval and amount.  \n  \nIf the per transaction limit is not set, the default per transaction limit amount for the selected limit currency will be used. The default per transaction amount is part of account settings. To change the default per transaction limit, please reach out to your account manager.  \n  \nThe account holder may be liable for any unauthorised spending on the card, so please apply limits responsibly."
+          items:
+            $ref: '#/components/schemas/NonPciSpendingLimit'
+      description: Transaction limits for the card. Multiple transaction limits can be configured based on single currency. Each transaction will be checked against the limits with interval after currency conversion rate applied.
+    NonPciRemainingLimit:
+      type: object
+      required:
+      - amount
+      - interval
+      - remaining
+      properties:
+        amount:
+          type: number
+          description: Transaction limit amount.
+        interval:
+          type: string
+          description: 'Transaction limit interval. One of: `PER_TRANSACTION`, `DAILY`, `WEEKLY`, `MONTHLY`, `ALL_TIME`.'
+        remaining:
+          type: number
+          description: Remaining amount of transaction limit for that interval. Refunds are always restored to active limits (each refund will increase the limit balance). Please check product doc for more details.
+    PciCardPci:
+      type: object
+      required:
+      - card_number
+      - cvv
+      - expiry_month
+      - expiry_year
+      - name_on_card
+      properties:
+        card_number:
+          type: string
+          description: Card Number.
+        cvv:
+          type: string
+          description: Card Verification Value.
+        expiry_month:
+          type: integer
+          format: int32
+          description: Card Expiry Month.
+        expiry_year:
+          type: integer
+          format: int32
+          description: Card Expiry Year.
+        name_on_card:
+          type: string
+          description: Name printed on card.
+    NonPciAllowedMerchantBrands:
+      type: object
+      properties:
+        categories:
+          type: array
+          description: Allowed Merchant Brands Categories for transactions. These must be provided using the codes defined in the [Merchant Brands Controls product page](/docs/issuing/card-controls/authorization-controls/merchant-brand-transaction-categories). Please note if this field is absent from request payload, or has a value of `null` or empty array `[]`, then transactions from all merchant brand categories will be allowed.
+          items:
+            type: string
+        ids:
+          type: array
+          description: Allowed Merchant Brand identifiers for transactions. Please note if this field is absent from request payload, or has a value of `null` or empty array `[]`, then transactions from all merchant brand ids will be allowed. You can search for Merchant Brands ids using the [Merchant Brands API](/docs/api/issuing/merchant_brands/retrieve).
+          items:
+            type: string
+            format: uuid
+        subcategories:
+          type: array
+          description: Allowed Merchant Brands Subcategories for transactions. These must be provided using the codes defined in the [Merchant Brands Controls product page](/docs/issuing/card-controls/authorization-controls/merchant-brand-transaction-categories). Please note if this field is absent from request payload, or has a value of `null` or empty array `[]`, then transactions from all merchant brand subcategories will be allowed.
+          items:
+            type: string
+      description: Allowed Merchant Brands rules for transactions. Please note if this field is absent from request payload, then transactions from all merchant brands will be allowed.
+    NonPciRemainingLimits:
+      type: object
+      properties:
+        cash_withdrawal_limits:
+          type: array
+          description: Remaining Cash Withdrawal Limits for Intervals.
+          items:
+            $ref: '#/components/schemas/NonPciRemainingLimit'
+        currency:
+          type: string
+          description: Currency of transaction limits (3-letter ISO-4217 code).
+        limits:
+          type: array
+          description: Remaining limits for Intervals.
+          items:
+            $ref: '#/components/schemas/NonPciRemainingLimit'
+    NonPciCardProgram:
+      type: object
+      properties:
+        card_profile_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the card profile used to create this card, if one was applied. When `card_profile_id` is supplied in the Create Card request, the card's program and card art are resolved from that profile.
+          x-stage: preview
+        interchange_percent:
+          type: string
+          description: Interchange percent of the card - This is only available for `sub_type="B2B_TRAVEL"` cards. Interchange can vary from 0.8 to 1.9, with increments of 0.1.
+        purpose:
+          type: string
+          enum:
+          - CONSUMER
+          - COMMERCIAL
+          x-enumDescriptions:
+            CONSUMER: A card used for personal purposes backed by funding belonging to an individual.
+            COMMERCIAL: A card used for business purposes backed by funding belonging to a business.
+        sub_type:
+          type: string
+          description: Sub type of the program - This is used for specific products under the defined program types. e.g `B2B_TRAVEL` which designates BINs for travel use cases (E.g OTAs).
+          enum:
+          - GOOD_FUNDS_CREDIT
+          - B2B_TRAVEL
+          - UNKNOWN
+        type:
+          type: string
+          description: Card type - `PREPAID`, `DEBIT`, `CREDIT` or `DEFERRED_DEBIT`. `DEFERRED_DEBIT` is Deferred Debit card available for OTA (Online Travel Agent) customers only in UK/Europe countries. If card type is not set, the default card type which is a part of your account setting will be used.
+          enum:
+          - UNKNOWN
+          - DEBIT
+          - PREPAID
+          - CREDIT
+          - DEFERRED_DEBIT
+      description: Card program.
+    NonPciAlertSettings:
+      type: object
+      properties:
+        low_remaining_transaction_limit:
+          $ref: '#/components/schemas/NonPciAlertSettingEntry'
+          description: 'Configures an alert for when the remaining spending limit dips below a specified percentage. When enabled, a webhook notification will be triggered if the remaining limit falls below the defined threshold. Note that:
+
+
+            - Only one notification per spend limit interval will be sent. A webhook is triggered only when the threshold is crossed, and further spending below the threshold will not trigger additional notifications. Example: if the percent enabled is 10, a webhook will be sent once the remaining limit is at or less than 10%.
+
+            - If the spend limit has been updated, a new notification will be sent when the new threshold is crossed.
+
+            - This alert only applies to multiple use cards.
+
+            - If not specified, this setting will be enabled by default with ``enabled`` set to ``true`` and ``percent`` set to an account specific default value.'
+      description: Contains alert configuration settings for the card.
+    PciApiProvisioning:
+      type: object
+      required:
+      - card_id
+      properties:
+        card_id:
+          type: string
+          description: Identifier of the provisioned card.
+        activation_data:
+          type: string
+          description: Present when `type` is `apple_pay`. Activation data to return to Apple PassKit.
+        encrypted_pass_data:
+          type: string
+          description: Present when `type` is `apple_pay`. Encrypted pass data to return to Apple PassKit to complete provisioning.
+        ephemeral_public_key:
+          type: string
+          description: Present when `type` is `apple_pay`. Ephemeral public key to return to Apple PassKit.
+        expiration_date:
+          $ref: '#/components/schemas/IssuingPciExpirationDate'
+          description: Present when `type` is `google_pay`. Expiration date of the provisioned token.
+        enc_address:
+          type: string
+          description: Present when `type` is `google_pay`, when available. Encrypted billing address.
+        last4:
+          type: string
+          description: Present when `type` is `google_pay` or `samsung_pay`. Last four digits of the tokenized card.
+        opaque_payment_card:
+          type: string
+          description: Present when `type` is `google_pay` or `samsung_pay`. Opaque payment card payload to pass to the wallet SDK.
+        google_opaque_payment_card:
+          type: string
+          description: Present when `type` is `google_pay`. Used for push provisioning.
+        card_type:
+          type: string
+          description: Present when `type` is `samsung_pay`. Card network / type.
+        vcard_id:
+          type: string
+          description: Present when `type` is `samsung_pay`.
+    NonPciAlertSettingEntry:
+      type: object
+      required:
+      - enabled
+      - percent
+      properties:
+        enabled:
+          type: boolean
+          description: Indicates whether the alert is active.
+        percent:
+          type: integer
+          format: int32
+          description: Specifies the percentage threshold for the alert.
+      description: 'Configures an alert for when the remaining spending limit dips below a specified percentage. When enabled, a webhook notification will be triggered if the remaining limit falls below the defined threshold. Note that:
+
+
+        - Only one notification per spend limit interval will be sent. A webhook is triggered only when the threshold is crossed, and further spending below the threshold will not trigger additional notifications. Example: if the percent enabled is 10, a webhook will be sent once the remaining limit is at or less than 10%.
+
+        - If the spend limit has been updated, a new notification will be sent when the new threshold is crossed.
+
+        - This alert only applies to multiple use cards.
+
+        - If not specified, this setting will be enabled by default with ``enabled`` set to ``true`` and ``percent`` set to an account specific default value.'
+    NonPciCard:
+      type: object
+      properties:
+        activate_on_issue:
+          type: boolean
+          description: Set this to `true` to activate the physical card when it is created. This will enable use of the card while it’s being delivered to the cardholder. Virtual cards will always be activated upon creation.
+        auto_close_date:
+          type: string
+          format: date
+          description: The date on which the card is automatically closed, at the start of that day (00:00 GMT). The date is in the format YYYY-MM-DD. Returns `null` if no automatic closure is scheduled.
+        additional_cardholder_ids:
+          type: array
+          description: The ID of additional cardholders of this card. Only valid if `is_personalized` is `false`.
+          items:
+            type: string
+            format: uuid
+        alert_settings:
+          $ref: '#/components/schemas/NonPciAlertSettings'
+          description: Contains alert configuration settings for the card.
+        all_card_versions:
+          type: array
+          description: Contains information about all versions of a card. A version changes with change in PAN.
+          items:
+            $ref: '#/components/schemas/NonPciCardVersion'
+        authorization_controls:
+          $ref: '#/components/schemas/NonPciAuthorizationControls'
+          description: Spend controls that determine the rules and restrictions to check for transaction authorizations.
+        brand:
+          type: string
+          description: Card Brand.
+        card_id:
+          type: string
+          format: uuid
+          description: Unique Identifier for the card.
+        card_number:
+          type: string
+          description: Masked card number.
+        card_status:
+          type: string
+          description: Current card status. See [Card Status](/docs/issuing/get-started/create-cards/card-statuses) for definitions.
+          enum:
+          - PENDING
+          - FAILED
+          - INACTIVE
+          - ACTIVE
+          - LOST
+          - STOLEN
+          - CLOSED
+          - BLOCKED
+          - EXPIRED
+          - UNKNOWN
+        card_version:
+          type: integer
+          format: int32
+          description: Current version of the card.
+        cardholder_id:
+          type: string
+          format: uuid
+          description: The unique identifier of the cardholder this card is associated with if it is an individual card.
+        client_data:
+          type: string
+          description: Client data which will be stored against the card record in Airwallex.
+        created_at:
+          type: string
+          format: date-time
+          description: Creation time of the card.
+        created_by:
+          type: string
+          description: The creator of the card.
+        delivery_details:
+          $ref: '#/components/schemas/NonPciDeliveryDetails'
+          description: Delivery detail of the card. Only available for physical cards.
+        form_factor:
+          type: string
+          description: Form of the card.
+          enum:
+          - PHYSICAL
+          - VIRTUAL
+        funding_source_id:
+          type: string
+          format: uuid
+          description: A unique identifier that links a card to its designated funding source. This unique identifier determines which funding source will be accessed for the deduction of funds during transactions. The `funding_source_id` can be retrieved from the client's account manager. If `funding_source_id` is not provided, the default funding source would be the account's wallet.
+        is_personalized:
+          type: boolean
+          description: Determines whether the card should be assigned to a singular individual or to the business with multiple cardholders who are authorized to use the card. Note - only personalized cards can be created as physical and added to digital wallet providers.
+        metadata:
+          type: object
+          description: A set of key-value pairs that can be attached to the Card. You can specify up to 20 keys, with key names up to 20 characters long and values up to 150 characters long.
+          additionalProperties:
+            type: string
+        name_on_card:
+          type: string
+          description: Name to be printed on card.
+        nick_name:
+          type: string
+          description: A nick name for the card.
+        note:
+          type: string
+          description: Notes that are to be stored against the card request (for client reference).
+        postal_address:
+          $ref: '#/components/schemas/NonPciAddress'
+          description: Optional postal address of physical card delivery.
+        primary_contact_details:
+          $ref: '#/components/schemas/NonPciPrimaryContactDetail'
+          description: Details of the primary contact of the card.
+        program:
+          $ref: '#/components/schemas/NonPciCardProgram'
+          description: Card program.
+        purpose:
+          type: string
+          description: The purpose of the card's usage. Only available for expense cards.
+          enum:
+          - SUBSCRIPTIONS
+          - OFFICE_SUPPLIES
+          - MARKETING_EXPENSES
+          - TRAVEL_EXPENSES
+          - CLIENT_EXPENSES
+          - TEAM_EXPENSES
+          - ONLINE_PURCHASING
+          - BUSINESS_EXPENSES
+          - OTHER
+        request_id:
+          type: string
+          description: 'A unique request identifier specified by the client. Requests with the same request_id will be ignored. This allows requests to be replayed if client is unsure of the outcome, e.g. due to network issues, system failures, etc.  Note: Can be non-UUID as long as it is unique between requests.'
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update time of the card.
+    NonPciCardSummary:
+      type: object
+      required:
+      - brand
+      - card_id
+      - card_number
+      - card_status
+      - created_at
+      properties:
+        additional_cardholder_ids:
+          type: array
+          description: Unique Identifiers for additional cardholders.
+          items:
+            type: string
+            format: uuid
+        brand:
+          type: string
+          description: Card Brand.
+        card_id:
+          type: string
+          format: uuid
+          description: Unique Identifier for the card.
+        card_number:
+          type: string
+          description: Masked card number.
+        card_status:
+          type: string
+          description: 'Current card status, one of: '
+          enum:
+          - PENDING
+          - FAILED
+          - INACTIVE
+          - ACTIVE
+          - LOST
+          - STOLEN
+          - CLOSED
+          - BLOCKED
+          - EXPIRED
+          - UNKNOWN
+        cardholder_id:
+          type: string
+          format: uuid
+          description: Unique Identifier for the cardholder, if this is an employee card.
+        created_at:
+          type: string
+          format: date-time
+          description: Date card was created.
+        nick_name:
+          type: string
+          description: Nickname on the card.
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update time of the card.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    IssuingPciExpirationDate:
+      type: object
+      required:
+      - month
+      - year
+      properties:
+        month:
+          type: string
+          description: Expiry month of the provisioned token.
+        year:
+          type: string
+          description: Expiry year of the provisioned token.
+    NonPciCardVersion:
+      type: object
+      properties:
+        card_number:
+          type: string
+          description: Masked card number of this version.
+        card_status:
+          type: string
+          description: Card status of this version. See [Card Status](/docs/issuing/get-started/create-cards/card-statuses) for definitions.
+          enum:
+          - PENDING
+          - FAILED
+          - INACTIVE
+          - ACTIVE
+          - LOST
+          - STOLEN
+          - CLOSED
+          - BLOCKED
+          - EXPIRED
+          - UNKNOWN
+        card_version:
+          type: integer
+          format: int32
+          description: Version Id which uniquely identifies this card version object.
+        created_at:
+          type: string
+          format: date-time
+          description: Creation time of the card version.
+    NonPciSpendingLimit:
+      type: object
+      required:
+      - amount
+      - interval
+      properties:
+        amount:
+          type: number
+          description: Transaction limit amount. This field is mandatory and must be greater than 0. Customer can set perTransaction limit up to a maximum amount (The maximum amount is part of account setting).
+        interval:
+          type: string
+          description: 'Transaction limit interval. This field is mandatory and must be one of: `PER_TRANSACTION`, `DAILY`, `WEEKLY`, `MONTHLY`, `ALL_TIME`.'
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

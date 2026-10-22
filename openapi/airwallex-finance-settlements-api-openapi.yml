@@ -1,0 +1,306 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Finance > Settlements API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Finance > Settlements
+  description: Represents the set of endpoints you use to track and manage payment settlements that contribute to your Airwallex account balance. You can list settlements with optional filters, retrieve a settlements overview for a specific settlement by settlement batch unique identifier, and download batch settlement reports for reconciliation or record keeping.
+  x-domain: Finance
+  x-resource: Settlements
+  x-urlPath: finance/settlements
+paths:
+  /api/v1/pa/financial/settlements/{id}:
+    get:
+      tags:
+      - Finance > Settlements
+      summary: 1|Retrieve a Settlement
+      description: Get a specific settlement detail by specifying the Airwallex settlement unique identifier.
+      operationId: retrieveSettlement
+      parameters:
+      - name: id
+        in: path
+        description: Batch unique identifier of transaction.
+        required: true
+        schema:
+          type: string
+          default: bat_20190328_EUR_1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentAcceptanceFinancialSettlement'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/financial/settlements/settlement_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          amount: 99
+          created_at: '2019-11-21'
+          currency: CNY
+          estimated_settled_at: '2019-11-21'
+          fee: 1
+          settlement_id: bat_20190328_EUR_1
+          settled_at: '2019-11-21'
+          status: PENDING
+      x-domain: Finance
+      x-resource: Settlements
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/financial/settlements:
+    get:
+      tags:
+      - Finance > Settlements
+      summary: 2|List all Settlements
+      description: Get list of settlements that contributed to the Airwallex account balance from a specified settled date, with optional filters on end settled date, currency and status.
+      operationId: listSettlement
+      parameters:
+      - name: currency
+        in: query
+        description: Currency of the settlement.
+        required: true
+        schema:
+          type: string
+          default: CNY
+      - name: from_settled_at
+        in: query
+        description: The start date of `settled_at` in ISO8601 format (inclusive).
+        required: true
+        schema:
+          type: string
+          default: '2017-04-01'
+      - name: page_num
+        in: query
+        description: Page number, starts from 0.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of results per page, default is 100, max is 1000.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: status
+        in: query
+        description: 'Status of the settlement, one of: `PENDING`, `SETTLED`.'
+        required: true
+        schema:
+          type: string
+          default: PENDING
+      - name: to_settled_at
+        in: query
+        description: The end date of `settled_at` in ISO8601 format (inclusive).
+        required: true
+        schema:
+          type: string
+          default: '2017-04-01'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: List items.
+                    items:
+                      $ref: '#/components/schemas/PaymentAcceptanceFinancialSettlement'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/financial/settlements
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: true
+          items:
+          - amount: 99
+            created_at: '2019-11-21'
+            currency: CNY
+            estimated_settled_at: '2019-11-21'
+            fee: 1
+            settlement_id: bat_20190328_EUR_1
+            settled_at: '2019-11-21'
+            status: PENDING
+      x-domain: Finance
+      x-resource: Settlements
+      x-urlPath: list
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/financial/settlements/{id}/report:
+    get:
+      tags:
+      - Finance > Settlements
+      summary: 3|Retrieve a Settlement Report
+      description: Get a single batch settlement report by specifying the Airwallex settlement batch unique identifier.
+      operationId: listReport
+      parameters:
+      - name: file_format
+        in: query
+        description: File format of the requested report. Supported formats are `csv` and `excel`. Default format is `excel`.
+        required: false
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: Batch unique identifier of transaction.
+        required: true
+        schema:
+          type: string
+          default: bat_20190328_EUR_1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentAcceptanceFinancialSettlementReport'
+        '400':
+          description: 'Bad Request. Possible error codes: `resource_not_found` (invalid `settlement_id`), `validation_error` (e.g. report too large to generate).'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/financial/settlements/settlement_id/report
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          created_at: '2019-11-15T20:00:48+00:00'
+          settlement_id: bat_20190328_EUR_1
+          report_url: https://www.airwallex.com
+          report_status: READY
+      x-domain: Finance
+      x-resource: Settlements
+      x-urlPath: report
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    PaymentAcceptanceFinancialSettlementReport:
+      type: object
+      properties:
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time this settlement report was created.
+        settlement_id:
+          type: string
+          description: ID of the settlement.
+        report_url:
+          type:
+          - string
+          - 'null'
+          description: The url of the report. Available when `report_status` is `READY`, otherwise `null`.
+        report_status:
+          type: string
+          enum:
+          - READY
+          - IN_PROGRESS
+          x-enumDescriptions:
+            READY: '`READY` once available for download'
+            IN_PROGRESS: '`IN_PROGRESS` while still being generated'
+          description: Status of the report.
+    PaymentAcceptanceFinancialSettlement:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: Settlement amount Airwallex pays to the merchant.
+        created_at:
+          type: string
+          format: date-time
+          description: The time this settlement was created at.
+        currency:
+          type: string
+          description: Currency of the settlement.
+        estimated_settled_at:
+          type: string
+          format: date-time
+          description: The time when the settlement will be settled at.
+        fee:
+          type: number
+          description: Fee of the settlement.
+        settlement_id:
+          type: string
+          description: ID of the settlement.
+        settled_at:
+          type: string
+          format: date-time
+          description: The time this settlement was settled at.
+        status:
+          type: string
+          description: One of `PENDING`, `SETTLED`.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

@@ -1,10 +1,10 @@
-generated: '2026-08-30'
+generated: '2026-10-20'
 method: searched
 source: https://www.airwallex.com/docs/developer-tools/ai/agentos.md
 status: published
-note: Airwallex ships THREE hosted MCP servers plus a first-party stdio package. Two are OAuth-gated (AgentOS
-  production, Developer sandbox) and one — the Docs MCP — is fully anonymous, so its tools/list below
-  was captured live rather than read off a docs page.
+note: Airwallex ships THREE hosted MCP servers plus a first-party stdio package. Two are OAuth-gated (AgentOS production,
+  Developer sandbox) and one — the Docs MCP — is fully anonymous, so its tools/list below was captured live rather
+  than read off a docs page.
 deployment:
   mode: both
   endpoint: https://mcp.airwallex.com/mcp
@@ -12,10 +12,9 @@ deployment:
   package: https://www.npmjs.com/package/@airwallex/developer-mcp
   auth: oauth
   verified: probed
-  note: mode is `both` because Airwallex publishes remote HTTPS endpoints an MCP client POSTs to AND a
-    first-party npm package (@airwallex/developer-mcp, npm owner `airwallex`). The remote endpoints are
-    the documented default in every install path in the AgentOS and developer-connector guides; the package
-    is the local option.
+  note: mode is `both` because Airwallex publishes remote HTTPS endpoints an MCP client POSTs to AND a first-party
+    npm package (@airwallex/developer-mcp, npm owner `airwallex`). The remote endpoints are the documented default
+    in every install path in the AgentOS and developer-connector guides; the package is the local option.
   probe_prior: (never probed)
   probe: gated
   probe_why: RFC 9728 challenge on the MCP path only
@@ -33,9 +32,8 @@ servers:
     method: POST tools/list
     http_status: 401
     www_authenticate: Bearer error="invalid_token", resource_metadata="https://mcp.airwallex.com/.well-known/oauth-protected-resource/mcp/"
-    note: Live and reachable; the tool list requires an authenticated session. The anonymous RFC 9728
-      protected-resource document IS served and is saved at well-known/airwallex-oauth-protected-resource-mcp.json
-      (35 scopes).
+    note: Live and reachable; the tool list requires an authenticated session. The anonymous RFC 9728 protected-resource
+      document IS served and is saved at well-known/airwallex-oauth-protected-resource-mcp.json (35 scopes).
   docs: https://www.airwallex.com/docs/developer-tools/ai/agentos.md
   guardrails:
   - No money-out actions (transfers, FX conversions, payouts) by default.
@@ -53,8 +51,7 @@ servers:
     http_status: 401
     www_authenticate: Bearer error="invalid_token", resource_metadata="https://mcp.sandbox.airwallex.com/.well-known/oauth-protected-resource/developer/"
   docs: https://www.airwallex.com/docs/developer-tools/ai/developer-connector.md
-  capability: Documentation tools + sandbox simulation tools + sandbox endpoint access. Never touches
-    production.
+  capability: Documentation tools + sandbox simulation tools + sandbox endpoint access. Never touches production.
 - name: airwallex-docs
   title: Airwallex Docs MCP
   transport: http
@@ -78,6 +75,10 @@ servers:
     prompts: 0
     resources: 0
     raw: mcp/airwallex-docs-mcp-tools.json
+    checked: '2026-10-20'
+    tools:
+    - read_integration_best_practices
+    - search_public_docs
   docs: https://www.airwallex.com/docs/developer-tools/ai/developer-connector.md
 packages:
 - registry: npm
@@ -90,8 +91,8 @@ tools:
 - name: read_integration_best_practices
   title: Read Airwallex integration best practices
   server: airwallex-docs
-  description: Must be called once per conversation before any other Airwallex tool, but only when the
-    user intent is code generation or a payment dispute flow.
+  description: Must be called once per conversation before any other Airwallex tool, but only when the user intent
+    is code generation or a payment dispute flow.
   parameters: []
   method: probed
 - name: search_public_docs
@@ -101,16 +102,15 @@ tools:
   - question
   - source
   method: probed
-  description: 'Retrieve relevant sections from the official Airwallex documentation matching the user''s
-    question.  NOTE: The required parameters is QUESTION instead of query.  USAGE STRATEGY:   DO: Prefer
-    to start with a broad search without specifying any source and then narrow down the search with a
-    specific source when needed   DO: For relevant API endpoints or SDK methods in the sections returned,
-    invoke thi…'
+  description: 'Retrieve relevant sections from the official Airwallex documentation matching the user''s question.  NOTE:
+    The required parameters is QUESTION instead of query.  USAGE STRATEGY:   DO: Prefer to start with a broad search
+    without specifying any source and then narrow down the search with a specific source when needed   DO: For relevant
+    API endpoints or SDK methods in the sections returned, invoke thi…'
 tools_gated:
-  note: The AgentOS (production) and Developer (sandbox) servers did not return a tool list anonymously.
-    Their real capability envelope IS published anonymously as OAuth scopes in the RFC 9728 protected-resource
-    documents — 35 on production, 48 on sandbox — captured in scopes/airwallex-scopes.yml. Input schemas
-    require an authenticated tools/list.
+  note: The AgentOS (production) and Developer (sandbox) servers did not return a tool list anonymously. Their real
+    capability envelope IS published anonymously as OAuth scopes in the RFC 9728 protected-resource documents —
+    35 on production, 48 on sandbox — captured in scopes/airwallex-scopes.yml. Input schemas require an authenticated
+    tools/list.
 plugins:
   marketplace: https://github.com/airwallex/airwallex-marketplace
   install:
@@ -120,6 +120,25 @@ plugins:
       codex plugin add airwallex-agentos@airwallex-marketplace'
     cursor: Settings > Plugins > Marketplace > search "airwallex"
   skills: skills/_index.yml
+  published_skills:
+    agentos:
+    - contract-to-billing
+    - beneficiary-creation
+    - card-provisioning
+    - manage-cashflow
+    - awx-best-practices
+    airwallex-dev:
+    - airwallex-ai-provider-card-mit
+    - airwallex-billing-checkout
+    - airwallex-dropin
+    - airwallex-hpp
+    - airwallex-kyc
+    - airwallex-split-card
+    source: https://github.com/airwallex/airwallex-marketplace
+    saved_verbatim: skills/published/
+    checked: '2026-10-20'
+    note: The published skills name CLI commands and request fields but no AgentOS MCP tool names, so they do not
+      unlock the gated tool list.
 descriptions_source: live tools/list (authorship probe or saved capture); filled by backfill-tools-from-authorship.py
   --descriptions, 2026-09-28
 rfc9728:
@@ -171,3 +190,5 @@ rfc9728:
     - w:org_action:billing.usage_metering_edit
     bearer_methods_supported:
     - header
+crosswalk: mcp/airwallex-tool-crosswalk.yml
+openapi: openapi/airwallex-openapi.yml

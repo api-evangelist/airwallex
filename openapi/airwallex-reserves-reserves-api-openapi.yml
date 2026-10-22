@@ -1,0 +1,285 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Reserves > Reserves API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Reserves > Reserves
+  x-domain: Reserves
+  x-resource: Reserves
+  x-urlPath: reserves/reserves
+paths:
+  /api/v1/reserves/create:
+    post:
+      tags:
+      - Reserves > Reserves
+      summary: 1|Create a Reserve
+      description: Reserve balance. Deduct from Available balance and increase Reserve balance.
+      operationId: createReserve
+      x-oboSupported: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - account_id
+              - amount
+              - currency
+              - request_id
+              properties:
+                account_id:
+                  type: string
+                  description: Airwallex account unique identifier.
+                amount:
+                  type: number
+                  description: Amount of the reserve in `currency`, representing how much to reserve.
+                currency:
+                  type: string
+                  description: Currency (3-letter ISO-4217 code).
+                request_id:
+                  type: string
+                  description: Unique request identifier. 1-50 characters long.
+        description: reserveRequestDto
+        required: true
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reserve'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  details:
+                    type: object
+                  message:
+                    type: string
+                  source:
+                    type: string
+                title: ErrorResponse
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/reserves/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          account_id: '1936398'
+          amount: 10000
+          currency: AUD
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+        response_body:
+          account_id: '1936398'
+          amount: 10000
+          created_at: 2018-03-22T16:08:02+1100
+          currency: AUD
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          reserve_id: d9af1614-a6a1-4d45-aae7-6858fc6d9ede
+      x-oauthSupported: false
+      x-domain: Reserves
+      x-resource: Reserves
+      x-urlPath: create
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/reserves/unreserve:
+    post:
+      tags:
+      - Reserves > Reserves
+      summary: 2|Create an Unreserve
+      description: Unreserve balance. Deduct from Reserve balance and increase Available balance.
+      operationId: unreserve
+      x-oboSupported: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - account_id
+              - amount
+              - currency
+              - request_id
+              properties:
+                account_id:
+                  type: string
+                  description: Airwallex account unique identifier.
+                amount:
+                  type: number
+                  description: Amount of the unreserve in `currency`, representing how much to unreserve.
+                currency:
+                  type: string
+                  description: Currency (3-letter ISO-4217 code).
+                request_id:
+                  type: string
+                  description: Unique request identifier. 1-50 characters long.
+        description: unreserveRequestDto
+        required: true
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unreserve'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  details:
+                    type: object
+                  message:
+                    type: string
+                  source:
+                    type: string
+                title: ErrorResponse
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/reserves/unreserve
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          account_id: '1936398'
+          amount: 10000
+          currency: AUD
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+        response_body:
+          account_id: '1936398'
+          amount: 10000
+          created_at: 2018-03-22T16:08:02+1100
+          currency: AUD
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          unreserve_id: d9af1614-a6a1-4d45-aae7-6858fc6d9ede
+      x-oauthSupported: false
+      x-domain: Reserves
+      x-resource: Reserves
+      x-urlPath: unreserve
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    Unreserve:
+      type: object
+      required:
+      - account_id
+      - amount
+      - created_at
+      - currency
+      - request_id
+      - unreserve_id
+      properties:
+        account_id:
+          type: string
+          description: Airwallex account unique identifier specified in the request.
+        amount:
+          type: number
+          description: Amount of the unreserve in `currency` specified in the request.
+        created_at:
+          type: string
+          format: date-time
+          description: The time this unreserve was created.
+        currency:
+          type: string
+          description: Currency (3-letter ISO-4217 code) specified in the request.
+        request_id:
+          type: string
+          description: Unique request identifier specified in the request.
+        unreserve_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the unreserve.
+    Reserve:
+      type: object
+      required:
+      - account_id
+      - amount
+      - created_at
+      - currency
+      - request_id
+      - reserve_id
+      properties:
+        account_id:
+          type: string
+          description: Airwallex account unique identifier specified in the request.
+        amount:
+          type: number
+          description: Amount of the reserve in `currency` specified in the request.
+        created_at:
+          type: string
+          format: date-time
+          description: The time this reserve was created.
+        currency:
+          type: string
+          description: Currency (3-letter ISO-4217 code) specified in the request.
+        request_id:
+          type: string
+          description: Unique request identifier specified in the request.
+        reserve_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the reserve.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

@@ -1,0 +1,381 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Simulation (Sandbox Only) > Terminal Simulation…
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Simulation (Sandbox Only) > Terminal Simulation
+  description: A Terminal represents a virtual point-of-sale (POS) device registered in the sandbox environment for testing in-person payment flows.
+  x-domain: Simulation (Sandbox Only)
+  x-resource: Terminal Simulation
+  x-urlPath: simulation/terminal_simulation
+paths:
+  /api/v1/simulation/pa/pos/terminals/generate_activation_code:
+    post:
+      servers:
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+      tags:
+      - Simulation (Sandbox Only) > Terminal Simulation
+      summary: 1|Generate an Activation Code
+      description: Generates an activation code for the terminal owner to enter in the Airwallex web app to activate the terminal device.
+      operationId: simulation_geneerateActivationCode
+      x-oboSupported: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              properties:
+                request_id:
+                  type: string
+                  description: UUID of the request.
+        description: Generate activation code request.
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulationGenerateActivationCode'
+        '400':
+          description: invalid_argument
+        '401':
+          description: credentials_invalid
+        '500':
+          description: service_unavailable
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/simulation/pa/pos/terminals/generate_activation_code
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          request_id: 123e4567-e89b-12d3-a456-426614174000
+        response_body:
+          activation_code: 5W0D3E8L
+          expires_at: 1761031320416
+      x-domain: Simulation (Sandbox Only)
+      x-resource: Terminal Simulation
+      x-urlPath: generate_activation_code_terminals
+      x-oauthSupported: true
+      x-resourceLevel: account
+  /api/v1/simulation/pa/pos/terminals/turn_on:
+    post:
+      servers:
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+      tags:
+      - Simulation (Sandbox Only) > Terminal Simulation
+      summary: 2|Turn on a Terminal
+      description: Turns on the terminal device.
+      operationId: simulation_turnOn
+      x-oboSupported: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - terminal_id
+              properties:
+                terminal_id:
+                  type: string
+                  description: Terminal unique identifier.
+        description: Turn on terminal request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulationTerminalStatus'
+        '400':
+          description: invalid_argument
+        '401':
+          description: credentials_invalid
+        '404':
+          description: not_found
+        '500':
+          description: service_unavailable
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/simulation/pa/pos/terminals/turn_on
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          terminal_id: ter_stnck59hc8ej0qujy
+        response_body:
+          connection_status: CONNECTED
+          terminal_id: ter_stnck59hc8ej0qujy
+      x-domain: Simulation (Sandbox Only)
+      x-resource: Terminal Simulation
+      x-urlPath: turn_on_terminals
+      x-oauthSupported: true
+      x-resourceLevel: account
+  /api/v1/simulation/pa/pos/terminals/turn_off:
+    post:
+      servers:
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+      tags:
+      - Simulation (Sandbox Only) > Terminal Simulation
+      summary: 3|Turn Off a Terminal
+      description: Turns off the terminal device.
+      operationId: simulation_turnOff
+      x-oboSupported: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - terminal_id
+              properties:
+                terminal_id:
+                  type: string
+                  description: Terminal unique identifier.
+        description: Turn off terminal request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulationTerminalStatus'
+        '400':
+          description: invalid_argument
+        '401':
+          description: credentials_invalid
+        '404':
+          description: not_found
+        '500':
+          description: service_unavailable
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/simulation/pa/pos/terminals/turn_off
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          terminal_id: ter_stnck59hc8ej0qujy
+        response_body:
+          connection_status: CONNECTED
+          terminal_id: ter_stnck59hc8ej0qujy
+      x-domain: Simulation (Sandbox Only)
+      x-resource: Terminal Simulation
+      x-urlPath: turn_off_terminals
+      x-oauthSupported: true
+      x-resourceLevel: account
+  /api/v1/simulation/pa/pos/terminals/confirm_payment_intent:
+    post:
+      servers:
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+      tags:
+      - Simulation (Sandbox Only) > Terminal Simulation
+      summary: 4|Confirm Payment Using a Scenario
+      description: Confirm the current terminal's linked payment using a specific scenario.
+      operationId: simulation_confirrmPaymentIntent
+      x-oboSupported: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - payment_scenario_name
+              - terminal_id
+              properties:
+                payment_scenario_name:
+                  type: string
+                  description: Payment scenario name. You can retrieve supported values using the List payment scenarios API (/api/v1/simulation/pa/pos/terminals/payment_scenarios).
+                terminal_id:
+                  type: string
+                  description: Terminal unique identifier.
+        description: Confirm payment intent request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulationConfirmPaymentIntent'
+        '400':
+          description: invalid_argument
+        '401':
+          description: credentials_invalid
+        '500':
+          description: service_unavailable
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/simulation/pa/pos/terminals/confirm_payment_intent
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          payment_scenario_name: visa_chip_with_pin
+          terminal_id: ter_stnck59hc8ej0qujy
+        response_body:
+          payment_intent:
+            id: int_hkstfc294hc8ff7p1nn
+            status: REQUIRES_CAPTURE
+          terminal_id: ter_stnck59hc8ej0qujy
+      x-domain: Simulation (Sandbox Only)
+      x-resource: Terminal Simulation
+      x-urlPath: confirm_payment_intent_terminals
+      x-oauthSupported: true
+      x-resourceLevel: account
+  /api/v1/simulation/pa/pos/terminals/payment_scenarios:
+    get:
+      servers:
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+      tags:
+      - Simulation (Sandbox Only) > Terminal Simulation
+      summary: 5|List all Available Payment Scenarios
+      description: Retrieves all payment scenarios supported by the sandbox environment for in-person payment flows.
+      operationId: simulation_listPaymentScenarios
+      x-oboSupported: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulationAvailableScenarioNames'
+        '400':
+          description: invalid_argument
+        '401':
+          description: credentials_invalid
+        '500':
+          description: service_unavailable
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/simulation/pa/pos/terminals/payment_scenarios
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - description: Mastercard chip card without PIN verification.
+            name: mastercard_chip_no_pin
+      x-domain: Simulation (Sandbox Only)
+      x-resource: Terminal Simulation
+      x-urlPath: payment_scenarios
+      x-oauthSupported: true
+      x-resourceLevel: account
+components:
+  schemas:
+    SimulationPaymentScenario:
+      type: object
+      required:
+      - description
+      - name
+      properties:
+        description:
+          type: string
+          description: The description of the payment scenario.
+        name:
+          type: string
+          description: The name of the payment scenario.
+    SimulationPaymentIntentInfo:
+      type: object
+      required:
+      - id
+      - status
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the payment intent.
+        status:
+          type: string
+          description: The status of the payment intent.
+      description: The payment intent that has been confirmed.
+    SimulationConfirmPaymentIntent:
+      type: object
+      required:
+      - payment_intent
+      - terminal_id
+      properties:
+        payment_intent:
+          $ref: '#/components/schemas/SimulationPaymentIntentInfo'
+          description: The payment intent that has been confirmed.
+        terminal_id:
+          type: string
+          description: Terminal unique identifier.
+    SimulationGenerateActivationCode:
+      type: object
+      required:
+      - activation_code
+      - expires_at
+      properties:
+        activation_code:
+          type: string
+          description: The activation code read from the terminal.
+        expires_at:
+          type: integer
+          format: int64
+          description: Expiration time of the activation code.
+    SimulationAvailableScenarioNames:
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          description: All available payment scenarios.
+          items:
+            $ref: '#/components/schemas/SimulationPaymentScenario'
+    SimulationTerminalStatus:
+      type: object
+      required:
+      - connection_status
+      - terminal_id
+      properties:
+        connection_status:
+          type: string
+          description: Terminal device connection status.
+          enum:
+          - CONNECTED
+          - DISCONNECTED
+        terminal_id:
+          type: string
+          description: Terminal unique identifier.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

@@ -1,0 +1,430 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Issuing > Config API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Issuing > Config
+  description: You can view config for cards such as default and maximum limit when creating card and remote auth setting to process authorization on your side.
+  x-domain: Issuing
+  x-resource: Config
+  x-urlPath: issuing/config
+paths:
+  /api/v1/issuing/config:
+    get:
+      tags:
+      - Issuing > Config
+      summary: 1|Retrieve the Issuing Config
+      description: Retrieves the default issuing settings configured for your account.
+      operationId: listConfig
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonPciIssuingSetting'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/issuing/config
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          blocked_transaction_usages:
+          - transaction_scope: MAGSTRIPE
+            usage_scope: INTERNATIONAL
+          - transaction_scope: ONLINE_TRANSACTION
+            usage_scope: ALL
+          enable_auto_conversion: true
+          primary_currency: USD
+          remote_auth_settings:
+            created_at: '2018-03-22T16:08:02+00:00'
+            default_action: DECLINED
+            enabled: true
+            shared_secret: 50qJEcIBT36Fg5DU1pxV1HSAcTPDA8etZnb5fYObi70BcCT52q19PFxyfkXd
+            updated_at: '2018-03-22T16:08:02+00:00'
+            url: https://your.domain/remote-auth
+          remote_call_config:
+            methods:
+            - name: Echo
+              path: /echo
+            shared_secret: 50qJEcIBT36Fg5DU1pxV1HSAcTPDA8etZnb5fYObi70BcCT52q19PFxyfkXd
+            url: https://your.domain
+          remote_provisioning_config:
+            default_action: UNKNOWN
+            enabled: true
+          spending_limit_settings:
+            per_transaction_limits:
+            - currency: AUD
+              default: 1000
+              maximum: 1000
+      x-oauthSupported: false
+      x-scope:
+      - scope: issuing.config:read
+        group: Issuing
+        resource_name: Config
+      x-domain: Issuing
+      x-resource: Config
+      x-urlPath: retrieve
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/issuing/config/update:
+    post:
+      tags:
+      - Issuing > Config
+      summary: 2|Update the Issuing Config
+      description: Update issuing config (currently only support remote call config update).
+      operationId: updateConfig
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                enable_auto_conversion:
+                  type: boolean
+                  description: Whether auto currency conversion is enabled.
+                primary_currency:
+                  type: string
+                  description: The designated primary currency used as the funding source for auto currency conversion.
+                remote_auth:
+                  type: object
+                  description: Remote authorization config. Please read the [remote auth product documentation](/docs/issuing/card-controls/remote-authorization) for more information. You will need to reach out to our support team to enable this feature for you.
+                  properties:
+                    default_action:
+                      type: string
+                      description: Default action when remote auth failed - `AUTHORIZED` or `DECLINED`.
+                    enabled:
+                      type: boolean
+                      description: Remote auth feature enabled flag.
+                    new_shared_secret:
+                      type: boolean
+                      description: Should create a new shared secret for remote auth.
+                    url:
+                      type: string
+                      description: The url for your remote auth endpoint, this is a mandatory field when you init your remote auth config.
+                    version:
+                      type: integer
+                      format: int32
+                      description: Specifies the remote auth payload version (1 or 2). Defaults to 2 on creation. If omitted during updates, the existing value is retained.
+                remote_call_config:
+                  type: object
+                  description: Remote call config. You will need to reach out to our support team to enable this feature for you.
+                  properties:
+                    methods:
+                      type: array
+                      description: Individual remote call method configs.
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                            description: Name of the method being configured.
+                          path:
+                            type: string
+                            description: Path that will be combined with url for remote calls.
+                    shared_secret:
+                      type: string
+                      description: Shared secret to verify remote call requests. Please note this field only return once when you init remote call config or request a new secret in the update request, get issuing setting always return null.
+                      readOnly: true
+                    url:
+                      type: string
+                      description: The base url for remote calls, which will be combined with the path supplied for individual methods.
+                remote_provisioning_config:
+                  type: object
+                  description: Remote provisioning config. You will need to reach out to our support team to enable this feature for you.
+                  properties:
+                    default_action:
+                      type: string
+                      description: Default action when remote provisioning attempt fails.
+                      enum:
+                      - UNKNOWN
+                      - CONDITIONAL_APPROVAL
+                      - GENERIC_DECLINE
+                    enabled:
+                      type: boolean
+                      description: Remote Provisioning config enabled flag, Airwallex will start sending remote provisioning requests to your endpoint once this flag is enabled.
+        description: issuingConfigUpdateRequestDto.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonPciIssuingSetting'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/issuing/config/update
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          enable_auto_conversion: true
+          primary_currency: USD
+          remote_auth:
+            default_action: DECLINED
+            enabled: true
+            new_shared_secret: true
+            url: https://your.domain/remote-auth
+            version: 2
+          remote_call_config:
+            methods:
+            - name: Echo
+              path: /echo
+            shared_secret: 50qJEcIBT36Fg5DU1pxV1HSAcTPDA8etZnb5fYObi70BcCT52q19PFxyfkXd
+            url: https://your.domain
+          remote_provisioning_config:
+            default_action: UNKNOWN
+            enabled: true
+        response_body:
+          blocked_transaction_usages:
+          - transaction_scope: MAGSTRIPE
+            usage_scope: INTERNATIONAL
+          - transaction_scope: ONLINE_TRANSACTION
+            usage_scope: ALL
+          enable_auto_conversion: true
+          primary_currency: USD
+          remote_auth_settings:
+            created_at: '2018-03-22T16:08:02+00:00'
+            default_action: DECLINED
+            enabled: true
+            shared_secret: 50qJEcIBT36Fg5DU1pxV1HSAcTPDA8etZnb5fYObi70BcCT52q19PFxyfkXd
+            updated_at: '2018-03-22T16:08:02+00:00'
+            url: https://your.domain/remote-auth
+          remote_call_config:
+            methods:
+            - name: Echo
+              path: /echo
+            shared_secret: 50qJEcIBT36Fg5DU1pxV1HSAcTPDA8etZnb5fYObi70BcCT52q19PFxyfkXd
+            url: https://your.domain
+          remote_provisioning_config:
+            default_action: UNKNOWN
+            enabled: true
+          spending_limit_settings:
+            per_transaction_limits:
+            - currency: AUD
+              default: 1000
+              maximum: 1000
+      x-oauthSupported: false
+      x-scope:
+      - scope: issuing.config:write
+        group: Issuing
+        resource_name: Config
+      x-domain: Issuing
+      x-resource: Config
+      x-urlPath: update
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    NonPciRemoteCallConfig:
+      type: object
+      properties:
+        methods:
+          type: array
+          description: Individual remote call method configs.
+          items:
+            $ref: '#/components/schemas/NonPciMethodConfig'
+        shared_secret:
+          type: string
+          description: Shared secret to verify remote call requests. Please note this field only return once when you init remote call config or request a new secret in the update request, get issuing setting always return null.
+          readOnly: true
+        url:
+          type: string
+          description: The base url for remote calls, which will be combined with the path supplied for individual methods.
+      description: Remote call config. You will need to reach out to our support team to enable this feature for you.
+    NonPciRemoteAuthConfig:
+      type: object
+      properties:
+        created_at:
+          type: string
+          description: Remote auth config creation time.
+        default_action:
+          type: string
+          description: Default action when remote auth failed.
+          enum:
+          - AUTHORIZED
+          - DECLINED
+        enabled:
+          type: boolean
+          description: Remote auth config enabled flag, Airwallex will start sending remote auth request to your endpoint once this flag is enabled.
+        shared_secret:
+          type: string
+          description: Shared secret to verify our remote auth request. Please note this field only return once when you init remote auth config or request a new secret in the update request, get issuing setting always return null.
+        updated_at:
+          type: string
+          description: Remote auth config last update time.
+        url:
+          type: string
+          description: The url for your remote auth endpoint, we will send remote auth request to this endpoint when your config is enabled.
+        version:
+          type: integer
+          format: int32
+          description: Specifies the remote auth payload version (1 or 2).
+      description: Remote authorization config. Please read the [remote auth product documentation](/docs/issuing/card-controls/remote-authorization) for more information. You will need to reach out to our support team to enable this feature for you.
+    NonPciMethodConfig:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the method being configured.
+        path:
+          type: string
+          description: Path that will be combined with url for remote calls.
+    NonPciTransactionUsage:
+      type: object
+      properties:
+        transaction_scope:
+          type: string
+          description: 'Types of transaction scope. It can be one of: `ALL_TRANSACTIONS`, `ONLINE_TRANSACTION`, `CONTACTLESS_TRANSACTION`, `CONTACT_CHIP_TRANSACTION`, `MAGSTRIPE`, `CASH_WITHDRAWAL`, `BILL_PAYMENT`, `ACCOUNT_FUNDING`.'
+        usage_scope:
+          type: string
+          description: 'Determines if a transaction can be made domestically and/or internationally. It can be one of: `ALL`, `INTERNATIONAL`, `DOMESTIC`.'
+    NonPciSpendingLimitSettings:
+      type: object
+      properties:
+        per_transaction_limits:
+          type: array
+          description: PerTransaction Limit settings for all supported base currency.
+          items:
+            $ref: '#/components/schemas/NonPciSpendingLimitSetting'
+      description: 'Spending limit settings. The default and maximum limits can be modified by reaching out to an Account Services team member. '
+    NonPciIssuingSetting:
+      type: object
+      required:
+      - enable_auto_conversion
+      - primary_currency
+      - spending_limit_settings
+      properties:
+        blocked_transaction_usages:
+          type: array
+          description: Transaction usage settings. The default controls are set based on regulatory requirements and can only be reviewed by reaching out to an Account Services team member.
+          items:
+            $ref: '#/components/schemas/NonPciTransactionUsage'
+        enable_auto_conversion:
+          type: boolean
+          description: Whether auto currency conversion is enabled.
+        primary_currency:
+          type: string
+          description: The designated primary currency used as the funding source for auto currency conversion.
+        remote_auth_settings:
+          $ref: '#/components/schemas/NonPciRemoteAuthConfig'
+          description: Remote authorization config. Please read the [remote auth product documentation](/docs/issuing/card-controls/remote-authorization) for more information. You will need to reach out to our support team to enable this feature for you.
+        remote_call_config:
+          $ref: '#/components/schemas/NonPciRemoteCallConfig'
+          description: Remote call config. You will need to reach out to our support team to enable this feature for you.
+        remote_provisioning_config:
+          $ref: '#/components/schemas/NonPciRemoteProvisioningConfig'
+          description: Digital wallet remote provisioning config. You will need to reach out to our support team to enable this feature for you.
+        spending_limit_settings:
+          $ref: '#/components/schemas/NonPciSpendingLimitSettings'
+          description: 'Spending limit settings. The default and maximum limits can be modified by reaching out to an Account Services team member. '
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    NonPciSpendingLimitSetting:
+      type: object
+      properties:
+        currency:
+          type: string
+          description: Currency code of the card spending limit setting.
+        default:
+          type: number
+          description: Default card spending limit amount of no limit set when create/update card.
+        maximum:
+          type: number
+          description: Maximum spending limit user can set for the card. When create/update card, if spending limit exceed this amount, the create/update card request will be rejected.
+    NonPciRemoteProvisioningConfig:
+      type: object
+      properties:
+        default_action:
+          type: string
+          description: Default action when remote provisioning attempt fails.
+          enum:
+          - UNKNOWN
+          - CONDITIONAL_APPROVAL
+          - GENERIC_DECLINE
+        enabled:
+          type: boolean
+          description: Remote Provisioning config enabled flag, Airwallex will start sending remote provisioning requests to your endpoint once this flag is enabled.
+      description: Remote provisioning config. You will need to reach out to our support team to enable this feature for you.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

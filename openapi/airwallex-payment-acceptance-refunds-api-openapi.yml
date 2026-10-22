@@ -1,0 +1,398 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Payment Acceptance > Refunds API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Payment Acceptance > Refunds
+  description: 'The **Refund** API allows you to refund a succeeded payment back to the payment method used by your customer. The refund amount must be equal to or less than the amount specified in the original Payment Intent/Payment Attempt.
+
+
+    Multiple Refunds can be created until the full amount is refunded.
+
+
+    Data Retention Policy: You can query Refund resources for a maximum of 2 years since creation.'
+  x-domain: Payment Acceptance
+  x-resource: Refunds
+  x-urlPath: payments/refunds
+paths:
+  /api/v1/pa/refunds/create:
+    post:
+      tags:
+      - Payment Acceptance > Refunds
+      summary: 1|Create a Refund
+      description: Create a Refund against a Payment Intent/Payment Attempt.
+      operationId: createRefund
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              properties:
+                amount:
+                  type: number
+                  description: Amount of the Refund. If not specified, it will be same as the remaining amount that has been captured but not yet refunded. Please refer to [supported currencies](/docs/payments/supported-currencies) for supported minor units.
+                metadata:
+                  type: object
+                  description: A set of key-value pairs that you can attach to the Refund. You can specify up to 50 keys with key names up to 50 characters long and values up to 500 characters long.
+                  additionalProperties:
+                    type: string
+                payment_attempt_id:
+                  type: string
+                  description: Payment Attempt unique identifier against which this Refund is created. Either this or the `payment_intent_id` must be provided.
+                payment_intent_id:
+                  type: string
+                  description: Payment Intent unique identifier against which this Refund is created. Either this or the `payment_attempt_id` must be provided.
+                reason:
+                  type: string
+                  description: Reason of the Refund. Maximum length is 128.
+                request_id:
+                  type: string
+                  description: Unique request identifier specified by the merchant. Maximum length is 64.
+        description: Refund creation request.
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Refund'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `duplicate_request`, `invalid_status_for_operation`, `amount_above_limit`, `operation_not_supported`, `resource_not_found`(invalid `payment_attempt_id` or `payment_intent_id`)'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/refunds/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          payment_attempt_id: att_hkpdskz7vg1xc7uscdj
+          reason: Return goods
+          amount: 10
+          request_id: 962dbd83-5e7b-4185-b668-596834395c12
+        status_code: 201
+        reason_phrase: Created
+        response_body:
+          id: rfd_hkpdbybkch3ovunwjy1_1raukh
+          request_id: 962dbd83-5e7b-4185-b668-596834395c12
+          payment_intent_id: int_hkpdskz7vg1xc7uscdj
+          payment_attempt_id: att_hkpdskz7vg1xc7uscdj
+          amount: 10
+          currency: USD
+          reason: Return goods
+          status: RECEIVED
+          created_at: '2021-01-31T06:57:10+00:00'
+          updated_at: '2021-01-31T07:01:10+00:00'
+      x-scope:
+      - scope: payment_acceptance:write
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Refunds
+      x-urlPath: create
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/refunds/{id}:
+    get:
+      tags:
+      - Payment Acceptance > Refunds
+      summary: 2|Retrieve a Refund
+      description: Retrieve a Refund by unique identifier.
+      operationId: retrieveRefund
+      parameters:
+      - name: id
+        in: path
+        description: Refund unique identifier.
+        required: true
+        schema:
+          type: string
+          default: rfd_ps8e0ZgQzd2QnCxVpzJrHD6KOVu
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Refund'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url), `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/refunds/rfd_hkpdbybkch3ovunwjy1_1raukh
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: rfd_hkpdbybkch3ovunwjy1_1raukh
+          request_id: 962dbd83-5e7b-4185-b668-596834395c12
+          payment_intent_id: int_hkpdskz7vg1xc7uscdj
+          payment_attempt_id: att_hkpdskz7vg1xc7uscdj
+          amount: 10
+          currency: USD
+          reason: Return goods
+          status: ACCEPTED
+          created_at: '2021-01-31T06:57:10+00:00'
+          updated_at: '2021-01-31T07:01:10+00:00'
+      x-scope:
+      - scope: payment_acceptance:read
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Refunds
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/refunds:
+    get:
+      tags:
+      - Payment Acceptance > Refunds
+      summary: 3|List all Refunds
+      description: List all Refunds.
+      operationId: listRefunds
+      parameters:
+      - name: connected_account_id
+        in: query
+        description: Optional Airwallex-assigned identifier of the connected account to filter by. Only applicable to platforms.
+        required: false
+        schema:
+          type: string
+      - name: currency
+        in: query
+        description: Refund currency.
+        required: false
+        schema:
+          type: string
+          default: USD
+      - name: from_created_at
+        in: query
+        description: The start time of `created_at` in ISO8601 format. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`).
+        required: false
+        schema:
+          type: string
+          default: '2017-03-01T03:52:34+00:00'
+      - name: page_num
+        in: query
+        description: Page number starting from 0.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of Refunds to be listed per page. Default value is 10. Maximum is 1000. The value greater than the maximum will be capped to the maximum.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: payment_attempt_id
+        in: query
+        description: Payment Attempt unique identifier of the Refunds.
+        required: false
+        schema:
+          type: string
+          default: att_e65tkXCSzJrsMpTrzoFrjaau53
+      - name: payment_intent_id
+        in: query
+        description: Payment Intent unique identifier of the Refunds.
+        required: false
+        schema:
+          type: string
+          default: int_e65tkXCSzJrsMpTrzoFrjaau53
+      - name: status
+        in: query
+        description: Refund status.
+        required: false
+        schema:
+          type: string
+          default: SETTLED
+      - name: to_created_at
+        in: query
+        description: The end time of `created_at` in ISO8601 format. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`).
+        required: false
+        schema:
+          type: string
+          default: '2017-04-01T03:52:34+00:00'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: List items.
+                    items:
+                      $ref: '#/components/schemas/Refund'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/refunds
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        query_params:
+          page_num: 0
+          page_size: 10
+          status: SETTLED,ACCEPTED
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - id: rfd_hkpdbybkch3ovunwjy1_1raukh
+            request_id: 962dbd83-5e7b-4185-b668-596834395c12
+            payment_intent_id: int_hkpdskz7vg1xc7uscdj
+            payment_attempt_id: att_hkpdskz7vg1xc7uscdj
+            amount: 10
+            currency: USD
+            reason: Return goods
+            status: SETTLED
+            created_at: '2021-01-31T06:57:10+00:00'
+            updated_at: '2021-01-31T07:01:10+00:00'
+      x-scope:
+      - scope: payment_acceptance:read
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Refunds
+      x-urlPath: list
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    Payment_Acceptance_FailureDetails:
+      type: object
+      properties:
+        code:
+          type: string
+          description: The failure code returned by Airwallex.
+        details:
+          type: object
+          description: Additional details that may include `original_response_code`, `original_response_message` from provider, and other contextual information such as card details, risk factors, etc. depending on the specific error code.
+        message:
+          type: string
+          description: The failure description.
+        trace_id:
+          type: string
+          description: The unique identifier for tracing the failure.
+      description: Failure details. Only applicable when status is FAILED.
+    Refund:
+      type: object
+      properties:
+        acquirer_reference_number:
+          type: string
+          description: A unique number that tags a credit or debit card transaction when it goes from the merchant's bank through to the cardholder's bank.
+        amount:
+          type: number
+          description: Amount to be refunded.
+        connected_account_id:
+          type: string
+          description: Account identifier of the connected account.
+        created_at:
+          type: string
+          format: date-time
+          description: Time at which the Refund was created.
+        currency:
+          type: string
+          description: Currency of the Refund.
+        failure_details:
+          $ref: '#/components/schemas/Payment_Acceptance_FailureDetails'
+          description: Failure details. Only applicable when status is FAILED.
+        id:
+          type: string
+          description: Unique identifier for the Refund.
+        metadata:
+          type: object
+          description: A set of key-value pairs that you can attach to the Refund. You can specify up to 50 keys with key names up to 50 characters long and values up to 500 characters long.
+          additionalProperties:
+            type: string
+        payment_attempt_id:
+          type: string
+          description: Unique identifier of Payment Attempt on which the Refund is created.
+        payment_intent_id:
+          type: string
+          description: Unique identifier of Payment Intent on which the Refund is created.
+        reason:
+          type: string
+          description: Reason of the Refund.
+        request_id:
+          type: string
+          description: Unique request identifier specified by the merchant in the last operation.
+        status:
+          type: string
+          description: "Status of the Refund. One of `RECEIVED`, `ACCEPTED`, `SETTLED` or `FAILED` \n\n- **RECEIVED**: The Refund is created, which means the requested refund amount is valid and the payment is not in dispute.\n- **ACCEPTED**: The Refund has been accepted by the payment method provider and can be considered completed.\n- **SETTLED**: The Refund has been reconciled and will show up in the Airwallex settlement report.\n- **FAILED**: The Refund has been rejected, which can be caused by the insufficient Airwallex receivable/available balance, or by the provider for more channel-specific reasons.\n"
+        updated_at:
+          type: string
+          format: date-time
+          description: Last time at which the Refund was updated.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

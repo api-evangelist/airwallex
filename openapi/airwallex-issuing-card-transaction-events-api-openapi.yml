@@ -1,0 +1,610 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Issuing > Card Transaction Events API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Issuing > Card Transaction Events
+  description: 'A **transaction event** is the most granular level of the three-level transaction model
+
+    (**Lifecycle → Card Transaction → Transaction Event**).
+
+
+    Each transaction event represents an individual network message or fund movement, with an immutable
+
+    fund movement per event. Use transaction events when you need per-event
+
+    details such as failure reasons, authorization subtypes, or individual amounts.
+
+
+    **Event types:** `AUTHORIZATION`, `CLEARING`, `REVERSAL_AUTH`.
+
+
+    **Event subtypes:** `AUTHORIZATION`, `INCREMENTAL_AUTHORIZATION`, `VERIFICATION`, `REVERSAL`,
+
+    `PARTIAL_REVERSAL`, `EXPIRED_AUTHORIZATION`, `CLEARING`, `PARTIAL_CLEARING`, `CLEARING_REVERSAL`.
+
+
+    **Data retention:** Resources can be queried for a maximum of 2 years from creation.
+
+
+    Learn more about the transaction lifecycle.'
+  x-domain: Issuing
+  x-resource: Card Transaction Events
+  x-urlPath: issuing/card_transaction_events
+paths:
+  /api/v1/issuing/card_transaction_events/{id}:
+    get:
+      tags:
+      - Issuing > Card Transaction Events
+      summary: 1|Retrieve a Card Transaction Event
+      description: Retrieve a single transaction event by its unique identifier. The response includes the event type, subtype, process result, failure reason (if declined), and per-event billing and transaction amounts.
+      operationId: retrieveCardTransactionEvent
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the transaction event.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonPciTransactionEvent'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/issuing/card_transaction_events/card_transaction_event_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          acquiring_institution_identifier: '410964'
+          auth_code: VJT90Z
+          billing_amount: 100
+          billing_currency: USD
+          card_transaction_id: 5b2dc266-09ad-4235-b61a-767c7cd6d6ef
+          conversion_details:
+            from_currency: USD
+            rate: 1.56
+            to_currency: AUD
+          created_at: '2018-03-22T16:08:02+00:00'
+          digital_wallet_token:
+            id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+            payment_method: GOOGLE_PAY
+          expiry_date: '2026-02-01T16:08:02+00:00'
+          failure_reason: <string>
+          fee_details:
+          - amount: 500
+            currency: USD
+            type: ATM_ACCESS_FEE
+          id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          lifecycle_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+          masked_card_number: '************4242'
+          merchant:
+            additional_merchant_info:
+              merchant_brand_category_id: 17000
+              merchant_brand_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+              merchant_brand_name: Meta
+              merchant_brand_subcategory_id: 17004
+              merchant_logo_url: https://example.com/logo.png
+            category_code: '4829'
+            city: New York
+            country: US
+            identifier: 012345678910123
+            name: Test Merchant
+            postcode: '10001'
+            state: NY
+          network_transaction_id: '386055120641953'
+          pos_entry_mode: CONTACTLESS_CHIP
+          process_result: APPROVED
+          retrieval_ref: '605103644028'
+          risk_details:
+            risk_actions_performed:
+            - TRANSACTION_BLOCKED
+            risk_factors:
+            - Suspicious transaction velocity
+            three_dsecure_outcome: AUTHENTICATED
+          subtype: AUTHORIZATION
+          transaction_amount: 100
+          transaction_category: PURCHASE
+          transaction_currency: AUD
+          transacted_at: '2018-03-22T16:08:02+00:00'
+          type: AUTHORIZATION
+          updated_at: '2018-03-22T16:08:02+00:00'
+      x-scope:
+      - scope: issuing.transaction:read
+        group: Issuing
+        resource_name: Authorizations and Transactions
+      x-domain: Issuing
+      x-resource: Card Transaction Events
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/issuing/card_transaction_events:
+    get:
+      tags:
+      - Issuing > Card Transaction Events
+      summary: 2|List all Card Transaction Events
+      description: Retrieve a paginated list of transaction events. Each event includes its type, subtype, process result, and per-event amounts. Use the `lifecycle_id` or `card_transaction_id` filter to trace the sequence of events within a specific lifecycle or card transaction.
+      operationId: listCardTransactionEvents
+      parameters:
+      - name: billing_currency
+        in: query
+        description: Filter by billing currency (3-letter ISO 4217 code).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: card_id
+        in: query
+        description: Filter by card. Only returns transaction events associated with this card.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          format: uuid
+      - name: card_transaction_id
+        in: query
+        description: Filter by card transaction. Only returns transaction events belonging to this card transaction.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          format: uuid
+      - name: from_created_at
+        in: query
+        description: Filter for items created after this date in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          format: date-time
+      - name: lifecycle_id
+        in: query
+        description: Filter by lifecycle. Only returns transaction events belonging to this lifecycle.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          format: uuid
+      - name: page
+        in: query
+        description: A bookmark for use in pagination to retrieve either the next page or the previous page of results. You can fetch the value for this identifier from the response of the previous API call. To retrieve the next page of results, pass the value of `page_after` (if not null) from the response to a subsequent call. To retrieve the previous page of results, pass the value of `page_before` (if not null) from the response to a subsequent call.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: page_size
+        in: query
+        description: Number of related objects to be listed per page. The maximum is 100.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: to_created_at
+        in: query
+        description: Filter for items created before this date in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          format: date-time
+      - name: type
+        in: query
+        description: Filter by event type. One of `AUTHORIZATION`, `CLEARING`, or `REVERSAL_AUTH`.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          enum:
+          - AUTHORIZATION
+          - CLEARING
+          - REVERSAL_AUTH
+          - UNKNOWN
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonPciBookmarkedResultOfIssuingNonPciTransactionEvent'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/issuing/card_transaction_events
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - acquiring_institution_identifier: '410964'
+            auth_code: VJT90Z
+            billing_amount: 100
+            billing_currency: USD
+            card_transaction_id: 5b2dc266-09ad-4235-b61a-767c7cd6d6ef
+            conversion_details:
+              from_currency: USD
+              rate: 1.56
+              to_currency: AUD
+            created_at: '2018-03-22T16:08:02+00:00'
+            digital_wallet_token:
+              id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+              payment_method: GOOGLE_PAY
+            expiry_date: '2026-02-01T16:08:02+00:00'
+            fee_details:
+            - amount: 500
+              currency: USD
+              type: ATM_ACCESS_FEE
+            id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+            lifecycle_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+            masked_card_number: '************4242'
+            merchant:
+              additional_merchant_info:
+                merchant_brand_category_id: 17000
+                merchant_brand_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+                merchant_brand_name: Meta
+                merchant_brand_subcategory_id: 17004
+                merchant_logo_url: https://example.com/logo.png
+              category_code: '4829'
+              city: New York
+              country: US
+              identifier: 012345678910123
+              name: Test Merchant
+              postcode: '10001'
+              state: NY
+            network_transaction_id: '386055120641953'
+            pos_entry_mode: CONTACTLESS_CHIP
+            process_result: APPROVED
+            retrieval_ref: '605103644028'
+            risk_details:
+              risk_actions_performed:
+              - TRANSACTION_BLOCKED
+              risk_factors:
+              - Suspicious transaction velocity
+              three_dsecure_outcome: AUTHENTICATED
+            subtype: AUTHORIZATION
+            transaction_amount: 100
+            transaction_category: PURCHASE
+            transaction_currency: AUD
+            transacted_at: '2018-03-22T16:08:02+00:00'
+            type: AUTHORIZATION
+            updated_at: '2018-03-22T16:08:02+00:00'
+          page_after: YWZ0ZXI9MmFjNmEzMjQtM2IwNC00M2JkLThmNTUtOWQ5YzdmZjEzZGZm
+          page_before: YmVmb3JlPWVmZDQxZTk3LTU2MzctNDQ5MC04NjNkLTU2MDE5MjIwNDQ2YQ==
+      x-scope:
+      - scope: issuing.transaction:read
+        group: Issuing
+        resource_name: Authorizations and Transactions
+      x-domain: Issuing
+      x-resource: Card Transaction Events
+      x-urlPath: list
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    NonPciMerchantWithEnrichment:
+      type: object
+      properties:
+        additional_merchant_info:
+          $ref: '#/components/schemas/NonPciAdditionalMerchantInfo-2'
+          description: Supplemental details providing richer context on the merchant and its brand. Learn more about [merchant brand controls](/docs/issuing/card-controls/authorization-controls/merchant-brand-transaction-categories).
+        category_code:
+          type: string
+          description: The Merchant Category Code (MCC).
+        city:
+          type: string
+          description: The city of the merchant.
+        country:
+          type: string
+          description: The country of the merchant.
+        identifier:
+          type: string
+          description: Unique identifier for the merchant.
+        name:
+          type: string
+          description: The short name of the merchant.
+        postcode:
+          type: string
+          description: The postal code of the merchant.
+        state:
+          type: string
+          description: The state or province of the merchant.
+      description: Details about the merchant where the transaction occurred, including enriched brand information.
+    NonPciFxConversionFromToDetails:
+      type: object
+      properties:
+        from_currency:
+          type: string
+          description: The source currency of the conversion (3-letter ISO-4217 code).
+        rate:
+          type: number
+          description: The effective rate of fx after markup, in the from -> to direction.
+        to_currency:
+          type: string
+          description: The target currency of the conversion (3-letter ISO-4217 code).
+      description: Currency conversion details, present when the billing currency differs from the transaction currency.
+    NonPciFeeDetail:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: Fee amount.
+        currency:
+          type: string
+          description: Currency in which the fee is charged (3-letter ISO-4217 code).
+        type:
+          type: string
+          description: 'Fee type. One of: `ATM_ACCESS_FEE`.'
+    NonPciTransactionEvent:
+      type: object
+      properties:
+        acquiring_institution_identifier:
+          type: string
+          description: Identifier of the acquiring institution (the merchant's bank).
+        auth_code:
+          type: string
+          description: Authorization code returned for approved transactions.
+        billing_amount:
+          type: number
+          description: The amount for this event in the card's billing currency.
+        billing_currency:
+          type: string
+          description: Three-letter ISO 4217 currency code for the billing amount.
+        card_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the card associated with this transaction event.
+        card_transaction_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the card transaction this event belongs to.
+        conversion_details:
+          $ref: '#/components/schemas/NonPciFxConversionFromToDetails'
+          description: Currency conversion details, present when the billing currency differs from the transaction currency.
+        created_at:
+          type: string
+          description: Date and time when the transaction event was created, in ISO 8601 format.
+        digital_wallet_token:
+          $ref: '#/components/schemas/NonPciSimpleDigitalWalletToken'
+          description: Details of the digital wallet token used for the transaction, if applicable.
+        expiry_date:
+          type: string
+          description: 'The date and time when the authorization is set to expire, in ISO 8601 format. After expiry, reserved funds are released. Note: the associated card transaction status may not update to `EXPIRED` immediately after this time.'
+        failure_reason:
+          type: string
+          description: The reason the event was declined. Only present when `process_result` is `DECLINED`. Learn more about [transaction failure reasons](/docs/issuing/transactions/transaction-failure-reasons).
+        fee_details:
+          type: array
+          description: Fees applied to this specific event.
+          items:
+            $ref: '#/components/schemas/NonPciFeeDetail'
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the transaction event.
+        lifecycle_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the lifecycle this event belongs to.
+        masked_card_number:
+          type: string
+          description: The masked primary account number (PAN) of the card.
+        merchant:
+          $ref: '#/components/schemas/NonPciMerchantWithEnrichment'
+          description: Details about the merchant where the event originated, including enriched brand information.
+        network_transaction_id:
+          type: string
+          description: Unique identifier assigned to the transaction by the card network.
+        pos_entry_mode:
+          type: string
+          description: 'The point-of-service entry mode indicating how the card was presented. One of: `MANUAL`, `CREDENTIAL_ON_FILE`, `CONTACTLESS_CHIP`, `CONTACT_CHIP`, or `MAGSTRIPE`.'
+        process_result:
+          type: string
+          description: The processing outcome for this event. `APPROVED` or `DECLINED`.
+        remote_auth:
+          type: object
+          description: Data related to remote authentication, present when the transaction was processed via Remote Auth. Null or absent otherwise.
+          required:
+          - default_response_used
+          - duration_ms
+          - reason
+          - response
+          - timed_out
+          properties:
+            response:
+              type: string
+              description: 'The response status of the remote auth call. One of: `AUTHORIZED`, `DECLINED`.'
+            reason:
+              type: string
+              description: Reason for the remote authorization decision.
+            duration_ms:
+              type: integer
+              format: int32
+              description: Response time of remote authorization in milliseconds.
+            timed_out:
+              type: boolean
+              description: Indicates whether the remote auth call timed out before a response was received.
+            default_response_used:
+              type: boolean
+              description: Indicates whether the fallback/default action from the remote auth configuration was applied.
+        retrieval_ref:
+          type: string
+          description: Reference number assigned by the acquiring bank, used to link related events (e.g., a clearing to its original authorization).
+        risk_details:
+          $ref: '#/components/schemas/NonPciRiskDetails'
+          description: Risk assessment details for this transaction event.
+        subtype:
+          type: string
+          description: 'A more specific classification of the event type. One of: `AUTHORIZATION`, `INCREMENTAL_AUTHORIZATION`, `VERIFICATION`, `REVERSAL`, `PARTIAL_REVERSAL`, `EXPIRED_AUTHORIZATION`, `CLEARING`, `PARTIAL_CLEARING`, `CLEARING_REVERSAL`.'
+        transaction_amount:
+          type: number
+          description: The amount for this event in the merchant's transaction currency.
+        transaction_category:
+          type: string
+          description: 'The category of the transaction, derived from the card scheme''s processing code. One of: `PURCHASE`, `CASH_DISBURSEMENT`, `ACCOUNT_FUNDING`, `QUASI_CASH`, `MERCHANT_CREDIT`, `DISPUTE_CREDIT`, `ORIGINAL_CREDIT`, `ELIGIBILITY_INQUIRY`, `BILL_PAYMENT`.'
+        transaction_currency:
+          type: string
+          description: Three-letter ISO 4217 currency code for the transaction amount.
+        transacted_at:
+          type: string
+          format: date-time
+          description: The date and time the transaction occurred as reported by the card network, in ISO 8601 format.
+        type:
+          type: string
+          description: 'The type of this transaction event. One of: `AUTHORIZATION`, `CLEARING`, or `REVERSAL_AUTH`.'
+        updated_at:
+          type: string
+          description: Date and time when the transaction event was last updated, in ISO 8601 format.
+    NonPciAdditionalMerchantInfo-2:
+      type: object
+      properties:
+        merchant_brand_category_id:
+          type: integer
+          format: int32
+          description: The unique identifier associated with the merchant category.
+        merchant_brand_id:
+          type: string
+          format: uuid
+          description: The unique identifier for the merchant brand.
+        merchant_brand_name:
+          type: string
+          description: The full legal or common name of the merchant.
+        merchant_brand_subcategory_id:
+          type: integer
+          format: int32
+          description: The unique identifier associated with the merchant's sub-category.
+        merchant_logo_url:
+          type: string
+          description: URL of the merchant's logo for display purposes.
+      description: Supplemental details providing richer context on the merchant and its brand. Learn more about [merchant brand controls](/docs/issuing/card-controls/authorization-controls/merchant-brand-transaction-categories).
+    NonPciRiskDetails:
+      type: object
+      properties:
+        risk_actions_performed:
+          type: array
+          description: Risk actions performed for a card transaction, triggered by rules in our risk engine.
+          items:
+            type: string
+        risk_factors:
+          type: array
+          description: Risk factors are conditions or variables that increase the likelihood of fraud or financial irregularities, assessed by our risk management system to determine the threat level of a transaction.
+          items:
+            type: string
+        three_dsecure_outcome:
+          type: string
+          description: 'The outcome of a 3D Secure authentication process, which verifies the identity of a cardholder during an online purchase. Can be one of: `ATTEMPTED`, `AUTHENTICATED`, `FAILED`, `NOT_APPLICABLE`, `NOT_REQUESTED`. Learn more about [3D Secure](/docs/issuing/card-controls/3d-secure-authentication).'
+      description: Risk details provides a comprehensive overview of the risk evaluation for a card transaction, including identified risk factors, actions taken by the risk engine, and the outcome of the 3D Secure authentication process. It encapsulates key elements that assess the potential threat level, safeguard the transaction, and ensure the cardholder’s identity is verified. N.b. this information will only be available for transactions on or after 1st Sept 2024.
+    NonPciSimpleDigitalWalletToken:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the digital token.
+        payment_method:
+          type: string
+          description: 'Payment method used. One of: `APPLE_PAY`, `GOOGLE_PAY`, `CARD_ON_FILE`.'
+      description: Details of the digital wallet token used for the transaction, if applicable.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    NonPciBookmarkedResultOfIssuingNonPciTransactionEvent:
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/NonPciTransactionEvent'
+        page_after:
+          type: string
+          description: A marker for retrieving the next page of results. Include this value in the `page` request parameter to retrieve subsequent pages.
+        page_before:
+          type: string
+          description: A marker for retrieving the previous page of results. Include this value in the `page` request parameter to retrieve previous pages.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

@@ -1,0 +1,450 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Billing > Products API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Billing > Products
+  description: Products represent the goods or services you offer to customers (e.g. books, memberships). When associated with Prices, they can be used with the Invoice and Subscription APIs.
+  x-domain: Billing
+  x-resource: Products
+  x-urlPath: billing/products
+paths:
+  /api/v1/billing/products/create:
+    post:
+      description: Creates a new Product object.
+      operationId: createProduct
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - name
+              - request_id
+              type: object
+              properties:
+                active:
+                  type: boolean
+                  description: '`true` if the product is available for new purchases, `false` otherwise. Defaults to `true`.'
+                description:
+                  maxLength: 500
+                  minLength: 0
+                  type: string
+                  description: Product description. Used for internal classification and identification.
+                metadata:
+                  type: object
+                  additionalProperties:
+                    type: string
+                    description: A set of string key-value pairs that you can attach to this object for storing additional information.
+                  description: A set of string key-value pairs that you can attach to this object for storing additional information.
+                name:
+                  maxLength: 200
+                  minLength: 0
+                  type: string
+                  description: Product name.
+                request_id:
+                  maxLength: 64
+                  minLength: 0
+                  type: string
+                  description: Unique request ID specified by the merchant.
+                tax_code:
+                  type: string
+                  description: The tax category of the product. Select the category that best describes this product to ensure accurate tax calculation. [Learn more about tax categories](/docs/billing/airwallex-tax/tax-categories).
+                unit:
+                  maxLength: 30
+                  minLength: 0
+                  type: string
+                  description: Product unit.
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `duplicate_request_id`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 1|Create a Product
+      tags:
+      - Billing > Products
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/billing/products/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          active: true
+          description: The license to use software in one month.
+          metadata:
+            foo: bar
+          name: Software License
+          request_id: ee939540-3203-4a2c-9172-89a566485dd9
+          tax_code: pct_0504010000
+          unit: month
+        response_body:
+          active: true
+          created_at: 2022-01-01T10:15:30+0000
+          description: The license to use software in one month.
+          id: prd_hkpd1x2gbgazzvcd42w
+          metadata:
+            foo: bar
+          name: Software License
+          tax_code: pct_0504010000
+          unit: month
+          updated_at: 2022-01-01T10:15:30+0000
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.product:write
+        group: Billing
+        resource_name: Products
+      x-domain: Billing
+      x-resource: Products
+      x-urlPath: create
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/products/{id}:
+    get:
+      description: Retrieves the product details by the ID.
+      operationId: retrieveProduct
+      parameters:
+      - description: ID of the Product object.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 2|Retrieve a Product
+      tags:
+      - Billing > Products
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/billing/products/product_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          active: true
+          created_at: 2022-01-01T10:15:30+0000
+          description: The license to use software in one month.
+          id: prd_hkpd1x2gbgazzvcd42w
+          metadata:
+            foo: bar
+          name: Software License
+          tax_code: pct_0504010000
+          unit: month
+          updated_at: 2022-01-01T10:15:30+0000
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.product:read
+        group: Billing
+        resource_name: Products
+      - scope: billing.product:write
+        group: Billing
+        resource_name: Products
+      x-domain: Billing
+      x-resource: Products
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/products:
+    get:
+      description: Retrieves a list of Products based on the query parameters.
+      operationId: listProducts
+      parameters:
+      - description: '`true` if the product is available for new purchases, `false` otherwise.'
+        in: query
+        name: active
+        required: false
+        schema:
+          type: boolean
+      - description: A bookmark for use in pagination to retrieve either the next page or the previous page of results. You can fetch the value for this identifier from the response of the previous API call. To retrieve the next page of results, pass the value of `page_after` (if not `null`) from the response to a subsequent call. To retrieve the previous page of results, pass the value of `page_before` (if not `null`) from the response to a subsequent call.
+        in: query
+        name: page
+        required: false
+        schema:
+          type: string
+      - description: Number of Products per page. Defaults to `20`.
+        in: query
+        name: page_size
+        required: false
+        schema:
+          maximum: 1000
+          minimum: 1
+          type: integer
+          format: int32
+          default: 20
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CursorPaginationClientApiResponseProduct'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 3|List all Products
+      tags:
+      - Billing > Products
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/billing/products
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - active: true
+            created_at: 2022-01-01T10:15:30+0000
+            description: The license to use software in one month.
+            id: prd_hkpd1x2gbgazzvcd42w
+            metadata:
+              foo: bar
+            name: Software License
+            tax_code: pct_0504010000
+            unit: month
+            updated_at: 2022-01-01T10:15:30+0000
+          page_after: <string>
+          page_before: <string>
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.product:read
+        group: Billing
+        resource_name: Products
+      - scope: billing.product:write
+        group: Billing
+        resource_name: Products
+      x-domain: Billing
+      x-resource: Products
+      x-urlPath: list
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/products/{id}/update:
+    post:
+      description: Updates a Product. Only fields provided in the request are updated, while omitted fields remain unchanged. Array fields are fully replaced if included. Set a field to null or an empty string (for strings) to clear its value.
+      operationId: updateProduct
+      parameters:
+      - description: ID of the Product object.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                active:
+                  type: boolean
+                  description: '`true` if the product is available for new purchases, `false` otherwise.'
+                description:
+                  type: string
+                  description: Product description. Used for internal classification and identification.
+                metadata:
+                  type: object
+                  additionalProperties:
+                    type: string
+                    description: A set of string key-value pairs that you can attach to this object for storing additional information.
+                  description: A set of string key-value pairs that you can attach to this object for storing additional information.
+                name:
+                  maxLength: 200
+                  minLength: 0
+                  type: string
+                  description: Product name.
+                request_id:
+                  maxLength: 64
+                  minLength: 0
+                  type: string
+                  description: Unique request ID specified by the merchant.
+                tax_code:
+                  type: string
+                  description: The tax category of the product.
+                unit:
+                  type: string
+                  description: Product unit.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 4|Update a Product
+      tags:
+      - Billing > Products
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/billing/products/product_id/update
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          active: true
+          description: The license to use software in one month.
+          metadata:
+            foo: bar
+          name: Software License
+          request_id: ee939540-3203-4a2c-9172-89a566485dd9
+          tax_code: pct_0504010000
+          unit: month
+        response_body:
+          active: true
+          created_at: 2022-01-01T10:15:30+0000
+          description: The license to use software in one month.
+          id: prd_hkpd1x2gbgazzvcd42w
+          metadata:
+            foo: bar
+          name: Software License
+          tax_code: pct_0504010000
+          unit: month
+          updated_at: 2022-01-01T10:15:30+0000
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.product:write
+        group: Billing
+        resource_name: Products
+      x-domain: Billing
+      x-resource: Products
+      x-urlPath: update
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    CursorPaginationClientApiResponseProduct:
+      required:
+      - items
+      type: object
+      properties:
+        items:
+          type: array
+          description: Paged results.
+          items:
+            $ref: '#/components/schemas/ProductResponse'
+        page_after:
+          type: string
+          description: The page cursor used for searching after page.
+        page_before:
+          type: string
+          description: The page cursor used for search before page.
+    ProductResponse:
+      required:
+      - active
+      - created_at
+      - id
+      - name
+      - unit
+      - updated_at
+      type: object
+      properties:
+        active:
+          type: boolean
+          description: '`true` if the product is available for new purchases, `false` otherwise.'
+        created_at:
+          type: string
+          description: Time when this product was created.
+        description:
+          type: string
+          description: Product description.
+        id:
+          type: string
+          description: ID of the Product object.
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+            description: A set of string key-value pairs that you can attach to this object for storing additional information.
+          description: A set of string key-value pairs that you can attach to this object for storing additional information.
+        name:
+          type: string
+          description: Product name.
+        tax_code:
+          type: string
+          description: The tax category of the product.
+        unit:
+          type: string
+          description: Product unit.
+        updated_at:
+          type: string
+          description: Time when this product was last updated.
+      description: Details of the [Product](/docs/api/billing/products) object this price is associated with.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

@@ -1,0 +1,112 @@
+generated: '2026-10-20'
+method: searched
+source:
+- https://www.airwallex.com/global/terms/privacy-policy
+- https://www.airwallex.com/global/terms/sub-processors-list
+- https://www.airwallex.com/global/terms/data-processing-addendum
+- https://security.airwallex.com/
+pages_read:
+- url: https://www.airwallex.com/global/terms/privacy-policy
+  http_status: 200
+  fetched: '2026-10-20'
+  title: Global Privacy Policy | Airwallex
+  note: 'Page states "Last updated: 26 February 2026".'
+- url: https://www.airwallex.com/global/terms/sub-processors-list
+  http_status: 200
+  fetched: '2026-10-20'
+  title: Airwallex (Sub-)Processors List
+  note: 'Linked from the privacy policy nav as "(Sub-)Processors List"; reached via https://www.airwallex.com/terms/sub-processors-list. Page states "Last updated: 7 October 2026".'
+- url: https://www.airwallex.com/global/terms/data-processing-addendum
+  http_status: 200
+  fetched: '2026-10-20'
+  title: Data Processing Addendum
+  note: 'Publicly reachable without login; reached via https://www.airwallex.com/terms/data-processing-addendum. Page states "Last updated: 6 August 2026".'
+- url: https://security.airwallex.com/
+  http_status: 200
+  fetched: '2026-10-20'
+  title: Airwallex Trust Center | Powered by SafeBase
+  note: Lists compliance frameworks (DORA, GDPR, PCI DSS, SOC 1/2, ISO/IEC 27001) and a Subprocessors section, but the anonymous page text shows no subprocessor names; the public list is on airwallex.com (above).
+- url: https://www.airwallex.com/global/terms/sign-up-terms
+  http_status: 200
+  fetched: '2026-10-20'
+  title: Sign Up Terms | Airwallex
+  note: No posture-signal language.
+- url: https://help.airwallex.com/hc/en-gb/articles/900004502526-Bug-Bounty-Program-Rules
+  http_status: 200
+  fetched: '2026-10-20'
+  title: Bug Bounty Program Rules – Airwallex Help Centre
+  note: Vulnerability-disclosure program; no posture-signal language (covered by security/).
+conventional_paths_probed:
+- {url: 'https://www.airwallex.com/accessibility', http_status: 404}
+- {url: 'https://www.airwallex.com/legal/subprocessors', http_status: 404}
+- {url: 'https://www.airwallex.com/legal/dpa', http_status: 404}
+- {url: 'https://www.airwallex.com/trust', http_status: 404}
+- {url: 'https://www.airwallex.com/transparency', http_status: 404}
+- {url: 'https://www.airwallex.com/ai', http_status: 404}
+signals:
+  data_subject_request:
+    url: https://www.airwallex.com/global/terms/privacy-policy
+    section: What rights do I have regarding the processing of my information by Airwallex?
+    rights_named: [access, copy, deletion, restriction, objection, rectification, data portability]
+    evidence:
+    - source: https://www.airwallex.com/global/terms/privacy-policy
+      http_status: 200
+      fetched: '2026-10-20'
+      quote: "Depending on where you are located, you may have certain rights with respect to your personal information, such as rights of access, to receive a copy of your information, or to delete your information or restrict or object to our processing of your information."
+    - source: https://www.airwallex.com/global/terms/privacy-policy
+      http_status: 200
+      fetched: '2026-10-20'
+      quote: "Depending on the jurisdiction where you reside, you may also be entitled to request the rectification, deletion or data portability of your personal information under our legal control or information about Airwallex’s use of automated decision-making with respect to your personal information under our legal control."
+    note: Jurisdiction-dependent data-subject rights, exercised by contacting Airwallex by email (address obfuscated on the page). No self-service request form or API documented.
+  subprocessors:
+    url: https://www.airwallex.com/global/terms/sub-processors-list
+    section: (Sub-)Processors
+    last_updated: 7 October 2026
+    evidence:
+    - source: https://www.airwallex.com/global/terms/sub-processors-list
+      http_status: 200
+      fetched: '2026-10-20'
+      quote: "The list below outlines the processors and sub-processors we use, in which region they are used, and a high-level description of the services they provide. We will periodically update this page to reflect additions and removals to our list of (sub-)processors."
+    note: A dated, public table (Name, Category, Description, Role, Region) naming e.g. Google Cloud Platform, Equinix, Zendesk, Twilio, MessageBird, Infobip. Regions shown are mostly "Global".
+  incident_notification:
+    url: https://www.airwallex.com/global/terms/data-processing-addendum
+    stated_sla: without undue delay and no later than seventy-two (72) hours after confirmation of any Data Breach
+    evidence:
+    - source: https://www.airwallex.com/global/terms/data-processing-addendum
+      http_status: 200
+      fetched: '2026-10-20'
+      quote: "With respect to Personal Data for which Airwallex acts as a Processor, Airwallex shall notify Customer without undue delay and no later than seventy-two (72) hours after confirmation of any Data Breach of such Personal Data in its custody or control (or within the custody and control of a Sub-Processor)"
+    note: Contractual customer breach-notification commitment in the public DPA; applies where Airwallex is processor. The 72-hour clock starts at confirmation, not discovery.
+  ai_transparency:
+    url: https://www.airwallex.com/global/terms/privacy-policy
+    section: 13. USE OF ARTIFICIAL INTELLIGENCE AND AUTOMATED TECHNOLOGIES
+    evidence:
+    - source: https://www.airwallex.com/global/terms/privacy-policy
+      http_status: 200
+      fetched: '2026-10-20'
+      quote: "This includes the responsible use of artificial intelligence (“AI”) and machine learning (“ML”) technologies, which may process your personal data. We may also process personal data to develop or improve our AI or ML technologies as described in section 4 of this Policy in accordance with applicable law and internal standards."
+    - source: https://www.airwallex.com/global/terms/privacy-policy
+      http_status: 200
+      fetched: '2026-10-20'
+      quote: "We do not use AI systems to make solely automated decisions that produce legal or similarly significant effects on individuals unless permitted by applicable laws, your consent (where required), and supported by appropriate safeguards."
+    note: A privacy-policy disclosure of AI/ML use, including use of personal data to improve its models, and a qualified limit on solely automated significant decisions. Not a standalone AI transparency page or a training-data summary.
+  data_retention:
+    url: https://www.airwallex.com/global/terms/privacy-policy
+    section: How long do we retain information for?
+    stated_period: for so long as it is required to fulfil the purpose for which it was collected
+    evidence:
+    - source: https://www.airwallex.com/global/terms/privacy-policy
+      http_status: 200
+      fetched: '2026-10-20'
+      quote: "We retain personal information for so long as it is required to fulfil the purpose for which it was collected, unless we are subject to legal or regulatory obligations to retain such information."
+    - source: https://www.airwallex.com/global/terms/data-processing-addendum
+      http_status: 200
+      fetched: '2026-10-20'
+      quote: "Upon termination or expiry of the Agreement (or upon written request where feasible), each Party shall delete or return the other Party’s Sensitive and Personal Data, unless retention is required (i) for either Party to exercise its rights or perform its obligations under the Agreement; or (ii) required or authorized by applicable Data Protection Law or other applicable law for a longer period."
+    note: Purpose-bound retention with no fixed period, plus a DPA delete-or-return obligation at termination. The delete-or-return clause is not a data export or switching-assistance commitment, so exit_assistance is not recorded.
+not_recorded:
+  age_assurance: 'The privacy policy says the services are "not intended for or directed at children" (under 16) and that Airwallex does not knowingly collect their data. That is a policy statement, not an age-assurance mechanism.'
+  global_privacy_control: No mention of Global Privacy Control or opt-out preference signals on the pages read.
+  transparency_report: The candidate line was a list of retention purposes ("To comply with legal process orders or law enforcement requests"), not a published transparency report.
+  exit_assistance: Data portability shows up only as a jurisdiction-dependent data-subject right (recorded under data_subject_request). There is no cloud-switching or export-assistance commitment.
+  data_residency: The subprocessor list gives regions, mostly "Global". No customer-selectable residency is documented.

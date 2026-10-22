@@ -1,0 +1,127 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Confirmation Letter > Confirmation Letter API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Confirmation Letter > Confirmation Letter
+  x-domain: Confirmation Letter
+  x-resource: Confirmation Letter
+  x-urlPath: confirmation_letter/confirmation_letter
+paths:
+  /api/v1/confirmation_letters/create:
+    post:
+      tags:
+      - Confirmation Letter > Confirmation Letter
+      summary: 1|Create a Confirmation Letter
+      description: Given a transaction id , to generate confirmation letter , return as file stream, currently support deposit and payment.
+      operationId: confirmationLettersCreate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - format
+              - transaction_id
+              properties:
+                format:
+                  type: string
+                  description: "The format of confirmation letter : \n  * `STANDARD` - this format includes fee info.\n  * `NO_FEE_DISPLAY` - this format won't display fee info."
+                transaction_id:
+                  type: string
+                  description: Unique identifier of the deposit or transfer to get confirmation letter.
+        description: dto
+        required: true
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  details:
+                    type: object
+                  message:
+                    type: string
+                  source:
+                    type: string
+                title: ErrorResponse
+            application/pdf:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  details:
+                    type: object
+                  message:
+                    type: string
+                  source:
+                    type: string
+                title: ErrorResponse
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/confirmation_letters/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          format: NO_FEE_DISPLAY
+          transaction_id: d9af1614-a6a1-4d45-aae7-6858fc6d9ede
+      x-oauthSupported: false
+      x-scope:
+      - scope: payouts.transfer:read
+        group: Payouts
+        resource_name: Transfers
+      - scope: payouts.transfer:write
+        group: Payouts
+        resource_name: Transfers
+      - scope: transfer:read
+        group: Payouts
+        resource_name: Transfers
+      - scope: transfer:write
+        group: Authentication
+        resource_name: Embedded Components - Transfers
+      x-domain: Confirmation Letter
+      x-resource: Confirmation Letter
+      x-urlPath: create
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

@@ -1,0 +1,636 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Reconciliation > Reconciliation API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Reconciliation > Reconciliation
+  x-domain: Reconciliation
+  x-resource: Reconciliation
+  x-urlPath: reconciliation/reconciliation
+paths:
+  /api/v1/tc/balances:
+    get:
+      tags:
+      - Reconciliation > Reconciliation
+      summary: 1|List all Balances
+      description: Get balances by either `client_request_id` or `currency` and range of `posted_at` dates.
+      operationId: listReconciliationBalances
+      x-oboSupported: false
+      parameters:
+      - name: client_request_id
+        in: query
+        description: The client request id.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: a08c0f2f
+      - name: currency
+        in: query
+        description: Currency.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: USD
+      - name: from_posted_at
+        in: query
+        description: The start date of `posted_at` in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: 2017-04-01T03:52:34+0000
+      - name: page_num
+        in: query
+        description: Page number, starts from 0.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of results per page. Default value is 100.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: to_posted_at
+        in: query
+        description: The end date of `posted_at` in ISO8601 format (exclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: 2017-04-01T03:52:34+0000
+      - name: type
+        in: query
+        description: Balance type, one of `ADJUSTMENT`, `CONVERSION_BUY`, `CONVERSION_SELL`,` DEPOSIT`, `FEE`, `PAYMENT`, `PAYMENT_REFUND`.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: DEPOSIT
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: Paged results.
+                    items:
+                      $ref: '#/components/schemas/TCBalance'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  details:
+                    type: object
+                  message:
+                    type: string
+                  source:
+                    type: string
+                title: ErrorResponse
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/tc/balances
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - amount: 0
+            beneficiary_bank_account_name: zhou xingxing
+            beneficiary_bank_account_number: '212121212'
+            client_request_id: a08c0f2f
+            closing_balance: 200
+            created_at: 2017-04-01T03:52:34+0000
+            currency: AUD
+            debit_credit_flag: CREDIT
+            id: a08c0f2f-3f26-4443-b5df-fad15582eb94
+            opening_balance: 100
+            posted_at: 2017-04-01T03:52:34+0000
+            reason: note to myself
+            reference: salary from airwallex
+            remitter_name: '212121212'
+            remitting_bank: '212121212'
+            request_id: a08c0f2f
+            type: PAYMENT_REFUND
+      x-oauthSupported: false
+      x-domain: Reconciliation
+      x-resource: Reconciliation
+      x-urlPath: balances
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/tc/balances/requests:
+    post:
+      tags:
+      - Reconciliation > Reconciliation
+      summary: 2|Retrieve the Balances in Batch
+      description: Get balances by a list of `client_request_id`, maximum 50 items are allowed per request.
+      operationId: tcBalancesRequests
+      x-oboSupported: false
+      parameters:
+      - name: not_found_as_error
+        in: query
+        description: Return error if any client_request_id doesn't exist.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: boolean
+          default: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+        description: requests
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: Paged results.
+                    items:
+                      $ref: '#/components/schemas/TCBalance'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  details:
+                    type: object
+                  message:
+                    type: string
+                  source:
+                    type: string
+                title: ErrorResponse
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/tc/balances/requests
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+        - <string>
+        response_body:
+          has_more: false
+          items:
+          - amount: 0
+            beneficiary_bank_account_name: zhou xingxing
+            beneficiary_bank_account_number: '212121212'
+            client_request_id: a08c0f2f
+            closing_balance: 200
+            created_at: 2017-04-01T03:52:34+0000
+            currency: AUD
+            debit_credit_flag: CREDIT
+            id: a08c0f2f-3f26-4443-b5df-fad15582eb94
+            opening_balance: 100
+            posted_at: 2017-04-01T03:52:34+0000
+            reason: note to myself
+            reference: salary from airwallex
+            remitter_name: '212121212'
+            remitting_bank: '212121212'
+            request_id: a08c0f2f
+            type: PAYMENT_REFUND
+      x-oauthSupported: false
+      x-domain: Reconciliation
+      x-resource: Reconciliation
+      x-urlPath: requests_balances
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/tc/transactions:
+    get:
+      tags:
+      - Reconciliation > Reconciliation
+      summary: 3|List all Transactions
+      description: Get transactions by either `client_request_id` or range of `created_at` dates.
+      operationId: listReconciliationTransactions
+      x-oboSupported: false
+      parameters:
+      - name: client_request_id
+        in: query
+        description: The client request id.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: a08c0f2f
+      - name: from_created_at
+        in: query
+        description: The start date of `posted_at` in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: 2017-04-01T03:52:34+0000
+      - name: page_num
+        in: query
+        description: Page number, starts from 0.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of results per page. Default value is 100.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: to_created_at
+        in: query
+        description: The end date of `posted_at` in ISO8601 format (exclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: 2017-04-01T03:52:34+0000
+      - name: type
+        in: query
+        description: Transaction type,  one of `ADJUSTMENT`, `CONVERSION`, `DEPOSIT`, `FEE`, `PAYMENT`.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: DEPOSIT
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: Paged results.
+                    items:
+                      $ref: '#/components/schemas/TCTransaction'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  details:
+                    type: object
+                  message:
+                    type: string
+                  source:
+                    type: string
+                title: ErrorResponse
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/tc/transactions
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - amount: 0
+            beneficiary_bank_account_name: zhou xingxing
+            beneficiary_bank_account_number: '212121212'
+            client_request_id: a08c0f2f
+            created_at: 2017-04-01T03:52:34+0000
+            currency: AUD
+            id: a08c0f2f-3f26-4443-b5df-fad15582eb94
+            reason: note to myself
+            reference: salary from airwallex
+            remitter_name: '212121212'
+            remitting_bank: '212121212'
+            status: SETTLED
+            type: PAYMENT
+      x-oauthSupported: false
+      x-domain: Reconciliation
+      x-resource: Reconciliation
+      x-urlPath: transactions
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/tc/transactions/requests:
+    post:
+      tags:
+      - Reconciliation > Reconciliation
+      summary: 4|Retrieve the Transactions in Batch
+      description: Get transactions by a list of `client_request_id`, maximum 50 items are allowed per request.
+      operationId: tcTransactionsRequests
+      x-oboSupported: false
+      parameters:
+      - name: not_found_as_error
+        in: query
+        description: Return error if any client_request_id doesn't exist.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: boolean
+          default: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+        description: requests
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: Paged results.
+                    items:
+                      $ref: '#/components/schemas/TCTransaction'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  details:
+                    type: object
+                  message:
+                    type: string
+                  source:
+                    type: string
+                title: ErrorResponse
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/tc/transactions/requests
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+        - <string>
+        response_body:
+          has_more: false
+          items:
+          - amount: 0
+            beneficiary_bank_account_name: zhou xingxing
+            beneficiary_bank_account_number: '212121212'
+            client_request_id: a08c0f2f
+            created_at: 2017-04-01T03:52:34+0000
+            currency: AUD
+            id: a08c0f2f-3f26-4443-b5df-fad15582eb94
+            reason: note to myself
+            reference: salary from airwallex
+            remitter_name: '212121212'
+            remitting_bank: '212121212'
+            status: SETTLED
+            type: PAYMENT
+      x-oauthSupported: false
+      x-domain: Reconciliation
+      x-resource: Reconciliation
+      x-urlPath: requests_transactions
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    TCBalance:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: The amount.
+        beneficiary_bank_account_name:
+          type: string
+          description: The beneficiary bank account name, only available when transaction type is PAYMENT.
+        beneficiary_bank_account_number:
+          type: string
+          description: The beneficiary bank account number, only available when transaction type is PAYMENT.
+        client_request_id:
+          type: string
+          description: The original request id by client.
+        closing_balance:
+          type: number
+          description: The closing balance.
+        created_at:
+          type: string
+          description: The time this transaction was created.
+        currency:
+          type: string
+          description: The currency.
+        debit_credit_flag:
+          type: string
+          description: The debit/credit flag.
+          enum:
+          - DEBIT
+          - CREDIT
+        id:
+          type: string
+          description: The id of this transaction.
+        opening_balance:
+          type: number
+          description: The opening balance.
+        posted_at:
+          type: string
+          description: The time this transaction posted to balance.
+        reason:
+          type: string
+          description: The note client add for itself.
+        reference:
+          type: string
+          description: The reference to beneficiary.
+        remitter_name:
+          type: string
+          description: The remitter name, only available when transaction type is DEPOSIT.
+        remitting_bank:
+          type: string
+          description: The remitting bank name, only available when transaction type is DEPOSIT.
+        request_id:
+          type: string
+          description: The client request id if the transaction initiated by client.
+        type:
+          type: string
+          description: The type of this transaction, can be one of `PAYMENT`, `PAYMENT_REFUND`, `CONVERSION_SELL`, `CONVERSION_BUY`, `DEPOSIT`, `ADJUSTMENT`, `FEE`.
+    TCTransaction:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: The credit amount.
+        beneficiary_bank_account_name:
+          type: string
+          description: The beneficiary bank account name, only available when transaction type is PAYMENT.
+        beneficiary_bank_account_number:
+          type: string
+          description: The beneficiary bank account number, only available when transaction type is PAYMENT.
+        client_request_id:
+          type: string
+          description: The original request id by client.
+        created_at:
+          type: string
+          description: The time this transaction was created.
+        currency:
+          type: string
+          description: The currency.
+        id:
+          type: string
+          description: The id of this transaction.
+        reason:
+          type: string
+          description: The note client add for itself.
+        reference:
+          type: string
+          description: The reference to beneficiary.
+        remitter_name:
+          type: string
+          description: The remitter name, only available when transaction type is DEPOSIT.
+        remitting_bank:
+          type: string
+          description: The remitting bank name, only available when transaction type is DEPOSIT.
+        status:
+          type: string
+          description: The status of this transaction, can be one of `NEW`, `SETTLED`, `CANCELED`.
+        type:
+          type: string
+          description: The type of this transaction, can be one of `PAYMENT`, `CONVERSION`, `DEPOSIT`, `ADJUSTMENT`, `FEE`.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

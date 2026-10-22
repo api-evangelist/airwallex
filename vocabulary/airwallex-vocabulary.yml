@@ -1,0 +1,511 @@
+generated: '2026-10-20'
+method: derived
+generator: derive-vocabulary.py
+source: openapi/airwallex-openapi.yml
+vocabulary:
+  name: Airwallex Domain Vocabulary
+  description: 'Terms declared by Airwallex''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions.
+    Derived, not authored.'
+  version: '2026-10-20'
+  terms:
+  - term: Account Capability > Account Capability
+    definition: The Account Capability resource represents capabilities you can enable or query on your Airwallex account like accepting card
+      payments or making fund transfers.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Accounting > Accounting Field Values
+    definition: Manages selectable values for custom accounting fields used when coding Airwallex Spend transactions.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Accounting > Accounting Fields
+    definition: Manages custom accounting fields that define additional accounting dimensions for Airwallex Spend, such as projects or cost centers.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Accounting > General Ledger Accounts
+    definition: Manages General Ledger (GL) account entries used when coding Airwallex Spend transactions, such as expenses and bills.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Accounting > Tax Codes
+    definition: Manages tax codes used when coding Airwallex Spend transactions, such as expenses and bills.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Authentication > Authentication
+    definition: 'Airwallex uses an API key and Client ID to authenticate requests. You authenticate by exchanging your API key and Client ID for
+      a short-lived access token, then sending that token as `Authorization: Bearer ` on every subsequent call. The access token is valid for
+      30 minutes and can be reused until it expires. Do not call the authentication endpoint before each request. Track expiration using the `'
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Authentication > Embedded Components
+    definition: Authorize to use embedded components.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Billing > Billing Checkouts
+    definition: 'A Billing Checkout manages the setup and lifecycle of an Airwallex-hosted customer checkout experience, enabling customers to
+      confirm and pay for line items or set up payment details for future transactions. We recommend creating a new Billing Checkout each time
+      a customer initiates a purchase. After the customer successfully completes the checkout, resources such as Customer, Payment Source, and '
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Billing > Billing Customers
+    definition: A Billing Customer is an individual or business who purchases or subscribes to your products or services.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Billing > Billing Transactions
+    definition: A Billing Transaction describes a transaction on your invoice such as a payment or refund.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Billing > Coupons
+    definition: Coupon management APIs for creating and managing coupon templates.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Billing > Credit Notes
+    definition: Issue a Credit Note to adjust the amount of a finalized invoice.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Billing > E-Invoicing Documents
+    definition: An E-Invoicing Document represents the regulatory (e-invoicing or e-reporting) processing record for an [Invoice](/docs/api/billing/invoices)
+      or [Credit Note](/docs/api/billing/credit_notes). It tracks the processing status, regulatory artifacts, the recipient's response, and processing
+      errors.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Billing > Invoices
+    definition: An Invoice represents an official request for payment that details products or services purchased, pricing and payment instructions.
+      It can be issued directly (one-time invoices) or via a [Subscription](/docs/api/billing/subscriptions) (recurring invoices).
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Billing > Meters
+    definition: A Meter defines how to aggregate usage events over a billing period to determine how much a customer should be billed.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Billing > Payment Sources
+    definition: A Payment Source represents a [Billing Customer](/docs/api/billing/billing_customers)'s funding instrument that can be used to
+      pay for invoices.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Billing > Prices
+    definition: 'A Price defines the pricing information for a [Product](/docs/api/billing/products) such as amount, currency, and billing frequency.
+      A Product can have multiple Prices. For example, you can offer the following pricing options for a software license Product: - 1. Standard
+      Price: $10 / month - 2. Student Price: $5 / month - 3. Lifetime Access: $200 one-off purchase Prices are primarily used in [Invo'
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Billing > Products
+    definition: Products represent the goods or services you offer to customers (e.g. books, memberships). When associated with [Prices](/docs/api/billing/prices),
+      they can be used with the [Invoice](/docs/api/billing/invoices) and [Subscription](/docs/api/billing/subscriptions) APIs.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Billing > Rate Cards
+    definition: A Rate Card is a versioned container for multi-dimensional pricing. It groups multiple Rate Card Items, each representing the
+      price for one combination of dimensions (e.g. `model` × `token_type`), under shared billing fields (`product_id`, `meter_id`, `currency`,
+      `recurring`). This lets you define pricing for an entire matrix for a single [Product](/docs/api/billing/products) and add it to a [Subs
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Billing > Subscriptions
+    definition: A Subscription manages the billing lifecycle for the recurring products or services that a customer purchases. One or more Products
+      and Prices can be added as Subscription Items to a Subscription. Customers can be charged automatically, or be issued invoices that they
+      will pay manually every billing cycle. If a Subscription is set to charge a Billing Customer's Payment Source automatically, the ch
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Billing > Usage Events
+    definition: A Usage Event represents a customer's usage of a product at a specific timestamp.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Checkout > Checkout Sessions
+    definition: A Checkout Session manages the setup and lifecycle of an Airwallex-hosted customer checkout experience, including billing subscriptions,
+      one-off payments and payment setup flows. We recommend creating a new Checkout Session each time a customer initiates a purchase. After
+      the customer successfully completes the session, downstream resources such as Billing Customer, Customer, Payment Source, Payme
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Core Resources > Balances
+    definition: Different types of balances such as available and pending can be retrieved to reflect the present balances under your Airwallex
+      account.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Core Resources > Deposits
+    definition: Deposits are transfers made into your Airwallex account via Global Accounts, Airwallex Pay, or Aggregate Funds for adding funds
+      or collecting funds from third parties.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Core Resources > Direct Debits
+    definition: Direct Debits are transactions that third party made to pull funds out of your Airwallex account.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Core Resources > Global Accounts
+    definition: Global Accounts are foreign currency accounts that function as local bank accounts. They can be used to collect funds from around
+      the world. You get account details that enable you to collect funds from various platforms such as Amazon, eBay and Shopify, among others.
+      Global Accounts can also be used to top up your Airwallex balance.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Core Resources > Linked Accounts
+    definition: Linked Accounts are external financial accounts associated with your Airwallex account. You can use Linked Accounts to fund your
+      Airwallex wallet via Direct Debit.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Finance > Financial Reports
+    definition: The Financial Reports resources provide the capability to create and get the contents of reports on your Airwallex account's historical
+      transaction activity.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Finance > Settlements
+    definition: Represents the set of endpoints you use to track and manage payment settlements that contribute to your Airwallex account balance.
+      You can list settlements with optional filters, retrieve a settlements overview for a specific settlement by settlement batch unique identifier,
+      and download batch settlement reports for reconciliation or record keeping.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Issuing > Authorizations
+    definition: You can view authorizations such as pre auth and capture processed against individual cards or for all cards created within your
+      organisation.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Issuing > Card Transaction Events
+    definition: A **transaction event** is the most granular level of the three-level transaction model (**Lifecycle → Card Transaction → Transaction
+      Event**). Each transaction event represents an individual network message or fund movement, with an immutable fund movement per event. Use
+      transaction events when you need per-event details such as failure reasons, authorization subtypes, or individual amounts. **Ev
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Issuing > Card Transaction Lifecycles
+    definition: A **lifecycle** is the top level of the three-level transaction model (**Lifecycle → Card Transaction → Transaction Event**).
+      It is a container that groups all related card transactions and transaction events belonging to the same payment flow, based on network
+      information. Lifecycles provide a network-level view of a payment along with aggregated billing amounts across all related card transactio
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Issuing > Card Transactions
+    definition: A **card transaction** is the middle level of the three-level transaction model (**Lifecycle → Card Transaction → Transaction
+      Event**). It groups related transaction events and represents Airwallex's interpretation of a single card transaction. Each card transaction
+      has a guaranteed terminal status and a fund direction, making it the recommended level for tracking payment outcomes without implemen
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Issuing > Cardholders
+    definition: You can create cardholders, which are authorized representatives of your business that can be issued cards. Please note, this
+      API version is incompatible with any Airwallex Business Account Products such as "Borderless Cards" or "Expense Management" via Airwallex
+      web or mobile applications. If you're using any of these products, please use API version 2024-02-22. Contact your account manager for m
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Issuing > Cards
+    definition: You can create virtual cards associated with your organisation, these cards can be single or multi-usage and be restricted by
+      merchant code, currency and transaction amount. Please note, this API version is incompatible with any Airwallex Business Account Products
+      such as "Borderless Cards" or "Expense Management" via Airwallex web or mobile applications. If you're using any of these products, ple
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Issuing > Config
+    definition: You can view config for cards such as default and maximum limit when creating card and remote auth setting to process authorization
+      on your side.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Issuing > Digital Wallet Tokens
+    definition: Query and manage digital wallet tokens.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Issuing > Merchant Brands
+    definition: Searches Merchant Brands, primarily for configuring the set of Merchant Brand unique identifiers permitted on a card.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Issuing > Transaction Disputes
+    definition: You can create a dispute for a card transaction. You can also update/submit/cancel it.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Issuing > Transactions
+    definition: You can view transactions processed against individual cards or for all cards created within your organisation.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Payment Acceptance > Config
+    definition: The **Config** API allows you to query for active merchant configurations.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Payment Acceptance > Conversion Quotes
+    definition: A conversion quote locks the conversion rate between the merchant and shopper currencies for a certain period of time. Merchants
+      can repeatedly use it to price payments in the shopper's local currency during its validity period. Please refer to our [product documentation](/docs/payments/optimize-your-integration/increase-conversion/multi-currency-pricing-api)
+      for integration details. Data Retentio
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Payment Acceptance > Customer Balance Transactions
+    definition: A **Customer Balance Transaction** records a change in the balance of funds that Airwallex holds and returns on behalf of your
+      customer. It is used to notify you when bank transfer funds are received or reversed, including in exceptional scenarios such as overpayment,
+      underpayment, or unmatched funding. [For bank transfer payments](https://www.airwallex.com/docs/payments/payment-methods/global/ban
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Payment Acceptance > Customers
+    definition: '**Customer** is an API resource for you to save your customer''s information, which is required by the [Payment Method](/docs/api/payments/payment_methods)
+      and [Payment Consent](/docs/api/payments/payment_consents) APIs.'
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Payment Acceptance > Customs Declarations
+    definition: The **Customs Declaration** API help merchants to complete customs clearance process as regulation required. This API applies
+      only to China customs requirements and workflows.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Payment Acceptance > Funds Split Reversals
+    definition: 'The **Funds Split Reversal** API helps you reverse an existing **Funds Split** made to a connected account, either entirely or
+      partially. Data Retention Policy: You can query and operate Funds Split Reversal resources for a maximum of 2 years since creation.'
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Payment Acceptance > Funds Splits
+    definition: A **Funds Split** will guide you through the process to divide part of the collected funds to another destination before settling
+      to the account that owns the funds. You may create multiple **Funds Splits** for the same source of funds to send money to different destinations.
+      However, one **Funds Split** will only have one destination. You may specify the following on a Funds Split. 1. What is the
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Payment Acceptance > Payment Attempts
+    definition: A **Payment Attempt** object is created whenever a customer makes a payment with the chosen Payment Method. This API allows you
+      to find out how your customer paid for your order. A customer may attempt to pay for the same order multiple times. However, only one attempt
+      should succeed. Use the [List all Payment Attempts](/docs/api/payments/payment_attempts/list) endpoint to list each and every Paym
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Payment Acceptance > Payment Consents
+    definition: '**Payment Consent** is an API resource to represent the agreement between merchant and Customer of making subsequent payments
+      using the provided Payment Method. In general, we can categorize the usages of Payment Consent into two groups. - Merchant can initiate
+      the payment without customer''s presence (MIT). For example, membership subscription and utilities. - Customer can initiate the payment
+      wit'
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Payment Acceptance > Payment Disputes
+    definition: A dispute occurs when a shopper contests legitimacy of a payment. **PaymentDispute** APIs will enable you to manage your dispute
+      events removing the need to managing dispute events manually via web-app, there by reducing your manual efforts. Combination of a stage
+      & status of a PaymentDispute will indicate the current situation of dispute. You can use our [product documentation](/docs/payments/man
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Payment Acceptance > Payment Intents
+    definition: A **Payment Intent** guides you through the process of collecting a payment from your customer. It tracks a payment when your
+      customer first checks out, through to when payment is successfully paid by your customer. A Payment Intent transitions through a number
+      of states throughout the customer's payment journey. You may specify the following on a Payment Intent. 1. How much the payment is for?
+      De
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Payment Acceptance > Payment Links
+    definition: 'The **Payment Links** API allows you to accept payments from shoppers using a payment link URL. The payment link URL takes your
+      shopper to an Airwallex hosted secure checkout page where they can make the payment with their preferred payment method. The Payment Link
+      supports two pricing options: 1. Fixed pricing - Both the payment `amount` and `currency` are locked. The shopper must pay the exact a'
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Payment Acceptance > Payment Methods
+    definition: A **Payment Method** represents the funding source that belongs to a [Customer](/docs/api/payments/customers) and is used to bind
+      to one or several [Payment Consents](/docs/api/payments/payment_consents).
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Payment Acceptance > Reference Data
+    definition: 'All card schemes publish account range information which helps understand the product, issuer country code, issuer name etc.
+      Hence, merchants can request account range data under a particular PAN thereby enabling business logic such as: - Merchants query for BIN
+      info using the PAN to get information about card type so that they can surcharge if the card used is commercial / credit or other cases. '
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Payment Acceptance > Refunds
+    definition: 'The **Refund** API allows you to refund a succeeded payment back to the payment method used by your customer. The refund amount
+      must be equal to or less than the amount specified in the original Payment Intent/Payment Attempt. Multiple Refunds can be created until
+      the full amount is refunded. Data Retention Policy: You can query Refund resources for a maximum of 2 years since creation.'
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Payment Acceptance > Settlement Records
+    definition: Use the Settlement Record API to receive the full settlement details of a particular settlement batch or payment intent. The Settlement
+      Record API provides the same information as the [Settlement Report](/docs/payments/payment-operations/reporting/settlement-report) but via
+      JSON. The API can be queried using settlement batch ID or payment intent ID or both depending on your reconciliation use case
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Payment Acceptance > Terminals
+    definition: 'A **Terminal** represents a physical device that can process payments. This API allows you to manage terminals, including creating,
+      retrieving, updating, activating, deactivating, terminating, and processing payment intents in terminals. A Terminal can be in one of the
+      following states: 1. **ACTIVE**: The Terminal is activated and ready to use. 2. **INACTIVE**: The Terminal is deactivated for any '
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Payouts > Batch Transfers
+    definition: A batch transfer resource is created when you want to create multiple transfers with one fund deduction from your funding source.
+      You can create a batch transfer first, and then add items into this batch. You can only input one funding source in a batch. Beneficiary
+      information is contained in each item in the batch.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Payouts > Beneficiaries
+    definition: A beneficiary resource needs to be created before a payment can be made, the beneficiary notes the individual or organisation
+      being paid along with the bank details and payment method. A beneficiary unique identifier is generated upon the creation can be used for
+      creating payment using a payment resource.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Payouts > Payers
+    definition: By default you make payments from yourself therefore this resource is optional. However if your Airwallex Account allows paying
+      on behalf of others, you can create new payers and this resource becomes mandatory to be defined which payer you are paying from.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Payouts > Transfers
+    definition: A transfer resource is created when you send funds to a beneficiary, it details the beneficiary, bank details, the amount being
+      paid, its status and other relevant information. You can also create the transfer by using the beneficiary unique identifier which was previously
+      created using Beneficiary resource.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Risk > Fraud Feedback (Issuing)
+    definition: The **Fraud Feedback** API may be used to confirm whether an issuing transaction was authorized or not authorized by the cardholder.
+      A transaction confirmed to be authorized will allow Airwallex to better understand the cardholder's transaction patterns and increase the
+      success rate of similar transactions. A transaction confirmed not to have been authorized by the cardholder will be labelled as f
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Risk > Request for Information (RFI)
+    definition: As part of reviewing customer profiles and activity, Airwallex may request additional information about an account by raising
+      an RFI. Airwallex will initiate a request for information which may then contain one or more follow up questions if more clarification is
+      needed.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Risk > Risk Reports
+    definition: The Risk Reports API lets merchants self-serve their own risk datasets. The currently supported report type is `PAYMENT_FRAUD_REPORT`,
+      which contains payment fraud data reported through acquirer TC40 / SAFE reports for a given date range. Use [Generate a risk report](/docs/api/risk/risk_reports/generate)
+      to submit a query and obtain a report `id`, followed by [Retrieve a risk report](/docs/api/ris
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Risk > Sellers
+    definition: Manage sellers for your Merchant of Record (MoR) account.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Risk > Watchlist
+    definition: The Watchlist API is an automated tool for transaction verification and fraud prevention. With this API, merchants can create
+      and manage Watchlists of shoppers to automatically accept, verify, or block transactions. To add a Watchlist item, please use the ‘create’
+      endpoint. To make changes to an existing Watchlist item, please use the ‘update’ endpoint. To retrieve a specific item in the Watchlist
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Embedded Finance > Accounts
+    definition: The Accounts resource represents an Airwallex account, which serves as the main container for a customer’s financial data—including
+      wallet balances, financial transactions, cards, and more. This resource allows customers to retrieve and update account information. For
+      platform customers, it also supports onboarding and managing [Connected Accounts](/docs/connected-accounts/how-connected-accounts-w
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Embedded Finance > Charges
+    definition: A [Scale Charge](/docs/connected-accounts/move-funds/charges) can be used to charge a Connected Account and credit the Platform
+      account's wallet. This action may support processing fees and charges from your clients or business partners. Source Connected Account to
+      be charged must have passed KYC and be in state `ACTIVE`.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Embedded Finance > Connected Account Transfers
+    definition: A [Connected Account Transfer](/docs/connected-accounts/move-funds/connected-account-(ca)-transfers) can be used to send funds
+      directly from a Platform Account or Connected Account to another Account connected to the same platform. Destination Connected Account must
+      have passed KYC and be in state `ACTIVE`.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Embedded Finance > Hosted Flows
+    definition: Airwallex Hosted Flows enable a Platform to redirect end users into Airwallex-hosted web pages to complete a variety of activity
+      flows. Platforms can deliver hosted flows via a secure, short-lived link unique to each connected account. After completion of a flow, the
+      user is redirected back to the platform. Hosted flows are available for [accounts created via API](/docs/api/scale/accounts/create).
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Embedded Finance > Invitation Links
+    definition: Invitation Links are used by platforms or partners to manage Scale Connect invitation links.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Embedded Finance > Offboardings
+    definition: The Offboarding API allows platforms to programmatically submit offboarding requests for connected accounts and query the status
+      of submitted offboardings. Create an offboarding raises an Airwallex Operations-owned offboarding case for account closure. It differs from
+      [Suspend account](/docs/api/scale/accounts/suspend), which temporarily suspends an account and can be reversed with [Reactivate acc
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Embedded Finance > Platform Liquidity Programs
+    definition: Manage platform liquidity programs, spending accounts, transactions, and fund deposit and withdrawal.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Embedded Finance > Platform Reports
+    definition: Generate reports to understand the activity of your Platform account and connected accounts. Use [Create Platform report](/docs/api/scale/platform_reports/create)
+      to obtain a report id, followed by [Get Platform report](/docs/api/scale/platform_reports/retrieve) to retrieve a download URL for the report
+      once it is ready. Subscribe to the `Platform Report` webhook in the Airwallex webapp to be noti
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Embedded Finance > PSP Settlement Deposits
+    definition: A PSP Settlement Deposit is a deposit made by a PSP into a holding account. It is associated with a PSP Settlement Intent. Airwallex
+      provides the Platform with a **holding account**, set up by a Airwallex Solutions Engineer. Platforms pass payment details to a pay-in PSP
+      for funds acquired by PSPs to be deposited to Airwallex. PSP Settlement Deposits form part of the [PSP-agnostic payout solution]
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Embedded Finance > PSP Settlement Intents
+    definition: A PSP settlement intent represents a settlement with a PSP in a particular currency. Each PSP settlement intent is associated
+      with one or more PSP settlement deposits by `settlement_reference`. After creating your PSP settlement intent, you can start splitting it,
+      creating one PSP settlement split for each target account. Once you complete splitting your PSP settlement intent, you can submit it an
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Embedded Finance > PSP Settlement Splits
+    definition: Platforms must share PSP Settlement Split information with Airwallex before funds settle to the holding account, by calling the
+      [Split a PSP Settlement Intent API](/docs/api/scale/psp_settlement_splits/split_psp_settlement_intents). This data typically originates
+      from the pay-in PSP's reporting feed. Funds in the holding account are inaccessible to all parties until the funds are released to other
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Security > Activity Log
+    definition: Get activity logs of the login account.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Simulation (Sandbox Only) > Accounts
+    definition: Simulate the status transition of a connected account through its lifecycle in the sandbox environment.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml
+  - term: Simulation (Sandbox Only) > Billing
+    definition: Simulate billing operations in the sandbox environment.
+    tags:
+    - Resource Group
+    source: openapi/airwallex-openapi.yml

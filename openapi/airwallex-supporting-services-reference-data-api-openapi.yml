@@ -1,0 +1,678 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Supporting Services > Reference Data API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Supporting Services > Reference Data
+  description: Reference data made available to support the usage of the Airwallex platform.
+  x-domain: Supporting Services
+  x-resource: Reference Data
+  x-urlPath: supporting_services/reference_data
+paths:
+  /api/v1/reference/industry_categories:
+    get:
+      tags:
+      - Supporting Services > Reference Data
+      summary: 1|Industry Categories
+      description: Get a tree of industry categories and associated codes and questions.
+      operationId: listIndustryCategories
+      x-oboSupported: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IndustryCategoryV3Item'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/reference/industry_categories
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+        - answer: 'Yes'
+          name: Digital and tech
+          question: <string>
+          type: LIST
+          value: <string>
+          values:
+          - name: Financial data and research
+            type: code
+            value: ICCV3_0002XX
+          - name: Game
+            type: question
+            question: Does your product contain Transferable Virtual Assets (TVA) such as tools, ski...
+            values:
+            - answer: 'Yes'
+              type: code
+              value: ICCV3_000300
+            - answer: 'No'
+              type: code
+              value: ICCV3_000301
+      x-domain: Supporting Services
+      x-resource: Reference Data
+      x-urlPath: industry_categories
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/reference/invalid_conversion_dates:
+    get:
+      tags:
+      - Supporting Services > Reference Data
+      summary: 2|Invalid Conversion Dates
+      description: Gets a list of invalid conversion dates for a specified `currency_pair`.
+      operationId: listInvalidConversionDates
+      parameters:
+      - name: currency_pair
+        in: query
+        description: Currency pair to get the invalid conversion dates for.
+        required: true
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: AUDUSD
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidConversionDates'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/reference/invalid_conversion_dates
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          currency_pair: AUDUSD
+          invalid_conversion_dates:
+          - date: '2017-12-25'
+            reason: Christmas Day
+      x-domain: Supporting Services
+      x-resource: Reference Data
+      x-urlPath: invalid_conversion_dates
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/reference/supported_currencies:
+    get:
+      tags:
+      - Supporting Services > Reference Data
+      summary: 3|Supported Currencies
+      description: Gets the client-specific list of currencies that can be bought or sold.
+      operationId: listSupportedCurrencies
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportedCurrencies'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/reference/supported_currencies
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          conversion:
+            buy_currencies:
+            - AUD
+            - CAD
+            - EUR
+            - GBP
+            - HKD
+            - JPY
+            - NZD
+            - SGD
+            - USD
+            - CNY
+            sell_currencies:
+            - AUD
+            - CAD
+            - EUR
+            - GBP
+            - HKD
+            - JPY
+            - NZD
+            - SGD
+            - USD
+            - CNY
+      x-scope:
+      - scope: payouts.transfer:read
+        group: Payouts
+        resource_name: Transfers
+      - scope: payouts.transfer:write
+        group: Payouts
+        resource_name: Transfers
+      - scope: transfer:read
+        group: Payouts
+        resource_name: Transfers
+      - scope: transfer:write
+        group: Authentication
+        resource_name: Embedded Components - Transfers
+      x-domain: Supporting Services
+      x-resource: Reference Data
+      x-urlPath: supported_currencies
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/reference/order_items/expiring_quota:
+    get:
+      tags:
+      - Supporting Services > Reference Data
+      summary: 4|Retrieve the Expiring Transfer or Deposit Limit
+      description: Get available transfer or deposit limit that is about to expire in the next week.
+      operationId: retrieveExpiringQuota
+      parameters:
+      - name: type
+        in: query
+        description: type.
+        required: false
+        schema:
+          type: string
+          enum:
+          - CN_INBOUND
+          - ID_OUTBOUND
+          - VN_OUTBOUND
+          default: CN_INBOUND
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpiringQuota'
+        '400':
+          description: Bad request. Data provided is either incomplete or malformed.
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/reference/order_items/expiring_quota
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          currency: CNY
+          expire_by: '2021-09-16'
+          expiring_order_amount: 1000
+      x-scope:
+      - scope: reference.order_item:read
+        group: Supporting Services
+        resource_name: Order Items
+      - scope: reference.order_item:write
+        group: Supporting Services
+        resource_name: Order Items
+      x-domain: Supporting Services
+      x-resource: Reference Data
+      x-urlPath: expiring_quota
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/reference/order_items/quota:
+    get:
+      tags:
+      - Supporting Services > Reference Data
+      summary: 5|Retrieve the Transfer or Deposit Limit
+      description: Get available transfer or deposit limit.
+      operationId: retrieveQuota
+      parameters:
+      - name: type
+        in: query
+        description: type.
+        required: false
+        schema:
+          type: string
+          enum:
+          - CN_INBOUND
+          - ID_OUTBOUND
+          - VN_OUTBOUND
+          default: CN_INBOUND
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderQuota'
+        '400':
+          description: Bad request. Data provided is either incomplete or malformed.
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/reference/order_items/quota
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          available_order_amount: 1000
+          currency: CNY
+          history_order_amount: 1000
+      x-scope:
+      - scope: reference.order_item:read
+        group: Supporting Services
+        resource_name: Order Items
+      - scope: reference.order_item:write
+        group: Supporting Services
+        resource_name: Order Items
+      x-domain: Supporting Services
+      x-resource: Reference Data
+      x-urlPath: quota
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/reference/order_items/upload:
+    post:
+      tags:
+      - Supporting Services > Reference Data
+      summary: 6|Increase Transfer or Deposit Limit
+      description: 'Increase your transfer or deposit limit by providing cross-border sales order information. Before uploading, please learn about payout limits or deposit limits.
+
+
+        Type CN_INBOUND needs to be enabled before calling this endpoint, please contact your Account Manager. You may provide up to 500 items with each request.'
+      operationId: uploadOrderItems
+      parameters:
+      - name: allow_partial_success
+        in: query
+        description: Allow any order items that pass validation to be used for increasing the limit. If `false`, all order items must pass validation or the request will be rejected. Defaults to `false`.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: boolean
+          default: false
+      - name: types
+        in: query
+        description: Type of limit(s) to increase. Support any of `CN_INBOUND`, `ID_OUTBOUND`, defaults to `CN_INBOUND`.
+        required: false
+        allowEmptyValue: false
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - CN_INBOUND
+            - ID_OUTBOUND
+            - VN_OUTBOUND
+          enum:
+          - CN_INBOUND
+          - ID_OUTBOUND
+          - VN_OUTBOUND
+          default: CN_INBOUND
+      - name: x-jwt-oauth-client-id
+        in: header
+        description: x-jwt-oauth-client-id.
+        required: false
+        schema:
+          type: string
+      - name: x-jwt-type
+        in: header
+        description: x-jwt-type.
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                required:
+                - category
+                - currency
+                - item_name
+                - item_quantity
+                - item_unit_price
+                - item_url
+                - line_total
+                - order_datetime
+                - order_id
+                - shipment_provider
+                - shipment_tracking_number
+                properties:
+                  category:
+                    type: string
+                    description: Category of your sales order. One of `goods_trade_online`, `goods_trade_offline`, `services_trade_education_and_training`, `services_trade_international_logistics`, `services_trade_software`, `services_trade_professional`, `services_trade_travel`, `services_trade_travel_and_hospitality`.
+                  currency:
+                    type: string
+                    description: Order currency in ISO format, One of `AED`,`ALL`,`AMD`,`ANG`,`AOA`,`ARS`,`AUD`,`AWG`,`AZN`,`BAM`,`BBD`,`BDT`,`BGN`,`BIF`,`BMD`,`BND`,`BOB`,`BRL`,`BSD`,`BTN`,`BWP`,`BZD`,`CAD`,`CHF`,`CLP`,`COP`,`CRC`,`CVE`,`CZK`,`DJF`,`DKK`,`DOP`,`DZD`,`EGP`,`ERN`,`ETB`,`EUR`,`FJD`,`FKP`,`GBP`,`GEL`,`GHS`,`GIP`,`GMD`,`GNF`,`GTQ`,`GYD`,`HKD`,`HNL`,`HRK`,`HUF`,`IDR`,`ILS`,`INR`,`ISK`,`JMD`,`JOD`,`JPY`,`KES`,`KGS`,`KHR`,`KMF`,`KRW`,`KWD`,`KYD`,`KZT`,`LAK`,`LBP`,`LKR`,`LRD`,`LSL`,`LYD`,`MAD`,`MDL`,`MGA`,`MKD`,`MNT`,`MOP`,`MRU`,`MUR`,`MVR`,`MWK`,`MXN`,`MYR`,`NAD`,`NIO`,`NOK`,`NPR`,`NZD`,`OMR`,`PAB`,`PEN`,`PGK`,`PHP`,`PKR`,`PLN`,`PYG`,`QAR`,`RON`,`RSD`,`RWF`,`SAR`,`SBD`,`SCR`,`SEK`,`SGD`,`SHP`,`SLL`,`SRD`,`STN`,`SVC`,`SZL`,`THB`,`TJS`,`TMT`,`TND`,`TOP`,`TRY`,`TTD`,`TWD`,`TZS`,`UAH`,`UGX`,`USD`,`UYU`,`UZS`,`VND`,`VUV`,`WST`,`XAF`,`XCD`,`XOF`,`XPF`,`ZAR`,`ZMW`.
+                  description:
+                    type: string
+                    description: Description of the order.
+                  item_name:
+                    type: string
+                    description: Item name (min. 2 character and max. 256 characters).
+                  item_quantity:
+                    type: number
+                    description: Quantity of the item, must be an integer.
+                  item_reference:
+                    type: string
+                    description: Short reference for reconciliation purposes, which will not be passed to external parties.
+                  item_unit_price:
+                    type: number
+                    description: Item's unit price.
+                  item_url:
+                    type: string
+                    description: URL of the item (min. 1 characters and max. 1000 characters).
+                  line_total:
+                    type: number
+                    description: Line total of the item.
+                  order_datetime:
+                    type: string
+                    description: Order date time in ISO format, (formatted in ISO08601 datetime format), no more than 350 days old.
+                  order_id:
+                    type: string
+                    description: Order unique identifier (min. 1 characters and max. 50 characters).
+                  shipment_provider:
+                    type: string
+                    description: Name of the logistics provider.
+                  shipment_tracking_number:
+                    type: string
+                    description: Tracking number issued by the logistics provider (min. 5 characters and max. 35 characters).
+        description: orderItemDtos
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/reference/order_items/upload
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+        - category: goods_trade_online
+          currency: IDR
+          description: book
+          item_name: book
+          item_quantity: 1
+          item_reference: ac3342a4a9434ba69a91bb1c9966b477
+          item_unit_price: 19.38
+          item_url: <string>
+          line_total: 100
+          order_datetime: 2021-09-16T03:52:34+0000
+          order_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          shipment_provider: <string>
+          shipment_tracking_number: EG420386995JP
+      x-scope:
+      - scope: reference.order_item:write
+        group: Supporting Services
+        resource_name: Order Items
+      x-domain: Supporting Services
+      x-resource: Reference Data
+      x-urlPath: upload_order_items
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    OrderQuota:
+      type: object
+      required:
+      - available_order_amount
+      - currency
+      - history_order_amount
+      properties:
+        available_order_amount:
+          type: number
+          description: Available order amount of the account.
+        currency:
+          type: string
+          description: Currency of the account order amount.
+        history_order_amount:
+          type: number
+          description: history order amount of the account.
+    ConvertableCurrencies:
+      type: object
+      required:
+      - buy_currencies
+      - sell_currencies
+      properties:
+        buy_currencies:
+          type: array
+          description: List of buyable currencies.
+          items:
+            type: string
+        sell_currencies:
+          type: array
+          description: List of sellable currencies.
+          items:
+            type: string
+      description: Supported currencies for conversion.
+    InvalidConversionDate:
+      type: object
+      required:
+      - date
+      - reason
+      properties:
+        date:
+          type: string
+          format: date
+          description: The invalid conversion date.
+        reason:
+          type: string
+          description: Reason as to why the date is invalid.
+    SupportedCurrencies:
+      type: object
+      required:
+      - conversion
+      properties:
+        conversion:
+          $ref: '#/components/schemas/ConvertableCurrencies'
+          description: Supported currencies for conversion.
+    InvalidConversionDates:
+      type: object
+      required:
+      - currency_pair
+      - invalid_conversion_dates
+      properties:
+        currency_pair:
+          type: string
+          description: Currency pair that the invalid conversion dates are applicable to.
+        invalid_conversion_dates:
+          type: array
+          description: List of invalid conversion dates.
+          items:
+            $ref: '#/components/schemas/InvalidConversionDate'
+    ExpiringQuota:
+      type: object
+      required:
+      - currency
+      - expire_by
+      - expiring_order_amount
+      properties:
+        currency:
+          type: string
+          description: Currency of the account order amount.
+        expire_by:
+          type: string
+          description: Expired date for this these order amount.
+        expiring_order_amount:
+          type: number
+          description: Expiring available order amount of the account.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    IndustryCategoryV3Item:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: "The answer to the question. \nOnly for CODE items under QUESTION items."
+          enum:
+          - 'Yes'
+          - 'No'
+        name:
+          type: string
+          description: "Name of the industry category item. \nIt's null for CODE items under QUESTION items."
+        question:
+          type: string
+          description: "The question to determine a industry category code. \nOnly for QUESTION items."
+        type:
+          type: string
+          description: Type of the industry category item.
+          enum:
+          - LIST
+          - CODE
+          - QUESTION
+        value:
+          type: string
+          description: "The code identifying this industry category. \nOnly for CODE items."
+        values:
+          type: array
+          description: "Industry category items under the current item. \nOnly for LIST items and QUESTION items."
+          items:
+            $ref: '#/components/schemas/IndustryCategoryV3Item'
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

@@ -1,0 +1,452 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Risk > Sellers API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Risk > Sellers
+  description: Manage sellers for your Merchant of Record (MoR) account.
+  x-domain: Risk
+  x-resource: Sellers
+  x-urlPath: risk/sellers
+paths:
+  /api/v1/sellers/create:
+    post:
+      tags:
+      - Risk > Sellers
+      summary: 1|Create a Seller
+      description: Creates a new seller for your MoR account.
+      operationId: createSeller
+      x-oboSupported: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                address:
+                  type: object
+                  description: Business address.
+                  properties:
+                    address_line1:
+                      type: string
+                      description: Address line 1.
+                    address_line2:
+                      type: string
+                      description: Address line 2.
+                    country_code:
+                      type: string
+                      description: Country code (2-letter ISO 3166-2 country code).
+                    postcode:
+                      type: string
+                      description: Postal code.
+                    state:
+                      type: string
+                      description: State or province.
+                    suburb:
+                      type: string
+                      description: Suburb or city.
+                business_identification_number:
+                  type: string
+                  description: Business identification number.
+                email:
+                  type: string
+                  description: Contact email.
+                industry_code:
+                  type: string
+                  description: Industry code.
+                legal_entity_name:
+                  type: string
+                  description: Legal entity name.
+                merchant_category_code:
+                  type: string
+                  description: Merchant category code.
+                phone_number:
+                  type: string
+                  description: Phone number.
+                registration_country:
+                  type: string
+                  description: Registration country code.
+                registration_date:
+                  type: string
+                  description: Registration date in YYYY-MM-DD format.
+                trading_name:
+                  type: string
+                  description: Trading name.
+                websites:
+                  type: array
+                  description: List of websites.
+                  items:
+                    type: object
+                    properties:
+                      url:
+                        type: string
+                        description: Website URL.
+              description: Seller details.
+        description: Seller creation request.
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubsellerStatus'
+        '400':
+          description: '["invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: '["internal_server_error"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/sellers/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          address:
+            address_line1: 123 Market St
+            address_line2: Suite 100
+            country_code: US
+            postcode: '94105'
+            state: California
+            suburb: San Francisco
+          business_identification_number: 201626561Z
+          email: contact@acme.com
+          industry_code: ICCV3_0001XX
+          legal_entity_name: AIRWALLEX (SINGAPORE) PTE. LTD.
+          merchant_category_code: '5734'
+          phone_number: +1-555-1234
+          registration_country: SG
+          registration_date: '2020-01-15'
+          trading_name: AIRWALLEX SG
+          websites:
+          - url: https://www.subseller.com
+        response_body:
+          created_at: '2025-10-24T06:15:09Z'
+          id: 2ec93632-07c6-4afc-8519-25da56f3931a
+          status: IN_REVIEW
+          updated_at: '2025-10-24T07:01:03Z'
+      x-scope:
+      - scope: risk.seller:write
+        group: Risk
+        resource_name: Sellers
+      x-domain: Risk
+      x-resource: Sellers
+      x-urlPath: create
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/sellers/{id}:
+    get:
+      tags:
+      - Risk > Sellers
+      summary: 2|Retrieve a Seller
+      description: Retrieves details of a seller using the given seller unique identifier.
+      operationId: retrieveSeller
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the seller.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubsellerDetailsResponse'
+        '400':
+          description: '["invalid_argument", "validation_failed"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '404':
+          description: '["resource_not_found"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too many requests
+        '500':
+          description: '["internal_server_error"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/sellers/seller_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          created_at: '2025-10-28T06:45:12Z'
+          details:
+            address:
+              address_line1: 123 Market St
+              address_line2: Suite 100
+              country_code: US
+              postcode: '94105'
+              state: California
+              suburb: San Francisco
+            business_identification_number: 201626561Z
+            email: contact@acme.com
+            industry_code: ICCV3_0001XX
+            legal_entity_name: AIRWALLEX (SINGAPORE) PTE. LTD.
+            merchant_category_code: '5734'
+            phone_number: +1-555-1234
+            registration_country: SG
+            registration_date: '2020-01-15'
+            trading_name: AIRWALLEX SG
+            websites:
+            - url: https://www.subseller.com
+          id: 220362ad-f8e0-42c9-937a-5bdd67cfc7d1
+          status: ACTIVE
+          updated_at: '2025-10-28T07:01:03Z'
+      x-scope:
+      - scope: risk.seller:read
+        group: Risk
+        resource_name: Sellers
+      - scope: risk.seller:write
+        group: Risk
+        resource_name: Sellers
+      x-domain: Risk
+      x-resource: Sellers
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/sellers/{id}/deactivate:
+    post:
+      tags:
+      - Risk > Sellers
+      summary: 3|Deactivate a Seller
+      description: Deactivates an existing seller by unique identifier.
+      operationId: sellers_deactivate
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the seller.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubsellerStatus'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '404':
+          description: '["resource_not_found"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too many requests
+        '500':
+          description: '["internal_server_error"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/sellers/seller_id/deactivate
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          created_at: '2025-10-24T06:15:09Z'
+          id: 2ec93632-07c6-4afc-8519-25da56f3931a
+          status: IN_REVIEW
+          updated_at: '2025-10-24T07:01:03Z'
+      x-scope:
+      - scope: risk.seller:write
+        group: Risk
+        resource_name: Sellers
+      x-domain: Risk
+      x-resource: Sellers
+      x-urlPath: deactivate
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    SubsellerWebsite:
+      type: object
+      properties:
+        url:
+          type: string
+          description: Website URL.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    SubsellerDetails:
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/SubsellerAddress'
+          description: Business address.
+        business_identification_number:
+          type: string
+          description: Business identification number.
+        email:
+          type: string
+          description: Contact email.
+        industry_code:
+          type: string
+          description: Industry code.
+        legal_entity_name:
+          type: string
+          description: Legal entity name.
+        merchant_category_code:
+          type: string
+          description: Merchant category code.
+        phone_number:
+          type: string
+          description: Phone number.
+        registration_country:
+          type: string
+          description: Registration country code.
+        registration_date:
+          type: string
+          description: Registration date in YYYY-MM-DD format.
+        trading_name:
+          type: string
+          description: Trading name.
+        websites:
+          type: array
+          description: List of websites.
+          items:
+            $ref: '#/components/schemas/SubsellerWebsite'
+      description: Seller details.
+    SubsellerDetailsResponse:
+      type: object
+      properties:
+        created_at:
+          type: string
+          description: Creation timestamp in ISO8601 format.
+        details:
+          $ref: '#/components/schemas/SubsellerDetails'
+          description: Seller details.
+        id:
+          type: string
+          description: Unique identifier of the seller.
+        status:
+          type: string
+          description: Status of the seller.
+        updated_at:
+          type: string
+          description: Last update timestamp in ISO8601 format.
+    SubsellerStatus:
+      type: object
+      properties:
+        created_at:
+          type: string
+          description: Creation timestamp in ISO8601 format.
+        id:
+          type: string
+          description: Unique identifier of the seller.
+        status:
+          type: string
+          description: Status of the seller.
+        updated_at:
+          type: string
+          description: Last update timestamp in ISO8601 format.
+    SubsellerAddress:
+      type: object
+      properties:
+        address_line1:
+          type: string
+          description: Address line 1.
+        address_line2:
+          type: string
+          description: Address line 2.
+        country_code:
+          type: string
+          description: Country code (2-letter ISO 3166-2 country code).
+        postcode:
+          type: string
+          description: Postal code.
+        state:
+          type: string
+          description: State or province.
+        suburb:
+          type: string
+          description: Suburb or city.
+      description: Business address.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

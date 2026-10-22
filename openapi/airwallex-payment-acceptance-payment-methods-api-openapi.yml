@@ -1,0 +1,1433 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Payment Acceptance > Payment Methods API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Payment Acceptance > Payment Methods
+  description: A **Payment Method** represents the funding source that belongs to a Customer and is used to bind to one or several Payment Consents.
+  x-domain: Payment Acceptance
+  x-resource: Payment Methods
+  x-urlPath: payments/payment_methods
+paths:
+  /api/v1/pa/payment_methods/create:
+    post:
+      tags:
+      - Payment Acceptance > Payment Methods
+      summary: 1|Create a Payment Method
+      description: 'Create a Payment Method which can be referenced by Payment Consent.
+
+
+        Alternatively you can directly provide entire payload of new Payment Method when verifying the Payment Consent, and then a Payment Method will be generated for you automatically during the process, which can be re-used for other Payment Consent later.'
+      operationId: createPaymentMethod
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - customer_id
+              - request_id
+              - type
+              properties:
+                applepay:
+                  type: object
+                  description: Apple pay information. This must be provided if `type` is set to `applepay`.
+                  properties:
+                    billing:
+                      type: object
+                      description: Billing information.
+                      properties:
+                        address:
+                          type: object
+                          required:
+                          - country_code
+                          description: The billing address as it appears on the credit card issuer’s records.
+                          properties:
+                            city:
+                              type: string
+                              description: City of the address. Maximum of 100 characters.
+                            country_code:
+                              type: string
+                              description: The two-letter country code in ISO 3166-1 alpha-2 format.
+                            postcode:
+                              type: string
+                              description: Postcode of the address. Maximum of 10 characters.
+                            state:
+                              type: string
+                              description: State or province of the address. Maximum of 100 characters.
+                            street:
+                              type: string
+                              description: Street of the address. Maximum of 1000 characters.
+                        email:
+                          type: string
+                          description: Email address of the customer.
+                        first_name:
+                          type: string
+                          description: First name of the customer. Maximum length is 128.
+                        last_name:
+                          type: string
+                          description: Last name of the customer. Maximum length is 128.
+                        phone_number:
+                          type: string
+                          description: Phone number of the customer.
+                    encrypted_payment_token:
+                      type: string
+                      description: Payment data from Apple Pay Payment Token.
+                    payment_data_type:
+                      type: string
+                      description: Type of the payment data details. One of `tokenized_card` or `encrypted_payment_token`.
+                    tokenized_card:
+                      type: object
+                      required:
+                      - expiry_month
+                      - expiry_year
+                      - number
+                      description: Payment data with the tokenized card details.
+                      properties:
+                        authentication_method:
+                          type: object
+                          required:
+                          - type
+                          description: Authentication method.
+                          properties:
+                            emv:
+                              type: object
+                              required:
+                              - emv_data
+                              description: EMV data.
+                              properties:
+                                emv_data:
+                                  type: string
+                                  description: Output from the Secure Element.
+                                encrypted_pin_data:
+                                  type: string
+                                  description: The PIN encrypted using the bank’s key.
+                            three_ds:
+                              type: object
+                              required:
+                              - online_payment_cryptogram
+                              description: 3D-Secure authentication data.
+                              properties:
+                                eci_indicator:
+                                  type: string
+                                  description: Electronic Commerce Indicator, as defined by 3-D Secure.
+                                online_payment_cryptogram:
+                                  type: string
+                                  description: Online payment cryptogram, as defined by 3-D Secure.
+                            type:
+                              type: string
+                              description: The authentication method type. One of `emv` or `three_ds`.
+                        device_manufacturer_identifier:
+                          type: string
+                          description: Device manufacturer identifier.
+                        expiry_month:
+                          type: string
+                          description: Two digit number representing the card’s expiration month.
+                        expiry_year:
+                          type: string
+                          description: Four digit number representing the card’s expiration year.
+                        name:
+                          type: string
+                          description: Cardholder name.
+                        number:
+                          type: string
+                          description: Card number.
+                card:
+                  type: object
+                  description: Card information. This must be provided if `type` is set to `card`.
+                  properties:
+                    additional_info:
+                      type: object
+                      description: Additional information of external network token requestor. Should be provided when number_type is `EXTERNAL_NETWORK_TOKEN`.
+                      properties:
+                        merchant_verification_value:
+                          type: string
+                          description: 'Merchant Verification Value (Provided by VISA during onboarding)
+
+                            or
+
+                            MasterCard Assigned ID (Provided by MasterCard during onboarding).'
+                        token_requestor_id:
+                          type: string
+                          description: Token requestor unique identifier (Provided by card schemes during onboarding).
+                    billing:
+                      type: object
+                      description: Billing information.
+                      properties:
+                        address:
+                          type: object
+                          required:
+                          - country_code
+                          description: The billing address as it appears on the credit card issuer’s records.
+                          properties:
+                            city:
+                              type: string
+                              description: City of the address. Maximum of 100 characters.
+                            country_code:
+                              type: string
+                              description: The two-letter country code in ISO 3166-1 alpha-2 format.
+                            postcode:
+                              type: string
+                              description: Postcode of the address. Maximum of 10 characters.
+                            state:
+                              type: string
+                              description: State or province of the address. Maximum of 100 characters.
+                            street:
+                              type: string
+                              description: Street of the address. Maximum of 1000 characters.
+                        email:
+                          type: string
+                          description: Email address of the customer.
+                        first_name:
+                          type: string
+                          description: First name of the customer. Maximum length is 128.
+                        last_name:
+                          type: string
+                          description: Last name of the customer. Maximum length is 128.
+                        phone_number:
+                          type: string
+                          description: Phone number of the customer.
+                    expiry_month:
+                      type: string
+                      description: Two digit number representing the card’s expiration month.
+                    expiry_year:
+                      type: string
+                      description: Four digit number representing the card’s expiration year.
+                    name:
+                      type: string
+                      description: Card holder name. Maximum length is 128.
+                    number:
+                      type: string
+                      description: Card number.
+                    number_type:
+                      type: string
+                      description: 'Type of the number. One of `PAN`, `EXTERNAL_NETWORK_TOKEN`. Default: `PAN`.'
+                customer_id:
+                  type: string
+                  description: The Customer this Payment Method belongs to. This Payment Method is automatically added to the Customer as one of the available Payment Methods. See [Customers API](/docs/api/payments/customers) for further details.
+                googlepay:
+                  type: object
+                  description: Google pay information. This must be provided if `type` is set to `googlepay`.
+                  properties:
+                    billing:
+                      type: object
+                      description: Billing information.
+                      properties:
+                        address:
+                          type: object
+                          required:
+                          - country_code
+                          description: The billing address as it appears on the credit card issuer’s records.
+                          properties:
+                            city:
+                              type: string
+                              description: City of the address. Maximum of 100 characters.
+                            country_code:
+                              type: string
+                              description: The two-letter country code in ISO 3166-1 alpha-2 format.
+                            postcode:
+                              type: string
+                              description: Postcode of the address. Maximum of 10 characters.
+                            state:
+                              type: string
+                              description: State or province of the address. Maximum of 100 characters.
+                            street:
+                              type: string
+                              description: Street of the address. Maximum of 1000 characters.
+                        email:
+                          type: string
+                          description: Email address of the customer.
+                        first_name:
+                          type: string
+                          description: First name of the customer. Maximum length is 128.
+                        last_name:
+                          type: string
+                          description: Last name of the customer. Maximum length is 128.
+                        phone_number:
+                          type: string
+                          description: Phone number of the customer.
+                    encrypted_payment_token:
+                      type: string
+                      description: A UTF-8 encoded, serialized JSON object with the keys specified.
+                    payment_data_type:
+                      type: string
+                      description: Type of the payment data details.  One of `tokenized_card` or `encrypted_payment_token`.
+                    tokenized_card:
+                      type: object
+                      required:
+                      - expiry_month
+                      - expiry_year
+                      - number
+                      description: Payment data with the tokenized card details.
+                      properties:
+                        authentication_method:
+                          type: object
+                          required:
+                          - type
+                          description: Authentication method.
+                          properties:
+                            emv:
+                              type: object
+                              required:
+                              - emv_data
+                              description: EMV data.
+                              properties:
+                                emv_data:
+                                  type: string
+                                  description: Output from the Secure Element.
+                                encrypted_pin_data:
+                                  type: string
+                                  description: The PIN encrypted using the bank’s key.
+                            three_ds:
+                              type: object
+                              required:
+                              - online_payment_cryptogram
+                              description: 3D-Secure authentication data.
+                              properties:
+                                eci_indicator:
+                                  type: string
+                                  description: Electronic Commerce Indicator, as defined by 3-D Secure.
+                                online_payment_cryptogram:
+                                  type: string
+                                  description: Online payment cryptogram, as defined by 3-D Secure.
+                            type:
+                              type: string
+                              description: The authentication method type. One of `emv` or `three_ds`.
+                        device_manufacturer_identifier:
+                          type: string
+                          description: Device manufacturer identifier.
+                        expiry_month:
+                          type: string
+                          description: Two digit number representing the card’s expiration month.
+                        expiry_year:
+                          type: string
+                          description: Four digit number representing the card’s expiration year.
+                        name:
+                          type: string
+                          description: Cardholder name.
+                        number:
+                          type: string
+                          description: Card number.
+                metadata:
+                  type: object
+                  description: A set of key-value pairs that you can attach to this Payment Method. You can specify up to 50 keys with key names up to 50 characters long and values up to 500 characters long.
+                  additionalProperties:
+                    type: string
+                request_id:
+                  type: string
+                  description: Unique request identifier specified by the merchant.
+                type:
+                  type: string
+                  description: Type of the Payment Method.
+                  enum:
+                  - card
+                  - applepay
+                  - googlepay
+        description: Payment Method creation request.
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentMethod'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `duplicate_request`, `resource_not_found`(invalid `customer_id`)'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/payment_methods/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          type: card
+          card:
+            expiry_month: '03'
+            expiry_year: '2030'
+            number: '4035501000000008'
+            name: John Doe
+            number_type: PAN
+            billing:
+              email: john.doe@example.com
+              phone_number: +1 1234567890
+              first_name: John
+              last_name: Doe
+              address:
+                country_code: US
+                city: San Francisco
+                state: CA
+                street: 1460 Mission St.#02W101
+                postcode: '94103'
+          customer_id: cus_hkpd1dsaklad5sa
+          request_id: 9dbaecc9-24da-41e8-9d48-7f4ef4d1057e
+        status_code: 201
+        reason_phrase: Created
+        response_body:
+          id: mtd_hkpd1dsjklad5sa
+          request_id: 9dbaecc9-24da-41e8-9d48-7f4ef4d1057e
+          customer_id: cus_hkpd1dsaklad5sa
+          type: card
+          card:
+            expiry_month: '03'
+            expiry_year: '2030'
+            name: John Doe
+            bin: '403550'
+            last4: 0008
+            brand: visa
+            issuer_country_code: US
+            card_type: CREDIT
+            fingerprint: AKvN4TqxI04SNFZ+oYRXaECtDA==
+            billing:
+              first_name: John
+              last_name: Doe
+              email: john.doe@example.com
+              phone_number: +1 1234567890
+              address:
+                country_code: US
+                state: CA
+                city: San Francisco
+                street: 1460 Mission St.#02W101
+                postcode: '94103'
+            issuer_name: JPMorgan Chase
+            is_commercial: false
+            number_type: PAN
+          status: CREATED
+          created_at: '2023-10-01T12:00:00+00:00'
+          updated_at: '2023-10-01T12:00:00+00:00'
+      x-scope:
+      - scope: payment_acceptance:write
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Payment Methods
+      x-urlPath: create
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/payment_methods/{id}:
+    get:
+      tags:
+      - Payment Acceptance > Payment Methods
+      summary: 2|Retrieve a Payment Method
+      description: Retrieve Payment Method by unique identifier.
+      operationId: retrievePaymentMethod
+      parameters:
+      - name: id
+        in: path
+        description: Payment Method unique identifier.
+        required: true
+        schema:
+          type: string
+          default: mtd_unun8upp2g4yc1lzax4
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentMethod'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url), `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/payment_methods/att_hkpd12a3456hi7
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: mtd_hkpd1dsjklad5sa
+          request_id: 9dbaecc9-24da-41e8-9d48-7f4ef4d1057e
+          customer_id: cus_hkpd1dsaklad5sa
+          type: card
+          card:
+            expiry_month: '03'
+            expiry_year: '2030'
+            name: John Doe
+            bin: '403550'
+            last4: 0008
+            brand: visa
+            issuer_country_code: US
+            card_type: CREDIT
+            fingerprint: AKvN4TqxI04SNFZ+oYRXaECtDA==
+            billing:
+              first_name: John
+              last_name: Doe
+              email: john.doe@example.com
+              phone_number: +1 1234567890
+              address:
+                country_code: US
+                state: CA
+                city: San Francisco
+                street: 1460 Mission St.#02W101
+                postcode: '94103'
+            issuer_name: JPMorgan Chase
+            is_commercial: false
+            number_type: PAN
+          status: CREATED
+          created_at: '2023-10-01T12:00:00+00:00'
+          updated_at: '2023-10-01T12:00:00+00:00'
+      x-scope:
+      - scope: payment_acceptance:read
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Payment Methods
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/payment_methods:
+    get:
+      tags:
+      - Payment Acceptance > Payment Methods
+      summary: 3|List all Payment Methods
+      description: List all Payment Methods.
+      operationId: listPaymentMethods
+      parameters:
+      - name: customer_id
+        in: query
+        description: Customer unique identifier of the Payment Methods.
+        required: false
+        schema:
+          type: string
+          default: cus_2019091803110002010199020012_0378811980855892
+      - name: from_created_at
+        in: query
+        description: The start time of `created_at` in ISO8601 format. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`).
+        required: false
+        schema:
+          type: string
+          default: '2017-03-01T03:52:34+00:00'
+      - name: page_num
+        in: query
+        description: Page number starting from 0.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of Payment Methods to be listed per page. Default value is 10. Maximum is 1000. The value greater than the maximum will be capped to the maximum.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: status
+        in: query
+        description: Payment Method status. One of `CREATED`, `DISABLED`.
+        required: false
+        schema:
+          type: string
+          default: CREATED
+      - name: to_created_at
+        in: query
+        description: The end time of `created_at` in ISO8601 format. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`).
+        required: false
+        schema:
+          type: string
+          default: '2017-04-01T03:52:34+00:00'
+      - name: type
+        in: query
+        description: Payment Method type, can be `card`, `ach_direct_debit`.
+        required: false
+        schema:
+          type: string
+          default: card
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: List items.
+                    items:
+                      $ref: '#/components/schemas/PaymentMethod'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/payment_methods
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        query_params:
+          customer_id: cus_hkpd1dsaklad5sa
+          page_num: 0
+          page_size: 10
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - id: mtd_hkpd1dsjklad5sa
+            request_id: 9dbaecc9-24da-41e8-9d48-7f4ef4d1057e
+            customer_id: cus_hkpd1dsaklad5sa
+            type: card
+            card:
+              expiry_month: '03'
+              expiry_year: '2030'
+              name: John Doe
+              bin: '403550'
+              last4: 0008
+              brand: visa
+              issuer_country_code: US
+              card_type: CREDIT
+              fingerprint: AKvN4TqxI04SNFZ+oYRXaECtDA==
+              billing:
+                first_name: John
+                last_name: Doe
+                email: john.doe@example.com
+                phone_number: +1 1234567890
+                address:
+                  country_code: US
+                  state: CA
+                  city: San Francisco
+                  street: 1460 Mission St.#02W101
+                  postcode: '94103'
+              issuer_name: JPMorgan Chase
+              is_commercial: false
+              number_type: PAN
+            status: CREATED
+            created_at: '2023-10-01T12:00:00+00:00'
+            updated_at: '2023-10-01T12:00:00+00:00'
+      x-scope:
+      - scope: payment_acceptance:read
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Payment Methods
+      x-urlPath: list
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/payment_methods/{id}/update:
+    post:
+      tags:
+      - Payment Acceptance > Payment Methods
+      summary: 4|Update a Payment Method
+      description: Depending on the `payment_method_type`, you may update some of the details contained within.
+      operationId: updatePaymentMethod
+      parameters:
+      - name: id
+        in: path
+        description: Payment Method to update.
+        required: true
+        schema:
+          type: string
+          default: mtd_unun8upp2g4yc1lzax4
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - card
+              - request_id
+              properties:
+                card:
+                  type: object
+                  description: Card information. This must be provided.
+                  properties:
+                    billing:
+                      type: object
+                      description: Billing information.
+                      properties:
+                        address:
+                          type: object
+                          required:
+                          - country_code
+                          description: The billing address as it appears on the credit card issuer’s records.
+                          properties:
+                            city:
+                              type: string
+                              description: City of the address. Maximum of 100 characters.
+                            country_code:
+                              type: string
+                              description: The two-letter country code in ISO 3166-1 alpha-2 format.
+                            postcode:
+                              type: string
+                              description: Postcode of the address. Maximum of 10 characters.
+                            state:
+                              type: string
+                              description: State or province of the address. Maximum of 100 characters.
+                            street:
+                              type: string
+                              description: Street of the address. Maximum of 1000 characters.
+                        email:
+                          type: string
+                          description: Email address of the customer.
+                        first_name:
+                          type: string
+                          description: First name of the customer. Maximum length is 128.
+                        last_name:
+                          type: string
+                          description: Last name of the customer. Maximum length is 128.
+                        phone_number:
+                          type: string
+                          description: Phone number of the customer.
+                    expiry_month:
+                      type: string
+                      description: Two digit number representing the card’s expiration month.
+                    expiry_year:
+                      type: string
+                      description: Four digit number representing the card’s expiration year.
+                request_id:
+                  type: string
+                  description: Unique request identifier specified by the merchant.
+        description: Payment Method update request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentMethod'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/payment_methods/mtd_hkpd1dsjklad5sa/update
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          card:
+            expiry_month: '03'
+            expiry_year: '2035'
+            billing:
+              email: john.doe@example.com
+              phone_number: +1 1234567890
+              first_name: John
+              last_name: Doe
+              address:
+                country_code: US
+                city: San Francisco
+                state: CA
+                street: 1460 Mission St.#02W101
+                postcode: '94103'
+          request_id: 9dbaecc9-24da-41e8-9d48-7f4ef4d1057e
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: mtd_hkpd1dsjklad5sa
+          request_id: ff59b8e3-ea26-4d69-8a2c-a072c02e5235
+          customer_id: cus_hkpd1dsaklad5sa
+          type: card
+          card:
+            expiry_month: '03'
+            expiry_year: '2035'
+            name: John Doe
+            bin: '403550'
+            last4: 0008
+            brand: visa
+            issuer_country_code: US
+            card_type: CREDIT
+            fingerprint: AKvN4TqxI04SNFZ+oYRXaECtDA==
+            billing:
+              first_name: John
+              last_name: Doe
+              email: john.doe@example.com
+              phone_number: +1 1234567890
+              address:
+                country_code: US
+                state: CA
+                city: San Francisco
+                street: 1460 Mission St.#02W101
+                postcode: '94103'
+            issuer_name: JPMorgan Chase
+            is_commercial: false
+            number_type: PAN
+          status: CREATED
+          created_at: '2023-10-01T12:00:00+00:00'
+          updated_at: '2023-10-01T12:00:00+00:00'
+      x-scope:
+      - scope: payment_acceptance:write
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Payment Methods
+      x-urlPath: update
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/payment_methods/{id}/disable:
+    post:
+      tags:
+      - Payment Acceptance > Payment Methods
+      summary: 5|Disable a Payment Method
+      description: Disable Payment Method by unique identifier. The Payment Method status would become `DISABLED`.
+      operationId: paymentMethods_disable
+      parameters:
+      - name: id
+        in: path
+        description: Payment Method unique identifier.
+        required: true
+        schema:
+          type: string
+          default: mtd_unun8upp2g4yc1lzax4
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              properties:
+                request_id:
+                  type: string
+                  description: Unique request identifier specified by the merchant.
+        description: Payment Method disable request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentMethod'
+        '201':
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `duplicate_request`, `invalid_status_for_operation`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url), `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/payment_methods/att_hkpd12a3456hi7/disable
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          request_id: ebd6f3f2-d489-4c2c-9548-8d2a742dc4f7
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: mtd_hkpd1dsjklad5sa
+          request_id: ebd6f3f2-d489-4c2c-9548-8d2a742dc4f7
+          customer_id: cus_hkpd1dsaklad5sa
+          type: card
+          card:
+            expiry_month: '03'
+            expiry_year: '2030'
+            name: John Doe
+            bin: '403550'
+            last4: 0008
+            brand: visa
+            issuer_country_code: US
+            card_type: CREDIT
+            fingerprint: AKvN4TqxI04SNFZ+oYRXaECtDA==
+            billing:
+              first_name: John
+              last_name: Doe
+              email: john.doe@example.com
+              phone_number: +1 1234567890
+              address:
+                country_code: US
+                state: CA
+                city: San Francisco
+                street: 1460 Mission St.#02W101
+                postcode: '94103'
+            issuer_name: JPMorgan Chase
+            is_commercial: false
+            number_type: PAN
+          status: DISABLED
+          created_at: '2023-10-01T12:00:00+00:00'
+          updated_at: '2023-10-01T12:00:00+00:00'
+      x-scope:
+      - scope: payment_acceptance:write
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Payment Methods
+      x-urlPath: disable
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    BacsDirectDebitAddress:
+      type: object
+      required:
+      - line1
+      - postcode
+      - town
+      properties:
+        country_code:
+          type: string
+          description: Country code of the address. Use the two-character ISO Standard Country Codes. One of `GB`, `US`. Default to `GB` if not provided.
+        line1:
+          type: string
+          description: House number and street name, e.g., `777 Casino Drive`.
+        line2:
+          type: string
+          description: Locality name, e.g., `Apartment 123`.
+        postcode:
+          type: string
+          description: Postcode of the address.
+        state:
+          type: string
+          description: State or province of the address. Should be provided if country code is `US`. Use the two-character ISO3166-2:US state code.
+        town:
+          type: string
+          description: Post town.
+      description: Account holder's address.
+    AuthenticationMethod:
+      type: object
+      required:
+      - type
+      properties:
+        emv:
+          $ref: '#/components/schemas/Emv'
+          description: EMV data.
+        three_ds:
+          $ref: '#/components/schemas/ThreeDomainSecure'
+          description: 3D-Secure authentication data.
+        type:
+          type: string
+          description: The authentication method type. One of `CRYPTOGRAM_3DS`, `PAN_ONLY`.
+      description: Authentication method.
+    Applepay:
+      type: object
+      properties:
+        billing:
+          $ref: '#/components/schemas/Billing'
+          description: Billing information.
+        lifecycle_id:
+          type: string
+          description: Identifier used to link the transaction to the original or previous transaction in a subscription or card-on-file chain. Currently supported only for Mastercard.
+        payment_data_type:
+          type: string
+          description: Type of the payment data details. One of `tokenized_card` or `encrypted_payment_token`.
+        tokenized_card:
+          $ref: '#/components/schemas/TokenizedCard'
+          description: Payment data with the tokenized card details.
+      description: Apple pay information.
+    Payment_Acceptance_Address:
+      type: object
+      required:
+      - country_code
+      properties:
+        city:
+          type: string
+          description: City of the address. Maximum of 100 characters.
+        country_code:
+          type: string
+          description: The two-letter country code in ISO 3166-1 alpha-2 format.
+        postcode:
+          type: string
+          description: Postcode of the address. Maximum of 10 characters.
+        state:
+          type: string
+          description: State or province of the address. Maximum of 100 characters.
+        street:
+          type: string
+          description: Street of the address. Maximum of 1000 characters.
+      description: The billing address as it appears on the credit card issuer’s records.
+    ThreeDomainSecure:
+      type: object
+      required:
+      - online_payment_cryptogram
+      properties:
+        eci_indicator:
+          type: string
+          description: Electronic Commerce Indicator, as defined by 3-D Secure.
+        online_payment_cryptogram:
+          type: string
+          description: Online payment cryptogram, as defined by 3-D Secure.
+      description: 3D-Secure authentication data.
+    MicroDepositResult:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The status of micro_deposit.
+      description: The result of micro deposit.
+    BecsDirectDebit:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: 4-9 digits number to identify a bank account in Australia.
+        bsb_number:
+          type: string
+          description: 6-digit Bank-State-Branch number.
+        business_account:
+          type: boolean
+          description: Indicate whether the account is a business account.
+        micro_debit:
+          $ref: '#/components/schemas/MicroDebitResult'
+          description: The result of micro debit.
+        micro_deposit:
+          $ref: '#/components/schemas/MicroDepositResult'
+          description: The result of micro deposit.
+        owner_email:
+          type: string
+          description: Account holder's email.
+        owner_name:
+          type: string
+          description: Account holder name.
+      description: BECS Direct Debit information.
+    EftDirectDebit:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: 4-17 digits number to identify a bank account in Canada.
+        business_account:
+          type: boolean
+          description: Indicate whether the account is a business account.
+        institution_number:
+          type: string
+          description: 3-digit number to identify a bank institution in Canada.
+        micro_debit:
+          $ref: '#/components/schemas/MicroDebitResult'
+          description: The result of micro debit.
+        micro_deposit:
+          $ref: '#/components/schemas/MicroDepositResult'
+          description: The result of micro deposit.
+        owner_email:
+          type: string
+          description: Email of the account holder.
+        owner_name:
+          type: string
+          description: Name of the account holder.
+        transit_number:
+          type: string
+          description: Identify a bank branch transit in Canada.
+      description: EFT Direct Debit information.
+    BacsDirectDebit:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: 8 digits number to identify a bank account in the UK.
+        address:
+          $ref: '#/components/schemas/BacsDirectDebitAddress'
+          description: Account holder's address.
+        bank_name:
+          type: string
+          description: Bank of the account. You can call [API to retrieve the available bank names](/docs/api/payments/config/banks).
+        business_account:
+          type: boolean
+          description: Indicate whether the account is a business account.
+        micro_deposit:
+          $ref: '#/components/schemas/MicroDepositResult'
+          description: The result of micro deposit.
+        owner_email:
+          type: string
+          description: Email of the account holder.
+        owner_name:
+          type: string
+          description: Name of the account holder.
+        sort_code:
+          type: string
+          description: 6-digit number to identify a bank in the UK.
+      description: BACS Direct Debit information.
+    AchDirectDebit:
+      type: object
+      properties:
+        aba_routing_number:
+          type: string
+          description: 9-digit number to identify a bank in the US.
+        account_number:
+          type: string
+          description: 4-17 digits number to identify a bank account in the US.
+        business_account:
+          type: boolean
+          description: Indicate whether the account is a business account.
+        micro_debit:
+          $ref: '#/components/schemas/MicroDebitResult'
+          description: The result of micro debit.
+        micro_deposit:
+          $ref: '#/components/schemas/MicroDepositResult'
+          description: The result of micro deposit.
+        owner_email:
+          type: string
+          description: Email of the account holder.
+        owner_name:
+          type: string
+          description: Name of the account holder.
+      description: ACH Direct Debit information.
+    Billing:
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/Payment_Acceptance_Address'
+          description: The billing address as it appears on the credit card issuer’s records.
+        date_of_birth:
+          type: string
+          description: 'Date of birth of the customer in the format: YYYY-MM-DD.'
+        email:
+          type: string
+          description: Email address of the customer.
+        first_name:
+          type: string
+          description: First name of the customer.
+        last_name:
+          type: string
+          description: Last name of the customer.
+        phone_number:
+          type: string
+          description: Phone number of the customer.
+      description: Billing information.
+    Payment_Acceptance_Card:
+      type: object
+      properties:
+        additional_info:
+          $ref: '#/components/schemas/CardAdditionalInfo'
+          description: Additional information of external network token requestor. Would return when number_type is `EXTERNAL_NETWORK_TOKEN`.
+        billing:
+          $ref: '#/components/schemas/Billing'
+          description: Billing information.
+        bin:
+          type: string
+          description: Bank identify number of this card.
+        brand:
+          type: string
+          description: Brand of the card. One of `mastercard`, `visa`, `union pay`, `american express`, `jcb`, `discover`, `diners club international`.
+        card_type:
+          type: string
+          description: Funding type of the card.
+        expiry_month:
+          type: string
+          description: Two digit number representing the card’s expiration month.
+        expiry_year:
+          type: string
+          description: Four digit number representing the card’s expiration year.
+        fingerprint:
+          type: string
+          description: Fingerprint of the card.
+        is_commercial:
+          type: boolean
+          description: A boolean field referring whether the card is commercial or not.
+        issuer_country_code:
+          type: string
+          description: Country code of the card issuer.
+        issuer_name:
+          type: string
+          description: Issuer name.
+        korean_card:
+          $ref: '#/components/schemas/KoreanCardData'
+          description: Information for Korean Card.
+        last4:
+          type: string
+          description: Last four digits of the card number.
+        lifecycle_id:
+          type: string
+          description: Identifier used to link the transaction to the original or previous transaction in a subscription or card-on-file chain. Currently supported only for Mastercard.
+        name:
+          type: string
+          description: Card holder name.
+        number_type:
+          type: string
+          description: Type of the number. One of `PAN`, `EXTERNAL_NETWORK_TOKEN`, `AIRWALLEX_NETWORK_TOKEN`.
+      description: Card information. Only provided when `type` is `card`.
+    MicroDebitResult:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The status of micro_debit.
+      description: The result of micro debit.
+    Emv:
+      type: object
+      required:
+      - emv_data
+      properties:
+        emv_data:
+          type: string
+          description: Output from the Secure Element.
+        encrypted_pin_data:
+          type: string
+          description: The PIN encrypted using the bank’s key.
+      description: EMV data.
+    Googlepay:
+      type: object
+      properties:
+        billing:
+          $ref: '#/components/schemas/Billing'
+          description: Billing information.
+        lifecycle_id:
+          type: string
+          description: Identifier used to link the transaction to the original or previous transaction in a subscription or card-on-file chain. Currently supported only for Mastercard.
+        payment_data_type:
+          type: string
+          description: Type of the payment data details. One of `tokenized_card` or `encrypted_payment_token`.
+        tokenized_card:
+          $ref: '#/components/schemas/TokenizedCard'
+          description: Payment data with the tokenized card details.
+      description: Google pay information.
+    SepaDirectDebitAddress:
+      type: object
+      required:
+      - postcode
+      - street
+      - town
+      properties:
+        country_code:
+          type: string
+          description: Country code of the address. Use the two-character ISO Standard Country Codes.
+        postcode:
+          type: string
+          description: Postcode of the address.
+        street:
+          type: string
+          description: 'street of the address. '
+        town:
+          type: string
+          description: town of the address.
+      description: Account holder's address.
+    CardAdditionalInfo:
+      type: object
+      properties:
+        merchant_verification_value:
+          type: string
+          description: 'Merchant Verification Value (Provided by VISA during onboarding)
+
+            or
+
+            MasterCard Assigned ID (Provided by MasterCard during onboarding).'
+        token_requestor_id:
+          type: string
+          description: Token requestor unique identifier (Provided by card schemes during onboarding).
+      description: Additional information of external network token requestor. Would return when number_type is `EXTERNAL_NETWORK_TOKEN`.
+    TokenizedCard:
+      type: object
+      required:
+      - expiry_month
+      - expiry_year
+      properties:
+        authentication_method:
+          $ref: '#/components/schemas/AuthenticationMethod'
+          description: Authentication method.
+        bin:
+          type: string
+          description: Bank identify number of this card.
+        brand:
+          type: string
+          description: Brand of the card. One of `visa`, `mastercard`, `maestro`, `chinaunionpay`.
+        device_manufacturer_identifier:
+          type: string
+          description: Device manufacturer identifier.
+        expiry_month:
+          type: string
+          description: Two digit number representing the card’s expiration month.
+        expiry_year:
+          type: string
+          description: Four digit number representing the card’s expiration year.
+        fingerprint:
+          type: string
+          description: Fingerprint of the card.
+        is_commercial:
+          type: boolean
+          description: A boolean field referring whether the card is commercial or not.
+        issuer_country_code:
+          type: string
+          description: Country code of the card issuer.
+        issuer_name:
+          type: string
+          description: Issuer name.
+        last4:
+          type: string
+          description: Last four digits of the card number.
+        name:
+          type: string
+          description: Cardholder name.
+        type:
+          type: string
+          description: The card's type of payment. One of `credit` or `debit`.
+      description: Payment data with the tokenized card details.
+    SepaDirectDebit:
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/SepaDirectDebitAddress'
+          description: Account holder's address.
+        bank_name:
+          type: string
+          description: Bank of the account. You can call [API to retrieve the available bank names](/docs/api/payments/config/banks).
+        business_account:
+          type: boolean
+          description: Indicate whether the account is a business account.
+        country_code:
+          type: string
+          description: The 2-letter ISO country/region code from which the consumer will be paying.
+        iban:
+          type: string
+          description: 15–34 characters to identify a bank account.
+        micro_debit:
+          $ref: '#/components/schemas/MicroDebitResult'
+          description: The result of micro debit.
+        micro_deposit:
+          $ref: '#/components/schemas/MicroDepositResult'
+          description: The result of micro deposit.
+        owner_email:
+          type: string
+          description: Email of the account holder.
+        owner_name:
+          type: string
+          description: Name of the account holder.
+      description: SEPA Direct Debit information.
+    KoreanCardData:
+      type: object
+      properties:
+        business_number:
+          type: string
+          description: A 10-digit business number of the company.
+        date_of_birth:
+          type: string
+          description: A 6-digit date of birth in the format of YYMMDD.
+        password_first2:
+          type: string
+          description: Card password first 2 digits.
+      description: Information for Korean Card.
+    PaymentMethod:
+      type: object
+      properties:
+        ach_direct_debit:
+          $ref: '#/components/schemas/AchDirectDebit'
+          description: ACH Direct Debit information. Only provided when `type` is `ach_direct_debit`.
+        applepay:
+          $ref: '#/components/schemas/Applepay'
+          description: Apple pay information. Only provided when `type` is `applepay`.
+        bacs_direct_debit:
+          $ref: '#/components/schemas/BacsDirectDebit'
+          description: BACS Direct Debit information. Only provided when `type` is `bacs_direct_debit`.
+        becs_direct_debit:
+          $ref: '#/components/schemas/BecsDirectDebit'
+          description: BECS Direct Debit information. Only provided when `type` is `becs_direct_debit`.
+        card:
+          $ref: '#/components/schemas/Payment_Acceptance_Card'
+          description: Card information. Only provided when `type` is `card`.
+        created_at:
+          type: string
+          format: date-time
+          description: Time when the Payment Method was created.
+        customer_id:
+          type: string
+          description: The Customer this Payment Method belongs to.
+        eft_direct_debit:
+          $ref: '#/components/schemas/EftDirectDebit'
+          description: EFT Direct Debit information. Only provided when `type` is `eft_direct_debit`.
+        googlepay:
+          $ref: '#/components/schemas/Googlepay'
+          description: Google pay information. Only provided when `type` is `googlepay`.
+        id:
+          type: string
+          description: Unique identifier for the Payment Method.
+        metadata:
+          type: object
+          description: A set of key-value pairs that you can attach to this Payment Method. You can specify up to 50 keys with key names up to 50 characters long and values up to 500 characters long.
+          additionalProperties:
+            type: string
+        request_id:
+          type: string
+          description: Unique request identifier specified by the merchant.
+        sepa_direct_debit:
+          $ref: '#/components/schemas/SepaDirectDebit'
+          description: SEPA Direct Debit information. Only provided when `type` is `sepa_direct_debit`.
+        status:
+          type: string
+          description: Status of the Payment Method. One of `CREATED`, `DISABLED`.
+        type:
+          type: string
+          description: Type of the Payment Method. One of `card`, `applepay`, `googlepay`, `ach_direct_debit`, `bacs_direct_debit`, `becs_direct_debit`, `sepa_direct_debit`, `eft_direct_debit`.
+        updated_at:
+          type: string
+          format: date-time
+          description: Time when the Payment Method was last updated.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

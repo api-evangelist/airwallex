@@ -1,0 +1,443 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Accounting > General Ledger Accounts API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Accounting > General Ledger Accounts
+  description: Manages General Ledger (GL) account entries used when coding Airwallex Spend transactions, such as expenses and bills.
+  x-domain: Accounting
+  x-resource: General Ledger Accounts
+  x-urlPath: accounting/general_ledger_accounts
+paths:
+  /api/v1/accounting/gl_accounts/create:
+    post:
+      tags:
+      - Accounting > General Ledger Accounts
+      summary: 1|Create a General Ledger Account
+      description: Creates a new General Ledger (GL) account for coding Airwallex Spend transactions.
+      operationId: createGLAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              - value
+              properties:
+                request_id:
+                  type: string
+                  description: Unique identifier for this request to ensure idempotency. Generate a random UUID to prevent accidental duplication.
+                code:
+                  type: string
+                  description: General ledger account code.
+                value:
+                  type: string
+                  description: General ledger account name.
+                value_label:
+                  type: string
+                  description: Airwallex display name for the general ledger account.
+                external_id:
+                  type: string
+                  description: External ID from the accounting system.
+                legal_entity_ids:
+                  type: array
+                  description: Legal entity IDs to which this general ledger account applies. Omit this field when it applies to all legal entities.
+                  items:
+                    type: string
+      responses:
+        '201':
+          description: General ledger account created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GLAccount'
+        '400':
+          description: Invalid request.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/accounting/gl_accounts/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          request_id: 4b8d83d6-70c4-429d-8a0b-bb3281f6b17f
+          code: 601022001-2
+          value: Travel Costs-Domestic-Transportation -2
+          value_label: Travel-Domestic-Flight | 601022001
+          external_id: 601022001-2
+          legal_entity_ids:
+          - le_U3jlHqQRNHWn2zAKeeT8sg
+        status_code: 201
+        reason_phrase: Created
+        response_body:
+          id: 985461d5-016f-4e1f-a387-5f1380b42d92
+          code: 601022001-2
+          value: Travel Costs-Domestic-Transportation -2
+          value_label: Travel-Domestic-Flight | 601022001
+          external_id: 601022001-2
+          legal_entity_ids:
+          - le_U3jlHqQRNHWn2zAKeeT8sg
+          status: ACTIVE
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-01-01T00:00:00Z'
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-stage: beta
+      x-scope:
+      - scope: accounting.gl_account:write
+        group: Accounting
+        resource_name: GL Accounts
+      x-domain: Accounting
+      x-resource: General Ledger Accounts
+      x-urlPath: create_gl_accounts
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/accounting/gl_accounts/{id}:
+    get:
+      tags:
+      - Accounting > General Ledger Accounts
+      summary: 2|Retrieve a General Ledger Account
+      description: Retrieves an existing General Ledger (GL) account used in Airwallex Spend.
+      operationId: retrieveGLAccount
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the general ledger account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GLAccount'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/accounting/gl_accounts/985461d5-016f-4e1f-a387-5f1380b42d92
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: 985461d5-016f-4e1f-a387-5f1380b42d92
+          code: 601022001-2
+          value: Travel Costs-Domestic-Transportation -2
+          value_label: Travel-Domestic-Flight | 601022001
+          external_id: 601022001-2
+          legal_entity_ids:
+          - le_U3jlHqQRNHWn2zAKeeT8sg
+          status: ACTIVE
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-02-02T00:00:00Z'
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-stage: beta
+      x-scope:
+      - scope: accounting.gl_account:read
+        group: Accounting
+        resource_name: GL Accounts
+      - scope: accounting.gl_account:write
+        group: Accounting
+        resource_name: GL Accounts
+      x-domain: Accounting
+      x-resource: General Ledger Accounts
+      x-urlPath: retrieve_gl_accounts
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/accounting/gl_accounts:
+    get:
+      tags:
+      - Accounting > General Ledger Accounts
+      summary: 3|List all General Ledger Accounts
+      description: Returns General Ledger (GL) accounts used in Airwallex Spend, filtered by the specified query parameters.
+      operationId: listGLAccounts
+      parameters:
+      - name: page
+        in: query
+        description: A bookmark for use in pagination to retrieve the next or previous page of results.
+        required: false
+        schema:
+          type: string
+      - name: page_size
+        in: query
+        description: The number of items returned per page, between 1 and 100. The default is 100.
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 100
+      - name: status
+        in: query
+        description: Filter by general ledger account status.
+        required: false
+        schema:
+          $ref: '#/components/schemas/AccountingResourceStatus'
+      - name: external_id
+        in: query
+        description: Filter by external ID.
+        required: false
+        schema:
+          type: string
+      - name: legal_entity_id
+        in: query
+        description: Filter by legal entity ID.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GLAccountPagination'
+        '400':
+          description: Invalid request.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/accounting/gl_accounts
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - id: 985461d5-016f-4e1f-a387-5f1380b42d92
+            code: 601022001-2
+            value: Travel Costs-Domestic-Transportation -2
+            value_label: Travel-Domestic-Flight | 601022001
+            external_id: 601022001-2
+            legal_entity_ids:
+            - le_U3jlHqQRNHWn2zAKeeT8sg
+            status: ACTIVE
+            created_at: '2025-01-01T00:00:00Z'
+            updated_at: '2025-02-02T00:00:00Z'
+          page_after: eyJwYWdlIjoiMiJ9
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-stage: beta
+      x-scope:
+      - scope: accounting.gl_account:read
+        group: Accounting
+        resource_name: GL Accounts
+      - scope: accounting.gl_account:write
+        group: Accounting
+        resource_name: GL Accounts
+      x-domain: Accounting
+      x-resource: General Ledger Accounts
+      x-urlPath: gl_accounts
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/accounting/gl_accounts/{id}/update:
+    post:
+      tags:
+      - Accounting > General Ledger Accounts
+      summary: 4|Update a General Ledger Account
+      description: Updates an existing General Ledger (GL) account used in Airwallex Spend.
+      operationId: updateGLAccount
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the general ledger account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - value
+              - status
+              properties:
+                code:
+                  type: string
+                  description: General ledger account code.
+                value:
+                  type: string
+                  description: General ledger account name.
+                value_label:
+                  type: string
+                  description: Airwallex display name for the general ledger account.
+                external_id:
+                  type: string
+                  description: External ID from the accounting system.
+                legal_entity_ids:
+                  type: array
+                  description: Legal entity IDs to which this general ledger account applies. Omit this field when it applies to all legal entities.
+                  items:
+                    type: string
+                status:
+                  $ref: '#/components/schemas/AccountingResourceStatus'
+      responses:
+        '200':
+          description: General ledger account updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GLAccount'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/accounting/gl_accounts/985461d5-016f-4e1f-a387-5f1380b42d92/update
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          code: 601022001-2
+          value: Travel Costs-Domestic-Transportation -2
+          value_label: Travel-Domestic-Flight | 601022001
+          external_id: 601022001-2
+          legal_entity_ids:
+          - le_U3jlHqQRNHWn2zAKeeT8sg
+          status: ACTIVE
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: 985461d5-016f-4e1f-a387-5f1380b42d92
+          code: 601022001-2
+          value: Travel Costs-Domestic-Transportation -2
+          value_label: Travel-Domestic-Flight | 601022001
+          external_id: 601022001-2
+          legal_entity_ids:
+          - le_U3jlHqQRNHWn2zAKeeT8sg
+          status: ACTIVE
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-02-02T00:00:00Z'
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-stage: beta
+      x-scope:
+      - scope: accounting.gl_account:write
+        group: Accounting
+        resource_name: GL Accounts
+      x-domain: Accounting
+      x-resource: General Ledger Accounts
+      x-urlPath: update_gl_accounts
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    GLAccount:
+      type: object
+      required:
+      - id
+      - value
+      - status
+      - created_at
+      - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the general ledger account.
+        code:
+          type: string
+          description: General ledger account code.
+        value:
+          type: string
+          description: General ledger account name.
+        value_label:
+          type: string
+          description: Airwallex display name for the general ledger account.
+        external_id:
+          type: string
+          description: External ID from the accounting system.
+        legal_entity_ids:
+          type: array
+          description: Legal entity IDs to which this general ledger account applies. Omit this field when it applies to all legal entities.
+          items:
+            type: string
+        status:
+          $ref: '#/components/schemas/AccountingResourceStatus'
+        created_at:
+          type: string
+          description: Time at which the general ledger account was created, in ISO 8601 format.
+        updated_at:
+          type: string
+          description: Time at which the general ledger account was last updated, in ISO 8601 format.
+      description: General Ledger (GL) account that can be selected when coding Airwallex Spend transactions.
+    AccountingResourceStatus:
+      type: string
+      description: Status of an Accounting resource used in Airwallex Spend.
+      enum:
+      - ACTIVE
+      - ARCHIVED
+    GLAccountPagination:
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          description: List of general ledger accounts returned.
+          items:
+            $ref: '#/components/schemas/GLAccount'
+        page_after:
+          type: string
+          description: A pointer to the end of the page list used to retrieve the next page of results.
+        page_before:
+          type: string
+          description: A pointer to the start of the page list used to retrieve the previous page of results.
+      description: Paginated list of General Ledger (GL) accounts.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

@@ -1,0 +1,324 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Finance > Financial Transactions API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Finance > Financial Transactions
+  x-domain: Finance
+  x-resource: Financial Transactions
+  x-urlPath: finance/financial_transactions
+paths:
+  /api/v1/financial_transactions/{id}:
+    get:
+      tags:
+      - Finance > Financial Transactions
+      summary: 1|Retrieve a Financial Transaction
+      description: Get a specific financial transaction by an Airwallex financial transaction unique identifier.
+      operationId: retrieveFinancialTransaction
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of financial transaction.
+        required: true
+        schema:
+          type: string
+      - name: x-on-behalf-of
+        in: header
+        description: Unique identifier of the connected sub account.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoreBankingFinancialTransaction'
+        '401':
+          description: '`credentials_invalid`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: '`not_found`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: '`service_unavailable`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/financial_transactions/financial_transaction_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          amount: 200.21
+          batch_id: bat_20201202_SGD_2
+          client_rate: 6.93
+          created_at: '2021-03-22T16:08:02'
+          currency: CNY
+          currency_pair: AUDUSD
+          description: deposit to.
+          estimated_settled_at: '2021-03-22T16:08:02'
+          fee: 0
+          funding_source_id: 99d23411-234-22dd-23po-13sd7c267b9e
+          id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          net: 100.21
+          settled_at: '2021-03-22T16:08:02'
+          source_id: 9f687fe6-dcf4-4462-92fa-80335301d9d2
+          source_type: PAYMENT_ATTEMPT
+          status: PENDING
+          transaction_type: PAYMENT
+      x-scope:
+      - scope: financial_transaction:read
+        group: Finance
+        resource_name: Financial Transactions
+      x-domain: Finance
+      x-resource: Financial Transactions
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/financial_transactions:
+    get:
+      tags:
+      - Finance > Financial Transactions
+      summary: 2|List all Financial Transactions
+      description: Get a list of financial transactions that contributed to the Airwallex account balance from a specified creation date/time, with optional filters on end creation date/time, batch_id and status.
+      operationId: listFinancialTransactions
+      parameters:
+      - name: batch_id
+        in: query
+        description: Batch unique identifier of the financial transaction.
+        required: false
+        schema:
+          type: string
+      - name: currency
+        in: query
+        description: The currency (3-letter ISO-4217 code) of the financial transaction.
+        required: false
+        schema:
+          type: string
+      - name: from_created_at
+        in: query
+        description: The start time of `created_at` in ISO8601 format (inclusive).
+        required: false
+        schema:
+          type: string
+      - name: page_num
+        in: query
+        description: Page number, default is 0, max is 2000.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of results per page, default is 100, max is 1000.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: source_id
+        in: query
+        description: The source unique identifier of the transaction.
+        required: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: 'Status of the financial transaction, one of: `PENDING`, `SETTLED`.'
+        required: false
+        schema:
+          type: string
+      - name: to_created_at
+        in: query
+        description: The end time of `created_at` in ISO8601 format (inclusive).
+        required: false
+        schema:
+          type: string
+      - name: x-on-behalf-of
+        in: header
+        description: Unique identifier of the connected sub account.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: List items.
+                    items:
+                      $ref: '#/components/schemas/CoreBankingFinancialTransaction'
+        '400':
+          description: '`invalid_argument`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '`credentials_invalid`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: '`service_unavailable`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/financial_transactions
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: true
+          items:
+          - amount: 200.21
+            batch_id: bat_20201202_SGD_2
+            client_rate: 6.93
+            created_at: '2021-03-22T16:08:02'
+            currency: CNY
+            currency_pair: AUDUSD
+            description: deposit to.
+            estimated_settled_at: '2021-03-22T16:08:02'
+            fee: 0
+            funding_source_id: 99d23411-234-22dd-23po-13sd7c267b9e
+            id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+            net: 100.21
+            settled_at: '2021-03-22T16:08:02'
+            source_id: 9f687fe6-dcf4-4462-92fa-80335301d9d2
+            source_type: PAYMENT_ATTEMPT
+            status: PENDING
+            transaction_type: PAYMENT
+      x-scope:
+      - scope: financial_transaction:read
+        group: Finance
+        resource_name: Financial Transactions
+      x-domain: Finance
+      x-resource: Financial Transactions
+      x-urlPath: list
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    CoreBankingFinancialTransaction:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: Gross amount the transaction.
+        batch_id:
+          type: string
+          description: The batch unique identifier of the settlement that the transaction belongs to.
+        client_rate:
+          type: number
+          description: The client rate for the transaction.
+        created_at:
+          type: string
+          format: date-time
+          description: The time this transaction was created at.
+        currency:
+          type: string
+          description: Currency the transaction should be made in (3-letter ISO-4217 code).
+        currency_pair:
+          type: string
+          description: The currency pair that the `client_rate` is quoted in.
+        description:
+          type: string
+          description: The description of the transaction.
+        estimated_settled_at:
+          type: string
+          format: date-time
+          description: The time when the transaction will be settled at.
+        fee:
+          type: number
+          description: Fee paid for the transaction.
+        funding_source_id:
+          type: string
+          description: The unique identifier of the funding source from which the transaction originated.
+        id:
+          type: string
+          description: Unique identifier  of the transaction.
+        net:
+          type: number
+          description: Net amount of the transaction.
+        settled_at:
+          type: string
+          format: date-time
+          description: The time when the transaction was settled at.
+        source_id:
+          type: string
+          description: The source unique identifier of the transaction.
+        source_type:
+          type: string
+          description: "The type of the source transaction, One of `PAYOUT`, `CONVERSION`, `DEPOSIT`, \n            `ADJUSTMENT`, `FEE`, `PAYMENT_ATTEMPT`, `REFUND`, `DISPUTE`, `CHARGE`, `TRANSFER`, `YIELD`, \n            `BATCH_PAYOUT`, `CARD_PURCHASE`, `CARD_REFUND`, `PURCHASE`, `REFUND_REVERSAL`, `REPAYMENT`, `TRANSFER_OUT`, `TRANSFER_IN`, `TRANSFER_OUT_REVERSAL`, `TRANSFER_IN_REVERSAL`, `WITHHOLDING_TAX`."
+        status:
+          type: string
+          description: One of `PENDING`, `SETTLED`, `CANCELLED` .
+        transaction_type:
+          type: string
+          description: "The type of the transaction, One of `DISPUTE`,\n            `DISPUTE_REVERSAL`, `DISPUTE_LOST`, `REFUND`, `REFUND_REVERSAL`,`REFUND_FAILURE`,\n            `PAYMENT_RESERVE_HOLD`,`PAYMENT_RESERVE_RELEASE`,`PAYOUT`,`PAYOUT_FAILURE`,\n            `PAYOUT_REVERSAL`, `CONVERSION_SELL`, `CONVERSION_BUY`, `CONVERSION_REVERSAL`,\n            `DEPOSIT`, `ADJUSTMENT`, `FEE`, `DD_CREDIT`, `DD_DEBIT`, `DC_CREDIT`, `DC_DEBIT`,\n            `TRANSFER`, `PAYMENT`, `ISSUING_AUTHORISATION_HOLD`,\n            `ISSUING_AUTHORISATION_RELEASE`, `ISSUING_CAPTURE`, `ISSUING_REFUND`, `PURCHASE`,\n            `PREPAYMENT`, `PREPAYMENT_RELEASE`, `REPAYMENT_FUNDING`, `REPAYMENT_DEDUCTION`,\n            `MOR_PAYOUT`, `MOR_PAYOUT_REVERSAL`, `TRANSFER_OUT`, `TRANSFER_IN`,\n            `TRANSFER_OUT_REVERSAL`, `TRANSFER_IN_REVERSAL`,\n            `WITHHOLDING_TAX`, `WITHHOLDING_TAX_REVERSAL`."
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

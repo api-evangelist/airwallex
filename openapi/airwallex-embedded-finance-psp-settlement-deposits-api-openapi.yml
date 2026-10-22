@@ -1,0 +1,255 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Embedded Finance > PSP Settlement Deposits API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Embedded Finance > PSP Settlement Deposits
+  description: 'A PSP Settlement Deposit is a deposit made by a PSP into a holding account. It is associated with a PSP Settlement Intent.
+
+
+    Airwallex provides the Platform with a **holding account**, set up by a Airwallex Solutions Engineer. Platforms pass payment details to a pay-in PSP for funds acquired by PSPs to be deposited to Airwallex.
+
+
+    PSP Settlement Deposits form part of the PSP-agnostic payout solution.'
+  x-domain: Embedded Finance
+  x-resource: PSP Settlement Deposits
+  x-urlPath: scale/psp_settlement_deposits
+paths:
+  /api/v1/psp_settlement_deposits:
+    get:
+      tags:
+      - Embedded Finance > PSP Settlement Deposits
+      summary: 1|List all PSP Settlement Deposits
+      description: Get a list of PSP settlement deposits sent to your account. The deposits returned are sorted by deposit time in descending order.
+      operationId: listPspSettlementDeposits
+      x-oboSupported: false
+      parameters:
+      - name: deposit_id
+        in: query
+        description: Unique identifier of the deposit.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: from_deposited_at
+        in: query
+        description: The start date of `deposited_at` in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: global_account_id
+        in: query
+        description: Global account unique identifier to which the funds were sent.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: holding_account_id
+        in: query
+        description: Holding account unique identifier into which the funds were deposited.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: page_num
+        in: query
+        description: Page number, starts from 0.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of results per page. Default value is 100, minimum 10, maximum 100.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: status
+        in: query
+        description: PSP Settlement Deposit status. One of `NEW`, `MATCHED`, or `ACTION_REQUIRED`.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: to_deposited_at
+        in: query
+        description: The end date of `deposited_at` in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettlementDeposit'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid","credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/psp_settlement_deposits
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          amount: '10000'
+          currency: AUD
+          deposit_id: 90b98dc6-63a0-403f-816b-ac5305b42a11
+          deposited_at: 2022-09-22T16:08:02+1100
+          global_account_id: 3f457fe5-daf4-9962-92ec-10332301d9p3
+          holding_account_id: acct_wst1AJZWbOx2Ijf-PDS123w
+          payer:
+            name: <string>
+          psp_settlement_intent_id: psi_0iBwL9IuOZaKCz8Kn-01ew
+          reference: PMT1936398
+          requirements:
+            matching_psp_settlement_required:
+              message: <string>
+            psp_settlement_intent_required:
+              message: <string>
+            reference_disambiguation_required:
+              message: <string>
+          status: ACTION_REQUIRED
+      x-oauthSupported: false
+      x-scope:
+      - scope: psp_settlement_deposit:read
+        group: Embedded Finance
+        resource_name: PSP Settlement Deposits
+      x-domain: Embedded Finance
+      x-resource: PSP Settlement Deposits
+      x-urlPath: list
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    SettlementDepositRequirements:
+      type: object
+      properties:
+        matching_psp_settlement_required:
+          $ref: '#/components/schemas/MatchingPspSettlementRequired'
+          description: The amount of associated PSP settlement deposits does not match the amount of the PSP settlement intent.
+        psp_settlement_intent_required:
+          $ref: '#/components/schemas/PspSettlementIntentRequired'
+          description: Awaiting a PSP settlement intent.
+        reference_disambiguation_required:
+          $ref: '#/components/schemas/ReferenceDisambiguationRequired'
+          description: PSP settlement deposit reference corresponds to multiple PSP settlement intents. Please specify in the PSP settlement intents which PSP settlement deposits correspond to them.
+      description: Further actions required in order to proceed with this PSP settlement deposit.
+    Embedded_Finance_Payer:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the payer.
+      description: The Payer provided along with the deposit.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    MatchingPspSettlementRequired:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Information about this requirement.
+      description: The amount of associated PSP settlement deposits does not match the amount of the PSP settlement intent.
+    SettlementDeposit:
+      type: object
+      properties:
+        amount:
+          type: string
+          description: Amount of the PSP settlement deposit.
+        currency:
+          type: string
+          description: Currency (3-letter ISO-4217 code) of the PSP settlement deposit.
+        deposit_id:
+          type: string
+          description: The unique identifier of the deposit associated with this PSP settlement deposit.
+        deposited_at:
+          type: string
+          description: The time this deposit was created.
+        global_account_id:
+          type: string
+          description: The unique identifier of the global account to which the funds were sent.
+        holding_account_id:
+          type: string
+          description: Holding account unique identifier into which the funds were deposited.
+        payer:
+          $ref: '#/components/schemas/Embedded_Finance_Payer'
+          description: The Payer provided along with the deposit.
+        psp_settlement_intent_id:
+          type: string
+          description: The unique identifier of the PSP settlement intent, if any, associated with this PSP settlement deposit.
+        reference:
+          type: string
+          description: Reference provided along with the deposit, which will be used to associate this PSP settlement deposit with PSP settlement splits.
+        requirements:
+          $ref: '#/components/schemas/SettlementDepositRequirements'
+          description: Further actions required in order to proceed with this PSP settlement deposit.
+        status:
+          type: string
+          description: 'Status of the PSP settlement deposit. One of: `NEW`, `ACTION_REQUIRED`, `MATCHED`, `SETTLED`.'
+    ReferenceDisambiguationRequired:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+      description: PSP settlement deposit reference corresponds to multiple PSP settlement intents. Please specify in the PSP settlement intents which PSP settlement deposits correspond to them.
+    PspSettlementIntentRequired:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Information about this requirement.
+      description: Awaiting a PSP settlement intent.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

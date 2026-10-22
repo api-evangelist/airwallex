@@ -1,0 +1,535 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Risk > Watchlist API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Risk > Watchlist
+  description: 'The Watchlist API is an automated tool for transaction verification and fraud prevention. With this API, merchants can create and manage Watchlists of shoppers to automatically accept, verify, or block transactions.
+
+    To add a Watchlist item, please use the ‘create’ endpoint. To make changes to an existing Watchlist item, please use the ‘update’ endpoint. To retrieve a specific item in the Watchlist, please provide the item_id with the ‘get’ endpoint.'
+  x-domain: Risk
+  x-resource: Watchlist
+  x-urlPath: risk/watchlist
+paths:
+  /api/v1/risk/watchlist/{item_id}:
+    get:
+      tags:
+      - Risk > Watchlist
+      summary: 1|Retrieve an Item
+      description: Get a specific Watchlist item by specifying the Airwallex item_id.
+      operationId: retrieveWatchlist
+      x-oboSupported: false
+      parameters:
+      - name: item_id
+        in: path
+        description: item_id of the item to retrieve.
+        required: true
+        schema:
+          type: string
+          default: 46c22228-5831-4c53-a4fa-a3ab4954877c
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListItem'
+        '401':
+          description: Unauthorized
+        '403':
+          description: '["account_not_authorised_for_operation"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: '["resource_not_found"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: '["internal_server_error"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/risk/watchlist/item_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          action: BLOCK
+          created_at: 2023-01-01T00:00:00+0000
+          id: <string>
+          reason: risk concern
+          request_id: <string>
+          status: ACTIVE
+          type: CUSTOMER_EMAIL
+          updated_at: 2023-01-01T00:00:00+0000
+          value: testblock@123.com
+      x-scope:
+      - scope: risk.watchlist:read
+        group: Risk
+        resource_name: Watchlist
+      - scope: risk.watchlist:write
+        group: Risk
+        resource_name: Watchlist
+      x-domain: Risk
+      x-resource: Watchlist
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/risk/watchlist:
+    get:
+      tags:
+      - Risk > Watchlist
+      summary: 2|List all Items
+      description: Get list of items with optional filters, sorted by the item creation date in descending order.
+      operationId: listWatchlist
+      x-oboSupported: false
+      parameters:
+      - name: action
+        in: query
+        description: Filter on action of Watchlist item.
+        required: false
+        schema:
+          type: string
+      - name: from_created_at
+        in: query
+        description: The start date of created_at in ISO8601 format (yyyy-MM-dd'T'HH:mm:ssZ). The default is 30 days before `to_create_at`.
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: page
+        in: query
+        description: A bookmark for use in pagination to retrieve either the next page or the previous page of results. You can fetch the value for this identifier from the response of the previous API call. To retrieve the next page of results, pass the value of page_after (if not null) from the response to a subsequent call. To retrieve the previous page of results, pass the value of page_before (if not null) from the response to a subsequent call.
+        required: false
+        schema:
+          type: string
+      - name: page_size
+        in: query
+        description: A limit on the number of records to be returned on a page, between 1 and 2000. The default is 100.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 2000
+      - name: status
+        in: query
+        description: Filter on status of Watchlist item.
+        required: false
+        schema:
+          type: string
+      - name: to_created_at
+        in: query
+        description: The end date of created_at in ISO8601 format (yyyy-MM-dd'T'HH:mm:ssZ). The default is current time.
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: type
+        in: query
+        description: Filter on type of Watchlist item.
+        required: false
+        schema:
+          type: string
+      - name: value
+        in: query
+        description: Filter on value of Watchlist item.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListCursorBasedPagedQueryResult'
+        '400':
+          description: '["invalid_operation"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+        '403':
+          description: '["account_not_authorised_for_operation"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: '["resource_not_found"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: '["internal_server_error"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/risk/watchlist
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - action: BLOCK
+            created_at: 2023-01-01T00:00:00+0000
+            reason: risk concern
+            status: ACTIVE
+            type: CUSTOMER_EMAIL
+            updated_at: 2023-01-01T00:00:00+0000
+            value: testblock@123.com
+          page_after: YWZ0ZXI9MTk5MTI3NzEtNjRmZi00NjljLTlkZTItY2I1MzM1OWU5NWZj
+          page_before: YWZ0ZXI9MTk5MTI3NzEtNjRmZi00NjljLTlkZTItY2I1MzM1OWU5NWZj
+      x-scope:
+      - scope: risk.watchlist:read
+        group: Risk
+        resource_name: Watchlist
+      - scope: risk.watchlist:write
+        group: Risk
+        resource_name: Watchlist
+      x-domain: Risk
+      x-resource: Watchlist
+      x-urlPath: list
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/risk/watchlist/{item_id}/update:
+    post:
+      tags:
+      - Risk > Watchlist
+      summary: 3|Update an Item
+      description: Edit an existing Watchlist item stored on the Airwallex platform.
+      operationId: updateWatchlist
+      x-oboSupported: false
+      parameters:
+      - name: item_id
+        in: path
+        description: item_id of the list item to update.
+        required: true
+        schema:
+          type: string
+          default: 46c22228-5831-4c53-a4fa-a3ab4954877c
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              properties:
+                reason:
+                  type: string
+                  description: The reason for adding this item to the Watchlist.
+                request_id:
+                  type: string
+                  description: Unique id for the request.
+                status:
+                  type: string
+                  description: The status of the list item should be one of:`ACTIVE`,`INACTIVE`. Default is:`ACTIVE`.
+                value:
+                  type: string
+                  description: The value of the item corresponding to the correct type.
+        description: listItemUpdateRequest
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListItem'
+        '201':
+          description: Created
+        '400':
+          description: '["invalid_operation"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+        '403':
+          description: '["account_not_authorised_for_operation"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: '["resource_not_found"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: '["list_item_duplicate"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: '["internal_server_error"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/risk/watchlist/item_id/update
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          reason: risk concern
+          request_id: <string>
+          status: ACTIVE
+          value: testblock@123.com
+        response_body:
+          action: BLOCK
+          created_at: 2023-01-01T00:00:00+0000
+          id: <string>
+          reason: risk concern
+          request_id: <string>
+          status: ACTIVE
+          type: CUSTOMER_EMAIL
+          updated_at: 2023-01-01T00:00:00+0000
+          value: testblock@123.com
+      x-scope:
+      - scope: risk.watchlist:write
+        group: Risk
+        resource_name: Watchlist
+      x-domain: Risk
+      x-resource: Watchlist
+      x-urlPath: update
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/risk/watchlist/create:
+    post:
+      tags:
+      - Risk > Watchlist
+      summary: 4|Add an Item to the Watchlist
+      description: Add an item to the Watchlist.
+      operationId: createWatchlist
+      x-oboSupported: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - action
+              - request_id
+              - type
+              - value
+              properties:
+                action:
+                  type: string
+                  description: 'Risk action to be taken by the risk engine: Use `BLOCK`, `VERIFY`, `ACCEPT` to always perform the associated risk action. The risk engine will prioritize actions in the following order: `BLOCK`>`VERIFY`>`ACCEPT`.
+
+                    Please note that `ACCEPT` functionality will only be available to users with good fraud performance and will be subject to reasonable usage limits.'
+                reason:
+                  type: string
+                  description: The reason for adding this item to the Watchlist.
+                request_id:
+                  type: string
+                  description: Unique id for the request.
+                status:
+                  type: string
+                  description: The status of the list item should be one of:`ACTIVE`,`INACTIVE`. Default is:`ACTIVE`.
+                type:
+                  type: string
+                  description: "The type of the Watchlist item: `CARD_BIN`, `CARD_FINGERPRINT`, `CARD_ISSUER_COUNTRY_CODE`, `CUSTOMER_EMAIL`, `CUSTOMER_ID`. \nPlease note that `ACCEPT` Watchlist only supports `CARD_FINGERPRINT`, `CUSTOMER_EMAIL` and `CUSTOMER_ID`. \nThe following data fields are case sensitive: `CARD_FINGERPRINT`, `CUSTOMER_ID`."
+                value:
+                  type: string
+                  description: The value of the item corresponding to the correct type.
+        description: listItemApiRequest
+        required: true
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListItem'
+        '400':
+          description: '["invalid_operation"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+        '403':
+          description: '["account_not_authorised_for_operation"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: '["resource_not_found"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: '["list_item_duplicate"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: '["internal_server_error"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/risk/watchlist/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          action: BLOCK
+          reason: risk concern
+          request_id: request_id
+          status: ACTIVE
+          type: CUSTOMER_EMAIL
+          value: testblock@123.com
+        response_body:
+          action: BLOCK
+          created_at: 2023-01-01T00:00:00+0000
+          id: <string>
+          reason: risk concern
+          request_id: <string>
+          status: ACTIVE
+          type: CUSTOMER_EMAIL
+          updated_at: 2023-01-01T00:00:00+0000
+          value: testblock@123.com
+      x-scope:
+      - scope: risk.watchlist:write
+        group: Risk
+        resource_name: Watchlist
+      x-domain: Risk
+      x-resource: Watchlist
+      x-urlPath: create
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    ListCursorBasedPagedQueryResult:
+      type: object
+      properties:
+        items:
+          type: array
+          description: Paged results.
+          items:
+            $ref: '#/components/schemas/ListItem'
+        page_after:
+          type: string
+          description: The page cursor used for searching after page.
+        page_before:
+          type: string
+          description: The page cursor used for search before page.
+    ListItem:
+      type: object
+      properties:
+        action:
+          type: string
+          description: 'Risk action to be taken by the risk engine: Use `BLOCK`, `VERIFY`, `ACCEPT` to always perform the associated risk action. The risk engine will prioritize actions in the following order: `BLOCK`>`VERIFY`>`ACCEPT`.
+
+            Please note that `ACCEPT` functionality will only be available to users with good fraud performance and will be subject to reasonable usage limits.'
+        created_at:
+          type: string
+          description: The latest timestamp the Watchlist item was created.
+        id:
+          type: string
+          description: Unique identifier for the item.
+        reason:
+          type: string
+          description: The reason for adding this item to the Watchlist.
+        request_id:
+          type: string
+          description: Unique request id for the item.
+        status:
+          type: string
+          description: 'The status of the list item will be one of: `ACTIVE`, `INACTIVE`, `DEACTIVATED`. Default is `ACTIVE`. Some list items may be forcefully `DEACTIVATED` based on fraud performance.'
+        type:
+          type: string
+          description: The type of the Watchlist item.
+        updated_at:
+          type: string
+          description: The latest timestamp the Watchlist item was updated.
+        value:
+          type: string
+          description: The value of the item corresponding to the correct type.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

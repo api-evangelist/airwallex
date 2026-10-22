@@ -1,0 +1,192 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Transactional FX > Rates API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Transactional FX > Rates
+  description: You can retrieve the current rates that a conversion request would be booked at.
+  x-domain: Transactional FX
+  x-resource: Rates
+  x-urlPath: transactional_fx/rates
+paths:
+  /api/v1/fx/rates/current:
+    get:
+      tags:
+      - Transactional FX > Rates
+      summary: 1|Retrieve a Current Rate
+      description: Retrieve a current rate for the buy/sell currency and amount. Note that the amount is validated against the upper conversion limit to ensure that a conversion for the specified amount can be executed.
+      operationId: retrieveCurrent
+      parameters:
+      - name: buy_amount
+        in: query
+        description: Amount the client buys in `buy_currency` (must be blank if `sell_amount` is specified). Defaults to 10000 if neither `buy_amount` or `sell_amount` is specified.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: number
+          default: 10000
+      - name: buy_currency
+        in: query
+        description: Currency (3-letter ISO-4217 code) the client buys.
+        required: true
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: AUD
+      - name: conversion_date
+        in: query
+        description: Date on which the conversion will be settled. `conversion_date` defaults to current date, if funding is available, unless specified.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          format: date
+          default: '2017-04-01'
+      - name: sell_amount
+        in: query
+        description: Amount the client sells in `sell_currency` (must be blank if `buy_amount` is specified).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: number
+      - name: sell_currency
+        in: query
+        description: Currency (3-letter ISO-4217 code) the client sells.  This is the currency you will need to send us by the settlement cutoff time.
+        required: true
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: USD
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FxRates'
+        '400':
+          description: '["amount_above_limit"
+
+            ,"invalid_settlement_date"
+
+            ,"invalid_endpoint"
+
+            ,"invalid_argument"
+
+            ,"unsupported_currency"]'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/fx/rates/current
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          buy_currency: AUD
+          conversion_date: '2017-04-01'
+          created_at: 2019-05-04T02:49:05+0000
+          currency_pair: AUDUSD
+          dealt_currency: AUD
+          rate: 7632
+          rate_details:
+          - buy_amount: 10000
+            level: CLIENT
+            rate: 0.781523
+            sell_amount: 12794.27
+          sell_currency: USD
+      x-scope:
+      - scope: fx.conversion:read
+        group: Transactional FX
+        resource_name: Conversion
+      x-domain: Transactional FX
+      x-resource: Rates
+      x-urlPath: current
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    FxRates:
+      type: object
+      required:
+      - buy_currency
+      - conversion_date
+      - created_at
+      - currency_pair
+      - dealt_currency
+      - rate
+      - rate_details
+      - sell_currency
+      properties:
+        buy_currency:
+          type: string
+          description: Buy currency of the rate (3-letter ISO-4217 code).
+        conversion_date:
+          type: string
+          description: Date on which the conversion will be settled. `conversion_date` defaults to current date, if funding is available, unless specified.
+        created_at:
+          type: string
+          description: The time at which the request was made. Follows the [same timestamp format](/docs/api/data_types) as the rest of Airwallex’s APIs.
+        currency_pair:
+          type: string
+          description: The currency pair that the rate is for.  The direction of the currency pair is per market convention where possible.
+        dealt_currency:
+          type: string
+          description: The currency where the client provided the exact amount for in the request.
+        rate:
+          type: number
+          description: '`sell_amount` copied from the Rate request (if specified).  Otherwise, this is calculated by multiplying/dividing the `buy_amount` by the FX rate depending on the direction of the currency pair.'
+        rate_details:
+          type: array
+          description: Breakdown of rates at different user levels.
+          items:
+            $ref: '#/components/schemas/RateDetail'
+        sell_currency:
+          type: string
+          description: Sell currency of the rate (3-letter ISO-4217 code).
+    RateDetail:
+      type: object
+      properties:
+        buy_amount:
+          type: number
+          description: The total amount being bought at the respective level.
+        level:
+          type: string
+          enum:
+          - CLIENT
+          - AWX
+          - PLATFORM_CLIENT
+        rate:
+          type: number
+          description: The exchange rate from the respective level's perspective.
+        sell_amount:
+          type: number
+          description: The total amount being sold at the respective level.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

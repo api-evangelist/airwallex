@@ -1,0 +1,460 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Accounting > Accounting Field Values API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Accounting > Accounting Field Values
+  description: Manages selectable values for custom accounting fields used when coding Airwallex Spend transactions.
+  x-domain: Accounting
+  x-resource: Accounting Field Values
+  x-urlPath: accounting/accounting_field_values
+paths:
+  /api/v1/accounting/accounting_field_values/create:
+    post:
+      tags:
+      - Accounting > Accounting Field Values
+      summary: 1|Create an Accounting Field Value
+      description: Creates a new accounting field value for coding Airwallex Spend transactions.
+      operationId: createAccountingFieldValue
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              - accounting_field_id
+              - value
+              properties:
+                request_id:
+                  type: string
+                  description: Unique identifier for this request to ensure idempotency. Generate a random UUID to prevent accidental duplication.
+                accounting_field_id:
+                  type: string
+                  format: uuid
+                  description: Unique identifier of the parent accounting field.
+                value:
+                  type: string
+                  description: Accounting field value name.
+                value_label:
+                  type: string
+                  description: Airwallex display name for the accounting field value.
+                external_id:
+                  type: string
+                  description: External ID from the accounting system.
+                legal_entity_ids:
+                  type: array
+                  description: Legal entity IDs to which this accounting field value applies. Omit this field when it applies to all legal entities.
+                  items:
+                    type: string
+      responses:
+        '201':
+          description: Accounting field value created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountingFieldValue'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/accounting/accounting_field_values/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          request_id: 4b8d83d6-70c4-429d-8a0b-bb3281f6b17f
+          accounting_field_id: 985461d5-016f-4e1f-a387-5f1380b42d92
+          value: RSG1
+          value_label: Singapore | RSG1
+          external_id: RSG1
+          legal_entity_ids:
+          - le_U3jlHqQRNHWn2zAKeeT8sg
+        status_code: 201
+        reason_phrase: Created
+        response_body:
+          id: 4b8d83d6-70c4-429d-8a0b-bb3281f6b17f
+          accounting_field_id: 985461d5-016f-4e1f-a387-5f1380b42d92
+          value: RSG1
+          value_label: Singapore | RSG1
+          external_id: RSG1
+          legal_entity_ids:
+          - le_U3jlHqQRNHWn2zAKeeT8sg
+          status: ACTIVE
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-01-01T00:00:00Z'
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-stage: beta
+      x-scope:
+      - scope: accounting.field:write
+        group: Accounting
+        resource_name: Fields
+      x-domain: Accounting
+      x-resource: Accounting Field Values
+      x-urlPath: create
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/accounting/accounting_field_values/{id}:
+    get:
+      tags:
+      - Accounting > Accounting Field Values
+      summary: 2|Retrieve an Accounting Field Value
+      description: Retrieves an existing accounting field value used in Airwallex Spend.
+      operationId: retrieveAccountingFieldValue
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the accounting field value.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountingFieldValue'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/accounting/accounting_field_values/4b8d83d6-70c4-429d-8a0b-bb3281f6b17f
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: 4b8d83d6-70c4-429d-8a0b-bb3281f6b17f
+          accounting_field_id: 985461d5-016f-4e1f-a387-5f1380b42d92
+          value: RSG1
+          value_label: Singapore | RSG1
+          external_id: RSG1
+          legal_entity_ids:
+          - le_U3jlHqQRNHWn2zAKeeT8sg
+          status: ACTIVE
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-02-02T00:00:00Z'
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-stage: beta
+      x-scope:
+      - scope: accounting.field:read
+        group: Accounting
+        resource_name: Fields
+      - scope: accounting.field:write
+        group: Accounting
+        resource_name: Fields
+      x-domain: Accounting
+      x-resource: Accounting Field Values
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/accounting/accounting_field_values:
+    get:
+      tags:
+      - Accounting > Accounting Field Values
+      summary: 3|List all Accounting Field Values
+      description: Returns accounting field values used in Airwallex Spend, filtered by the specified query parameters.
+      operationId: listAccountingFieldValues
+      parameters:
+      - name: accounting_field_id
+        in: query
+        description: Filter by accounting field ID.
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: page
+        in: query
+        description: A bookmark for use in pagination to retrieve the next or previous page of results.
+        required: false
+        schema:
+          type: string
+      - name: page_size
+        in: query
+        description: The number of items returned per page, between 1 and 100. The default is 100.
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 100
+      - name: status
+        in: query
+        description: Filter by accounting field value status.
+        required: false
+        schema:
+          $ref: '#/components/schemas/AccountingResourceStatus'
+      - name: external_id
+        in: query
+        description: Filter by external ID.
+        required: false
+        schema:
+          type: string
+      - name: legal_entity_id
+        in: query
+        description: Filter by legal entity ID.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountingFieldValuePagination'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/accounting/accounting_field_values
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - id: 4b8d83d6-70c4-429d-8a0b-bb3281f6b17f
+            accounting_field_id: 985461d5-016f-4e1f-a387-5f1380b42d92
+            value: RSG1
+            value_label: Singapore | RSG1
+            external_id: RSG1
+            legal_entity_ids:
+            - le_U3jlHqQRNHWn2zAKeeT8sg
+            status: ACTIVE
+            created_at: '2025-01-01T00:00:00Z'
+            updated_at: '2025-02-02T00:00:00Z'
+          page_after: eyJwYWdlIjoiMiJ9
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-stage: beta
+      x-scope:
+      - scope: accounting.field:read
+        group: Accounting
+        resource_name: Fields
+      - scope: accounting.field:write
+        group: Accounting
+        resource_name: Fields
+      x-domain: Accounting
+      x-resource: Accounting Field Values
+      x-urlPath: list
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/accounting/accounting_field_values/{id}/update:
+    post:
+      tags:
+      - Accounting > Accounting Field Values
+      summary: 4|Update an Accounting Field Value
+      description: Updates an existing accounting field value used in Airwallex Spend.
+      operationId: updateAccountingFieldValue
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the accounting field value.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - accounting_field_id
+              - value
+              - status
+              properties:
+                accounting_field_id:
+                  type: string
+                  format: uuid
+                  description: Unique identifier of the parent accounting field.
+                value:
+                  type: string
+                  description: Accounting field value name.
+                value_label:
+                  type: string
+                  description: Airwallex display name for the accounting field value.
+                external_id:
+                  type: string
+                  description: External ID from the accounting system.
+                legal_entity_ids:
+                  type: array
+                  description: Legal entity IDs to which this accounting field value applies. Omit this field when it applies to all legal entities.
+                  items:
+                    type: string
+                status:
+                  $ref: '#/components/schemas/AccountingResourceStatus'
+      responses:
+        '200':
+          description: Accounting field value updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountingFieldValue'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/accounting/accounting_field_values/4b8d83d6-70c4-429d-8a0b-bb3281f6b17f/update
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          accounting_field_id: 985461d5-016f-4e1f-a387-5f1380b42d92
+          value: RSG1
+          value_label: Singapore | RSG1
+          external_id: RSG1
+          legal_entity_ids:
+          - le_U3jlHqQRNHWn2zAKeeT8sg
+          status: ACTIVE
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: 4b8d83d6-70c4-429d-8a0b-bb3281f6b17f
+          accounting_field_id: 985461d5-016f-4e1f-a387-5f1380b42d92
+          value: RSG1
+          value_label: Singapore | RSG1
+          external_id: RSG1
+          legal_entity_ids:
+          - le_U3jlHqQRNHWn2zAKeeT8sg
+          status: ACTIVE
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-02-02T00:00:00Z'
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-stage: beta
+      x-scope:
+      - scope: accounting.field:write
+        group: Accounting
+        resource_name: Fields
+      x-domain: Accounting
+      x-resource: Accounting Field Values
+      x-urlPath: update
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    AccountingFieldValuePagination:
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          description: List of accounting field values returned.
+          items:
+            $ref: '#/components/schemas/AccountingFieldValue'
+        page_after:
+          type: string
+          description: A pointer to the end of the page list used to retrieve the next page of results.
+        page_before:
+          type: string
+          description: A pointer to the start of the page list used to retrieve the previous page of results.
+      description: Paginated list of accounting field values.
+    AccountingResourceStatus:
+      type: string
+      description: Status of an Accounting resource used in Airwallex Spend.
+      enum:
+      - ACTIVE
+      - ARCHIVED
+    AccountingFieldValue:
+      type: object
+      required:
+      - id
+      - accounting_field_id
+      - value
+      - status
+      - created_at
+      - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the accounting field value.
+        accounting_field_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the parent accounting field.
+        value:
+          type: string
+          description: Accounting field value name.
+        value_label:
+          type: string
+          description: Airwallex display name for the accounting field value.
+        external_id:
+          type: string
+          description: External ID from the accounting system.
+        legal_entity_ids:
+          type: array
+          description: Legal entity IDs to which this accounting field value applies. Omit this field when it applies to all legal entities.
+          items:
+            type: string
+        status:
+          $ref: '#/components/schemas/AccountingResourceStatus'
+        created_at:
+          type: string
+          description: Time at which the accounting field value was created, in ISO 8601 format.
+        updated_at:
+          type: string
+          description: Time at which the accounting field value was last updated, in ISO 8601 format.
+      description: Selectable value for a custom accounting field used when coding Airwallex Spend transactions.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

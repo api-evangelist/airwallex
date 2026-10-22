@@ -1,0 +1,573 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Payment Acceptance > Customs Declarations API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Payment Acceptance > Customs Declarations
+  description: The **Customs Declaration** API help merchants to complete customs clearance process as regulation required. This API applies only to China customs requirements and workflows.
+  x-domain: Payment Acceptance
+  x-resource: Customs Declarations
+  x-urlPath: payments/customs_declarations
+paths:
+  /api/v1/pa/customs_declarations/create:
+    post:
+      tags:
+      - Payment Acceptance > Customs Declarations
+      summary: 1|Create a Customs Declaration
+      description: Start the declaration process by creating a customs declaration. Please note that sub_order fields are required. If there is no need to split your original order, please fill the sub_order fields with your original order information for declaration. In this case, remember to use the provider_order_id in the response for your order information/shipment information declaration.
+      operationId: createCustomsDeclaration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - customs_details
+              - payment_intent_id
+              - request_id
+              properties:
+                customs_details:
+                  type: object
+                  required:
+                  - customs_code
+                  - merchant_customs_name
+                  - merchant_customs_number
+                  description: Customs details.
+                  properties:
+                    customs_code:
+                      type: string
+                      description: China customs code, please refer to here for information https://www.airwallex.com/docs/payments/apac/wechat-pay/customs-declaration,https://www.airwallex.com/docs/payments/apac/alipay/customs-declaration.
+                    merchant_customs_name:
+                      type: string
+                      description: Merchant's registered name in customs system. Maximum length is 256.
+                    merchant_customs_number:
+                      type: string
+                      description: Merchant's registered number in customs system. Maximum length is 32.
+                payment_intent_id:
+                  type: string
+                  description: Unique identifier of the payment intent on which customs declaration will be created.
+                request_id:
+                  type: string
+                  description: Unique request identifier specified by the merchant. Maximum length is 64.
+                shopper_details:
+                  type: object
+                  required:
+                  - shopper_id
+                  - shopper_name
+                  description: Shopper details. Will be used for shopper identity check.
+                  properties:
+                    shopper_id:
+                      type: string
+                      description: Mainland China unique identifier of the shopper.
+                    shopper_name:
+                      type: string
+                      description: Name of the shopper in simplified Chinese.
+                sub_order:
+                  type: object
+                  required:
+                  - amount
+                  - currency
+                  - order_number
+                  - shipping_fee
+                  description: Suborder info, required when there are split orders.
+                  properties:
+                    amount:
+                      type: number
+                      description: The total amount of your sub_order, shipping fee shall be included, unit is Yuan. Please refer to [supported currencies](/docs/payments/supported-currencies) for supported minor units.
+                    currency:
+                      type: string
+                      description: Currency for the suborder, only CNY supported now.
+                    order_number:
+                      type: string
+                      description: Suborder number in merchant system. Maximum length is 128.
+                    provider_order_id:
+                      type: string
+                      description: 'The unique transaction identifier assigned by the provider for your sub_order. Please use this field as the provider transaction no. for your order information/shipment information’s declaration. Example of our providers: Cards, WeChat, Alipay etc.'
+                    shipping_fee:
+                      type: number
+                      description: Suborder transport fee, unit is Yuan.
+        description: Customs declaration request.
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomsDeclaration'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `duplicate_request`, `resource_already_exists`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/customs_declarations/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          request_id: ac88c53b-f1bd-479b-a1b8-2686db548b39
+          payment_intent_id: int_hkpdskz7vg1xc7uscdj
+          customs_details:
+            customs_code: GUANGZHOU_ZS
+            merchant_customs_name: Airwallex
+            merchant_customs_number: C129000000
+          sub_order:
+            amount: 10
+            currency: USD
+            order_number: o100001213
+            provider_order_id: T912345678901234569
+            shipping_fee: 0
+        status_code: 201
+        reason_phrase: Created
+        response_body:
+          id: cdc_hkpdkjd4t98sa
+          request_id: ac88c53b-f1bd-479b-a1b8-2686db548b39
+          status: UNDECLARED
+          payment_method_type: card
+          provider_transaction_id: t202401091234567890123456789
+          awx_request_id: '1234567890123456789'
+          verification_department_code: OTHERS
+          verification_department_transaction_id: tx1202401091234567890123456789
+          customs_details:
+            customs_code: GUANGZHOU_ZS
+            merchant_customs_number: C129000000
+            merchant_customs_name: Airwallex
+          sub_order:
+            order_number: o100001213
+            provider_order_id: T912345678901234569
+            amount: 10
+            shipping_fee: 0
+            currency: USD
+          shopper_identity_check_result: UNCHECKED
+          created_at: '2024-01-31T06:59:10+00:00'
+          updated_at: '2024-01-31T06:59:10+00:00'
+      x-scope:
+      - scope: customs_declaration:write
+        group: Payment Acceptance
+        resource_name: Customs Declarations
+      x-domain: Payment Acceptance
+      x-resource: Customs Declarations
+      x-urlPath: create
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/customs_declarations/{id}:
+    get:
+      tags:
+      - Payment Acceptance > Customs Declarations
+      summary: 2|Retrieve a Customs Declaration
+      description: Retrieve an existing customs declaration.
+      operationId: retrieveCustomsDeclaration
+      parameters:
+      - name: id
+        in: path
+        description: Customs Declaration unique identifier.
+        required: true
+        schema:
+          type: string
+          default: cdc_ps8e0ZgQzd2QnCxVpzJrHD6KOVu
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomsDeclaration'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url), `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/customs_declarations/cdc_hkpdkjd4t98sa
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: cdc_hkpdkjd4t98sa
+          request_id: 4dd119d8-331d-41a0-b037-122f0113b227
+          status: DECLARED
+          payment_method_type: card
+          provider_transaction_id: t202401091234567890123456789
+          awx_request_id: '1234567890123456789'
+          verification_department_code: OTHERS
+          verification_department_transaction_id: tx1202401091234567890123456789
+          customs_details:
+            customs_code: GUANGZHOU_ZS
+            merchant_customs_number: C129000000
+            merchant_customs_name: Airwallex
+          sub_order:
+            order_number: o100001213
+            provider_order_id: T912345678901234569
+            amount: 10
+            shipping_fee: 0
+            currency: USD
+          shopper_identity_check_result: UNCHECKED
+          created_at: '2024-01-31T06:59:10+00:00'
+          updated_at: '2024-01-31T06:59:10+00:00'
+      x-scope:
+      - scope: customs_declaration:read
+        group: Payment Acceptance
+        resource_name: Customs Declarations
+      - scope: customs_declaration:write
+        group: Payment Acceptance
+        resource_name: Customs Declarations
+      x-domain: Payment Acceptance
+      x-resource: Customs Declarations
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/customs_declarations/{id}/update:
+    post:
+      tags:
+      - Payment Acceptance > Customs Declarations
+      summary: 3|Update a Customs Declaration
+      description: Update an existing customs declaration. `SHANGHAI_CBT` does not support update after a successful declaration.
+      operationId: updateCustomsDeclaration
+      parameters:
+      - name: id
+        in: path
+        description: id.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              properties:
+                customs_code:
+                  type: string
+                  description: China customs code.
+                merchant_customs_name:
+                  type: string
+                  description: Merchant's registered name in customs system. Maximum length is 256.
+                merchant_customs_number:
+                  type: string
+                  description: Merchant's registered number in customs system. Maximum length is 32.
+                request_id:
+                  type: string
+                  description: Unique request identifier specified by the merchant. Maximum length is 64.
+                shopper_details:
+                  type: object
+                  required:
+                  - shopper_id
+                  - shopper_name
+                  description: Shopper details. Will be used to update shopper identity check information.
+                  properties:
+                    shopper_id:
+                      type: string
+                      description: Mainland China unique identifier of the shopper.
+                    shopper_name:
+                      type: string
+                      description: Name of the shopper in simplified Chinese.
+                sub_order_amount:
+                  type: number
+                  description: Suborder amount. Please refer to [supported currencies](/docs/payments/supported-currencies) for supported minor units.
+        description: Customs declaration update request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomsDeclaration'
+        '201':
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `invalid_status_for_operation`, `provider_declined`, `provider_unavailable`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url), `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/customs_declarations/cdc_hkpdkjd4t98sa/update
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          customs_code: GUANGZHOU_ZS
+          merchant_customs_name: C129000000
+          merchant_customs_number: Airwallex
+          request_id: ce113401-b801-4722-b43b-1ddb50e8951f
+          shopper_details:
+            shopper_id: '800000206709306711'
+            shopper_name: nessus_was_textvpwjrhzt
+          sub_order_amount: 10
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: cdc_hkpdkjd4t98sa
+          request_id: ce113401-b801-4722-b43b-1ddb50e8951f
+          status: DECLARED
+          payment_method_type: card
+          provider_transaction_id: t202401091234567890123456789
+          awx_request_id: '1234567890123456789'
+          verification_department_code: OTHERS
+          verification_department_transaction_id: tx1202401091234567890123456789
+          customs_details:
+            customs_code: GUANGZHOU_ZS
+            merchant_customs_number: C129000000
+            merchant_customs_name: Airwallex
+          sub_order:
+            order_number: o100001213
+            provider_order_id: T912345678901234569
+            amount: 10
+            shipping_fee: 0
+            currency: USD
+          shopper_identity_check_result: UNCHECKED
+          created_at: '2024-01-31T06:59:10+00:00'
+          updated_at: '2024-01-31T06:59:10+00:00'
+      x-scope:
+      - scope: customs_declaration:write
+        group: Payment Acceptance
+        resource_name: Customs Declarations
+      x-domain: Payment Acceptance
+      x-resource: Customs Declarations
+      x-urlPath: update
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/customs_declarations/{id}/redeclare:
+    post:
+      tags:
+      - Payment Acceptance > Customs Declarations
+      summary: 4|Redeclare a Customs Declaration
+      description: Redeclare an existing customs declaration. `SHANGHAI_CBT` does not support redeclaration after a successful declaration.
+      operationId: redeclare
+      parameters:
+      - name: id
+        in: path
+        description: Customs Declaration unique identifier.
+        required: true
+        schema:
+          type: string
+          default: cdc_ps8e0ZgQzd2QnCxVpzJrHD6KOVu
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              properties:
+                request_id:
+                  type: string
+                  description: Unique request identifier specified by the merchant. Maximum length is 64.
+        description: Customs declaration redeclare request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomsDeclaration'
+        '201':
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `duplicate_request`, `provider_declined`, `provider_unavailable`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url), `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/customs_declarations/cdc_hkpdkjd4t98sa/redeclare
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          request_id: a268d48f-f42a-438e-bf99-ca74b7f58d09
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: cdc_hkpdkjd4t98sa
+          request_id: a268d48f-f42a-438e-bf99-ca74b7f58d09
+          status: REDECLARED
+          payment_method_type: card
+          provider_transaction_id: t202401091234567890123456789
+          awx_request_id: '1234567890123456789'
+          verification_department_code: OTHERS
+          verification_department_transaction_id: tx1202401091234567890123456789
+          customs_details:
+            customs_code: GUANGZHOU_ZS
+            merchant_customs_number: C129000000
+            merchant_customs_name: Airwallex
+          sub_order:
+            order_number: o100001213
+            provider_order_id: T912345678901234569
+            amount: 10
+            shipping_fee: 0
+            currency: USD
+          shopper_identity_check_result: UNCHECKED
+          created_at: '2024-01-31T06:59:10+00:00'
+          updated_at: '2024-01-31T06:59:10+00:00'
+      x-scope:
+      - scope: customs_declaration:write
+        group: Payment Acceptance
+        resource_name: Customs Declarations
+      x-domain: Payment Acceptance
+      x-resource: Customs Declarations
+      x-urlPath: redeclare
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    CustomsDetails:
+      type: object
+      required:
+      - customs_code
+      - merchant_customs_name
+      - merchant_customs_number
+      properties:
+        customs_code:
+          type: string
+          description: China customs code, please refer to here for information https://www.airwallex.com/docs/payments/apac/wechat-pay/customs-declaration,https://www.airwallex.com/docs/payments/apac/alipay/customs-declaration.
+        merchant_customs_name:
+          type: string
+          description: Merchant's registered name in customs system. Maximum length is 256.
+        merchant_customs_number:
+          type: string
+          description: Merchant's registered number in customs system. Maximum length is 32.
+      description: Customs details.
+    SubOrder:
+      type: object
+      required:
+      - amount
+      - currency
+      - order_number
+      - shipping_fee
+      properties:
+        amount:
+          type: number
+          description: The total amount of your sub_order, shipping fee shall be included, unit is Yuan. Please refer to [supported currencies](/docs/payments/supported-currencies) for supported minor units.
+        currency:
+          type: string
+          description: Currency for the suborder, only CNY supported now.
+        order_number:
+          type: string
+          description: Suborder number in merchant system. Maximum length is 128.
+        provider_order_id:
+          type: string
+          description: 'The unique transaction identifier assigned by the provider for your sub_order. Please use this field as the provider transaction no. for your order information/shipment information’s declaration. Example of our providers: Cards, WeChat, Alipay etc.'
+        shipping_fee:
+          type: number
+          description: Suborder transport fee, unit is Yuan.
+      description: Suborder info, required for each customs declaration.
+    CustomsDeclaration:
+      type: object
+      properties:
+        awx_request_id:
+          type: string
+          description: Request unique identifier generated by Air Wallex send to the provider for a Payment Attempt.
+        created_at:
+          type: string
+          format: date-time
+          description: Time at which the Customs Declaration was created.
+        customs_details:
+          $ref: '#/components/schemas/CustomsDetails'
+          description: Customs details.
+        customs_status_message:
+          type: string
+          description: Additional status message from customs.
+        id:
+          type: string
+          description: Unique identifier for the Customs Declaration.
+        payment_method_type:
+          type: string
+          description: Payment method type of the Payment Attempt.
+        provider_transaction_id:
+          type: string
+          description: 'The unique transaction identifier assigned by the provider for a payment attempt. Example of our providers: Cards, WeChat, Alipay etc.'
+        request_id:
+          type: string
+          description: Unique request identifier specified by the merchant in the last operation.
+        shopper_identity_check_result:
+          type: string
+          description: Identity check result of the shopper.
+        status:
+          type: string
+          description: Customs processing status, UNDECLARED/PROCESSING/SUCCESS/FAIL.
+        sub_order:
+          $ref: '#/components/schemas/SubOrder'
+          description: Suborder info, required for each customs declaration.
+        updated_at:
+          type: string
+          format: date-time
+          description: Last time at which the Customs Declaration was updated or operated on.
+        verification_department_code:
+          type: string
+          description: Verification department code.
+        verification_department_transaction_id:
+          type: string
+          description: Transaction unique identifier returned by verification department.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

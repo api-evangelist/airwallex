@@ -1,0 +1,277 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Billing > Billing Transactions API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Billing > Billing Transactions
+  description: A Billing Transaction describes a transaction on your invoice such as a payment or refund.
+  x-domain: Billing
+  x-resource: Billing Transactions
+  x-urlPath: billing/billing_transactions
+paths:
+  /api/v1/billing/billing_transactions/{id}:
+    get:
+      description: Retrieves the details of a Billing Transaction.
+      operationId: retrieveBillingTransaction
+      parameters:
+      - description: ID of the Billing Transaction object.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 1|Retrieve a Billing Transaction
+      tags:
+      - Billing > Billing Transactions
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/billing/billing_transactions/billing_transaction_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          amount: 19.99
+          billing_customer_id: bcus_hkpd7fedfgb004apkvs
+          cancelled_at: 2023-06-15T12:30:00+0000
+          created_at: 2023-06-15T12:30:00+0000
+          currency: USD
+          external_id: int_e65tkXCSzJrsMpTrzoFrjaau53
+          id: btxn_hkst2n8dxh3h6vaiq9i
+          invoice_id: inv_hkpd49cskgblns6iimw
+          linked_payment_account_id: acct_ncI2nypPKSq2VXKxscAcg
+          metadata:
+            order_id: ORD-12345
+          out_of_band: false
+          payment_source_id: psrc_sgstvjkjjh7lzraf39f
+          status: SUCCEEDED
+          succeeded_at: 2023-06-15T12:35:01+0000
+          type: PAYMENT
+          updated_at: 2023-06-15T12:30:00+0000
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.transaction:read
+        group: Billing
+        resource_name: Billing Transactions
+      x-domain: Billing
+      x-resource: Billing Transactions
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/billing_transactions:
+    get:
+      description: Retrieves a list of Billing Transactions based on the query parameters.
+      operationId: listBillingTransactions
+      parameters:
+      - description: ID of the [Invoice](/docs/api/billing/invoices) this Billing Transaction is associated with.
+        in: query
+        name: invoice_id
+        required: true
+        schema:
+          type: string
+      - description: The start date of `created_at` in ISO8601 format (inclusive).
+        in: query
+        name: from_created_at
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - description: The end date of `created_at` in ISO8601 format (exclusive).
+        in: query
+        name: to_created_at
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - description: A bookmark for use in pagination to retrieve either the next page or the previous page of results. You can fetch the value for this identifier from the response of the previous API call. To retrieve the next page of results, pass the value of `page_after` (if not `null`) from the response to a subsequent call. To retrieve the previous page of results, pass the value of `page_before` (if not `null`) from the response to a subsequent call.
+        in: query
+        name: page
+        required: false
+        schema:
+          type: string
+      - description: Number of Billing Transactions per page. Defaults to `20`.
+        in: query
+        name: page_size
+        required: false
+        schema:
+          maximum: 1000
+          minimum: 1
+          type: integer
+          format: int32
+          default: 20
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CursorPaginationClientApiResponseTransaction'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 2|List all Billing Transactions
+      tags:
+      - Billing > Billing Transactions
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/billing/billing_transactions
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - amount: 19.99
+            billing_customer_id: bcus_hkpd7fedfgb004apkvs
+            cancelled_at: 2023-06-15T12:30:00+0000
+            created_at: 2023-06-15T12:30:00+0000
+            currency: USD
+            external_id: int_e65tkXCSzJrsMpTrzoFrjaau53
+            id: btxn_hkst2n8dxh3h6vaiq9i
+            invoice_id: inv_hkpd49cskgblns6iimw
+            linked_payment_account_id: acct_ncI2nypPKSq2VXKxscAcg
+            metadata:
+              order_id: ORD-12345
+            out_of_band: false
+            payment_source_id: psrc_sgstvjkjjh7lzraf39f
+            status: SUCCEEDED
+            succeeded_at: 2023-06-15T12:35:01+0000
+            type: PAYMENT
+            updated_at: 2023-06-15T12:30:00+0000
+          page_after: <string>
+          page_before: <string>
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.transaction:read
+        group: Billing
+        resource_name: Billing Transactions
+      x-domain: Billing
+      x-resource: Billing Transactions
+      x-urlPath: list
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    Transaction:
+      required:
+      - amount
+      - billing_customer_id
+      - created_at
+      - currency
+      - id
+      - status
+      - updated_at
+      type: object
+      properties:
+        amount:
+          type: number
+          description: The total amount of this billing transaction.
+        billing_customer_id:
+          type: string
+          description: ID of the [Billing Customer](/docs/api/billing/billing_customers) who is making this Billing Transaction.
+        cancelled_at:
+          type: string
+          description: Time when this billing transaction was cancelled.
+        created_at:
+          type: string
+          description: Time when this billing transaction was created.
+        currency:
+          type: string
+          description: The currency of the Billing Transaction in 3-letter ISO-4217 format.
+        external_id:
+          type: string
+          description: ID of the [Payment Intent](/docs/api/payments/payment_intents) associated with the Billing Transaction.
+        id:
+          type: string
+          description: ID of the Billing Transaction object.
+        invoice_id:
+          type: string
+          description: ID of the [Invoice](/docs/api/billing/invoices) this billing transaction is associated with.
+        linked_payment_account_id:
+          type: string
+          description: ID of the linked payment account to collect payment. You can find this ID in the Airwallex web app > Settings > Account details, within the Account Information section.
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+            description: A set of string key-value pairs that you can attach to this object for storing additional information.
+          description: A set of string key-value pairs that you can attach to this object for storing additional information.
+        out_of_band:
+          type: boolean
+          description: Returns true if the billing transaction was manually marked as succeeded, returns false if the transaction hasn't succeeded yet or was processed on Airwallex.
+        payment_source_id:
+          type: string
+          description: ID of the [Payment Source](/docs/api/billing/payment_sources) for which this billing transaction is made.
+        status:
+          type: string
+          description: Status of the billing transaction, one of `CREATED`, `SUCCEEDED`, `CANCELLED` and `FAILED`.
+        succeeded_at:
+          type: string
+          description: The time that the billing transaction succeeded.
+        type:
+          type: string
+          description: Type of the billing transaction. One of `PAYMENT` or `REFUND`.
+        updated_at:
+          type: string
+          description: Time when this billing transaction was last updated.
+    CursorPaginationClientApiResponseTransaction:
+      required:
+      - items
+      type: object
+      properties:
+        items:
+          type: array
+          description: Paged results.
+          items:
+            $ref: '#/components/schemas/Transaction'
+        page_after:
+          type: string
+          description: The page cursor used for searching after page.
+        page_before:
+          type: string
+          description: The page cursor used for search before page.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

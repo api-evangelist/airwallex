@@ -1,0 +1,1864 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Billing > Credit Notes API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Billing > Credit Notes
+  description: Issue a Credit Note to adjust the amount of a finalized invoice.
+  x-domain: Billing
+  x-resource: Credit Notes
+  x-urlPath: billing/credit_notes
+paths:
+  /api/v1/billing/credit_notes/create:
+    post:
+      description: Create a Credit Note that is linked to an Invoice.
+      operationId: createCreditNote
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - invoice_id
+              - reason
+              - request_id
+              - type
+              type: object
+              properties:
+                custom_reason:
+                  maxLength: 500
+                  minLength: 0
+                  type: string
+                  description: An explanation for issuing the credit note when the reason is set to `OTHER`. This field is required if reason is `OTHER` and must be omitted or null for all other reason values.
+                invoice_id:
+                  type: string
+                  description: ID of the [Invoice](/docs/api/billing/invoices).
+                memo:
+                  maxLength: 500
+                  minLength: 0
+                  type: string
+                  description: Customer-facing text that appears on the credit note PDF.
+                metadata:
+                  type: object
+                  additionalProperties:
+                    type: string
+                    description: A set of key-value pairs that you can attach to this object for storing additional information.
+                  description: A set of key-value pairs that you can attach to this object for storing additional information.
+                reason:
+                  pattern: ^(PRODUCT_RETURN|ORDER_CHANGE|PRODUCT_OR_SERVICE_UNSATISFACTORY|BILLING_ERROR|GOODWILL_GESTURE|OTHER)$
+                  type: string
+                  description: 'Reason for issuing this credit note, one of: `PRODUCT_RETURN`, `ORDER_CHANGE`, `PRODUCT_OR_SERVICE_UNSATISFACTORY`, `BILLING_ERROR`, `GOODWILL_GESTURE`, `OTHER`.'
+                request_id:
+                  maxLength: 64
+                  minLength: 0
+                  type: string
+                  description: Unique request ID specified by the merchant.
+                type:
+                  pattern: ^(BEFORE_PAYMENT|AFTER_PAYMENT)$
+                  type: string
+                  description: 'The type of the credit note, one of: `BEFORE_PAYMENT`, `AFTER_PAYMENT`.'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditNote'
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `duplicate_request_id`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 1|Create a Credit Note
+      tags:
+      - Billing > Credit Notes
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/billing/credit_notes/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          custom_reason: Customer requested adjustment
+          invoice_id: inv_hkpd49cskgblns6iimw
+          memo: Credit note memo.
+          metadata:
+            foo: bar
+          reason: PRODUCT_RETURN
+          request_id: ee939540-3203-4a2c-9172-89a566485dd9
+          type: BEFORE_PAYMENT
+        response_body:
+          adjustment_amount: 50
+          billing_customer_id: bcus_hkpd7fedfgb004apkvs
+          created_at: 2022-01-01T10:15:30+0000
+          currency: USD
+          custom_reason: Customer requested adjustment
+          finalized_at: 2022-12-05T10:15:30+0000
+          id: crn_hkpda1313adfadfa
+          invoice_id: inv_hkpd49cskgblns6iimw
+          memo: Credit note memo.
+          metadata:
+            foo: bar
+          number: CRN-591726CD-01
+          out_of_band_amount: 25
+          pdf_url: https://creditnote.airwallex.com/billing/creditnotes/pdf?s=jwt_token
+          reason: PRODUCT_RETURN
+          refund_amount: 25
+          refund_status: SUCCEEDED
+          status: FINALIZED
+          total_amount: 100
+          total_discount_amounts:
+          - amount: 10
+            applied_discount_id: disc_hkpdkcmxdgazzq53jbk
+          total_tax_amount: 0
+          type: BEFORE_PAYMENT
+          updated_at: 2022-01-01T10:15:30+0000
+          voided_at: 2022-12-05T10:15:30+0000
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.credit_note:write
+        group: Billing
+        resource_name: Credit Notes
+      x-domain: Billing
+      x-resource: Credit Notes
+      x-urlPath: create
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/credit_notes/{id}:
+    get:
+      description: Retrieves the details of a Credit Note.
+      operationId: retrieveCreditNote
+      parameters:
+      - description: ID of the Credit Note object.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditNote'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 2|Retrieve a Credit Note
+      tags:
+      - Billing > Credit Notes
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/billing/credit_notes/credit_note_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          adjustment_amount: 50
+          billing_customer_id: bcus_hkpd7fedfgb004apkvs
+          created_at: 2022-01-01T10:15:30+0000
+          currency: USD
+          custom_reason: Customer requested adjustment
+          finalized_at: 2022-12-05T10:15:30+0000
+          id: crn_hkpda1313adfadfa
+          invoice_id: inv_hkpd49cskgblns6iimw
+          memo: Credit note memo.
+          metadata:
+            foo: bar
+          number: CRN-591726CD-01
+          out_of_band_amount: 25
+          pdf_url: https://creditnote.airwallex.com/billing/creditnotes/pdf?s=jwt_token
+          reason: PRODUCT_RETURN
+          refund_amount: 25
+          refund_status: SUCCEEDED
+          status: FINALIZED
+          total_amount: 100
+          total_discount_amounts:
+          - amount: 10
+            applied_discount_id: disc_hkpdkcmxdgazzq53jbk
+          total_tax_amount: 0
+          type: BEFORE_PAYMENT
+          updated_at: 2022-01-01T10:15:30+0000
+          voided_at: 2022-12-05T10:15:30+0000
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.credit_note:read
+        group: Billing
+        resource_name: Credit Notes
+      - scope: billing.credit_note:write
+        group: Billing
+        resource_name: Credit Notes
+      x-domain: Billing
+      x-resource: Credit Notes
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/credit_notes:
+    get:
+      description: Retrieve a list of Credit Notes based on the query parameters.
+      operationId: listCreditNotes
+      parameters:
+      - description: ID of the invoice.
+        in: query
+        name: invoice_id
+        required: false
+        schema:
+          type: string
+      - description: ID of the billing customer.
+        in: query
+        name: billing_customer_id
+        required: false
+        schema:
+          type: string
+      - description: 'The type of the credit note, one of: `BEFORE_PAYMENT`, `AFTER_PAYMENT`.'
+        in: query
+        name: type
+        required: false
+        schema:
+          type: string
+      - description: Status of the credit note, one of `DRAFT`, `FINALIZED`, and `VOIDED`.
+        in: query
+        name: status
+        required: false
+        schema:
+          type: string
+      - description: The start date of created_at in ISO8601 format (inclusive).
+        in: query
+        name: from_created_at
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - description: The end date of created_at in ISO8601 format (exclusive).
+        in: query
+        name: to_created_at
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - description: A bookmark for use in pagination to retrieve either the next page or the previous page of results. You can fetch the value for this identifier from the response of the previous API call. To retrieve the next page of results, pass the value of `page_after` (if not `null`) from the response to a subsequent call. To retrieve the previous page of results, pass the value of `page_before` (if not `null`) from the response to a subsequent call.
+        in: query
+        name: page
+        required: false
+        schema:
+          type: string
+      - description: Number of Credit Notes to be listed per page. Defaults to 20.
+        in: query
+        name: page_size
+        required: false
+        schema:
+          maximum: 1000
+          minimum: 1
+          type: integer
+          format: int32
+          default: 20
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CursorPaginationClientApiResponseCreditNote'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 3|List all Credit Notes
+      tags:
+      - Billing > Credit Notes
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/billing/credit_notes
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - adjustment_amount: 50
+            billing_customer_id: bcus_hkpd7fedfgb004apkvs
+            created_at: 2022-01-01T10:15:30+0000
+            currency: USD
+            custom_reason: Customer requested adjustment
+            finalized_at: 2022-12-05T10:15:30+0000
+            id: crn_hkpda1313adfadfa
+            invoice_id: inv_hkpd49cskgblns6iimw
+            memo: Credit note memo.
+            metadata:
+              foo: bar
+            number: CRN-591726CD-01
+            out_of_band_amount: 25
+            pdf_url: https://creditnote.airwallex.com/billing/creditnotes/pdf?s=jwt_token
+            reason: PRODUCT_RETURN
+            refund_amount: 25
+            refund_status: SUCCEEDED
+            status: FINALIZED
+            total_amount: 100
+            total_discount_amounts:
+            - amount: 10
+              applied_discount_id: disc_hkpdkcmxdgazzq53jbk
+            total_tax_amount: 0
+            type: BEFORE_PAYMENT
+            updated_at: 2022-01-01T10:15:30+0000
+            voided_at: 2022-12-05T10:15:30+0000
+          page_after: <string>
+          page_before: <string>
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.credit_note:read
+        group: Billing
+        resource_name: Credit Notes
+      - scope: billing.credit_note:write
+        group: Billing
+        resource_name: Credit Notes
+      x-domain: Billing
+      x-resource: Credit Notes
+      x-urlPath: list
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/credit_notes/{id}/update:
+    post:
+      description: Update a draft Credit Note.
+      operationId: updateCreditNote
+      parameters:
+      - description: ID of the Credit Note object.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                custom_reason:
+                  type: string
+                  description: An explanation for issuing the credit note when the reason enum is set to `OTHER`. This field is required if reason is `OTHER` and must be omitted or null for all other reason values.
+                memo:
+                  type: string
+                  description: Customer-facing text that appears on the credit note PDF.
+                metadata:
+                  type: object
+                  additionalProperties:
+                    type: string
+                    description: A set of key-value pairs that you can attach to this object for storing additional information.
+                  description: A set of key-value pairs that you can attach to this object for storing additional information.
+                reason:
+                  pattern: ^(PRODUCT_RETURN|ORDER_CHANGE|PRODUCT_OR_SERVICE_UNSATISFACTORY|BILLING_ERROR|GOODWILL_GESTURE|OTHER)$
+                  type: string
+                  description: 'Reason for issuing this credit note, one of: `PRODUCT_RETURN`, `ORDER_CHANGE`, `PRODUCT_OR_SERVICE_UNSATISFACTORY`, `BILLING_ERROR`, `GOODWILL_GESTURE`, `OTHER`.'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditNote'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 4|Update a Credit Note
+      tags:
+      - Billing > Credit Notes
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/billing/credit_notes/credit_note_id/update
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          custom_reason: Customer requested adjustment
+          memo: Updated credit note memo.
+          metadata:
+            foo: bar
+          reason: PRODUCT_RETURN
+        response_body:
+          adjustment_amount: 50
+          billing_customer_id: bcus_hkpd7fedfgb004apkvs
+          created_at: 2022-01-01T10:15:30+0000
+          currency: USD
+          custom_reason: Customer requested adjustment
+          finalized_at: 2022-12-05T10:15:30+0000
+          id: crn_hkpda1313adfadfa
+          invoice_id: inv_hkpd49cskgblns6iimw
+          memo: Credit note memo.
+          metadata:
+            foo: bar
+          number: CRN-591726CD-01
+          out_of_band_amount: 25
+          pdf_url: https://creditnote.airwallex.com/billing/creditnotes/pdf?s=jwt_token
+          reason: PRODUCT_RETURN
+          refund_amount: 25
+          refund_status: SUCCEEDED
+          status: FINALIZED
+          total_amount: 100
+          total_discount_amounts:
+          - amount: 10
+            applied_discount_id: disc_hkpdkcmxdgazzq53jbk
+          total_tax_amount: 0
+          type: BEFORE_PAYMENT
+          updated_at: 2022-01-01T10:15:30+0000
+          voided_at: 2022-12-05T10:15:30+0000
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.credit_note:write
+        group: Billing
+        resource_name: Credit Notes
+      x-domain: Billing
+      x-resource: Credit Notes
+      x-urlPath: update
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/credit_notes/preview:
+    post:
+      description: Preview a Credit Note that is linked to an Invoice.
+      operationId: creditNotes_preview
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - invoice_id
+              - line_items
+              - reason
+              - type
+              type: object
+              properties:
+                custom_reason:
+                  maxLength: 500
+                  minLength: 0
+                  type: string
+                  description: An explanation for issuing the credit note when the reason is set to `OTHER`. This field is required if reason is `OTHER` and must be omitted or null for all other reason values.
+                invoice_id:
+                  type: string
+                  description: ID of the [Invoice](/docs/api/billing/invoices).
+                line_items:
+                  maxItems: 100
+                  minItems: 0
+                  type: array
+                  description: A list of credit note line items to preview.
+                  items:
+                    type: object
+                    properties:
+                      amount:
+                        maximum: 9999999999
+                        minimum: 0
+                        type: number
+                        description: 'The amount of the credit note line item. You can specify either the `amount` directly, or the pair of `quantity` and `unit_amount`. When the `invoice_line_item_id` is null, this amount is proportionally distributed across all invoice line items based on their `remaining_creditable_amount`. '
+                      description:
+                        maxLength: 500
+                        minLength: 0
+                        type: string
+                        description: Description of the line item being credited.
+                      invoice_line_item_id:
+                        type: string
+                        description: ID of the Invoice Line Item.
+                      invoice_line_item_group_id:
+                        type: string
+                        description: A unique identifier that groups all related line items from a single tiered price. Used to credit by group instead of by individual line item. Mutually exclusive with `invoice_line_item_id`. When specified, `invoice_line_item_id`, `amount`, and `unit_amount` must be null. A single request cannot include both an `invoice_line_item_group_id` and any of its constituent `invoice_line_item_id`s. For `GRADUATED` prices, the credit amount is recalculated based on the remaining quantity. If the adjusted quantity no longer reaches a tier, associated fees (including flat fees) are automatically credited. For `VOLUME` prices, no tier adjustment is applied.
+                      metadata:
+                        type: object
+                        additionalProperties:
+                          type: string
+                          description: A set of key-value pairs that you can attach to this object for storing additional information.
+                        description: A set of key-value pairs that you can attach to this object for storing additional information.
+                      quantity:
+                        minimum: 1
+                        type: integer
+                        description: The number of units of product being credited.
+                        format: int32
+                      tax_included:
+                        type: boolean
+                        description: Whether the `amount` or `unit_amount` are inclusive of taxes or exclusive of taxes. Only can set the value to true for `unit_amount` when the price of the associated invoice line item is also tax inclusive. Defaults to false.
+                      unit_amount:
+                        maximum: 9999999999
+                        minimum: 0
+                        type: number
+                        description: 'The amount to be credited per product unit. This `unit_amount` will be multiplied by the `quantity` to get the full amount to credit for this line item. You can specify either the `amount` directly, or the pair of `quantity` and `unit_amount`. Only applicable when the `invoice_line_item_id` is not null.
+
+
+                          Defaults to the unit amount of the invoice line item when `quantity` is provided.'
+                memo:
+                  maxLength: 500
+                  minLength: 0
+                  type: string
+                  description: Customer-facing text that appears on the credit note PDF.
+                metadata:
+                  type: object
+                  additionalProperties:
+                    type: string
+                    description: A set of key-value pairs that you can attach to this object for storing additional information.
+                  description: A set of key-value pairs that you can attach to this object for storing additional information.
+                reason:
+                  pattern: ^(PRODUCT_RETURN|ORDER_CHANGE|PRODUCT_OR_SERVICE_UNSATISFACTORY|BILLING_ERROR|GOODWILL_GESTURE|OTHER)$
+                  type: string
+                  description: 'Reason for issuing this credit note, one of: `PRODUCT_RETURN`, `ORDER_CHANGE`, `PRODUCT_OR_SERVICE_UNSATISFACTORY`, `BILLING_ERROR`, `GOODWILL_GESTURE`, `OTHER`.'
+                type:
+                  pattern: ^(BEFORE_PAYMENT|AFTER_PAYMENT)$
+                  type: string
+                  description: 'The type of the credit note, one of: `BEFORE_PAYMENT`, `AFTER_PAYMENT`.'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditNotePreview'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 5|Preview a Credit Note
+      tags:
+      - Billing > Credit Notes
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/billing/credit_notes/preview
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          custom_reason: Customer requested adjustment
+          invoice_id: inv_hkpd49cskgblns6iimw
+          line_items:
+          - amount: 20
+            description: Customer generated description of the item.
+            invoice_line_item_id: iit_hkpd49cskgblnsnzgm1
+            metadata:
+              foo: bar
+            quantity: 10
+            tax_included: false
+            unit_amount: 2
+          - description: Customer generated description of the item.
+            invoice_line_item_group_id: aaea4c0e-d8b4-4b19-b249-ca28d7e17d54
+            metadata:
+              foo: bar
+            quantity: 10
+            tax_included: false
+          memo: Credit note memo.
+          metadata:
+            foo: bar
+          reason: PRODUCT_RETURN
+          type: BEFORE_PAYMENT
+        response_body:
+          adjustment_amount: 50
+          billing_customer_id: bcus_hkpd7fedfgb004apkvs
+          currency: USD
+          custom_reason: Customer requested adjustment
+          invoice_id: inv_hkpd49cskgblns6iimw
+          line_items:
+          - amount: 10
+            currency: CNY
+            description: Customer generated description of the item.
+            discount_amounts:
+            - amount: 10
+              applied_discount_id: disc_hkpdkcmxdgazzq53jbk
+            invoice_line_item_id: iit_hkpd49cskgblnsnzgm1
+            metadata: {}
+            quantity: 1
+            tax_amount: 10
+            tax_breakdown:
+            - name: GST
+              tax_amount: 10
+              tax_percent: 10
+              taxable_amount: 100
+            unit_amount: 10
+          memo: Credit note memo.
+          metadata:
+            foo: bar
+          reason: PRODUCT_RETURN
+          refund_amount: 25
+          total_amount: 110
+          total_discount_amounts:
+          - amount: 10
+            applied_discount_id: disc_hkpdkcmxdgazzq53jbk
+          total_tax_amount: 10
+          type: BEFORE_PAYMENT
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.credit_note:read
+        group: Billing
+        resource_name: Credit Notes
+      - scope: billing.credit_note:write
+        group: Billing
+        resource_name: Credit Notes
+      x-domain: Billing
+      x-resource: Credit Notes
+      x-urlPath: preview
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/credit_notes/{id}/finalize:
+    post:
+      description: Finalize a draft Credit Note. If the type is `BEFORE_PAYMENT`, the `refund_amount` and `out_of_band_amount` must be null. If the type is `AFTER_PAYMENT`, you will need to allocate the `total_amount` of the credit note to either `refund_amount` or `out_of_band_amount`.
+      operationId: creditNotes_finalize
+      parameters:
+      - description: ID of the Credit Note object.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                out_of_band_amount:
+                  type: number
+                  description: Amount credited outside of Airwallex. Only applicable when the `type` is `AFTER_PAYMENT`.
+                refund_amount:
+                  type: number
+                  description: Amount credited with refund. Only applicable when the `type` is `AFTER_PAYMENT`.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditNote'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 6|Finalize a Credit Note
+      tags:
+      - Billing > Credit Notes
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/billing/credit_notes/credit_note_id/finalize
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          out_of_band_amount: 0
+          refund_amount: 100.3
+        response_body:
+          adjustment_amount: 50
+          billing_customer_id: bcus_hkpd7fedfgb004apkvs
+          created_at: 2022-01-01T10:15:30+0000
+          currency: USD
+          custom_reason: Customer requested adjustment
+          finalized_at: 2022-12-05T10:15:30+0000
+          id: crn_hkpda1313adfadfa
+          invoice_id: inv_hkpd49cskgblns6iimw
+          memo: Credit note memo.
+          metadata:
+            foo: bar
+          number: CRN-591726CD-01
+          out_of_band_amount: 25
+          pdf_url: https://creditnote.airwallex.com/billing/creditnotes/pdf?s=jwt_token
+          reason: PRODUCT_RETURN
+          refund_amount: 25
+          refund_status: SUCCEEDED
+          status: FINALIZED
+          total_amount: 100
+          total_discount_amounts:
+          - amount: 10
+            applied_discount_id: disc_hkpdkcmxdgazzq53jbk
+          total_tax_amount: 0
+          type: BEFORE_PAYMENT
+          updated_at: 2022-01-01T10:15:30+0000
+          voided_at: 2022-12-05T10:15:30+0000
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.credit_note:write
+        group: Billing
+        resource_name: Credit Notes
+      x-domain: Billing
+      x-resource: Credit Notes
+      x-urlPath: finalize
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/credit_notes/{id}/delete:
+    post:
+      description: Delete a draft Credit Note.
+      operationId: deleteCreditNote
+      parameters:
+      - description: ID of the Credit Note object.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditNoteDeleted'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 7|Delete a Credit Note
+      tags:
+      - Billing > Credit Notes
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/billing/credit_notes/credit_note_id/delete
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          deleted: true
+          id: crn_hkpda1313adfadfa
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.credit_note:write
+        group: Billing
+        resource_name: Credit Notes
+      x-domain: Billing
+      x-resource: Credit Notes
+      x-urlPath: delete
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/credit_notes/{id}/void:
+    post:
+      description: 'Void a finalized Credit Note. Transition from finalized to voided is allowed only when: 1) type of Credit Note is pre-payment 2) payment status of the linked Invoice is unpaid.'
+      operationId: creditNotes_void
+      parameters:
+      - description: ID of the Credit Note object.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditNote'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 8|Void a Credit Note
+      tags:
+      - Billing > Credit Notes
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/billing/credit_notes/credit_note_id/void
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          adjustment_amount: 50
+          billing_customer_id: bcus_hkpd7fedfgb004apkvs
+          created_at: 2022-01-01T10:15:30+0000
+          currency: USD
+          custom_reason: Customer requested adjustment
+          finalized_at: 2022-12-05T10:15:30+0000
+          id: crn_hkpda1313adfadfa
+          invoice_id: inv_hkpd49cskgblns6iimw
+          memo: Credit note memo.
+          metadata:
+            foo: bar
+          number: CRN-591726CD-01
+          out_of_band_amount: 25
+          pdf_url: https://creditnote.airwallex.com/billing/creditnotes/pdf?s=jwt_token
+          reason: PRODUCT_RETURN
+          refund_amount: 25
+          refund_status: SUCCEEDED
+          status: FINALIZED
+          total_amount: 100
+          total_discount_amounts:
+          - amount: 10
+            applied_discount_id: disc_hkpdkcmxdgazzq53jbk
+          total_tax_amount: 0
+          type: BEFORE_PAYMENT
+          updated_at: 2022-01-01T10:15:30+0000
+          voided_at: 2022-12-05T10:15:30+0000
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.credit_note:write
+        group: Billing
+        resource_name: Credit Notes
+      x-domain: Billing
+      x-resource: Credit Notes
+      x-urlPath: void
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/credit_notes/{id}/add_line_items:
+    post:
+      description: Create Line Items and add them to a Credit Note. This is only possible when the Credit Note status is `DRAFT`. You can only add 100 line items at a time. The bulk create operation is atomic, all the line items created with the request will either succeed or fail together.
+      operationId: creditNotes_addLineItems
+      parameters:
+      - description: ID of the Credit Note object.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - line_items
+              - request_id
+              type: object
+              properties:
+                line_items:
+                  maxItems: 100
+                  minItems: 0
+                  type: array
+                  description: A list of credit note line items to be added, you may add 100 items at a time and add up to a maximum of 1000 items per credit note.
+                  items:
+                    type: object
+                    properties:
+                      amount:
+                        maximum: 9999999999
+                        minimum: 0
+                        type: number
+                        description: 'The amount of the credit note line item. You can specify either the `amount` directly, or the pair of `quantity` and `unit_amount`. When the `invoice_line_item_id` is null, this amount is proportionally distributed across all invoice line items based on their `remaining_creditable_amount`. '
+                      description:
+                        maxLength: 500
+                        minLength: 0
+                        type: string
+                        description: Description of the line item being credited.
+                      invoice_line_item_id:
+                        type: string
+                        description: ID of the Invoice Line Item.
+                      invoice_line_item_group_id:
+                        type: string
+                        description: A unique identifier that groups all related line items from a single tiered price. Used to credit by group instead of by individual line item. Mutually exclusive with `invoice_line_item_id`. When specified, `invoice_line_item_id`, `amount`, and `unit_amount` must be null. A single request cannot include both an `invoice_line_item_group_id` and any of its constituent `invoice_line_item_id`s. For `GRADUATED` prices, the credit amount is recalculated based on the remaining quantity. If the adjusted quantity no longer reaches a tier, associated fees (including flat fees) are automatically credited. For `VOLUME` prices, no tier adjustment is applied.
+                      metadata:
+                        type: object
+                        additionalProperties:
+                          type: string
+                          description: A set of key-value pairs that you can attach to this object for storing additional information.
+                        description: A set of key-value pairs that you can attach to this object for storing additional information.
+                      quantity:
+                        minimum: 1
+                        type: integer
+                        description: The number of units of product being credited.
+                        format: int32
+                      tax_included:
+                        type: boolean
+                        description: Whether the `amount` or `unit_amount` are inclusive of taxes or exclusive of taxes. Only can set the value to true for `unit_amount` when the price of the associated invoice line item is also tax inclusive. Defaults to false.
+                      unit_amount:
+                        maximum: 9999999999
+                        minimum: 0
+                        type: number
+                        description: 'The amount to be credited per product unit. This `unit_amount` will be multiplied by the `quantity` to get the full amount to credit for this line item. You can specify either the `amount` directly, or the pair of `quantity` and `unit_amount`. Only applicable when the `invoice_line_item_id` is not null.
+
+
+                          Defaults to the unit amount of the invoice line item when `quantity` is provided.'
+                request_id:
+                  maxLength: 64
+                  minLength: 0
+                  type: string
+                  description: Unique request ID specified by the merchant.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditNote'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 9|Create Credit Note Line Items and Add Them to a Credit Note
+      tags:
+      - Billing > Credit Notes
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/billing/credit_notes/credit_note_id/add_line_items
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          line_items:
+          - amount: 20
+            description: Customer generated description of the item.
+            invoice_line_item_id: iit_hkpd49cskgblnsnzgm1
+            metadata:
+              foo: bar
+            quantity: 10
+            tax_included: false
+            unit_amount: 2
+          - description: Customer generated description of the item.
+            invoice_line_item_group_id: aaea4c0e-d8b4-4b19-b249-ca28d7e17d54
+            metadata:
+              foo: bar
+            quantity: 10
+            tax_included: false
+          request_id: ee939540-3203-4a2c-9172-89a566485dd9
+        response_body:
+          adjustment_amount: 50
+          billing_customer_id: bcus_hkpd7fedfgb004apkvs
+          created_at: 2022-01-01T10:15:30+0000
+          currency: USD
+          custom_reason: Customer requested adjustment
+          finalized_at: 2022-12-05T10:15:30+0000
+          id: crn_hkpda1313adfadfa
+          invoice_id: inv_hkpd49cskgblns6iimw
+          memo: Credit note memo.
+          metadata:
+            foo: bar
+          number: CRN-591726CD-01
+          out_of_band_amount: 25
+          pdf_url: https://creditnote.airwallex.com/billing/creditnotes/pdf?s=jwt_token
+          reason: PRODUCT_RETURN
+          refund_amount: 25
+          refund_status: SUCCEEDED
+          status: FINALIZED
+          total_amount: 100
+          total_discount_amounts:
+          - amount: 10
+            applied_discount_id: disc_hkpdkcmxdgazzq53jbk
+          total_tax_amount: 0
+          type: BEFORE_PAYMENT
+          updated_at: 2022-01-01T10:15:30+0000
+          voided_at: 2022-12-05T10:15:30+0000
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.credit_note:write
+        group: Billing
+        resource_name: Credit Notes
+      x-domain: Billing
+      x-resource: Credit Notes
+      x-urlPath: add_line_items
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/credit_notes/{id}/line_items/{line_item_id}:
+    get:
+      description: Retrieves the details of a Credit Note Line Item.
+      operationId: creditNotes_retrieveLineItem
+      parameters:
+      - description: ID of the Credit Note object that this Credit Note Line Item belongs to.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - description: ID of the Credit Note Line Item object.
+        in: path
+        name: line_item_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditNoteLineItem'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 10|Retrieve a Credit Note Line Item
+      tags:
+      - Billing > Credit Notes
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/billing/credit_notes/credit_note_id/line_items/line_item_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          amount: 10
+          created_at: 2025-01-01T00:00:00+0000
+          credit_note_id: crn_hkpda1313adfadfa
+          currency: CNY
+          description: Customer generated description of the item.
+          discount_amounts:
+          - amount: 10
+            applied_discount_id: disc_hkpdkcmxdgazzq53jbk
+          id: cnit_hkpd49cskgblnsnzgm1
+          invoice_line_item_id: iit_hkpd49cskgblnsnzgm1
+          metadata: {}
+          price_tier:
+            level: 1
+            lower_bound: 0
+            unit_amount: 10
+            upper_bound: 20
+          quantity: 1
+          tax_amount: 10
+          tax_breakdown:
+          - name: GST
+            tax_amount: 10
+            tax_percent: 10
+            taxable_amount: 100
+          tax_percent: 0
+          unit_amount: 10
+          updated_at: 2025-01-01T00:00:00+0000
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.credit_note:read
+        group: Billing
+        resource_name: Credit Notes
+      - scope: billing.credit_note:write
+        group: Billing
+        resource_name: Credit Notes
+      x-domain: Billing
+      x-resource: Credit Notes
+      x-urlPath: retrieve_line_items
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/credit_notes/{id}/line_items:
+    get:
+      description: Retrieves a list of Credit Note Line Items based on the query parameters.
+      operationId: creditNotes_listLineItems
+      parameters:
+      - description: ID of the Credit Note object that the Credit Note Line Items belong to.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - description: A bookmark for use in pagination to retrieve either the next page or the previous page of results. You can fetch the value for this identifier from the response of the previous API call. To retrieve the next page of results, pass the value of `page_after` (if not `null`) from the response to a subsequent call. To retrieve the previous page of results, pass the value of `page_before` (if not `null`) from the response to a subsequent call.
+        in: query
+        name: page
+        required: false
+        schema:
+          type: string
+      - description: Number of Credit Note Line Items per page. Defaults to `20`.
+        in: query
+        name: page_size
+        required: false
+        schema:
+          maximum: 1000
+          minimum: 1
+          type: integer
+          format: int32
+          default: 20
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CursorPaginationClientApiResponseCreditNoteLineItem'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 11|List all Credit Note Line Items
+      tags:
+      - Billing > Credit Notes
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/billing/credit_notes/credit_note_id/line_items
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - amount: 10
+            created_at: 2025-01-01T00:00:00+0000
+            credit_note_id: crn_hkpda1313adfadfa
+            currency: CNY
+            description: Customer generated description of the item.
+            discount_amounts:
+            - amount: 10
+              applied_discount_id: disc_hkpdkcmxdgazzq53jbk
+            id: cnit_hkpd49cskgblnsnzgm1
+            invoice_line_item_id: iit_hkpd49cskgblnsnzgm1
+            metadata: {}
+            price_tier:
+              level: 1
+              lower_bound: 0
+              unit_amount: 10
+              upper_bound: 20
+            quantity: 1
+            tax_amount: 10
+            tax_breakdown:
+            - name: GST
+              tax_amount: 10
+              tax_percent: 10
+              taxable_amount: 100
+            unit_amount: 10
+            updated_at: 2025-01-01T00:00:00+0000
+          page_after: <string>
+          page_before: <string>
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.credit_note:read
+        group: Billing
+        resource_name: Credit Notes
+      - scope: billing.credit_note:write
+        group: Billing
+        resource_name: Credit Notes
+      x-domain: Billing
+      x-resource: Credit Notes
+      x-urlPath: line_items
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/credit_notes/{id}/update_line_items:
+    post:
+      description: Update Line Items in a Credit Note. This is only possible when the Credit Note status is `DRAFT`. You can only update 100 line items at a time. The bulk update operation is atomic, all the updates in the request will either succeed or fail together.
+      operationId: creditNotes_updateLineItems
+      parameters:
+      - description: ID of the Credit Note object.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - line_items
+              type: object
+              properties:
+                line_items:
+                  maxItems: 100
+                  minItems: 0
+                  type: array
+                  description: A list of credit note line items to be updated, you may update 100 items at a time.
+                  items:
+                    required:
+                    - id
+                    type: object
+                    properties:
+                      amount:
+                        type: number
+                        description: The amount of the credit note line item. Only applicable when both the `unit_amount` and `quantity` are null.
+                      description:
+                        type: string
+                        description: Description of the line item being credited.
+                      id:
+                        type: string
+                        description: ID of the credit note line item object.
+                      metadata:
+                        type: object
+                        additionalProperties:
+                          type: string
+                          description: A set of key-value pairs that you can attach to this object for storing additional information.
+                        description: A set of key-value pairs that you can attach to this object for storing additional information.
+                      quantity:
+                        type: integer
+                        description: The number of units of product being credited.
+                        format: int32
+                      tax_included:
+                        type: boolean
+                        description: Whether the `amount` or `unit_amount` are inclusive of taxes or exclusive of taxes.
+                      unit_amount:
+                        type: number
+                        description: The amount to be credited per product unit. This `unit_amount` will be multiplied by the `quantity` to get the full amount to credit for this line item.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditNote'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 12|Update Credit Note Line Items in a Credit Note
+      tags:
+      - Billing > Credit Notes
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/billing/credit_notes/credit_note_id/update_line_items
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          line_items:
+          - amount: 30
+            description: Customer generated description of the item.
+            id: cnit_hkpd49cskgblnsnzgm1
+            metadata:
+              foo: bar
+            quantity: 2
+            tax_included: false
+            unit_amount: 2
+        response_body:
+          adjustment_amount: 50
+          billing_customer_id: bcus_hkpd7fedfgb004apkvs
+          created_at: 2022-01-01T10:15:30+0000
+          currency: USD
+          custom_reason: Customer requested adjustment
+          finalized_at: 2022-12-05T10:15:30+0000
+          id: crn_hkpda1313adfadfa
+          invoice_id: inv_hkpd49cskgblns6iimw
+          memo: Credit note memo.
+          metadata:
+            foo: bar
+          number: CRN-591726CD-01
+          out_of_band_amount: 25
+          pdf_url: https://creditnote.airwallex.com/billing/creditnotes/pdf?s=jwt_token
+          reason: PRODUCT_RETURN
+          refund_amount: 25
+          refund_status: SUCCEEDED
+          status: FINALIZED
+          total_amount: 100
+          total_discount_amounts:
+          - amount: 10
+            applied_discount_id: disc_hkpdkcmxdgazzq53jbk
+          total_tax_amount: 0
+          type: BEFORE_PAYMENT
+          updated_at: 2022-01-01T10:15:30+0000
+          voided_at: 2022-12-05T10:15:30+0000
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.credit_note:write
+        group: Billing
+        resource_name: Credit Notes
+      x-domain: Billing
+      x-resource: Credit Notes
+      x-urlPath: update_line_items
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/credit_notes/{id}/delete_line_items:
+    post:
+      description: Delete Line Items in a Credit Note. This is only possible when the Credit Note status is `DRAFT`. You can only delete 100 line items at a time. The bulk delete operation is atomic, all the removals in the request will either succeed or fail together.
+      operationId: creditNotes_deleteLineItems
+      parameters:
+      - description: ID of the Credit Note object.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - line_item_ids
+              type: object
+              properties:
+                line_item_ids:
+                  maxItems: 100
+                  minItems: 0
+                  type: array
+                  description: List of Credit Note Line Item IDs to be deleted.
+                  items:
+                    maxLength: 100
+                    minLength: 0
+                    type: string
+                    description: List of Credit Note Line Item IDs to be deleted.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditNote'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 13|Delete Credit Note Line Items From a Credit Note
+      tags:
+      - Billing > Credit Notes
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/billing/credit_notes/credit_note_id/delete_line_items
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          line_item_ids:
+          - cnit_hkpd49cskgblnsnzgm1
+          - cnit_hkpd49cskgblnsnzgm2
+        response_body:
+          adjustment_amount: 50
+          billing_customer_id: bcus_hkpd7fedfgb004apkvs
+          created_at: 2022-01-01T10:15:30+0000
+          currency: USD
+          custom_reason: Customer requested adjustment
+          finalized_at: 2022-12-05T10:15:30+0000
+          id: crn_hkpda1313adfadfa
+          invoice_id: inv_hkpd49cskgblns6iimw
+          memo: Credit note memo.
+          metadata:
+            foo: bar
+          number: CRN-591726CD-01
+          out_of_band_amount: 25
+          pdf_url: https://creditnote.airwallex.com/billing/creditnotes/pdf?s=jwt_token
+          reason: PRODUCT_RETURN
+          refund_amount: 25
+          refund_status: SUCCEEDED
+          status: FINALIZED
+          total_amount: 100
+          total_discount_amounts:
+          - amount: 10
+            applied_discount_id: disc_hkpdkcmxdgazzq53jbk
+          total_tax_amount: 0
+          type: BEFORE_PAYMENT
+          updated_at: 2022-01-01T10:15:30+0000
+          voided_at: 2022-12-05T10:15:30+0000
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.credit_note:write
+        group: Billing
+        resource_name: Credit Notes
+      x-domain: Billing
+      x-resource: Credit Notes
+      x-urlPath: delete_line_items
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    DiscountAmount:
+      required:
+      - amount
+      - applied_discount_id
+      type: object
+      properties:
+        amount:
+          type: number
+          description: The amount of the applied discount.
+        applied_discount_id:
+          type: string
+          description: ID of the Discount object which is applied.
+    TaxBreakdownItem:
+      required:
+      - name
+      - tax_amount
+      - tax_percent
+      - taxable_amount
+      type: object
+      properties:
+        name:
+          type: string
+          description: The display name of this tax component.
+        tax_amount:
+          type: number
+          description: The amount of tax charged for this component.
+        tax_percent:
+          type: number
+          description: The tax percent applied for this component.
+        taxable_amount:
+          type: number
+          description: The portion of the subtotal that this tax component applies to.
+    CreditNoteDeleted:
+      required:
+      - deleted
+      - id
+      type: object
+      properties:
+        deleted:
+          type: boolean
+          description: Indicates whether the delete command was executed successfully.
+        id:
+          type: string
+          description: ID of the Credit Note object.
+    CreditNotePreview:
+      required:
+      - billing_customer_id
+      - currency
+      - invoice_id
+      - line_items
+      - total_amount
+      - total_discount_amounts
+      - total_tax_amount
+      type: object
+      properties:
+        adjustment_amount:
+          type: number
+          description: Amount credited to decrease the amount of an unpaid invoice.
+        billing_customer_id:
+          type: string
+          description: ID of the [Billing Customer](/docs/api/billing/billing_customers).
+        currency:
+          type: string
+          description: The currency of the credit note (in 3-letter ISO-4217 format).
+        custom_reason:
+          type: string
+          description: An explanation for issuing the credit note when the reason enum is set to `OTHER`. This field is required if the reason is `OTHER` and must be omitted or `null` for all other reason values.
+        invoice_id:
+          type: string
+          description: ID of the [Invoice](/docs/api/billing/invoices).
+        line_items:
+          type: array
+          description: The list of credit note line items in the preview.
+          items:
+            $ref: '#/components/schemas/CreditNoteLineItemPreview'
+        memo:
+          type: string
+          description: Customer-facing text that appears on the credit note PDF.
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+            description: A set of key-value pairs that you can attach to this object for storing additional information.
+          description: A set of key-value pairs that you can attach to this object for storing additional information.
+        reason:
+          type: string
+          description: 'Reason for issuing this credit note, one of: `PRODUCT_RETURN`, `ORDER_CHANGE`, `PRODUCT_OR_SERVICE_UNSATISFACTORY`, `BILLING_ERROR`, `GOODWILL_GESTURE`, `OTHER`.'
+        refund_amount:
+          type: number
+          description: Amount credited with refund.
+        total_amount:
+          type: number
+          description: The total amount of the credit note, including tax.
+        total_discount_amounts:
+          type: array
+          description: The aggregate amounts calculated per discount across all credit note line items and the credit note.
+          items:
+            $ref: '#/components/schemas/DiscountAmount'
+        total_tax_amount:
+          type: number
+          description: The total tax amount of the credit note.
+        type:
+          type: string
+          description: 'The type of the credit note, one of: `BEFORE_PAYMENT`, `AFTER_PAYMENT`.'
+    CursorPaginationClientApiResponseCreditNoteLineItem:
+      required:
+      - items
+      type: object
+      properties:
+        items:
+          type: array
+          description: Paged results.
+          items:
+            $ref: '#/components/schemas/CreditNoteLineItem'
+        page_after:
+          type: string
+          description: The page cursor used for searching after page.
+        page_before:
+          type: string
+          description: The page cursor used for search before page.
+    CreditNote:
+      required:
+      - adjustment_amount
+      - billing_customer_id
+      - created_at
+      - currency
+      - id
+      - invoice_id
+      - number
+      - out_of_band_amount
+      - reason
+      - refund_amount
+      - status
+      - total_amount
+      - total_discount_amounts
+      - total_tax_amount
+      - type
+      - updated_at
+      type: object
+      properties:
+        adjustment_amount:
+          type: number
+          description: Amount credited to decrease the amount of an unpaid invoice.
+        billing_customer_id:
+          type: string
+          description: ID of the [Billing Customer](/docs/api/billing/billing_customers).
+        created_at:
+          type: string
+          description: Time when this credit note was created.
+        currency:
+          type: string
+          description: The currency of the credit note (in 3-letter ISO-4217 format).
+        custom_reason:
+          type: string
+          description: An explanation for issuing the credit note when the reason enum is set to `OTHER`. This field is required if the reason is `OTHER` and must be omitted or `null` for all other reason values.
+        e_invoicing_document_id:
+          type: string
+          description: The ID of the [E-Invoicing Document](/docs/api/billing/e-invoicing_documents) associated with this Credit Note. `null` when no E-Invoicing Document has been created.
+        finalized_at:
+          type: string
+          description: Time at which the credit note was finalized.
+        id:
+          type: string
+          description: ID of the Credit Note object.
+        invoice_id:
+          type: string
+          description: ID of the [Invoice](/docs/api/billing/invoices).
+        memo:
+          type: string
+          description: Customer-facing text that appears on the credit note PDF.
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+            description: A set of key-value pairs that you can attach to this object for storing additional information.
+          description: A set of key-value pairs that you can attach to this object for storing additional information.
+        number:
+          type: string
+          description: A unique number that identifies this particular credit note and appears on the PDF of the credit note and its associated invoice.
+        out_of_band_amount:
+          type: number
+          description: Amount credited outside of Airwallex.
+        pdf_url:
+          type: string
+          description: The link to download the PDF for the credit note. The URL will be valid for 35 days. If the credit note has not been finalized yet, this will be `null`.
+        reason:
+          type: string
+          description: 'Reason for issuing this credit note, one of: `PRODUCT_RETURN`, `ORDER_CHANGE`, `PRODUCT_OR_SERVICE_UNSATISFACTORY`, `BILLING_ERROR`, `GOODWILL_GESTURE`, `OTHER`.'
+        refund_amount:
+          type: number
+          description: Amount credited with refund.
+        refund_status:
+          type: string
+          description: Status of the refund, one of `CREATED`, `SUCCEEDED` or `FAILED`. If no refund was created by this Credit Note, the status will be `null`.
+        status:
+          type: string
+          description: Status of the credit note, one of `DRAFT`, `FINALIZED`, and `VOIDED`.
+        total_amount:
+          type: number
+          description: The total amount of the credit note, including tax.
+        total_discount_amounts:
+          type: array
+          description: The aggregate amounts calculated per discount across all credit note line items and the credit note.
+          items:
+            $ref: '#/components/schemas/DiscountAmount'
+        total_tax_amount:
+          type: number
+          description: The aggregate amounts calculated per tax rate for all line items.
+        type:
+          type: string
+          description: 'The type of the credit note, one of: `BEFORE_PAYMENT`, `AFTER_PAYMENT`.'
+        updated_at:
+          type: string
+          description: Time when this credit note was last updated.
+        voided_at:
+          type: string
+          description: Time at which the credit note was voided.
+    InvoiceItemPriceTier:
+      required:
+      - level
+      type: object
+      properties:
+        flat_amount:
+          type: number
+          description: The flat amount to be charged for this tier when pricing model is `GRADUATED`, or the overall flat amount to be charged when pricing model is `VOLUME`.
+        level:
+          type: integer
+          description: The sequential position of the tier within the price definition. Starts from 1.
+          format: int32
+        lower_bound:
+          type: number
+          description: The lower quantity limit of this tier (inclusive). For the first tier, the lower bound is 0.
+        unit_amount:
+          type: number
+          description: The per-unit amount to be charged for this tier when pricing model is `GRADUATED`, or the overall per-unit amount to be charged when pricing model is `VOLUME`.
+        upper_bound:
+          type: number
+          description: The upper quantity limit of this tier (exclusive). For the last tier, the upper bound is null.
+      description: The price tier this line item belongs to. Only present for graduated or volume pricing.
+    CursorPaginationClientApiResponseCreditNote:
+      required:
+      - items
+      type: object
+      properties:
+        items:
+          type: array
+          description: Paged results.
+          items:
+            $ref: '#/components/schemas/CreditNote'
+        page_after:
+          type: string
+          description: The page cursor used for searching after page.
+        page_before:
+          type: string
+          description: The page cursor used for search before page.
+    CreditNoteLineItemPreview:
+      required:
+      - amount
+      - currency
+      - discount_amounts
+      - tax_breakdown
+      - tax_percent
+      type: object
+      properties:
+        amount:
+          type: number
+          description: The amount of the Credit Note Line Item.
+        currency:
+          type: string
+          description: The currency of the Credit Note Line Item in 3-letter ISO-4217 format.
+        description:
+          type: string
+          description: Description of the Credit Note Line Item.
+        discount_amounts:
+          type: array
+          description: The amount of discount calculated per discount for this credit note line item. The Discount applied to the credit note will be apportioned to the discount_amounts of each credit note line item.
+          items:
+            $ref: '#/components/schemas/DiscountAmount'
+        invoice_line_item_id:
+          type: string
+          description: ID of the Invoice Line Item that this credit note line item references.
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+            description: A set of string key-value pairs that you can attach to this object for storing additional information.
+          description: A set of string key-value pairs that you can attach to this object for storing additional information.
+        quantity:
+          type: integer
+          description: The product quantity.
+          format: int32
+        tax_amount:
+          type: number
+          description: The tax amount of this line item.
+        tax_breakdown:
+          type: array
+          description: The tax breakdown details the exact taxes that apply to this line item.
+          items:
+            $ref: '#/components/schemas/TaxBreakdownItem'
+        tax_percent:
+          type: number
+          description: The effective tax percent applied to this line item.
+        unit_amount:
+          type: number
+          description: The unit amount of the Credit Note Line Item.
+    CreditNoteLineItem:
+      required:
+      - amount
+      - created_at
+      - credit_note_id
+      - currency
+      - discount_amounts
+      - id
+      - tax_breakdown
+      - tax_percent
+      - updated_at
+      type: object
+      properties:
+        amount:
+          type: number
+          description: The amount of the Credit Note Line Item.
+        created_at:
+          type: string
+          description: Time when the Credit Note Line Item was created.
+        credit_note_id:
+          type: string
+          description: ID of the [Credit Note](/docs/api/billing/credit_notes) that this Credit Note Line Item belongs to.
+        currency:
+          type: string
+          description: The currency of the Credit Note Line Item in 3-letter ISO-4217 format.
+        description:
+          type: string
+          description: Description of the Credit Note Line Item.
+        discount_amounts:
+          type: array
+          description: The amount of discount calculated per discount for this credit note line item. The Discount applied to the credit note will be apportioned to the discount_amounts of each credit note line item.
+          items:
+            $ref: '#/components/schemas/DiscountAmount'
+        id:
+          type: string
+          description: ID of the Credit Note Line Item object.
+        invoice_line_item_id:
+          type: string
+          description: ID of the Invoice Line Item that this credit note line item references.
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+            description: A set of string key-value pairs that you can attach to this object for storing additional information.
+          description: A set of string key-value pairs that you can attach to this object for storing additional information.
+        price_tier:
+          $ref: '#/components/schemas/InvoiceItemPriceTier'
+        quantity:
+          type: integer
+          description: The product quantity.
+          format: int32
+        tax_amount:
+          type: number
+          description: The tax amount of this line item.
+        tax_breakdown:
+          type: array
+          description: The tax breakdown details the exact taxes that apply to this line item.
+          items:
+            $ref: '#/components/schemas/TaxBreakdownItem'
+        tax_percent:
+          type: number
+          description: The effective tax percent applied to this line item.
+        unit_amount:
+          type: number
+          description: The unit amount of the Credit Note Line Item.
+        updated_at:
+          type: string
+          description: Time when the Credit Note Line Item was last updated.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

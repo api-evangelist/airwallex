@@ -1,0 +1,740 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Transactional FX > Conversion API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Transactional FX > Conversion
+  description: The Conversion resources provide capability to create transactions that convert from one currency into another. The transaction will result in a debit and credit against your wallet balances. Both Quotes and Rates transactions can be created using the Conversion resources.
+  x-domain: Transactional FX
+  x-resource: Conversion
+  x-urlPath: transactional_fx/conversion
+paths:
+  /api/v1/fx/conversions/create:
+    post:
+      tags:
+      - Transactional FX > Conversion
+      summary: 1|Create a Conversion
+      description: 'Create a new conversion to be executed within your Airwallex wallet. To associate a conversion with a payout, use the Payment API. (Note: Some exotic currencies require conversions to be associated with payouts.)
+
+
+        If using Quotes, users must provide a valid Quote ID in the conversion request. The key details of the conversion request such as buy_currency, sell_currency, and conversion_date (if specified) must match the quote details. Otherwise, users can leave the Quote ID field blank, resulting in the conversion being executed at the current market rate.
+
+
+        On a conversion, populate both `buy_currency` and `sell_currency`, but define only one of either `buy_amount` or `sell_amount`. This populated amount defines the dealt (also known as fixed) side of the conversion. The other amount will be computed by Airwallex based on the exchange rate of the conversion. The minimum conversion limit per conversion is USD $1.'
+      operationId: createConversion
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - buy_currency
+              - request_id
+              - sell_currency
+              properties:
+                application_fee_options:
+                  type: array
+                  description: The application fee options applied to the transaction.
+                  items:
+                    type: object
+                    properties:
+                      amount:
+                        type: string
+                        description: A positive integer specifying the amount of the fee expressed in the smallest unit of the currency. e.g. cents for USD. This field is required only when type is FIXED.
+                      currency:
+                        type: string
+                        description: "Specify the currency of the application fee in ISO 4217 currency code format, e.g., USD, AUD. This field is required when the type is FIXED.  \nWhen the type is PERCENTAGE and source_type is CONVERSION, the currency for the conversion if specified must be from the currency pair. If the currency is unspecified, the contra currency of the quote will be used."
+                      metadata:
+                        type: object
+                        description: The metadata of the application fee. The value should be set in key:value format. (e.g., id:1).
+                        additionalProperties:
+                          type: string
+                      percentage:
+                        type: string
+                        description: "Required if the type is PERCENTAGE, and the value to be provided depends on the transaction context.  \nFX Conversions: The value acts as a markup on the FX rate, increasing the conversion cost by the specified percentage.  \nOthers: The value represents a direct fee calculated as a percentage of the transaction amount."
+                      source_type:
+                        type: string
+                        description: Specify type of the source transaction.
+                        enum:
+                        - CONVERSION
+                        - TRANSFER
+                      type:
+                        type: string
+                        description: Define the type of fee calculation. If the `source_type` is `CONVERSION`, then the type must be `PERCENTAGE`.
+                        enum:
+                        - FIXED
+                        - PERCENTAGE
+                buy_amount:
+                  type: string
+                  description: Amount in `buy_currency` that the client buys. Must be specified if `sell_amount` is not specified.
+                buy_currency:
+                  type: string
+                  description: Currency that the client buys (in 3-letter ISO-4217 format).
+                conversion_date:
+                  type: string
+                  description: Date on which the conversion will be settled. `conversion_date` defaults to current date, if funding is available, unless specified.
+                funding_source:
+                  type: object
+                  required:
+                  - id
+                  description: The funding information for this conversion. By default (when the funding object is not specified), conversions will source funds from the wallet.
+                  properties:
+                    debit_type:
+                      type: string
+                      description: The type of deposit you would like to create. If not specified, it will default to DIRECT_DEBIT.
+                      enum:
+                      - DIRECT_DEBIT
+                      - FASTER_DIRECT_DEBIT
+                    id:
+                      type: string
+                      description: The funding source unique identifier only supports Linked Accounts. Please provide the unique identifier of your Linked Account as returned in [Create a Linked Account](/docs/api/core_resources/linked_accounts/create). Note that if not specified, the funding source will default to your Wallet.
+                metadata:
+                  type: object
+                  description: A set of key-value pairs for storing your own data together with the conversion.
+                  additionalProperties:
+                    type: string
+                quote_id:
+                  type: string
+                  description: Provide a valid Quote unique identifier if you want the conversion executed at the `client_rate` returned in the quote.
+                request_id:
+                  type: string
+                  description: Client-generated idempotency key. Must be unique per request attempt. Conversion requests with the same `request_id` will be rejected. Parameter supports a maximum of 64 characters.
+                sell_amount:
+                  type: string
+                  description: Amount in `sell_currency` that the client sells. Must be specified if `buy_amount` is not specified.
+                sell_currency:
+                  type: string
+                  description: Currency that the client sells (in 3-letter ISO-4217 format).
+        description: request
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conversion'
+        '400':
+          description: '["amount_above_limit"
+
+            ,"amount_below_limit"
+
+            ,"conflict_original_ccy"
+
+            ,"expired_quote"
+
+            ,"field_required"
+
+            ,"invalid_argument"
+
+            ,"invalid_endpoint"
+
+            ,"invalid_quote_id"
+
+            ,"invalid_settlement_date"
+
+            ,"operation_failed"
+
+            ,"unsupported_currency"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/fx/conversions/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          application_fee_options:
+          - amount: '5'
+            currency: AUD
+            percentage: '0.1'
+            source_type: TRANSFER
+            type: FIXED
+          buy_amount: '10000'
+          buy_currency: USD
+          conversion_date: '2017-03-22'
+          funding_source:
+            debit_type: DIRECT_DEBIT
+            id: <string>
+          metadata: {}
+          quote_id: <string>
+          request_id: 67f687fe-dcf4-4462-92fa-20335301d9d8
+          sell_amount: <string>
+          sell_currency: AUD
+        response_body:
+          application_fee_options:
+          - amount: '5'
+            currency: AUD
+            percentage: '0.1'
+            source_type: TRANSFER
+            type: FIXED
+          application_fees:
+          - amount: '5'
+            currency: AUD
+            source_type: TRANSFER
+          awx_rate: 0.781523
+          buy_amount: '10000'
+          buy_currency: USD
+          client_rate: 0.781623
+          conversion_date: '2017-03-22'
+          conversion_id: d9af1614-a6a1-4d45-aae7-6858fc6d9ede
+          created_at: 2017-03-20T10:08:12+1100
+          currency_pair: AUDUSD
+          dealt_currency: USD
+          funding:
+            debit_type: DIRECT_DEBIT
+            failure_reason: <string>
+            funding_source_id: <string>
+            status: <string>
+          funding_source:
+            debit_type: DIRECT_DEBIT
+            id: <string>
+          mid_rate: 0.761223
+          quote_id: <string>
+          rate_details:
+          - buy_amount: '10000'
+            level: CLIENT
+            rate: 0.781523
+            sell_amount: 12794.27
+          request_id: 67f687fe-dcf4-4462-92fa-20335301d9d8
+          sell_amount: 12794.27
+          sell_currency: AUD
+          settlement_cutoff_at: 2017-03-22T14:00:00+1100
+          short_reference_id: 20170608-AF3GJ9
+          status: SETTLED
+          updated_at: 2017-03-20T14:00:01+1100
+      x-scope:
+      - scope: fx.conversion:write
+        group: Transactional FX
+        resource_name: Conversion
+      x-domain: Transactional FX
+      x-resource: Conversion
+      x-urlPath: create
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/fx/conversions/{conversion_id}:
+    get:
+      tags:
+      - Transactional FX > Conversion
+      summary: 2|Retrieve a Conversion
+      description: Get a specific conversion by specifying the Airwallex `conversion_id`.
+      operationId: retrieveConversion
+      parameters:
+      - name: conversion_id
+        in: path
+        description: Unique identifier of the conversion to retrieve.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: d9af1614-a6a1-4d45-aae7-6858fc6d9ede
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conversion'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ,]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '404':
+          description: '["not_found"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/fx/conversions/conversion_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          application_fee_options:
+          - amount: '5'
+            currency: AUD
+            percentage: '0.1'
+            source_type: TRANSFER
+            type: FIXED
+          application_fees:
+          - amount: '5'
+            currency: AUD
+            source_type: TRANSFER
+          awx_rate: 0.781523
+          buy_amount: 10000
+          buy_currency: USD
+          client_rate: 0.781623
+          conversion_date: '2017-03-22'
+          conversion_id: d9af1614-a6a1-4d45-aae7-6858fc6d9ede
+          created_at: 2017-03-20T10:08:12+1100
+          currency_pair: AUDUSD
+          dealt_currency: USD
+          funding:
+            debit_type: DIRECT_DEBIT
+            failure_reason: <string>
+            funding_source_id: <string>
+            status: <string>
+          funding_source:
+            debit_type: DIRECT_DEBIT
+            id: <string>
+          mid_rate: 0.761223
+          quote_id: <string>
+          rate_details:
+          - buy_amount: 10000
+            level: CLIENT
+            rate: 0.781523
+            sell_amount: 12794.27
+          request_id: 67f687fe-dcf4-4462-92fa-20335301d9d8
+          sell_amount: 12794.27
+          sell_currency: AUD
+          settlement_cutoff_at: 2017-03-22T14:00:00+1100
+          short_reference_id: 20170608-AF3GJ9
+          status: SETTLED
+          updated_at: 2017-03-20T14:00:01+1100
+      x-scope:
+      - scope: fx.conversion:read
+        group: Transactional FX
+        resource_name: Conversion
+      x-domain: Transactional FX
+      x-resource: Conversion
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/fx/conversions:
+    get:
+      tags:
+      - Transactional FX > Conversion
+      summary: 3|List all Conversions
+      description: Retrieve conversions, using any combination of optional queryable parameters below. You may specify none, one of, or both `from_created_at` or `to_created_at` parameters. If none of these parameters are specified, results for the last 31 days will be returned. If only one of these parameters are specified, we will assume a 31-day range to calculate the other, undefined parameter. The conversions are returned in descending order, with the most recent transactions appearing first. Each queryable parameter below supports only one defined value at a time.
+      operationId: listConversion
+      parameters:
+      - name: buy_currency
+        in: query
+        description: Currency that the client bought (in 3-letter ISO-4217 format).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: AUD
+      - name: from_created_at
+        in: query
+        description: The starting value for specifying a date range for results to be returned. The date range is specific to conversion creation (a conversion's `created_at` date). Specify a starting `created_at` date (in ISO-8601 format). This starting date is inclusive of the range.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: '2017-04-01'
+      - name: page_num
+        in: query
+        description: Page number, starts from 0.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of results per page. Default value is 100.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: request_id
+        in: query
+        description: Client-supplied conversion `request_id` (idempotency key).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: request_id
+      - name: sell_currency
+        in: query
+        description: Currency that the client sold (in 3-letter ISO-4217 format).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: USD
+      - name: status
+        in: query
+        description: Status of the conversion. Can be one of`SCHEDULED`, `OVERDUE`, `CANCELLED`, `SETTLED`.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: SCHEDULED
+      - name: to_created_at
+        in: query
+        description: The ending value for specifying a date range for results to be returned. The date range is specific to conversion creation (a conversion's `created_at` date). Specify an ending `created_at` date (in ISO-8601 format). This ending date is inclusive of the range.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: 2017-04-01T03:52:34+0000
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: Paged results.
+                    items:
+                      $ref: '#/components/schemas/Conversion'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/fx/conversions
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - application_fee_options:
+            - amount: '5'
+              currency: AUD
+              percentage: '0.1'
+              source_type: TRANSFER
+              type: FIXED
+            application_fees:
+            - amount: '5'
+              currency: AUD
+              source_type: TRANSFER
+            awx_rate: 0.781523
+            buy_amount: 10000
+            buy_currency: USD
+            client_rate: 0.781623
+            conversion_date: '2017-03-22'
+            conversion_id: d9af1614-a6a1-4d45-aae7-6858fc6d9ede
+            created_at: 2017-03-20T10:08:12+1100
+            currency_pair: AUDUSD
+            dealt_currency: USD
+            mid_rate: 0.761223
+            rate_details:
+            - buy_amount: 10000
+              level: CLIENT
+              rate: 0.781523
+              sell_amount: 12794.27
+            request_id: 67f687fe-dcf4-4462-92fa-20335301d9d8
+            sell_amount: 12794.27
+            sell_currency: AUD
+            settlement_cutoff_at: 2017-03-22T14:00:00+1100
+            short_reference_id: 20170608-AF3GJ9
+            status: SETTLED
+            updated_at: 2017-03-20T14:00:01+1100
+      x-scope:
+      - scope: fx.conversion:read
+        group: Transactional FX
+        resource_name: Conversion
+      x-domain: Transactional FX
+      x-resource: Conversion
+      x-urlPath: list
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    Conversion:
+      type: object
+      required:
+      - awx_rate
+      - buy_amount
+      - buy_currency
+      - client_rate
+      - conversion_date
+      - conversion_id
+      - created_at
+      - currency_pair
+      - dealt_currency
+      - mid_rate
+      - request_id
+      - sell_amount
+      - sell_currency
+      - settlement_cutoff_at
+      - short_reference_id
+      - status
+      - updated_at
+      properties:
+        application_fee_options:
+          type: array
+          description: The application fee options applied to the transaction.
+          items:
+            $ref: '#/components/schemas/ApplicationFeeOption'
+        application_fees:
+          type: array
+          description: Application fees in this transaction.
+          items:
+            $ref: '#/components/schemas/ApplicationFee'
+        awx_rate:
+          type: number
+          description: For reference purposes only. This is a reference rate Airwallex compiles by analyzing prices across multiple banking providers and independent rate publishers.
+        buy_amount:
+          type: number
+          description: The amount in `buy_currency` that was bought by the client.
+        buy_currency:
+          type: string
+          description: Currency that the client bought (in 3-letter ISO-4217 format).
+        client_rate:
+          type: number
+          description: The transaction execution rate of the conversion. This is the rate at which the client is charged.
+        conversion_date:
+          type: string
+          description: Date on which the conversion will be settled. `conversion_date` defaults to current date, if funding is available, unless specified.
+        conversion_id:
+          type: string
+          format: uuid
+          description: Airwallex-generated unique identifier for the conversion record.
+        created_at:
+          type: string
+          description: The time at which the conversion was created. Follows the [same timestamp format](/docs/api/data_types) as the rest of Airwallex’s APIs.
+        currency_pair:
+          type: string
+          description: The currency pair associated with `awx_rate` and `client_rate`.
+        dealt_currency:
+          type: string
+          description: Dealt denotes the fixed side of the conversion request. If `buy_amount` was specified, then `buy_currency`; else, `sell_currency` (in 3-letter ISO-4217 format).
+        funding:
+          $ref: '#/components/schemas/Transactional_FX_Funding'
+          description: The funding information for this conversion.
+        funding_source:
+          $ref: '#/components/schemas/FundingSource'
+          description: The funding information for this conversion.
+        mid_rate:
+          type: number
+          description: For reference purposes only. This rate represents the midpoint of the current bid and ask price.
+        quote_id:
+          type: string
+          description: The Quote used to execute the conversion. Echoes the request’s Quote unique identifier, if provided.
+        rate_details:
+          type: array
+          description: Breakdown of rates at different user levels.
+          items:
+            $ref: '#/components/schemas/RateDetail'
+        request_id:
+          type: string
+          description: Echoes request’s client-supplied request unique identifier (idempotency key).
+        sell_amount:
+          type: number
+          description: The amount in `sell_currency` that was sold by the client.
+        sell_currency:
+          type: string
+          description: Currency that the client sold (in 3-letter ISO-4217 format).
+        settlement_cutoff_at:
+          type: string
+          description: This is latest time by which the `sell_amount` in `sell_currency` needs to be available in Airwallex account balance for the conversion to be successfully settled.
+        short_reference_id:
+          type: string
+          description: Shortened transaction unique identifier for ease of use within Web GUI and with Airwallex support.
+        status:
+          type: string
+          description: Status of the conversion. Can be one of `SCHEDULED`, `CANCELLED`, `OVERDUE`, `SETTLED`.
+        updated_at:
+          type: string
+          description: The time at which the conversion was last updated (including status changes). Follows the [same timestamp format](/docs/api/data_types) as the rest of Airwallex’s APIs.
+    ApplicationFeeOption:
+      type: object
+      properties:
+        amount:
+          type: string
+          description: A positive integer specifying the amount of the fee expressed in the smallest unit of the currency. e.g. cents for USD. This field is required only when type is FIXED.
+        currency:
+          type: string
+          description: "Specify the currency of the application fee in ISO 4217 currency code format, e.g., USD, AUD. This field is required when the type is FIXED.  \nWhen the type is PERCENTAGE and source_type is CONVERSION, the currency for the conversion if specified must be from the currency pair. If the currency is unspecified, the contra currency of the quote will be used."
+        metadata:
+          type: object
+          description: The metadata of the application fee. The value should be set in key:value format. (e.g., id:1).
+          additionalProperties:
+            type: string
+        percentage:
+          type: string
+          description: "Required if the type is PERCENTAGE, and the value to be provided depends on the transaction context.  \nFX Conversions: The value acts as a markup on the FX rate, increasing the conversion cost by the specified percentage.  \nOthers: The value represents a direct fee calculated as a percentage of the transaction amount."
+        source_type:
+          type: string
+          description: Specify type of the source transaction.
+          enum:
+          - CONVERSION
+          - TRANSFER
+        type:
+          type: string
+          description: Define the type of fee calculation. If the `source_type` is `CONVERSION`, then the type must be `PERCENTAGE`.
+          enum:
+          - FIXED
+          - PERCENTAGE
+    RateDetail:
+      type: object
+      properties:
+        buy_amount:
+          type: number
+          description: The total amount being bought at the respective level.
+        level:
+          type: string
+          enum:
+          - CLIENT
+          - AWX
+          - PLATFORM_CLIENT
+        rate:
+          type: number
+          description: The exchange rate from the respective level's perspective.
+        sell_amount:
+          type: number
+          description: The total amount being sold at the respective level.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    ApplicationFee:
+      type: object
+      properties:
+        amount:
+          type: string
+          description: The application fee amount.
+        currency:
+          type: string
+          description: The currency of the application fee.
+        source_type:
+          type: string
+          description: Specify the type of source transaction for this application fee.
+          enum:
+          - CONVERSION
+          - TRANSFER
+    FundingSource:
+      type: object
+      required:
+      - id
+      properties:
+        debit_type:
+          type: string
+          description: The type of deposit you would like to create. If not specified, it will default to DIRECT_DEBIT.
+          enum:
+          - DIRECT_DEBIT
+          - FASTER_DIRECT_DEBIT
+        id:
+          type: string
+          description: The funding source unique identifier only supports Linked Accounts. Please provide the unique identifier of your Linked Account as returned in [Create a Linked Account](/docs/api/core_resources/linked_accounts/create). Note that if not specified, the funding source will default to your Wallet.
+      description: The funding information for this conversion.
+    Transactional_FX_Funding:
+      type: object
+      properties:
+        debit_type:
+          type: string
+          enum:
+          - DIRECT_DEBIT
+          - FASTER_DIRECT_DEBIT
+        failure_reason:
+          type: string
+          description: Empty unless the funding is in an error state.
+        funding_source_id:
+          type: string
+          description: The id of the funding source, it can be null if using a wallet.
+        status:
+          type: string
+          description: The funding statuses of this conversion.
+      description: The funding information for this conversion.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

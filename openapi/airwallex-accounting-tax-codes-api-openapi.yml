@@ -1,0 +1,446 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Accounting > Tax Codes API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Accounting > Tax Codes
+  description: Manages tax codes used when coding Airwallex Spend transactions, such as expenses and bills.
+  x-domain: Accounting
+  x-resource: Tax Codes
+  x-urlPath: accounting/tax_codes
+paths:
+  /api/v1/accounting/tax_codes/create:
+    post:
+      tags:
+      - Accounting > Tax Codes
+      summary: 1|Create a Tax Code
+      description: Creates a new tax code for coding Airwallex Spend transactions.
+      operationId: createTaxCode
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              - value
+              - rate_percent
+              properties:
+                request_id:
+                  type: string
+                  description: Unique identifier for this request to ensure idempotency. Generate a random UUID to prevent accidental duplication.
+                value:
+                  type: string
+                  description: Tax code name as defined in the accounting system.
+                rate_percent:
+                  type: string
+                  description: Tax rate value as a decimal percentage.
+                value_label:
+                  type: string
+                  description: Airwallex display name for the tax code.
+                external_id:
+                  type: string
+                  description: External ID from the accounting system.
+                legal_entity_ids:
+                  type: array
+                  description: Legal entity IDs to which this tax code applies. Omit this field when it applies to all legal entities.
+                  items:
+                    type: string
+      responses:
+        '201':
+          description: Tax code created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaxCode'
+        '400':
+          description: Invalid request.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/accounting/tax_codes/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          request_id: 4b8d83d6-70c4-429d-8a0b-bb3281f6b17f
+          value: '9'
+          rate_percent: '9.0000'
+          value_label: 9%
+          external_id: '9'
+          legal_entity_ids:
+          - le_U3jlHqQRNHWn2zAKeeT8sg
+        status_code: 201
+        reason_phrase: Created
+        response_body:
+          id: 985461d5-016f-4e1f-a387-5f1380b42d92
+          value: '9'
+          rate_percent: '9.0000'
+          value_label: 9%
+          external_id: '9'
+          legal_entity_ids:
+          - le_U3jlHqQRNHWn2zAKeeT8sg
+          status: ACTIVE
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-01-01T00:00:00Z'
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-stage: beta
+      x-scope:
+      - scope: accounting.tax_code:write
+        group: Accounting
+        resource_name: Tax Codes
+      x-domain: Accounting
+      x-resource: Tax Codes
+      x-urlPath: create
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/accounting/tax_codes/{id}:
+    get:
+      tags:
+      - Accounting > Tax Codes
+      summary: 2|Retrieve a Tax Code
+      description: Retrieves an existing tax code used in Airwallex Spend.
+      operationId: retrieveTaxCode
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the tax code.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaxCode'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/accounting/tax_codes/985461d5-016f-4e1f-a387-5f1380b42d92
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: 985461d5-016f-4e1f-a387-5f1380b42d92
+          value: '9'
+          rate_percent: '9.0000'
+          value_label: 9%
+          external_id: '9'
+          legal_entity_ids:
+          - le_U3jlHqQRNHWn2zAKeeT8sg
+          status: ACTIVE
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-02-02T00:00:00Z'
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-stage: beta
+      x-scope:
+      - scope: accounting.tax_code:read
+        group: Accounting
+        resource_name: Tax Codes
+      - scope: accounting.tax_code:write
+        group: Accounting
+        resource_name: Tax Codes
+      x-domain: Accounting
+      x-resource: Tax Codes
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/accounting/tax_codes:
+    get:
+      tags:
+      - Accounting > Tax Codes
+      summary: 3|List all Tax Codes
+      description: Returns tax codes used in Airwallex Spend, filtered by the specified query parameters.
+      operationId: listTaxCodes
+      parameters:
+      - name: page
+        in: query
+        description: A bookmark for use in pagination to retrieve the next or previous page of results.
+        required: false
+        schema:
+          type: string
+      - name: page_size
+        in: query
+        description: The number of items returned per page, between 1 and 100. The default is 100.
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 100
+      - name: status
+        in: query
+        description: Filter by tax code status.
+        required: false
+        schema:
+          $ref: '#/components/schemas/AccountingResourceStatus'
+      - name: external_id
+        in: query
+        description: Filter by external ID.
+        required: false
+        schema:
+          type: string
+      - name: legal_entity_id
+        in: query
+        description: Filter by legal entity ID.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaxCodePagination'
+        '400':
+          description: Invalid request.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/accounting/tax_codes
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - id: 985461d5-016f-4e1f-a387-5f1380b42d92
+            value: '9'
+            rate_percent: '9.0000'
+            value_label: 9%
+            external_id: '9'
+            legal_entity_ids:
+            - le_U3jlHqQRNHWn2zAKeeT8sg
+            status: ACTIVE
+            created_at: '2025-01-01T00:00:00Z'
+            updated_at: '2025-02-02T00:00:00Z'
+          page_after: eyJwYWdlIjoiMiJ9
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-stage: beta
+      x-scope:
+      - scope: accounting.tax_code:read
+        group: Accounting
+        resource_name: Tax Codes
+      - scope: accounting.tax_code:write
+        group: Accounting
+        resource_name: Tax Codes
+      x-domain: Accounting
+      x-resource: Tax Codes
+      x-urlPath: list
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/accounting/tax_codes/{id}/update:
+    post:
+      tags:
+      - Accounting > Tax Codes
+      summary: 4|Update a Tax Code
+      description: Updates an existing tax code used in Airwallex Spend.
+      operationId: updateTaxCode
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the tax code.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - value
+              - rate_percent
+              - status
+              properties:
+                value:
+                  type: string
+                  description: Tax code name as defined in the accounting system.
+                rate_percent:
+                  type: string
+                  description: Tax rate value as a decimal percentage.
+                value_label:
+                  type: string
+                  description: Airwallex display name for the tax code.
+                external_id:
+                  type: string
+                  description: External ID from the accounting system.
+                legal_entity_ids:
+                  type: array
+                  description: Legal entity IDs to which this tax code applies. Omit this field when it applies to all legal entities.
+                  items:
+                    type: string
+                status:
+                  $ref: '#/components/schemas/AccountingResourceStatus'
+      responses:
+        '200':
+          description: Tax code updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaxCode'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/accounting/tax_codes/985461d5-016f-4e1f-a387-5f1380b42d92/update
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          value: '9'
+          rate_percent: '9.0000'
+          value_label: 9%
+          external_id: '9'
+          legal_entity_ids:
+          - le_U3jlHqQRNHWn2zAKeeT8sg
+          status: ACTIVE
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: 985461d5-016f-4e1f-a387-5f1380b42d92
+          value: '9'
+          rate_percent: '9.0000'
+          value_label: 9%
+          external_id: '9'
+          legal_entity_ids:
+          - le_U3jlHqQRNHWn2zAKeeT8sg
+          status: ACTIVE
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-02-02T00:00:00Z'
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-stage: beta
+      x-scope:
+      - scope: accounting.tax_code:write
+        group: Accounting
+        resource_name: Tax Codes
+      x-domain: Accounting
+      x-resource: Tax Codes
+      x-urlPath: update
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    TaxCodePagination:
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          description: List of tax codes returned.
+          items:
+            $ref: '#/components/schemas/TaxCode'
+        page_after:
+          type: string
+          description: A pointer to the end of the page list used to retrieve the next page of results.
+        page_before:
+          type: string
+          description: A pointer to the start of the page list used to retrieve the previous page of results.
+      description: Paginated list of tax codes.
+    TaxCode:
+      type: object
+      required:
+      - id
+      - value
+      - rate_percent
+      - status
+      - created_at
+      - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the tax code.
+        value:
+          type: string
+          description: Tax code name as defined in the accounting system.
+        rate_percent:
+          type: string
+          description: Tax rate value as a decimal percentage.
+        value_label:
+          type: string
+          description: Airwallex display name for the tax code.
+        external_id:
+          type: string
+          description: External ID from the accounting system.
+        legal_entity_ids:
+          type: array
+          description: Legal entity IDs to which this tax code applies. Omit this field when it applies to all legal entities.
+          items:
+            type: string
+        status:
+          $ref: '#/components/schemas/AccountingResourceStatus'
+        created_at:
+          type: string
+          description: Time at which the tax code was created, in ISO 8601 format.
+        updated_at:
+          type: string
+          description: Time at which the tax code was last updated, in ISO 8601 format.
+      description: Tax code that can be selected when coding Airwallex Spend transactions.
+    AccountingResourceStatus:
+      type: string
+      description: Status of an Accounting resource used in Airwallex Spend.
+      enum:
+      - ACTIVE
+      - ARCHIVED
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

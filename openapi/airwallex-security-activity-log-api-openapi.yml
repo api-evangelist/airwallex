@@ -1,0 +1,231 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Security > Activity Log API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Security > Activity Log
+  description: Get activity logs of the login account.
+  x-domain: Security
+  x-resource: Activity Log
+  x-urlPath: security/activity_log
+paths:
+  /api/v1/audit_log/security_audit_logs:
+    get:
+      tags:
+      - Security > Activity Log
+      summary: 1|Security Audit Logs
+      x-stage: early_access
+      description: 'Use this endpoint to get a list of security audit logs of the login account.
+
+
+        Security audit logs includes activity related to: User management actions, User login actions, API key actions, 2FA actions, Login credential changes.'
+      operationId: listSecurityAuditLogs
+      x-oboSupported: false
+      parameters:
+      - name: end_event_time
+        in: query
+        description: The end date the audit log event time in ISO8601 format (exclusive), if not provided, default to from_event_time plus 180 days.
+        required: false
+        schema:
+          type: string
+      - name: from_event_time
+        in: query
+        description: The start date of the audit log event time in ISO8601 format (inclusive), default and earliest value 2024-02-06T00:00:00+0800.
+        required: false
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: Page bookmark.
+        required: false
+        schema:
+          type: string
+      - name: page_size
+        in: query
+        description: Page size, default 100 if not provided, valid value 1-2000.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedSecurityAuditLog'
+        '400':
+          description: '["invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["Unauthorized"
+
+            ,"Insufficient permissions"
+
+            ,"credentials_invalid"
+
+            ,"credentials_expired"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/audit_log/security_audit_logs
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - account_id: acct_TOslkS7-MnyXlQuV8Lb4og
+            event_details:
+              new_value: test+111@airwallex.com
+            event_time: 2022-06-08T06:41:37+0000
+            event_type: user.email.added
+            id: 45a6d9c3-bdcd-3bbf-b592-10f287a87ccd
+            operator_info:
+              email: test@airwallex.com
+              mobile: '12345679'
+              type: WEBAPP_ACCOUNT_USER
+            session_info:
+              application: Chrome
+              ip_address: 127.0.0.1
+              location: Hong Kong
+              operating_system: Mac OS X
+              user_agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36
+          page_after: <string>
+          page_before: <string>
+      x-scope:
+      - scope: security.activity_log:read
+        group: Security
+        resource_name: Activity Log
+      x-oauthSupported: false
+      x-domain: Security
+      x-resource: Activity Log
+      x-urlPath: security_audit_logs
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    ExternalUserInfo:
+      type: object
+      properties:
+        email:
+          type: string
+          description: User email.
+        mobile:
+          type: string
+          description: User mobile.
+        type:
+          type: string
+          description: Type of the operator user.
+      description: Operator info of the user trigger the event.
+    PagedSecurityAuditLog:
+      type: object
+      properties:
+        items:
+          type: array
+          description: Paged results.
+          items:
+            $ref: '#/components/schemas/AuditLog'
+        page_after:
+          type: string
+          description: The page bookmark used for search the item after the result.
+        page_before:
+          type: string
+          description: The page bookmark used for search the item before the result.
+    ExternalSessionInfo:
+      type: object
+      properties:
+        application:
+          type: string
+          description: Web browser or Airwallex app, derived from User agent info.
+        ip_address:
+          type: string
+          description: Ip address.
+        location:
+          type: string
+          description: Location info derived from ip address.
+        operating_system:
+          type: string
+          description: Operating system info.
+        user_agent:
+          type: string
+          description: User agent info.
+      description: Session info of where and what device trigger the event.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    AuditLog:
+      type: object
+      properties:
+        account_id:
+          type: string
+          description: Account id.
+        event_details:
+          type: object
+          description: Optional. Detail infos related to the event, differ for different action types.
+        event_time:
+          type: string
+          format: date-time
+          description: Event timestamp, UTC timezone.
+        event_type:
+          type: string
+          description: Event type.
+        id:
+          type: string
+          format: uuid
+          description: An unique UUID id of the event.
+        operator_info:
+          $ref: '#/components/schemas/ExternalUserInfo'
+          description: Operator info of the user trigger the event.
+        session_info:
+          $ref: '#/components/schemas/ExternalSessionInfo'
+          description: Session info of where and what device trigger the event.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

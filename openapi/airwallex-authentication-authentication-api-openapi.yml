@@ -1,0 +1,132 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Authentication > Authentication API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Authentication > Authentication
+  x-urlPath: authentication/api_access_token
+  x-resource: API Access Token
+  description: 'Airwallex uses an API key and Client ID to authenticate requests. You authenticate by exchanging your API key and Client ID for a short-lived access token, then sending that token as `Authorization: Bearer ` on every subsequent call. The access token is valid for 30 minutes and can be reused until it expires. Do not call the authentication endpoint before each request. Track expiration using the `expires_at` field from the login response. To get an access token, call Obtain an access token.
+
+
+    You can view and manage API keys in the Airwallex web app. Do not share your API key in publicly accessible places such as GitHub repositories, client-side code, and so forth. For guidance on scoping, storing, and rotating your keys, see API key best practices.
+
+
+    Airwallex authorizes each request against the scopes attached to your API key. For the full catalog of key permissions, see API key scopes.
+
+
+    All requests must be made over HTTPS. Only PCI-DSS recommended TLS versions and cipher suites are supported.'
+  x-domain: Authentication
+paths:
+  /api/v1/authentication/login:
+    post:
+      x-urlPath: login
+      tags:
+      - Authentication > Authentication
+      summary: 1|Obtain Access Token
+      description: 'Obtain an access token by specifying your `x-client-id` and `x-api-key` in the HTTP request header. Include the access token you receive in the `Authorization: Bearer [token]` header when calling other endpoints. The access token remains valid for 30 minutes and can be reused until it expires. Always refer to the `expires_at` field for the exact expiration time.
+
+
+        If your scoped API key includes permissions for multiple accounts, include the `x-login-as` header to specify the target account that the returned access token is authorized for. If the scoped API key also includes organization-level permissions, the access token would automatically have access to organization-level resources. For more details, see Manage API keys.'
+      operationId: authentication_login
+      parameters:
+      - name: x-api-key
+        in: header
+        description: API key provided by Airwallex.
+        required: true
+        schema:
+          type: string
+          default: 72c0a50d840626050145ccf72b733e32f31bb21323d493f9d00290b37676a138bcdf1d6415d9f08aad117450e23a4f4f
+      - name: x-client-id
+        in: header
+        description: Client unique identifier provided by Airwallex.
+        required: true
+        schema:
+          type: string
+          default: 5f1vUssbSnq45temBX6CnB
+      - name: x-login-as
+        in: header
+        description: Account unique identifier to be used for authentication.
+        required: false
+        schema:
+          type: string
+          default: acct_LTwYEh8EPa2yiA3dCoBEVA
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '400':
+          description: Bad request. Data provided is either incomplete or malformed.
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '403':
+          description: Forbidden. The request was denied due to insufficient permissions
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: Authenticate with a given API key
+        method: POST
+        uri: /api/v1/authentication/login
+        request_headers:
+          x-api-key: <string>
+          x-client-id: <string>
+        status_code: 201
+        reason_phrase: Created
+        response_body:
+          token: eyJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2MjQwMDAwMDAsImV4cCI6MTYyNDAwMTgwMH0.example
+          expires_at: 2021-06-18T16:30:00+0000
+      - key: default_for_account
+        name: Authenticate with a given API key for a given account
+        method: POST
+        uri: /api/v1/authentication/login
+        request_headers:
+          x-api-key: <string>
+          x-client-id: <string>
+          x-login-as: <string>
+        status_code: 201
+        reason_phrase: Created
+        response_body:
+          token: eyJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2MjQwMDAwMDAsImV4cCI6MTYyNDAwMTgwMH0.example
+          expires_at: 2021-06-18T16:30:00+0000
+      security: []
+      x-oauthSupported: false
+      x-oboSupported: false
+      x-domain: Authentication
+      x-resource: API Access Token
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    Token:
+      type: object
+      properties:
+        expires_at:
+          type: string
+          description: Token expiration time in ISO8601 format.
+        token:
+          type: string
+          description: Authentication token returned.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

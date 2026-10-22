@@ -1,0 +1,1131 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Embedded Finance > Platform Liquidity Programs API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Embedded Finance > Platform Liquidity Programs
+  description: Manage platform liquidity programs, spending accounts, transactions, and fund deposit and withdrawal.
+  x-domain: Embedded Finance
+  x-resource: Platform Liquidity Programs
+  x-urlPath: scale/platform_liquidity_programs
+paths:
+  /api/v1/platform_liquidity_programs/{id}:
+    get:
+      tags:
+      - Embedded Finance > Platform Liquidity Programs
+      x-stage: beta
+      summary: 1|Retrieve a Program
+      description: Retrieve details of a Platform Liquidity Program.
+      operationId: retrievePlatformLiquidityProgram
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the program.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlatformLiquidityProgram'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: '`forbidden`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: '`not_found`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: '`too_many_requests`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: '`service_unavailable`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/platform_liquidity_programs/platform_liquidity_program_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          created_at: '2023-06-01T15:30:00Z'
+          id: 123e4567-e89b-12d3-a456-426614174000
+          limit_balances:
+          - available_amount: 10000
+            currency: HKD
+            reserved_amount: 2000
+            total_amount: 12000
+          supported_connected_account_regions:
+          - HK
+          - SG
+          name: Merchant A Program
+          status: ACTIVE
+          supported_currencies:
+          - currency: HKD
+            low_balance_threshold: 1000
+          updated_at: '2023-06-01T15:45:30Z'
+      x-oauthSupported: false
+      x-domain: Embedded Finance
+      x-resource: Platform Liquidity Programs
+      x-urlPath: retrieve
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/platform_liquidity_programs/{id}/deposit:
+    post:
+      tags:
+      - Embedded Finance > Platform Liquidity Programs
+      x-stage: beta
+      summary: 2|Deposit Funds Into a Program
+      description: Deposits funds into the program's settlement Airwallex account from the platform's wallet. The program limit balance will increase by the deposited amount.
+      operationId: deposit
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the program.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - amount
+              - currency
+              - request_id
+              properties:
+                amount:
+                  type: number
+                  description: Deposit amount, greater than 0.
+                currency:
+                  type: string
+                  description: Currency in 3-letter ISO-4217 format.
+                request_id:
+                  type: string
+                  description: A unique request identifier specified by the client. It's used by Airwallex for idempotency check. In case of timeout, the client can retry with the same `request_id`.
+              description: Deposit request for platform liquidity program.
+        description: Deposit details.
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlatformLiquidityProgram'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: '`forbidden`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: '`too_many_requests`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: '`service_unavailable`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/platform_liquidity_programs/platform_liquidity_program_id/deposit
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          amount: 500
+          currency: USD
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+        response_body:
+          created_at: '2023-06-01T15:30:00Z'
+          id: 123e4567-e89b-12d3-a456-426614174000
+          limit_balances:
+          - available_amount: 10000
+            currency: HKD
+            reserved_amount: 2000
+            total_amount: 12000
+          supported_connected_account_regions:
+          - HK
+          - SG
+          name: Merchant A Program
+          status: ACTIVE
+          supported_currencies:
+          - currency: HKD
+            low_balance_threshold: 1000
+          updated_at: '2023-06-01T15:45:30Z'
+      x-oauthSupported: false
+      x-domain: Embedded Finance
+      x-resource: Platform Liquidity Programs
+      x-urlPath: deposit
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/platform_liquidity_programs/{id}/withdraw:
+    post:
+      tags:
+      - Embedded Finance > Platform Liquidity Programs
+      x-stage: beta
+      summary: 3|Withdraw Funds From a Program
+      description: Withdraws funds from the program's settlement Airwallex account into the platform's wallet. The program limit balance will decrease by the withdrawn amount.
+      operationId: withdraw
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the program.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - amount
+              - currency
+              - request_id
+              properties:
+                amount:
+                  type: number
+                  description: Withdraw amount, greater than 0.
+                currency:
+                  type: string
+                  description: Currency in 3-letter ISO-4217 format.
+                request_id:
+                  type: string
+                  description: A unique request identifier specified by the client. It's used by Airwallex for idempotency check. In case of timeout, the client can retry with the same `request_id`.
+              description: Withdrawal request for platform liquidity program.
+        description: Withdraw details.
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlatformLiquidityProgram'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: '`forbidden`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: '`too_many_requests`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: '`service_unavailable`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/platform_liquidity_programs/platform_liquidity_program_id/withdraw
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          amount: 500
+          currency: USD
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+        response_body:
+          created_at: '2023-06-01T15:30:00Z'
+          id: 123e4567-e89b-12d3-a456-426614174000
+          limit_balances:
+          - available_amount: 10000
+            currency: HKD
+            reserved_amount: 2000
+            total_amount: 12000
+          supported_connected_account_regions:
+          - HK
+          - SG
+          name: Merchant A Program
+          status: ACTIVE
+          supported_currencies:
+          - currency: HKD
+            low_balance_threshold: 1000
+          updated_at: '2023-06-01T15:45:30Z'
+      x-oauthSupported: false
+      x-domain: Embedded Finance
+      x-resource: Platform Liquidity Programs
+      x-urlPath: withdraw
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/platform_liquidity_programs/{id}/program_spending_accounts/create:
+    post:
+      tags:
+      - Embedded Finance > Platform Liquidity Programs
+      x-stage: beta
+      summary: 4|Create a Program Spending Account
+      description: Creates a spending account for a program, allowing access to program funds when transacting.
+      operationId: createProgramSpendingAccount
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the program.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - connected_account_id
+              properties:
+                connected_account_id:
+                  type: string
+                  description: Unique identifier of the Connected Account that the spending account is linked to.
+              description: Request to create a program spending account.
+        description: Program spending account creation details.
+        required: true
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateProgramSpendingAccountResponse'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: '`forbidden`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: '`too_many_requests`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: '`service_unavailable`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/platform_liquidity_programs/platform_liquidity_program_id/program_spending_accounts/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          connected_account_id: ACCT_123e4567
+        response_body:
+          connected_account_id: ACCT_123e4567
+          created_at: '2023-06-01T15:30:00Z'
+          funding_source_id: 123e4567-e89b-12d3-a456-426614174001
+          id: 123e4567-e89b-12d3-a456-426614174000
+          status: ACTIVE
+          updated_at: '2023-06-01T15:45:30Z'
+      x-oauthSupported: false
+      x-domain: Embedded Finance
+      x-resource: Platform Liquidity Programs
+      x-urlPath: create_program_spending_accounts
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/platform_liquidity_programs/{id}/program_spending_accounts/{spending_account_id}:
+    get:
+      tags:
+      - Embedded Finance > Platform Liquidity Programs
+      x-stage: beta
+      summary: 5|Retrieve a Program Spending Account
+      description: Retrieve details of a program spending account.
+      operationId: retrieveProgramSpendingAccounts
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the program.
+        required: true
+        schema:
+          type: string
+      - name: spending_account_id
+        in: path
+        description: Program Spending Account unique identifier.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProgramSpendingAccount'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: '`forbidden`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: '`not_found`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: '`too_many_requests`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: '`service_unavailable`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/platform_liquidity_programs/platform_liquidity_program_id/program_spending_accounts/spending_account_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          connected_account_id: ACCT_123e4567
+          created_at: '2023-06-01T15:30:00Z'
+          funding_source_id: 123e4567-e89b-12d3-a456-426614174001
+          id: 123e4567-e89b-12d3-a456-426614174000
+          limit_balances:
+          - available_amount: 1300
+            currency: USD
+            reserved_amount: 120
+            total_amount: 1420
+          limit_policy: ENFORCED
+          status: ACTIVE
+          updated_at: '2023-06-01T15:45:30Z'
+      x-oauthSupported: false
+      x-domain: Embedded Finance
+      x-resource: Platform Liquidity Programs
+      x-urlPath: retrieve_program_spending_accounts
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/platform_liquidity_programs/{id}/program_spending_accounts:
+    get:
+      tags:
+      - Embedded Finance > Platform Liquidity Programs
+      x-stage: beta
+      summary: 6|List all Program Spending Accounts
+      description: Retrieve a list of spending accounts associated with a Platform Liquidity Program.
+      operationId: listProgramSpendingAccounts
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the program.
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: Page marker to retrieve the previous or next page of results. Set this field to the value returned by `page_before` or `page_after` to retrieve the previous or next page, respectively.
+        required: false
+        schema:
+          type: string
+      - name: page_size
+        in: query
+        description: The number of items to return per page, range [10, 100], default to 10.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          minimum: 10
+          maximum: 100
+          default: 10
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProgramSpendingAccounts'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: '`forbidden`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: '`too_many_requests`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: '`service_unavailable`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/platform_liquidity_programs/platform_liquidity_program_id/program_spending_accounts
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - connected_account_id: ACCT_123e4567
+            created_at: '2023-06-01T15:30:00Z'
+            funding_source_id: 123e4567-e89b-12d3-a456-426614174001
+            id: 123e4567-e89b-12d3-a456-426614174000
+            limit_balances:
+            - available_amount: 1300
+              currency: USD
+              reserved_amount: 120
+              total_amount: 1420
+            limit_policy: ENFORCED
+            status: ACTIVE
+            updated_at: '2023-06-01T15:45:30Z'
+          page_after: eyJpZCI6ImIxMjM0NSJ9
+          page_before: eyJpZCI6ImEzNTUzMiJ9
+      x-oauthSupported: false
+      x-domain: Embedded Finance
+      x-resource: Platform Liquidity Programs
+      x-urlPath: program_spending_accounts
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/platform_liquidity_programs/{id}/program_spending_accounts/{spending_account_id}/adjust_limits:
+    post:
+      tags:
+      - Embedded Finance > Platform Liquidity Programs
+      x-stage: beta
+      summary: 7|Adjust Program Spending Account Limits
+      description: Updates a spending account's spending limits. Set `limit_policy` to `ENFORCED` to apply per-currency limits, or `BYPASSED` to turn them off. When enforcing, you can include `limit_adjustments` to raise or lower each currency's limit (a positive amount increases it, a negative amount decreases it). Leave `limit_adjustments` out when `limit_policy` is `BYPASSED`.
+      operationId: programSpendingAccountsAdjustLimits
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the program.
+        required: true
+        schema:
+          type: string
+      - name: spending_account_id
+        in: path
+        description: Program Spending Account unique identifier.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - limit_policy
+              - request_id
+              properties:
+                limit_adjustments:
+                  type: array
+                  description: Non-empty signed per-currency adjustments for `ENFORCED`; omitted for `BYPASSED`.
+                  items:
+                    type: object
+                    required:
+                    - amount
+                    - currency
+                    properties:
+                      amount:
+                        type: number
+                        description: Amount to adjust the available limit. Positive values increase the limit; negative values decrease it. Supports up to two decimal places.
+                      currency:
+                        type: string
+                        description: Supported uppercase three-letter ISO 4217 currency code.
+                    description: Signed adjustment to one currency's available limit.
+                limit_policy:
+                  type: string
+                  description: Target limit policy.
+                  enum:
+                  - BYPASSED
+                  - ENFORCED
+                request_id:
+                  type: string
+                  description: A globally unique UUID specified by the client to ensure idempotency. If the request times out, retry with the same `request_id`.
+              description: Request to adjust a program spending account's limit policy and per-currency limits.
+        description: Target policy and optional signed limit adjustments.
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProgramSpendingAccount'
+        '400':
+          description: '`validation_error`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: '`forbidden`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: '`not_found`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: '`already_exists`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: '`too_many_requests`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: '["internal_error"
+
+            ,"service_unavailable"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: enforced
+        name: Enforced
+        method: POST
+        uri: /api/v1/platform_liquidity_programs/platform_liquidity_program_id/program_spending_accounts/spending_account_id/adjust_limits
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          limit_adjustments:
+          - amount: -300
+            currency: USD
+          limit_policy: ENFORCED
+          request_id: 550e8400-e29b-41d4-a716-446655440002
+        response_body:
+          connected_account_id: ACCT_123e4567
+          created_at: '2023-06-01T15:30:00Z'
+          funding_source_id: 123e4567-e89b-12d3-a456-426614174001
+          id: 123e4567-e89b-12d3-a456-426614174000
+          limit_balances:
+          - available_amount: 1300
+            currency: USD
+            reserved_amount: 120
+            total_amount: 1420
+          limit_policy: ENFORCED
+          status: ACTIVE
+          updated_at: '2023-06-01T15:45:30Z'
+      - key: bypassed
+        name: Bypassed
+        method: POST
+        uri: /api/v1/platform_liquidity_programs/platform_liquidity_program_id/program_spending_accounts/spending_account_id/adjust_limits
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          limit_policy: BYPASSED
+          request_id: 550e8400-e29b-41d4-a716-446655440002
+        response_body:
+          connected_account_id: ACCT_123e4567
+          created_at: '2023-06-01T15:30:00Z'
+          funding_source_id: 123e4567-e89b-12d3-a456-426614174001
+          id: 123e4567-e89b-12d3-a456-426614174000
+          limit_policy: BYPASSED
+          status: ACTIVE
+          updated_at: '2023-06-01T15:45:30Z'
+      x-oauthSupported: false
+      x-domain: Embedded Finance
+      x-resource: Platform Liquidity Programs
+      x-urlPath: adjust_limits_program_spending_accounts
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/platform_liquidity_programs/{id}/transactions:
+    get:
+      tags:
+      - Embedded Finance > Platform Liquidity Programs
+      x-stage: beta
+      summary: 8|List all Program Transactions
+      description: Retrieve a list of transactions that contributed to the balance in the Platform Liquidity Program.
+      operationId: platformLiquidityPrograms_listTransactions
+      x-oboSupported: false
+      parameters:
+      - name: connected_account_id
+        in: query
+        description: Unique identifier of the Connected Account that the spending account is linked to.
+        required: false
+        schema:
+          type: string
+      - name: currency
+        in: query
+        description: The transaction currency in 3-letter ISO-4217 format.
+        required: false
+        schema:
+          type: string
+      - name: from_post_at
+        in: query
+        description: The start date (inclusive) of the date range during which balance activity occurred in your program fund balance. If not specified, `from_post_at` defaults to 7 days before `to_post_at`.
+        required: false
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: Unique identifier of the program.
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: Page marker to retrieve the previous or next page of results. Set this field to the value returned by `page_before` or `page_after` to retrieve the previous or next page, respectively.
+        required: false
+        schema:
+          type: string
+      - name: page_size
+        in: query
+        description: Page size, range [10, 1000], default to 100.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: to_post_at
+        in: query
+        description: The end date (exclusive) of the date range during which the balance activity occurred in your program fund balance. Defaults to today if neither this field nor `from_post_at` are specified. If `from_post_at` is specified, then `to_post_at` defaults to 7 days after the `from_post_at` date.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProgramTransactions'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: '`forbidden`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: '`not_found`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: '`too_many_requests`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: '`service_unavailable`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/platform_liquidity_programs/platform_liquidity_program_id/transactions
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - amount: 500
+            available_limit: 9500
+            connected_account_id: ACCT_123e4567
+            currency: USD
+            id: 123e4567-e89b-12d3-a456-426614174000
+            posted_at: '2023-06-01T15:30:00Z'
+            source_id: 123e4567-e89b-12d3-a456-426614174000
+            transaction_type: LIQUIDITY_AUTH_DEBIT
+          page_after: eyJpZCI6ImIxMjM0NSJ9
+          page_before: eyJpZCI6ImEzNTUzMiJ9
+      x-oauthSupported: false
+      x-domain: Embedded Finance
+      x-resource: Platform Liquidity Programs
+      x-urlPath: transactions
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    PlatformLiquidityProgram:
+      type: object
+      properties:
+        supported_connected_account_regions:
+          type: array
+          description: Array of two-letter region codes, in ISO 3166-1 alpha-2 format, that determine which connected account regions may onboard to this program.
+          items:
+            type: string
+        created_at:
+          type: string
+          description: The time the program was created.
+        id:
+          type: string
+          description: Unique identifier of the Platform Liquidity Program.
+        limit_balances:
+          type: array
+          description: Array of program balance information.
+          items:
+            $ref: '#/components/schemas/LimitBalance'
+        name:
+          type: string
+          description: Name of the Platform Liquidity Program.
+        status:
+          type: string
+          description: Status of the Platform Liquidity Program, either `ACTIVE` or `INACTIVE`.
+        supported_currencies:
+          type: array
+          deprecated: true
+          description: Array of currency configurations.
+          items:
+            $ref: '#/components/schemas/SupportedCurrency'
+        updated_at:
+          type: string
+          description: The time the program was last updated.
+      description: Platform Liquidity Program.
+    ProgramTransaction:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: The transaction amount.
+        available_limit:
+          type: number
+          description: The available limit after this transaction.
+        connected_account_id:
+          type: string
+          description: Unique identifier of the Connected Account to which the spending account is linked. Empty for `DC_CREDIT/DEBIT` transactions, which represent limit updates resulting from deposits and withdrawals.
+        currency:
+          type: string
+          description: The transaction currency in 3-letter ISO-4217 format.
+        id:
+          type: string
+          description: Unique identifier of the transaction object.
+        posted_at:
+          type: string
+          description: Timestamp of the transaction posted to balance.
+        source_id:
+          type: string
+          description: Unique identifier of the source transaction. For `LIQUIDITY_*` transactions, this is the Issuing card transaction event identifier, which can be retrieved using [Retrieve a Card Transaction Event](/docs/api/issuing/card_transaction_events/retrieve). For `DC_CREDIT` and `DC_DEBIT` transactions, this is the financial transaction identifier, which can be looked up using [List Financial Transactions](/docs/api/financial_platform/financial_transactions/list) by passing it as the `source_id` query parameter.
+        transaction_type:
+          type: string
+          description: "The type of this transaction. Possible values:\n * `DC_CREDIT`: Increase of the program balance after a deposit.\n * `DC_DEBIT`: Decrease of the program balance after a withdrawal.\n * `LIQUIDITY_AUTH_CREDIT`: Increase of the program balance when a card authorization is released.\n * `LIQUIDITY_AUTH_DEBIT`: Decrease of the program balance to reserve funds for a card authorization.\n * `LIQUIDITY_FUNDING_CREDIT`: Increase of the program balance when a card transaction is refunded.\n * `LIQUIDITY_FUNDING_DEBIT`: Decrease of the program balance to fund a card capture.\n"
+      description: Program transaction.
+    ProgramSpendingAccountLimitBalance:
+      type: object
+      required:
+      - available_amount
+      - currency
+      - reserved_amount
+      - total_amount
+      properties:
+        available_amount:
+          type: number
+          description: Amount available for new spending.
+        currency:
+          type: string
+          description: Three-letter ISO 4217 currency code.
+        reserved_amount:
+          type: number
+          description: Amount reserved by pending spending.
+        total_amount:
+          type: number
+          description: Sum of `available_amount` and `reserved_amount`.
+      description: Per-currency limit balance for a program spending account.
+    CreateProgramSpendingAccountResponse:
+      type: object
+      properties:
+        connected_account_id:
+          type: string
+          description: Unique identifier of the Connected Account that the spending account is linked to.
+        created_at:
+          type: string
+          description: The time the spending account was created.
+        funding_source_id:
+          type: string
+          description: Unique identifier of the funding source. Use this identifier to link a card to the program's spending account. Refer to [Create a Card](/docs/api/issuing/cards/create).
+        id:
+          type: string
+          description: Unique identifier of the program spending account.
+        status:
+          type: string
+          description: Status of the spending account, either `ACTIVE` or `INACTIVE`.
+        updated_at:
+          type: string
+          description: The time the spending account was last updated.
+      description: Created Program Spending Account.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    GetProgramSpendingAccounts:
+      type: object
+      properties:
+        items:
+          type: array
+          description: Array of program spending accounts.
+          items:
+            $ref: '#/components/schemas/ProgramSpendingAccount'
+        page_after:
+          type: string
+          description: A marker for retrieving the next page of results. Include this value in the `page` request parameter to retrieve subsequent pages.
+        page_before:
+          type: string
+          description: A marker for retrieving the previous page of results. Include this value in the `page` request parameter to retrieve previous pages.
+      description: Response containing list of program spending accounts.
+    ProgramSpendingAccount:
+      type: object
+      required:
+      - limit_policy
+      properties:
+        connected_account_id:
+          type: string
+          description: Unique identifier of the Connected Account that the spending account is linked to.
+        created_at:
+          type: string
+          description: The time the spending account was created.
+        funding_source_id:
+          type: string
+          description: Unique identifier of the funding source. Use this identifier to link a card to the program's spending account. Refer to [Create a Card](/docs/api/issuing/cards/create).
+        id:
+          type: string
+          description: Unique identifier of the program spending account.
+        limit_balances:
+          type: array
+          description: Per-currency balances when `limit_policy` is `ENFORCED`; `null` when `limit_policy` is `BYPASSED`.
+          items:
+            $ref: '#/components/schemas/ProgramSpendingAccountLimitBalance'
+        limit_policy:
+          type: string
+          description: Policy controlling whether local spending limits are enforced.
+          enum:
+          - BYPASSED
+          - ENFORCED
+        status:
+          type: string
+          description: Status of the spending account, either `ACTIVE` or `INACTIVE`.
+        updated_at:
+          type: string
+          description: The time the spending account was last updated.
+      description: Program Spending Account.
+    SupportedCurrency:
+      type: object
+      properties:
+        currency:
+          type: string
+          description: Three-letter ISO 4217 currency code.
+        low_balance_threshold:
+          type: number
+          description: Low balance threshold amount. When the available balance drops below this threshold, the low balance webhook will be triggered.
+      description: Currency configuration.
+    GetProgramTransactions:
+      type: object
+      properties:
+        items:
+          type: array
+          description: Array of program transactions.
+          items:
+            $ref: '#/components/schemas/ProgramTransaction'
+        page_after:
+          type: string
+          description: A marker for retrieving the next page of results. Include this value in the `page` request parameter to retrieve subsequent pages.
+        page_before:
+          type: string
+          description: A marker for retrieving the previous page of results. Include this value in the `page` request parameter to retrieve previous pages.
+      description: Response containing list of program transactions.
+    LimitBalance:
+      type: object
+      properties:
+        available_amount:
+          type: number
+          description: Available balance.
+        currency:
+          type: string
+          description: Three-letter ISO 4217 currency code.
+        reserved_amount:
+          type: number
+          description: Reserved balance.
+        total_amount:
+          type: number
+          description: Account total balance.
+      description: Limit balance information.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

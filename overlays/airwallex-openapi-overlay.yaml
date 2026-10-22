@@ -1,0 +1,1814 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Airwallex API
+  version: 1.0.0
+extends: ../openapi/_original/airwallex-openapi.yml
+x-provenance:
+  generated: '2026-10-20'
+  method: generated
+  source:
+  - openapi/airwallex-openapi.yml
+  - mcp/airwallex-tool-crosswalk.yml
+  - authentication/airwallex-authentication.yml
+  - conventions/airwallex-conventions.yml
+  note: The verbatim contract declares no securitySchemes and no idempotency convention; this overlay adds both
+    from the repo artifacts, plus each operation's public MCP OAuth scope (from the tool crosswalk). Replaces the
+    sixteen overlays that extended the retired per-API reconstruction files.
+actions:
+- target: $.info
+  update:
+    x-apievangelist-enrichment:
+      date: '2026-10-20'
+      conventions: conventions/airwallex-conventions.yml
+      errors: errors/airwallex-problem-types.yml
+      decline_codes: errors/airwallex-decline-codes.yml
+      authentication: authentication/airwallex-authentication.yml
+      scopes: scopes/airwallex-scopes.yml
+      rate_limits: rate-limits/airwallex-rate-limits.yml
+      webhooks: asyncapi/airwallex-webhooks.yml
+      mcp: mcp/airwallex-mcp.yml
+      tool_crosswalk: mcp/airwallex-tool-crosswalk.yml
+      skills: skills/_index.yml
+    x-api-version-header: x-api-version
+    x-idempotency:
+      style: body-field
+      field: request_id
+      value_format: UUIDv4 per distinct logical operation
+      replay_error: duplicate_request
+      source: conventions/airwallex-conventions.yml + errors/airwallex-problem-types.yml
+- target: $.components
+  update:
+    securitySchemes:
+      BearerAuth:
+        type: http
+        scheme: bearer
+        description: 'Access token returned by authentication_login (POST /api/v1/authentication/login with x-client-id
+          and x-api-key headers). Valid 30 minutes; cache and reuse. Source: authentication/airwallex-authentication.yml.'
+- target: $
+  update:
+    security:
+    - BearerAuth: []
+- target: $.paths['/api/v1/authentication/login'].post
+  update:
+    security: []
+- target: $.paths['/api/v1/balances/current'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:balances_view
+      servers: &id001
+      - production
+      - sandbox
+      confidence: medium
+- target: $.paths['/api/v1/balances/history'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:balances_view
+      servers: *id001
+      confidence: medium
+- target: $.paths['/api/v1/beneficiaries/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:contact_management_view
+      servers: &id002
+      - production
+      - sandbox
+      confidence: low
+- target: $.paths['/api/v1/beneficiaries'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:contact_management_view
+      servers: *id002
+      confidence: low
+- target: $.paths['/api/v1/beneficiaries/schema'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:contact_management_view
+      servers: *id002
+      confidence: low
+    - scope: w:awx_action:contact_management_edit
+      servers: &id003
+      - production
+      - sandbox
+      confidence: low
+    - scope: w:awx_action:transfers_edit
+      servers: &id004
+      - sandbox
+      confidence: medium
+- target: $.paths['/api/v1/beneficiary_form_schemas/supported_financial_institutions'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:contact_management_view
+      servers: *id002
+      confidence: low
+- target: $.paths['/api/v1/payers/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:contact_management_view
+      servers: *id002
+      confidence: low
+    - scope: w:awx_action:contact_management_edit
+      servers: *id003
+      confidence: low
+    - scope: w:awx_action:transfers_edit
+      servers: *id004
+      confidence: medium
+- target: $.paths['/api/v1/payers/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:contact_management_view
+      servers: *id002
+      confidence: low
+    - scope: w:awx_action:contact_management_edit
+      servers: *id003
+      confidence: low
+    - scope: w:awx_action:transfers_edit
+      servers: *id004
+      confidence: medium
+- target: $.paths['/api/v1/payers'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:contact_management_view
+      servers: *id002
+      confidence: low
+    - scope: w:awx_action:contact_management_edit
+      servers: *id003
+      confidence: low
+    - scope: w:awx_action:transfers_edit
+      servers: *id004
+      confidence: medium
+- target: $.paths['/api/v1/payers/{id}/update'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:contact_management_view
+      servers: *id002
+      confidence: low
+    - scope: w:awx_action:contact_management_edit
+      servers: *id003
+      confidence: low
+    - scope: w:awx_action:transfers_edit
+      servers: *id004
+      confidence: medium
+- target: $.paths['/api/v1/payers/validate'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:contact_management_view
+      servers: *id002
+      confidence: low
+    - scope: w:awx_action:contact_management_edit
+      servers: *id003
+      confidence: low
+    - scope: w:awx_action:transfers_edit
+      servers: *id004
+      confidence: medium
+- target: $.paths['/api/v1/payers/{id}/delete'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:contact_management_view
+      servers: *id002
+      confidence: low
+    - scope: w:awx_action:contact_management_edit
+      servers: *id003
+      confidence: low
+    - scope: w:awx_action:transfers_edit
+      servers: *id004
+      confidence: medium
+- target: $.paths['/api/v1/payers/schema'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:contact_management_view
+      servers: *id002
+      confidence: low
+    - scope: w:awx_action:contact_management_edit
+      servers: *id003
+      confidence: low
+    - scope: w:awx_action:transfers_edit
+      servers: *id004
+      confidence: medium
+- target: $.paths['/api/v1/fx/conversions/{conversion_id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:conversions_view
+      servers: &id005
+      - production
+      - sandbox
+      confidence: medium
+- target: $.paths['/api/v1/fx/conversions'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:conversions_view
+      servers: *id005
+      confidence: medium
+- target: $.paths['/api/v1/fx/conversion_amendments/{conversion_amendment_id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:conversions_view
+      servers: *id005
+      confidence: medium
+- target: $.paths['/api/v1/fx/conversion_amendments'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:conversions_view
+      servers: *id005
+      confidence: medium
+- target: $.paths['/api/v1/fx/quotes/{quote_id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:conversions_view
+      servers: *id005
+      confidence: medium
+- target: $.paths['/api/v1/fx/rates/current'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:conversions_view
+      servers: *id005
+      confidence: medium
+- target: $.paths['/api/v1/deposits/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:deposits_view
+      servers: &id006
+      - sandbox
+      confidence: medium
+- target: $.paths['/api/v1/deposits'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:deposits_view
+      servers: *id006
+      confidence: medium
+- target: $.paths['/api/v1/direct_debits/{transaction_id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:direct_debits_view
+      servers: &id007
+      - sandbox
+      confidence: medium
+- target: $.paths['/api/v1/direct_debits'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:direct_debits_view
+      servers: *id007
+      confidence: medium
+- target: $.paths['/api/v1/global_accounts/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:global_accounts_view
+      servers: &id008
+      - production
+      - sandbox
+      confidence: medium
+- target: $.paths['/api/v1/global_accounts'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:global_accounts_view
+      servers: *id008
+      confidence: medium
+- target: $.paths['/api/v1/global_accounts/{global_account_id}/aliases/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:global_accounts_view
+      servers: *id008
+      confidence: medium
+- target: $.paths['/api/v1/global_accounts/{global_account_id}/aliases'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:global_accounts_view
+      servers: *id008
+      confidence: medium
+- target: $.paths['/api/v1/global_accounts/{global_account_id}/mandates/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:global_accounts_view
+      servers: *id008
+      confidence: medium
+- target: $.paths['/api/v1/global_accounts/{global_account_id}/mandates'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:global_accounts_view
+      servers: *id008
+      confidence: medium
+- target: $.paths['/api/v1/global_accounts/{id}/transactions'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:global_accounts_view
+      servers: *id008
+      confidence: medium
+- target: $.paths['/api/v1/issuing/cardholders/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:issuing_cardholders_view
+      servers: &id009
+      - production
+      - sandbox
+      confidence: medium
+- target: $.paths['/api/v1/issuing/cardholders'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:issuing_cardholders_view
+      servers: *id009
+      confidence: medium
+- target: $.paths['/api/v1/issuing/cards/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:issuing_cards_view
+      servers: &id010
+      - production
+      - sandbox
+      confidence: medium
+- target: $.paths['/api/v1/issuing/cards'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:issuing_cards_view
+      servers: *id010
+      confidence: medium
+- target: $.paths['/api/v1/issuing/cards/{id}/details'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:issuing_cards_view
+      servers: *id010
+      confidence: medium
+- target: $.paths['/api/v1/issuing/cards/{id}/limits'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:issuing_cards_view
+      servers: *id010
+      confidence: medium
+- target: $.paths['/api/v1/issuing/authorizations/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:issuing_transactions_view
+      servers: &id011
+      - production
+      - sandbox
+      confidence: medium
+- target: $.paths['/api/v1/issuing/authorizations'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:issuing_transactions_view
+      servers: *id011
+      confidence: medium
+- target: $.paths['/api/v1/issuing/card_transaction_events/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:issuing_transactions_view
+      servers: *id011
+      confidence: medium
+- target: $.paths['/api/v1/issuing/card_transaction_events'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:issuing_transactions_view
+      servers: *id011
+      confidence: medium
+- target: $.paths['/api/v1/issuing/lifecycles/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:issuing_transactions_view
+      servers: *id011
+      confidence: medium
+- target: $.paths['/api/v1/issuing/lifecycles'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:issuing_transactions_view
+      servers: *id011
+      confidence: medium
+- target: $.paths['/api/v1/issuing/card_transactions/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:issuing_transactions_view
+      servers: *id011
+      confidence: medium
+- target: $.paths['/api/v1/issuing/card_transactions'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:issuing_transactions_view
+      servers: *id011
+      confidence: medium
+- target: $.paths['/api/v1/issuing/transactions/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:issuing_transactions_view
+      servers: *id011
+      confidence: medium
+- target: $.paths['/api/v1/issuing/transactions'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:issuing_transactions_view
+      servers: *id011
+      confidence: medium
+- target: $.paths['/api/v1/linked_accounts/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:linked_accounts_view
+      servers: &id012
+      - sandbox
+      confidence: medium
+- target: $.paths['/api/v1/linked_accounts'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:linked_accounts_view
+      servers: *id012
+      confidence: medium
+- target: $.paths['/api/v1/linked_accounts/{id}/balances'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:linked_accounts_view
+      servers: *id012
+      confidence: medium
+- target: $.paths['/api/v1/linked_accounts/{id}/mandate'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:linked_accounts_view
+      servers: *id012
+      confidence: medium
+    - scope: w:awx_action:linked_accounts_edit
+      servers: &id013
+      - sandbox
+      confidence: medium
+- target: $.paths['/api/v1/linked_accounts/{id}/mandate'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:linked_accounts_view
+      servers: *id012
+      confidence: medium
+    - scope: w:awx_action:linked_accounts_edit
+      servers: *id013
+      confidence: medium
+- target: $.paths['/api/v1/pa/config/reserve_plan'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:pa_view
+      servers: &id014
+      - production
+      - sandbox
+      confidence: medium
+- target: $.paths['/api/v1/pa/config/applepay/registered_domains'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:pa_view
+      servers: *id014
+      confidence: medium
+- target: $.paths['/api/v1/pa/config/convertible_shopper_currencies'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:pa_view
+      servers: *id014
+      confidence: medium
+- target: $.paths['/api/v1/pa/conversion_quotes/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:pa_view
+      servers: *id014
+      confidence: medium
+- target: $.paths['/api/v1/pa/customers/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:pa_view
+      servers: *id014
+      confidence: medium
+- target: $.paths['/api/v1/pa/customers'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:pa_view
+      servers: *id014
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_attempts/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:pa_view
+      servers: *id014
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_attempts'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:pa_view
+      servers: *id014
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_consents/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:pa_view
+      servers: *id014
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_consents'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:pa_view
+      servers: *id014
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_intents/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:pa_view
+      servers: *id014
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_intents'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:pa_view
+      servers: *id014
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_links/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:pa_view
+      servers: *id014
+      confidence: medium
+    - scope: r:awx_action:payment_links_view
+      servers: &id015
+      - production
+      - sandbox
+      confidence: medium
+    - scope: w:awx_action:payment_links_edit
+      servers: &id016
+      - production
+      - sandbox
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_links'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:pa_view
+      servers: *id014
+      confidence: medium
+    - scope: r:awx_action:payment_links_view
+      servers: *id015
+      confidence: medium
+    - scope: w:awx_action:payment_links_edit
+      servers: *id016
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_methods/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:pa_view
+      servers: *id014
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_methods'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:pa_view
+      servers: *id014
+      confidence: medium
+- target: $.paths['/api/v1/pa/reference/bin/lookup'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:pa_view
+      servers: *id014
+      confidence: medium
+- target: $.paths['/api/v1/pa/refunds/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:pa_view
+      servers: *id014
+      confidence: medium
+- target: $.paths['/api/v1/pa/refunds'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:pa_view
+      servers: *id014
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_disputes/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:payment_dispute_view
+      servers: &id017
+      - sandbox
+      confidence: high
+    - scope: w:awx_action:payment_dispute_edit
+      servers: &id018
+      - sandbox
+      confidence: high
+- target: $.paths['/api/v1/pa/payment_disputes'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:payment_dispute_view
+      servers: *id017
+      confidence: high
+    - scope: w:awx_action:payment_dispute_edit
+      servers: *id018
+      confidence: high
+- target: $.paths['/api/v1/pa/payment_disputes/{id}/related_payment_intents'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:payment_dispute_view
+      servers: *id017
+      confidence: high
+    - scope: w:awx_action:payment_dispute_edit
+      servers: *id018
+      confidence: high
+- target: $.paths['/api/v1/confirmation_letters/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:transfers_view
+      servers: &id019
+      - production
+      - sandbox
+      confidence: medium
+    - scope: w:awx_action:transfers_edit
+      servers: *id004
+      confidence: medium
+- target: $.paths['/api/v1/batch_transfers/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:transfers_view
+      servers: *id019
+      confidence: medium
+- target: $.paths['/api/v1/batch_transfers'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:transfers_view
+      servers: *id019
+      confidence: medium
+- target: $.paths['/api/v1/batch_transfers/{id}/items'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:transfers_view
+      servers: *id019
+      confidence: medium
+- target: $.paths['/api/v1/transfers/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:transfers_view
+      servers: *id019
+      confidence: medium
+- target: $.paths['/api/v1/transfers'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:transfers_view
+      servers: *id019
+      confidence: medium
+- target: $.paths['/api/v1/reference/supported_currencies'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:awx_action:transfers_view
+      servers: *id019
+      confidence: medium
+    - scope: w:awx_action:transfers_edit
+      servers: *id004
+      confidence: medium
+- target: $.paths['/api/v1/billing/billing_customers/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.customer_view
+      servers: &id020
+      - production
+      - sandbox
+      confidence: high
+    - scope: w:org_action:billing.customer_edit
+      servers: &id021
+      - production
+      - sandbox
+      confidence: high
+- target: $.paths['/api/v1/billing/billing_customers/{id}/bank_transfer_instructions'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.customer_view
+      servers: *id020
+      confidence: high
+    - scope: w:org_action:billing.customer_edit
+      servers: *id021
+      confidence: high
+- target: $.paths['/api/v1/billing/billing_customers'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.customer_view
+      servers: *id020
+      confidence: high
+    - scope: w:org_action:billing.customer_edit
+      servers: *id021
+      confidence: high
+- target: $.paths['/api/v1/billing/coupons/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.discount_view
+      servers: &id022
+      - production
+      - sandbox
+      confidence: high
+    - scope: w:org_action:billing.discount_edit
+      servers: &id023
+      - production
+      - sandbox
+      confidence: high
+- target: $.paths['/api/v1/billing/coupons'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.discount_view
+      servers: *id022
+      confidence: high
+    - scope: w:org_action:billing.discount_edit
+      servers: *id023
+      confidence: high
+- target: $.paths['/api/v1/billing/invoices/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.invoice_view
+      servers: &id024
+      - production
+      - sandbox
+      confidence: high
+    - scope: w:org_action:billing.invoice_edit
+      servers: &id025
+      - production
+      - sandbox
+      confidence: high
+- target: $.paths['/api/v1/billing/invoices'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.invoice_view
+      servers: *id024
+      confidence: high
+    - scope: w:org_action:billing.invoice_edit
+      servers: *id025
+      confidence: high
+- target: $.paths['/api/v1/billing/invoices/preview'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.invoice_view
+      servers: *id024
+      confidence: high
+    - scope: w:org_action:billing.invoice_edit
+      servers: *id025
+      confidence: high
+- target: $.paths['/api/v1/billing/invoices/{id}/line_items/{item_id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.invoice_view
+      servers: *id024
+      confidence: high
+    - scope: w:org_action:billing.invoice_edit
+      servers: *id025
+      confidence: high
+- target: $.paths['/api/v1/billing/invoices/{id}/line_items'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.invoice_view
+      servers: *id024
+      confidence: high
+    - scope: w:org_action:billing.invoice_edit
+      servers: *id025
+      confidence: high
+- target: $.paths['/api/v1/billing/invoices/{id}/line_item_groups/{group_id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.invoice_view
+      servers: *id024
+      confidence: high
+    - scope: w:org_action:billing.invoice_edit
+      servers: *id025
+      confidence: high
+- target: $.paths['/api/v1/billing/invoices/{id}/line_item_groups'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.invoice_view
+      servers: *id024
+      confidence: high
+    - scope: w:org_action:billing.invoice_edit
+      servers: *id025
+      confidence: high
+- target: $.paths['/api/v1/billing/payment_sources/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.payment_source_view
+      servers: &id026
+      - production
+      - sandbox
+      confidence: high
+- target: $.paths['/api/v1/billing/payment_sources'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.payment_source_view
+      servers: *id026
+      confidence: high
+- target: $.paths['/api/v1/billing/prices/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.price_view
+      servers: &id027
+      - production
+      - sandbox
+      confidence: high
+    - scope: w:org_action:billing.price_edit
+      servers: &id028
+      - production
+      - sandbox
+      confidence: high
+- target: $.paths['/api/v1/billing/prices'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.price_view
+      servers: *id027
+      confidence: high
+    - scope: w:org_action:billing.price_edit
+      servers: *id028
+      confidence: high
+- target: $.paths['/api/v1/billing/rate_cards/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.price_view
+      servers: *id027
+      confidence: high
+    - scope: w:org_action:billing.price_edit
+      servers: *id028
+      confidence: high
+- target: $.paths['/api/v1/billing/rate_cards'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.price_view
+      servers: *id027
+      confidence: high
+    - scope: w:org_action:billing.price_edit
+      servers: *id028
+      confidence: high
+- target: $.paths['/api/v1/billing/rate_cards/{id}/versions/{version}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.price_view
+      servers: *id027
+      confidence: high
+    - scope: w:org_action:billing.price_edit
+      servers: *id028
+      confidence: high
+- target: $.paths['/api/v1/billing/rate_cards/{id}/versions'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.price_view
+      servers: *id027
+      confidence: high
+    - scope: w:org_action:billing.price_edit
+      servers: *id028
+      confidence: high
+- target: $.paths['/api/v1/billing/rate_cards/{id}/versions/{version}/items/{item_id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.price_view
+      servers: *id027
+      confidence: high
+    - scope: w:org_action:billing.price_edit
+      servers: *id028
+      confidence: high
+- target: $.paths['/api/v1/billing/rate_cards/{id}/versions/{version}/items'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.price_view
+      servers: *id027
+      confidence: high
+    - scope: w:org_action:billing.price_edit
+      servers: *id028
+      confidence: high
+- target: $.paths['/api/v1/billing/products/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.product_view
+      servers: &id029
+      - production
+      - sandbox
+      confidence: high
+    - scope: w:org_action:billing.product_edit
+      servers: &id030
+      - production
+      - sandbox
+      confidence: high
+- target: $.paths['/api/v1/billing/products'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.product_view
+      servers: *id029
+      confidence: high
+    - scope: w:org_action:billing.product_edit
+      servers: *id030
+      confidence: high
+- target: $.paths['/api/v1/billing/subscriptions/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.subscription_view
+      servers: &id031
+      - production
+      - sandbox
+      confidence: high
+    - scope: w:org_action:billing.subscription_edit
+      servers: &id032
+      - production
+      - sandbox
+      confidence: high
+- target: $.paths['/api/v1/billing/subscriptions'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.subscription_view
+      servers: *id031
+      confidence: high
+    - scope: w:org_action:billing.subscription_edit
+      servers: *id032
+      confidence: high
+- target: $.paths['/api/v1/billing/subscriptions/{id}/items/{item_id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.subscription_view
+      servers: *id031
+      confidence: high
+    - scope: w:org_action:billing.subscription_edit
+      servers: *id032
+      confidence: high
+- target: $.paths['/api/v1/billing/subscriptions/{id}/items'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.subscription_view
+      servers: *id031
+      confidence: high
+    - scope: w:org_action:billing.subscription_edit
+      servers: *id032
+      confidence: high
+- target: $.paths['/api/v1/billing/billing_transactions/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.transaction_view
+      servers: &id033
+      - production
+      - sandbox
+      confidence: high
+- target: $.paths['/api/v1/billing/billing_transactions'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.transaction_view
+      servers: *id033
+      confidence: high
+- target: $.paths['/api/v1/billing/meters/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.usage_metering_view
+      servers: &id034
+      - production
+      - sandbox
+      confidence: high
+    - scope: w:org_action:billing.usage_metering_edit
+      servers: &id035
+      - production
+      - sandbox
+      confidence: high
+- target: $.paths['/api/v1/billing/meters'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.usage_metering_view
+      servers: *id034
+      confidence: high
+    - scope: w:org_action:billing.usage_metering_edit
+      servers: *id035
+      confidence: high
+- target: $.paths['/api/v1/billing/meters/{id}/summaries'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:billing.usage_metering_view
+      servers: *id034
+      confidence: high
+    - scope: w:org_action:billing.usage_metering_edit
+      servers: *id035
+      confidence: high
+- target: $.paths['/api/v1/spend/expenses/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:expense_management.expense:api_view
+      servers: &id036
+      - production
+      - sandbox
+      confidence: medium
+- target: $.paths['/api/v1/spend/expenses'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:expense_management.expense:api_view
+      servers: *id036
+      confidence: medium
+- target: $.paths['/api/v1/spend/reimbursement_reports/{id}/reimbursements/{reimbursement_id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:expense_management.expense:api_view
+      servers: *id036
+      confidence: medium
+- target: $.paths['/api/v1/spend/reimbursement_reports/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:expense_management.expense:api_view
+      servers: *id036
+      confidence: medium
+- target: $.paths['/api/v1/spend/reimbursement_reports/{id}/transfers/{transfer_id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:expense_management.expense:api_view
+      servers: *id036
+      confidence: medium
+- target: $.paths['/api/v1/spend/reimbursement_reports/{id}/reimbursements'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:expense_management.expense:api_view
+      servers: *id036
+      confidence: medium
+- target: $.paths['/api/v1/spend/reimbursement_reports'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:expense_management.expense:api_view
+      servers: *id036
+      confidence: medium
+- target: $.paths['/api/v1/spend/bills/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:spend.bills:api_view
+      servers: &id037
+      - production
+      - sandbox
+      confidence: medium
+- target: $.paths['/api/v1/spend/bills'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:spend.bills:api_view
+      servers: *id037
+      confidence: medium
+- target: $.paths['/api/v1/spend/vendors/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:spend.vendors:api_view
+      servers: &id038
+      - production
+      - sandbox
+      confidence: medium
+- target: $.paths['/api/v1/spend/vendors'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: r:org_action:spend.vendors:api_view
+      servers: *id038
+      confidence: medium
+- target: $.paths['/api/v1/beneficiaries/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:contact_management_edit
+      servers: *id003
+      confidence: low
+- target: $.paths['/api/v1/beneficiaries/{id}/update'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:contact_management_edit
+      servers: *id003
+      confidence: low
+- target: $.paths['/api/v1/beneficiaries/validate'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:contact_management_edit
+      servers: *id003
+      confidence: low
+- target: $.paths['/api/v1/beneficiaries/verify_account'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:contact_management_edit
+      servers: *id003
+      confidence: low
+- target: $.paths['/api/v1/beneficiaries/{id}/delete'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:contact_management_edit
+      servers: *id003
+      confidence: low
+- target: $.paths['/api/v1/beneficiary_api_schemas/generate'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:contact_management_edit
+      servers: *id003
+      confidence: low
+- target: $.paths['/api/v1/beneficiary_form_schemas/generate'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:contact_management_edit
+      servers: *id003
+      confidence: low
+- target: $.paths['/api/v1/fx/conversions/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:conversions_edit
+      servers: &id039
+      - sandbox
+      confidence: medium
+- target: $.paths['/api/v1/fx/conversion_amendments/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:conversions_edit
+      servers: *id039
+      confidence: medium
+- target: $.paths['/api/v1/fx/conversion_amendments/quote'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:conversions_edit
+      servers: *id039
+      confidence: medium
+- target: $.paths['/api/v1/fx/quotes/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:conversions_edit
+      servers: *id039
+      confidence: medium
+- target: $.paths['/api/v1/deposits/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:deposits_create
+      servers:
+      - sandbox
+      confidence: medium
+- target: $.paths['/api/v1/issuing/cardholders/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:issuing_cardholders_edit
+      servers: &id040
+      - production
+      - sandbox
+      confidence: medium
+- target: $.paths['/api/v1/issuing/cardholders/{id}/update'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:issuing_cardholders_edit
+      servers: *id040
+      confidence: medium
+- target: $.paths['/api/v1/issuing/cardholders/{id}/delete'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:issuing_cardholders_edit
+      servers: *id040
+      confidence: medium
+- target: $.paths['/api/v1/issuing/cards/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:issuing_cards_edit
+      servers: &id041
+      - production
+      - sandbox
+      confidence: medium
+- target: $.paths['/api/v1/issuing/cards/{id}/update'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:issuing_cards_edit
+      servers: *id041
+      confidence: medium
+- target: $.paths['/api/v1/issuing/cards/{id}/activate'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:issuing_cards_edit
+      servers: *id041
+      confidence: medium
+- target: $.paths['/api/v1/issuing/cards/{id}/provision_digital_token'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:issuing_cards_edit
+      servers: *id041
+      confidence: medium
+- target: $.paths['/api/v1/linked_accounts/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:linked_accounts_edit
+      servers: *id013
+      confidence: medium
+- target: $.paths['/api/v1/linked_accounts/auth'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:linked_accounts_edit
+      servers: *id013
+      confidence: medium
+- target: $.paths['/api/v1/linked_accounts/{id}/auth'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:linked_accounts_edit
+      servers: *id013
+      confidence: medium
+- target: $.paths['/api/v1/linked_accounts/{id}/verify_microdeposits'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:linked_accounts_edit
+      servers: *id013
+      confidence: medium
+- target: $.paths['/api/v1/linked_accounts/{id}/suspend'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:linked_accounts_edit
+      servers: *id013
+      confidence: medium
+- target: $.paths['/api/v1/linked_accounts/{id}/confirm'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:linked_accounts_edit
+      servers: *id013
+      confidence: medium
+- target: $.paths['/api/v1/linked_accounts/{id}/complete_auth'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:linked_accounts_edit
+      servers: *id013
+      confidence: medium
+- target: $.paths['/api/v1/pa/config/applepay/registered_domains/add_items'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:pa_edit
+      servers: &id042
+      - sandbox
+      confidence: medium
+- target: $.paths['/api/v1/pa/config/applepay/registered_domains/remove_items'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:pa_edit
+      servers: *id042
+      confidence: medium
+- target: $.paths['/api/v1/pa/conversion_quotes/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:pa_edit
+      servers: *id042
+      confidence: medium
+- target: $.paths['/api/v1/pa/customers/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:pa_edit
+      servers: *id042
+      confidence: medium
+- target: $.paths['/api/v1/pa/customers/{id}/update'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:pa_edit
+      servers: *id042
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_consents/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:pa_edit
+      servers: *id042
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_consents/{id}/update'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:pa_edit
+      servers: *id042
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_consents/{id}/verify'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:pa_edit
+      servers: *id042
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_consents/{id}/verify_continue'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:pa_edit
+      servers: *id042
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_consents/{id}/disable'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:pa_edit
+      servers: *id042
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_intents/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:pa_edit
+      servers: *id042
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_intents/{id}/update'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:pa_edit
+      servers: *id042
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_intents/{id}/confirm'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:pa_edit
+      servers: *id042
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_intents/{id}/capture'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:pa_edit
+      servers: *id042
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_intents/{id}/confirm_continue'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:pa_edit
+      servers: *id042
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_intents/{id}/increment_authorization'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:pa_edit
+      servers: *id042
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_intents/{id}/cancel'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:pa_edit
+      servers: *id042
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_links/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:pa_edit
+      servers: *id042
+      confidence: medium
+    - scope: w:awx_action:payment_links_edit
+      servers: *id016
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_links/{id}/update'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:pa_edit
+      servers: *id042
+      confidence: medium
+    - scope: w:awx_action:payment_links_edit
+      servers: *id016
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_links/{id}/notify_shopper'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:pa_edit
+      servers: *id042
+      confidence: medium
+    - scope: w:awx_action:payment_links_edit
+      servers: *id016
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_links/{id}/activate'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:pa_edit
+      servers: *id042
+      confidence: medium
+    - scope: w:awx_action:payment_links_edit
+      servers: *id016
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_links/{id}/deactivate'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:pa_edit
+      servers: *id042
+      confidence: medium
+    - scope: w:awx_action:payment_links_edit
+      servers: *id016
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_methods/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:pa_edit
+      servers: *id042
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_methods/{id}/update'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:pa_edit
+      servers: *id042
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_methods/{id}/disable'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:pa_edit
+      servers: *id042
+      confidence: medium
+- target: $.paths['/api/v1/pa/refunds/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:pa_edit
+      servers: *id042
+      confidence: medium
+- target: $.paths['/api/v1/pa/payment_disputes/{id}/update'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:payment_dispute_edit
+      servers: *id018
+      confidence: high
+- target: $.paths['/api/v1/pa/payment_disputes/{id}/accept'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:payment_dispute_edit
+      servers: *id018
+      confidence: high
+- target: $.paths['/api/v1/pa/payment_disputes/{id}/challenge'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:payment_dispute_edit
+      servers: *id018
+      confidence: high
+- target: $.paths['/api/v1/simulation/account/amendments/{id}/approve'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:simulation_edit
+      servers: &id043
+      - sandbox
+      confidence: high
+- target: $.paths['/api/v1/simulation/account/amendments/{id}/reject'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:simulation_edit
+      servers: *id043
+      confidence: high
+- target: $.paths['/api/v1/simulation/accounts/{account_id}/update_status'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:simulation_edit
+      servers: *id043
+      confidence: high
+- target: $.paths['/api/v1/simulation/billing/payment_sources/{id}/fail_next_autocharge'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:simulation_edit
+      servers: *id043
+      confidence: high
+- target: $.paths['/api/v1/simulation/deposit/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:simulation_edit
+      servers: *id043
+      confidence: high
+- target: $.paths['/api/v1/simulation/deposits/{deposit_id}/reverse'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:simulation_edit
+      servers: *id043
+      confidence: high
+- target: $.paths['/api/v1/simulation/deposits/{deposit_id}/settle'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:simulation_edit
+      servers: *id043
+      confidence: high
+- target: $.paths['/api/v1/simulation/deposits/{deposit_id}/reject'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:simulation_edit
+      servers: *id043
+      confidence: high
+- target: $.paths['/api/v1/simulation/issuing/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:simulation_edit
+      servers: *id043
+      confidence: high
+- target: $.paths['/api/v1/simulation/issuing/refund'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:simulation_edit
+      servers: *id043
+      confidence: high
+- target: $.paths['/api/v1/simulation/issuing/cardholders/{id}/pass_review'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:simulation_edit
+      servers: *id043
+      confidence: high
+- target: $.paths['/api/v1/simulation/issuing/threeds/notify'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:simulation_edit
+      servers: *id043
+      confidence: high
+- target: $.paths['/api/v1/simulation/linked_accounts/{linked_account_id}/mandate/accept'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:simulation_edit
+      servers: *id043
+      confidence: high
+- target: $.paths['/api/v1/simulation/linked_accounts/{linked_account_id}/mandate/reject'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:simulation_edit
+      servers: *id043
+      confidence: high
+- target: $.paths['/api/v1/simulation/linked_accounts/{linked_account_id}/mandate/cancel'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:simulation_edit
+      servers: *id043
+      confidence: high
+- target: $.paths['/api/v1/simulation/linked_accounts/{linked_account_id}/fail_microdeposits'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:simulation_edit
+      servers: *id043
+      confidence: high
+- target: $.paths['/api/v1/simulation/accounts/{account_id}/offboardings/{id}/cancel'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:simulation_edit
+      servers: *id043
+      confidence: high
+- target: $.paths['/api/v1/simulation/accounts/{account_id}/offboardings/{id}/complete'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:simulation_edit
+      servers: *id043
+      confidence: high
+- target: $.paths['/api/v1/simulation/pa/shopper_actions/{action}'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:simulation_edit
+      servers: *id043
+      confidence: high
+- target: $.paths['/api/v1/simulation/pa/payment_disputes/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:simulation_edit
+      servers: *id043
+      confidence: high
+- target: $.paths['/api/v1/simulation/pa/payment_disputes/{id}/resolve'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:simulation_edit
+      servers: *id043
+      confidence: high
+- target: $.paths['/api/v1/simulation/pa/payment_disputes/{id}/escalate'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:simulation_edit
+      servers: *id043
+      confidence: high
+- target: $.paths['/api/v1/simulation/rfis/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:simulation_edit
+      servers: *id043
+      confidence: high
+- target: $.paths['/api/v1/simulation/rfis/{id}/follow_up'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:simulation_edit
+      servers: *id043
+      confidence: high
+- target: $.paths['/api/v1/simulation/rfis/{id}/close'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:simulation_edit
+      servers: *id043
+      confidence: high
+- target: $.paths['/api/v1/simulation/transfers/{id}/transition'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:simulation_edit
+      servers: *id043
+      confidence: high
+- target: $.paths['/api/v1/batch_transfers/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:transfers_edit
+      servers: *id004
+      confidence: medium
+- target: $.paths['/api/v1/batch_transfers/{id}/add_items'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:transfers_edit
+      servers: *id004
+      confidence: medium
+- target: $.paths['/api/v1/batch_transfers/{id}/quote'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:transfers_edit
+      servers: *id004
+      confidence: medium
+- target: $.paths['/api/v1/batch_transfers/{id}/submit'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:transfers_edit
+      servers: *id004
+      confidence: medium
+- target: $.paths['/api/v1/batch_transfers/{id}/delete'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:transfers_edit
+      servers: *id004
+      confidence: medium
+- target: $.paths['/api/v1/batch_transfers/{id}/delete_items'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:transfers_edit
+      servers: *id004
+      confidence: medium
+- target: $.paths['/api/v1/transfers/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:transfers_edit
+      servers: *id004
+      confidence: medium
+- target: $.paths['/api/v1/transfers/validate'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:transfers_edit
+      servers: *id004
+      confidence: medium
+- target: $.paths['/api/v1/transfers/{id}/cancel'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:awx_action:transfers_edit
+      servers: *id004
+      confidence: medium
+- target: $.paths['/api/v1/billing/billing_checkouts/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.checkout_edit
+      servers: &id044
+      - sandbox
+      confidence: high
+- target: $.paths['/api/v1/billing/billing_checkouts/{id}'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.checkout_edit
+      servers: *id044
+      confidence: high
+- target: $.paths['/api/v1/billing/billing_checkouts'].get
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.checkout_edit
+      servers: *id044
+      confidence: high
+- target: $.paths['/api/v1/billing/billing_checkouts/{id}/update'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.checkout_edit
+      servers: *id044
+      confidence: high
+- target: $.paths['/api/v1/billing/billing_checkouts/{id}/cancel'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.checkout_edit
+      servers: *id044
+      confidence: high
+- target: $.paths['/api/v1/billing/billing_customers/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.customer_edit
+      servers: *id021
+      confidence: high
+- target: $.paths['/api/v1/billing/billing_customers/{id}/update'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.customer_edit
+      servers: *id021
+      confidence: high
+- target: $.paths['/api/v1/billing/coupons/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.discount_edit
+      servers: *id023
+      confidence: high
+- target: $.paths['/api/v1/billing/coupons/{id}/update'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.discount_edit
+      servers: *id023
+      confidence: high
+- target: $.paths['/api/v1/billing/invoices/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.invoice_edit
+      servers: *id025
+      confidence: high
+- target: $.paths['/api/v1/billing/invoices/{id}/update'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.invoice_edit
+      servers: *id025
+      confidence: high
+- target: $.paths['/api/v1/billing/invoices/{id}/finalize'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.invoice_edit
+      servers: *id025
+      confidence: high
+- target: $.paths['/api/v1/billing/invoices/{id}/mark_as_paid'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.invoice_edit
+      servers: *id025
+      confidence: high
+- target: $.paths['/api/v1/billing/invoices/{id}/pay'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.invoice_edit
+      servers: *id025
+      confidence: high
+- target: $.paths['/api/v1/billing/invoices/{id}/delete'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.invoice_edit
+      servers: *id025
+      confidence: high
+- target: $.paths['/api/v1/billing/invoices/{id}/void'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.invoice_edit
+      servers: *id025
+      confidence: high
+- target: $.paths['/api/v1/billing/invoices/{id}/add_line_items'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.invoice_edit
+      servers: *id025
+      confidence: high
+- target: $.paths['/api/v1/billing/invoices/{id}/update_line_items'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.invoice_edit
+      servers: *id025
+      confidence: high
+- target: $.paths['/api/v1/billing/invoices/{id}/delete_line_items'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.invoice_edit
+      servers: *id025
+      confidence: high
+- target: $.paths['/api/v1/billing/prices/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.price_edit
+      servers: *id028
+      confidence: high
+- target: $.paths['/api/v1/billing/prices/{id}/update'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.price_edit
+      servers: *id028
+      confidence: high
+- target: $.paths['/api/v1/billing/rate_cards/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.price_edit
+      servers: *id028
+      confidence: high
+- target: $.paths['/api/v1/billing/rate_cards/{id}/update'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.price_edit
+      servers: *id028
+      confidence: high
+- target: $.paths['/api/v1/billing/rate_cards/{id}/versions/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.price_edit
+      servers: *id028
+      confidence: high
+- target: $.paths['/api/v1/billing/products/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.product_edit
+      servers: *id030
+      confidence: high
+- target: $.paths['/api/v1/billing/products/{id}/update'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.product_edit
+      servers: *id030
+      confidence: high
+- target: $.paths['/api/v1/billing/subscriptions/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.subscription_edit
+      servers: *id032
+      confidence: high
+- target: $.paths['/api/v1/billing/subscriptions/{id}/update'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.subscription_edit
+      servers: *id032
+      confidence: high
+- target: $.paths['/api/v1/billing/subscriptions/{id}/cancel'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.subscription_edit
+      servers: *id032
+      confidence: high
+- target: $.paths['/api/v1/billing/meters/create'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.usage_metering_edit
+      servers: *id035
+      confidence: high
+- target: $.paths['/api/v1/billing/meters/{id}/update'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.usage_metering_edit
+      servers: *id035
+      confidence: high
+- target: $.paths['/api/v1/billing/meters/{id}/restore'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.usage_metering_edit
+      servers: *id035
+      confidence: high
+- target: $.paths['/api/v1/billing/meters/{id}/archive'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.usage_metering_edit
+      servers: *id035
+      confidence: high
+- target: $.paths['/api/v1/billing/usage_events/ingest'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.usage_metering_edit
+      servers: *id035
+      confidence: high
+- target: $.paths['/api/v1/billing/usage_events/batch_ingest'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.usage_metering_edit
+      servers: *id035
+      confidence: high
+- target: $.paths['/api/v1/billing/usage_events/void'].post
+  update:
+    x-apievangelist-mcp-scopes:
+    - scope: w:org_action:billing.usage_metering_edit
+      servers: *id035
+      confidence: high

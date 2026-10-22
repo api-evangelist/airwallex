@@ -1,0 +1,640 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Finance > Financial Reports API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Finance > Financial Reports
+  description: The Financial Reports resources provide the capability to create and get the contents of reports on your Airwallex account's historical transaction activity.
+  x-domain: Finance
+  x-resource: Financial Reports
+  x-urlPath: finance/financial_reports
+paths:
+  /api/v1/finance/financial_reports/create:
+    post:
+      tags:
+      - Finance > Financial Reports
+      summary: 1|Create a Financial Report
+      description: Create a balance activity, transaction reconciliation, or settlement report.
+      operationId: createFinancialReport
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - file_format
+              - from_date
+              - to_date
+              - type
+              properties:
+                additional_fields:
+                  type: array
+                  description: List of additional fields to include as extra columns in the report, identified by field code. Additional fields add business-context columns to each report row to support reconciliation, as in the web app. Supported only for `TRANSACTION_RECON_REPORT` and `BALANCE_ACTIVITY_REPORT`; available field codes depend on the report type. Any field code that is invalid for the requested report type is rejected with an `invalid_argument` error, including codes supplied for a report type that does not support additional fields. See [Additional fields in financial reports](/docs/banking-as-a-service/reporting/financial-reports/additional-fields-in-financial-reports) for the list of supported field codes.
+                  items:
+                    type: string
+                currencies:
+                  type: array
+                  description: Currencies to be included in the report. Required for `ACCOUNT_STATEMENT_REPORT` and supported as an optional filter for `BALANCE_ACTIVITY_REPORT` and `SETTLEMENT_REPORT`. Other report types do not support this filter.
+                  items:
+                    type: string
+                file_format:
+                  type: string
+                  description: File format of financial report to create.
+                  enum:
+                  - CSV
+                  - EXCEL
+                  - PDF
+                  x-enumDescriptions:
+                    CSV: Supported formats for Balance Activity Reports, Settlement and Transaction Reconciliation Reports
+                    EXCEL: Supported formats for Balance Activity Reports, Settlement and Transaction Reconciliation Reports, Online Payment Transaction Reports
+                    PDF: Supported formats for Balance Activity Reports, Account Statement Reports
+                file_name:
+                  type: string
+                  description: File name of the report. If left empty, a file name will be automatic generated following `{REPORT_TYPE}_{DATE}`.
+                from_date:
+                  type: string
+                  description: Start date of the report (inclusive).
+                report_options:
+                  type: object
+                  description: Additional options for configuring report generation behavior.
+                  properties:
+                    include_reservations:
+                      type: boolean
+                      description: Whether to include reservation transactions in the report. Defaults to true if not specified. This parameter is only applicable to `BALANCE_ACTIVITY_REPORT` for versions v1.2 and onwards.
+                report_version:
+                  type: string
+                  description: Version of the report (Not applicable to `SETTLEMENT_REPORT`). If left empty, defaults to 1.1.0 for the `BALANCE_ACTIVITY_REPORT` and `TRANSACTION_RECON_REPORT`, and to 1.0.0 for other report types. See the [Financial Report Product Docs](/docs/global-treasury/reporting/financial-reports) for details on available report versions and the contents of each version.
+                settlement_currencies:
+                  type: array
+                  description: Settlement currencies to be included in the report. The report will include all settlement currencies if left empty. This filter is only supported by `TRANSACTION_RECON_REPORT`.
+                  items:
+                    type: string
+                statuses:
+                  type: array
+                  description: Transaction statuses to be included in the report. The report will include all statuses if left empty. This filter is only supported by `TRANSACTION_RECON_REPORT`.
+                  items:
+                    type: string
+                time_zone:
+                  type: string
+                  description: Timezone of the user requesting the report (Not applicable to `SETTLEMENT_REPORT`).
+                to_date:
+                  type: string
+                  description: End date of the report (inclusive).
+                transaction_currencies:
+                  type: array
+                  description: Transaction currencies to be included in the report. The report will include all transaction currencies if left empty. This filter is only supported by `TRANSACTION_RECON_REPORT`.
+                  items:
+                    type: string
+                transaction_types:
+                  type: array
+                  description: 'Transaction types to be included in the report. Will include all transaction types if left empty. Supported Balance Activity Transaction Types: `ADJUSTMENT`, `CARD`, `CHARGE`, `CONVERSION`, `DEPOSIT`, `DIRECT_DEBIT`, `FEE`, `PAYIN`, `PAYOUT`, `TRANSFER`, `YIELD`. Supported Transaction Reconciliation Report Transaction Types: `ADJUSTMENT`, `CARD`, `CONVERSION`, `DEPOSIT`, `FEE`, `PAYMENT`, `PAYOUT`. Please leave blank when `type` is `ONLINE_PAYMENTS_TRANSACTION_REPORT` or `SETTLEMENT_REPORT`.'
+                  items:
+                    type: string
+                type:
+                  type: string
+                  description: Type of financial report to create.
+                  enum:
+                  - ACCOUNT_STATEMENT_REPORT
+                  - BALANCE_ACTIVITY_REPORT
+                  - ONLINE_PAYMENTS_TRANSACTION_REPORT
+                  - SETTLEMENT_REPORT
+                  - TRANSACTION_RECON_REPORT
+        description: Request body.
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoreBankingFinancialReportRes'
+        '400':
+          description: '`invalid_argument`. For any report type, this is returned if invalid arguments are provided. When type: `SETTLEMENT_REPORT`, this can be returned if the request ask for a report that is too large to be generated.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '`credentials_invalid`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: '`service_unavailable`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: Balance activity report
+        method: POST
+        uri: /api/v1/finance/financial_reports/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          additional_fields:
+          - issuing_card_nickname
+          - lending_credit_type
+          currencies:
+          - AUD
+          - USD
+          - EUR
+          file_format: CSV
+          file_name: BALANCE_ACTIVITY_REPORT_2026_02_23.csv
+          from_date: '2026-02-22'
+          to_date: '2026-02-25'
+          report_options:
+            include_reservations: true
+          report_version: 1.2.0
+          time_zone: UTC
+          transaction_types:
+          - CONVERSION
+          type: BALANCE_ACTIVITY_REPORT
+        response_body:
+          file_format: CSV
+          file_name: BALANCE_ACTIVITY_REPORT_2026_02_23.csv
+          id: ff13f14b-1624-4c24-b601-b4c018d2ea092
+          report_expires_at: 2026-03-23T23:59:59+1100
+          report_parameters:
+            currencies:
+            - AUD
+            - USD
+            - EUR
+            from_date: '2026-02-22'
+            time_zone: UTC
+            to_date: '2026-02-25'
+            transaction_types:
+            - conversion
+          report_version: 1.2.0
+          status: COMPLETED
+          type: BALANCE_ACTIVITY_REPORT
+      - key: transaction_recon_report_with_additional_fields
+        name: Transaction reconciliation report
+        method: POST
+        uri: /api/v1/finance/financial_reports/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          additional_fields:
+          - issuing_card_nickname
+          - funding_type
+          file_format: EXCEL
+          file_name: TRANSACTION_RECON_REPORT_2026_02_23.xlsx
+          from_date: '2026-02-22'
+          to_date: '2026-02-23'
+          report_version: 1.1.0
+          settlement_currencies:
+          - AUD
+          - USD
+          - EUR
+          statuses:
+          - SETTLED
+          time_zone: UTC
+          transaction_currencies:
+          - AUD
+          - USD
+          - EUR
+          type: TRANSACTION_RECON_REPORT
+        response_body:
+          file_format: EXCEL
+          file_name: TRANSACTION_RECON_REPORT_2026_02_23.xlsx
+          id: 8b2e4f1a-3c7d-4e9a-9f21-0a1b2c3d4e5f
+          report_expires_at: 2026-03-23T23:59:59+1100
+          report_parameters:
+            from_date: '2026-02-22'
+            time_zone: UTC
+            to_date: '2026-02-23'
+          report_version: 1.1.0
+          status: COMPLETED
+          type: TRANSACTION_RECON_REPORT
+      x-scope:
+      - scope: financial_report:write
+        group: Finance
+        resource_name: Financial Reports
+      x-domain: Finance
+      x-resource: Financial Reports
+      x-urlPath: create
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/finance/financial_reports/{id}:
+    get:
+      tags:
+      - Finance > Financial Reports
+      summary: 2|Retrieve a Financial Report
+      description: Get a single generated balance activity, transaction reconciliation, settlement or aggregated settlement report.
+      operationId: retrieveFinancialReport
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of financial report.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoreBankingFinancialReportRes'
+        '400':
+          description: '`invalid_argument`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '`credentials_invalid`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: '`not_found`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: '`service_unavailable`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/finance/financial_reports/financial_report_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          file_format: CSV
+          file_name: BALANCE_ACTIVITY_REPORT_2022_02_23.csv
+          id: ff13f14b-1624-4c24-b601-b4c018d2ea092
+          report_expires_at: 2022-03-23T23:59:59+1100
+          report_parameters:
+            currencies:
+            - AUD
+            - USD
+            - EUR
+            from_date: '2022-02-22'
+            time_zone: UTC
+            to_date: '2022-02-25'
+            transaction_types:
+            - conversion
+          report_version: 1.0.0
+          status: COMPLETED
+          type: BALANCE_ACTIVITY_REPORT
+      x-scope:
+      - scope: financial_report:read
+        group: Finance
+        resource_name: Finance Reports
+      x-domain: Finance
+      x-resource: Financial Reports
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/finance/financial_reports:
+    get:
+      tags:
+      - Finance > Financial Reports
+      summary: 3|List all Financial Reports
+      description: Get list of previously generated balance activity, transaction reconciliation, settlement, account statement, and aggregated settlement reports.
+      operationId: listFinancialReports
+      parameters:
+      - name: page_num
+        in: query
+        description: Page number, starts from 0.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of results per page, default is 100, max is 1000.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: List items.
+                    items:
+                      $ref: '#/components/schemas/CoreBankingFinancialReportRes'
+        '400':
+          description: '`invalid_argument`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '`credentials_invalid`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: '`service_unavailable`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/finance/financial_reports
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: true
+          items:
+          - file_format: CSV
+            file_name: BALANCE_ACTIVITY_REPORT_2022_02_23.csv
+            id: ff13f14b-1624-4c24-b601-b4c018d2ea092
+            report_expires_at: 2022-03-23T23:59:59+1100
+            report_parameters:
+              currencies:
+              - AUD
+              - USD
+              - EUR
+              from_date: '2022-02-22'
+              time_zone: UTC
+              to_date: '2022-02-25'
+              transaction_types:
+              - conversion
+            report_version: 1.0.0
+            status: COMPLETED
+            type: BALANCE_ACTIVITY_REPORT
+      x-scope:
+      - scope: financial_report:read
+        group: Finance
+        resource_name: Finance Reports
+      x-domain: Finance
+      x-resource: Financial Reports
+      x-urlPath: list
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/finance/financial_reports/{id}/content:
+    get:
+      tags:
+      - Finance > Financial Reports
+      summary: 4|Retrieve a Contents of a Financial Report
+      description: Download a previously generated balance activity, transaction reconciliation, settlement or aggregated settlement reports.
+      operationId: listContent
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of financial report.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: 'A file of content type matching the `file_format` of the financial report. The response `Content-Type` may be one of:
+
+
+            - `application/pdf`: PDF (.pdf)
+
+            - `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`: Microsoft Excel (.xlsx)
+
+            - `text/plain`: CSV (.csv)
+
+            - `application/octet-stream`: Generic binary file
+
+            '
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+            text/plain:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: '`invalid_argument`'
+          content:
+            application/octet-stream:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/pdf:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                $ref: '#/components/schemas/Error'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '`credentials_invalid`'
+          content:
+            application/octet-stream:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/pdf:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                $ref: '#/components/schemas/Error'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: '`not_found`'
+          content:
+            application/octet-stream:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/pdf:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                $ref: '#/components/schemas/Error'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: '`service_unavailable`'
+          content:
+            application/octet-stream:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/pdf:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                $ref: '#/components/schemas/Error'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/finance/financial_reports/financial_report_id/content
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body: <string>
+      x-scope:
+      - scope: financial_report:read
+        group: Finance
+        resource_name: Finance Reports
+      x-domain: Finance
+      x-resource: Financial Reports
+      x-urlPath: content
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    CoreBankingFinancialReportParameters:
+      type: object
+      properties:
+        currencies:
+          type: array
+          description: Currencies included in the report.
+          items:
+            type: string
+        from_date:
+          type: string
+          description: Start date of the report (inclusive).
+        time_zone:
+          type: string
+          description: Timezone of the user.
+        to_date:
+          type: string
+          description: End date of the report (inclusive).
+        transaction_types:
+          type: array
+          description: Transaction types included in the report.
+          items:
+            type: string
+      description: Parameters used to generate report.
+    CoreBankingFinancialReportRes:
+      type: object
+      properties:
+        file_format:
+          type: string
+          description: File format of the report. One of `CSV`, `PDF`, `EXCEL`.
+        file_name:
+          type: string
+          description: File name.
+        id:
+          type: string
+          description: Unique identifier of the financial report.
+        report_expires_at:
+          type: string
+          description: Contents expiration date. Will be empty string if report is in `PENDING` state or the report does not expire.
+        report_parameters:
+          $ref: '#/components/schemas/CoreBankingFinancialReportParameters'
+          description: Parameters used to generate report.
+        report_version:
+          type: string
+          description: Version of the report.
+        status:
+          type: string
+          description: Status of the report.
+          enum:
+          - COMPLETED
+          - FAILED
+          - PENDING
+        type:
+          type: string
+          enum:
+          - ACCOUNT_STATEMENT_REPORT
+          - AGGREGATED_SETTLEMENT_REPORT
+          - BALANCE_ACTIVITY_REPORT
+          - ONLINE_PAYMENTS_TRANSACTION_REPORT
+          - SETTLEMENT_REPORT
+          - TRANSACTION_RECON_REPORT
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

@@ -1,0 +1,491 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Issuing > Digital Wallet Tokens API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Issuing > Digital Wallet Tokens
+  description: Query and manage digital wallet tokens.
+  x-domain: Issuing
+  x-resource: Digital Wallet Tokens
+  x-urlPath: issuing/digital_wallet_tokens
+paths:
+  /api/v1/issuing/digital_wallet_tokens/{id}:
+    get:
+      tags:
+      - Issuing > Digital Wallet Tokens
+      summary: 1|Retrieve a Digital Wallet Token
+      description: Retrieves details of a digital wallet token for a given token ID.
+      operationId: retrieveDigitalWalletToken
+      parameters:
+      - name: id
+        in: path
+        description: Unique Identifier for the digital wallet token.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonPciDigitalWalletToken'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/issuing/digital_wallet_tokens/digital_wallet_token_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          card_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+          cardholder_id: 7f0216e7-0348-4a36-9871-d1ba82c13410
+          create_time: '2018-03-22T16:08:02+00:00'
+          device_information:
+            device_id: dSWbu2jPr9uRNe5UQolbeOxz
+            device_type: MOBILE_PHONE
+          expiry_month: 1
+          expiry_year: 2022
+          masked_card_number: '************4242'
+          pan_reference_id: V-5822325012766949099915
+          risk_information:
+            wallet_provider_account_score: '5'
+            wallet_provider_device_score: '5'
+          token_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          token_reference_id: DNITHE301616178439057312
+          token_status: ACTIVE
+          token_type: CARD_ON_FILE
+      x-oauthSupported: false
+      x-scope:
+      - scope: issuing.digital_wallet_token:read
+        group: Issuing
+        resource_name: Digital Wallet Tokens
+      x-domain: Issuing
+      x-resource: Digital Wallet Tokens
+      x-urlPath: retrieve
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/issuing/digital_wallet_tokens:
+    get:
+      tags:
+      - Issuing > Digital Wallet Tokens
+      summary: 2|List all Digital Wallet Tokens
+      description: Get digital wallet tokens created under an account. Will default to a 30 day period unless both *to* and *from* created_at request fields are populated.
+      operationId: listDigitalWalletTokens
+      parameters:
+      - name: card_id
+        in: query
+        description: Id of the card associated with the token.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          format: uuid
+      - name: cardholder_id
+        in: query
+        description: Id of the cardholder associated with the token.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          format: uuid
+      - name: from_created_at
+        in: query
+        description: Include tokens created after from_created_at (inclusive) in ISO8601 format.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: from_token_expires_on
+        in: query
+        description: Include tokens that expire after from_token_expires_on (inclusive) in format MMyy.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: page_num
+        in: query
+        description: Page number, starts from 0.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of results per page.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: to_created_at
+        in: query
+        description: Include tokens created before to_created_at (inclusive) in ISO8601 format.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: to_token_expires_on
+        in: query
+        description: Include tokens that expire before to_token_expires_on (inclusive) in format MMyy.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: token_reference_id
+        in: query
+        description: Unique identifier of the digital wallet token within the card network.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: token_statuses
+        in: query
+        description: "Token statuses  \nOne or more of `ACTIVE`, `INACTIVE`, `SUSPENDED`, `DEACTIVATED`."
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: token_types
+        in: query
+        description: "Token types  \nOne or more of `SECURE_ELEMENT`, `HCE`, `CARD_ON_FILE`, `ECOMMERCE`, `QRC`."
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - has_more
+                - items
+                properties:
+                  has_more:
+                    type: boolean
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NonPciDigitalWalletToken'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/issuing/digital_wallet_tokens
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - card_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+            cardholder_id: 7f0216e7-0348-4a36-9871-d1ba82c13410
+            create_time: '2018-03-22T16:08:02+00:00'
+            device_information:
+              device_id: dSWbu2jPr9uRNe5UQolbeOxz
+              device_type: MOBILE_PHONE
+            expiry_month: 1
+            expiry_year: 2022
+            masked_card_number: '************4242'
+            pan_reference_id: V-5822325012766949099915
+            risk_information:
+              wallet_provider_account_score: '5'
+              wallet_provider_device_score: '5'
+            token_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+            token_reference_id: DNITHE301616178439057312
+            token_status: ACTIVE
+            token_type: CARD_ON_FILE
+      x-oauthSupported: false
+      x-scope:
+      - scope: issuing.digital_wallet_token:read
+        group: Issuing
+        resource_name: Digital Wallet Tokens
+      x-domain: Issuing
+      x-resource: Digital Wallet Tokens
+      x-urlPath: list
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/issuing/digital_wallet_tokens/{id}/lifecycle:
+    post:
+      tags:
+      - Issuing > Digital Wallet Tokens
+      summary: 3|Update the Digital Wallet Token Status
+      description: 'Only available to platforms running their own white-labelled card program. Changes a digital wallet token''s status - suspend, resume, delete, or activate via call centre verification (see `operation_type` below). Applied asynchronously: Airwallex accepts the request immediately, then confirms the status change with the card network. Airwallex performs cardholder ID&V for call centre verification, before applying the change.'
+      operationId: lifecycle
+      parameters:
+      - name: id
+        in: path
+        description: The unique identifier of the digital wallet token.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - operation_type
+              properties:
+                activation_code:
+                  type: string
+                  description: Required when `operation_type` is `CALL_CENTER_ACTIVATION` and ignored for all other operations. A reference of up to 8 characters, captured when the cardholder's identity is verified by the Airwallex call center, that serves as a record that the activation was approved through that process. It is not validated and does not affect the outcome of the request.
+                  maxLength: 8
+                operation_reason:
+                  type: string
+                  description: Optional free-text reason for the operation, recorded for audit purposes. For example, 'Suspended due to lost device'.
+                operation_type:
+                  type: string
+                  description: The operation to perform on the token.
+                  enum:
+                  - DELETE
+                  - SUSPEND
+                  - RESUME
+                  - CALL_CENTER_ACTIVATION
+                  x-enumDescriptions:
+                    DELETE: Permanently deactivate the token. Its status becomes `DEACTIVATED`. This cannot be undone, and the card must be provisioned again to create a new token.
+                    SUSPEND: Temporarily block the token. Its status becomes `SUSPENDED` and the token cannot be used until it is resumed.
+                    RESUME: Reactivate a suspended token. Its status returns to `ACTIVE`.
+                    CALL_CENTER_ACTIVATION: Activate a token after the cardholder's identity has been verified by the Airwallex call center. Its status becomes `ACTIVE`. This operation requires `activation_code`.
+        description: request.
+        required: true
+      responses:
+        '202':
+          description: Accepted. The request has been validated and queued. The token's status is updated asynchronously once the change is confirmed with the card network. No response body is returned.
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PciError'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-oauthSupported: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/issuing/digital_wallet_tokens/digital_wallet_token_id/lifecycle
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 202
+        reason_phrase: Accepted
+        request_body:
+          activation_code: <string>
+          operation_reason: <string>
+          operation_type: DELETE
+      x-domain: Issuing
+      x-resource: Digital Wallet Tokens
+      x-urlPath: lifecycle
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    PciError:
+      type: object
+      required:
+      - code
+      - source
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    NonPciRiskInformation:
+      type: object
+      properties:
+        wallet_provider_account_score:
+          type: string
+          description: Indicates the wallet providers confidence in the account between 1 to 5, where 5 indicates the most confidence in the account.
+        wallet_provider_device_score:
+          type: string
+          description: Indicates the wallet providers confidence in the device between 1 to 5, where 5 indicates the most confidence in the device.
+      description: General risk information about the token.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    NonPciDeviceInformation:
+      type: object
+      properties:
+        device_id:
+          type: string
+          description: The identifier for the device associated with the token.
+        device_type:
+          type: string
+          description: "Type of device associated with the token  \nOne of `MOBILE_PHONE`, `TABLET`, `WATCH`, `MOBILEPHONE_OR_TABLET`, `PC`."
+          enum:
+          - MOBILE_PHONE
+          - TABLET
+          - WATCH
+          - MOBILEPHONE_OR_TABLET
+          - PC
+          - UNKNOWN
+      description: Additional information related to the device associated with the token.
+    NonPciDigitalWalletToken:
+      type: object
+      properties:
+        card_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the card associated with the token.
+        cardholder_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the cardholder associated with the token.
+        create_time:
+          type: string
+          description: The time this token was created.
+        device_information:
+          $ref: '#/components/schemas/NonPciDeviceInformation'
+          description: Additional information related to the device associated with the token.
+        expiry_month:
+          type: integer
+          format: int32
+          description: Token expiry month.
+        expiry_year:
+          type: integer
+          format: int32
+          description: Token expiry year.
+        masked_card_number:
+          type: string
+          description: Masked card number.
+        pan_reference_id:
+          type: string
+          description: Unique identifier for the tokenization of this card. Used by mobile SDKs to determine whether this card has already been provisioned to the device.
+        risk_information:
+          $ref: '#/components/schemas/NonPciRiskInformation'
+          description: General risk information about the token.
+        token_id:
+          type: string
+          format: uuid
+          description: Unique Identifier for the token.
+        token_reference_id:
+          type: string
+          description: Unique identifier of the digital wallet token within the card network.
+        token_status:
+          type: string
+          description: "Status of the token  \nOne of `ACTIVE`, `INACTIVE`, `SUSPENDED`, `DEACTIVATED`."
+          enum:
+          - ACTIVE
+          - INACTIVE
+          - SUSPENDED
+          - DEACTIVATED
+          - UNKNOWN
+        token_type:
+          type: string
+          description: "The type of this token  \nOne of `SECURE_ELEMENT`, `HCE`, `CARD_ON_FILE`, `ECOMMERCE`, `QRC`."
+          enum:
+          - SECURE_ELEMENT
+          - HCE
+          - CARD_ON_FILE
+          - ECOMMERCE
+          - QRC
+          - UNKNOWN
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

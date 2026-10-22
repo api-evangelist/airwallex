@@ -1,0 +1,2714 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Spend > Purchase Orders API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Spend > Purchase Orders
+  description: Manages purchase orders for tracking vendor commitments and spend. Supports creation, retrieval, listing with filters, and sync status updates for integration with external accounting systems.
+  x-domain: Spend
+  x-resource: Purchase Orders
+  x-urlPath: spend/purchase_orders
+paths:
+  /api/v1/spend/purchase_orders/create:
+    post:
+      tags:
+      - Spend > Purchase Orders
+      x-stage: beta
+      summary: 1|Create a Purchase Order
+      description: Creates a new purchase order.
+      operationId: createPurchaseOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - billing_currency
+              - external_id
+              - legal_entity_id
+              - line_items
+              - purchase_order_number
+              - request_id
+              - sync_status
+              - vendor_id
+              properties:
+                request_id:
+                  type: string
+                  description: Unique identifier for this request to ensure idempotency. To prevent accidental duplication, clients should generate a random UUID.
+                external_id:
+                  type: string
+                  description: External identifier for this purchase order in your system.
+                legal_entity_id:
+                  type: string
+                  description: Unique identifier of the legal entity associated with the purchase order.
+                vendor_id:
+                  type: string
+                  format: uuid
+                  description: Unique identifier of the vendor associated with the purchase order.
+                purchase_order_number:
+                  type: string
+                  description: Unique reference number for the purchase order.
+                sync_status:
+                  type: string
+                  description: Sync status for an accounting system.
+                  enum:
+                  - NOT_SYNCED
+                  - SYNCED
+                  - SYNC_FAILED
+                billing_currency:
+                  type: string
+                  description: Currency code for the purchase order.
+                  enum:
+                  - UNDEFINED
+                  - AED
+                  - AFN
+                  - ALL
+                  - AMD
+                  - ANG
+                  - AOA
+                  - ARS
+                  - AUD
+                  - AWG
+                  - AZN
+                  - BAM
+                  - BBD
+                  - BDT
+                  - BGN
+                  - BHD
+                  - BIF
+                  - BMD
+                  - BND
+                  - BOB
+                  - BOV
+                  - BRL
+                  - BSD
+                  - BTN
+                  - BWP
+                  - BYN
+                  - BYR
+                  - BZD
+                  - CAD
+                  - CDF
+                  - CHE
+                  - CHF
+                  - CHW
+                  - CLF
+                  - CLP
+                  - CNY
+                  - COP
+                  - COU
+                  - CRC
+                  - CUC
+                  - CUP
+                  - CVE
+                  - CZK
+                  - DJF
+                  - DKK
+                  - DOP
+                  - DZD
+                  - EGP
+                  - ERN
+                  - ETB
+                  - EUR
+                  - FJD
+                  - FKP
+                  - GBP
+                  - GEL
+                  - GHS
+                  - GIP
+                  - GMD
+                  - GNF
+                  - GTQ
+                  - GYD
+                  - HKD
+                  - HNL
+                  - HRK
+                  - HTG
+                  - HUF
+                  - IDR
+                  - ILS
+                  - INR
+                  - IQD
+                  - IRR
+                  - ISK
+                  - JMD
+                  - JOD
+                  - JPY
+                  - KES
+                  - KGS
+                  - KHR
+                  - KMF
+                  - KPW
+                  - KRW
+                  - KWD
+                  - KYD
+                  - KZT
+                  - LAK
+                  - LBP
+                  - LKR
+                  - LRD
+                  - LSL
+                  - LTL
+                  - LYD
+                  - MAD
+                  - MDL
+                  - MGA
+                  - MKD
+                  - MMK
+                  - MNT
+                  - MOP
+                  - MRO
+                  - MRU
+                  - MUR
+                  - MVR
+                  - MWK
+                  - MXN
+                  - MXV
+                  - MYR
+                  - MZN
+                  - NAD
+                  - NGN
+                  - NIO
+                  - NOK
+                  - NPR
+                  - NZD
+                  - OMR
+                  - PAB
+                  - PEN
+                  - PGK
+                  - PHP
+                  - PKR
+                  - PLN
+                  - PYG
+                  - QAR
+                  - RON
+                  - RSD
+                  - RUB
+                  - RUR
+                  - RWF
+                  - SAR
+                  - SBD
+                  - SCR
+                  - SDG
+                  - SEK
+                  - SGD
+                  - SHP
+                  - SLL
+                  - SOS
+                  - SRD
+                  - SSP
+                  - STD
+                  - STN
+                  - SVC
+                  - SYP
+                  - SZL
+                  - THB
+                  - TJS
+                  - TMT
+                  - TND
+                  - TOP
+                  - TRY
+                  - TTD
+                  - TWD
+                  - TZS
+                  - UAH
+                  - UGX
+                  - USD
+                  - USN
+                  - USS
+                  - UYI
+                  - UYU
+                  - UZS
+                  - VEF
+                  - VES
+                  - VND
+                  - VUV
+                  - WST
+                  - XAF
+                  - XAG
+                  - XAU
+                  - XBA
+                  - XBB
+                  - XBC
+                  - XBD
+                  - XCD
+                  - XDR
+                  - XOF
+                  - XPD
+                  - XPF
+                  - XPT
+                  - XSU
+                  - XTS
+                  - XUA
+                  - XXX
+                  - YER
+                  - ZAR
+                  - ZMW
+                  - ZWL
+                owner_email:
+                  type: string
+                  description: Email of the purchase order owner.
+                recurrence:
+                  type: object
+                  required:
+                  - frequency
+                  - iterations
+                  properties:
+                    frequency:
+                      type: string
+                      description: Frequency for recurring purchase orders.
+                      enum:
+                      - WEEKLY
+                      - MONTHLY
+                      - QUARTERLY
+                      - YEARLY
+                    iterations:
+                      type: integer
+                      format: int32
+                      description: Number of occurrences for recurring purchase orders.
+                  description: Defines the schedule and duration for a recurring purchase order.
+                line_items:
+                  type: array
+                  description: List of line items in the purchase order.
+                  items:
+                    type: object
+                    required:
+                    - quantity
+                    - unit_price
+                    properties:
+                      description:
+                        type: string
+                        description: Description of the line item.
+                      quantity:
+                        type: string
+                        description: Unit quantity of the line item.
+                      unit_price:
+                        type: string
+                        description: Unit price of the line item (tax-exclusive). Tax is applied separately based on the selected tax rate.
+                      accounting_field_selections:
+                        type: array
+                        description: List of accounting fields selected for the line item.
+                        items:
+                          type: object
+                          required:
+                          - type
+                          - source_id
+                          properties:
+                            type:
+                              type: string
+                              description: Type of accounting field selection.
+                              enum:
+                              - GENERAL_LEDGER_ACCOUNT
+                              - TAX_CODE
+                              - OTHER
+                              x-enumDescriptions:
+                                GENERAL_LEDGER_ACCOUNT: General ledger (GL) account assigned to the line item.
+                                TAX_CODE: Tax code applied to the line item.
+                                OTHER: Custom accounting field defined in your ERP.
+                            source_id:
+                              type: string
+                              format: uuid
+                              description: 'Unique identifier of the general ledger (GL) account, tax code, or accounting field value to assign to this line item. The required `id` depends on `type`: use [List General Ledger Accounts](/docs/api/accounting/general_ledger_accounts/list) for `GENERAL_LEDGER_ACCOUNT`, [List Tax Codes](/docs/api/accounting/tax_codes/list) for `TAX_CODE`, or [List Accounting Field Values](/docs/api/accounting/accounting_field_values/list) for `OTHER`.'
+                          description: List of accounting fields selected for the line item.
+                    description: Purchase order line item request.
+                description:
+                  type: string
+                  description: Description of the purchase order.
+                note:
+                  type: string
+                  description: Note for the purchase order.
+                net_payment_terms_in_days:
+                  type: integer
+                  format: int32
+                  description: Net payment terms in days.
+                promise_date:
+                  type: string
+                  description: Date when the vendor will deliver the goods or services. This can be either ISO8601 Date or DateTime format. Dates without time are interpreted as midnight UTC.
+                contacts:
+                  type: object
+                  properties:
+                    vendor_contact:
+                      type: object
+                      properties:
+                        contact_name:
+                          type: string
+                          description: Name of the contact person.
+                        company_name:
+                          type: string
+                          description: Name of the company.
+                        email:
+                          type: string
+                          description: Email address.
+                        phone_number:
+                          type: string
+                          description: Phone number in E.164 format.
+                        address:
+                          type: object
+                          properties:
+                            street_address:
+                              type: string
+                              description: Street address line.
+                            city:
+                              type: string
+                              description: City, district, suburb, or town.
+                            state:
+                              type: string
+                              description: State, province, or region.
+                            postcode:
+                              type: string
+                              description: Postal/ZIP code.
+                            country_code:
+                              type: string
+                              description: Country code (ISO 3166-1 alpha-2).
+                              enum:
+                              - UNDEFINED
+                              - AC
+                              - AD
+                              - AE
+                              - AF
+                              - AG
+                              - AI
+                              - AL
+                              - AM
+                              - AN
+                              - AO
+                              - AQ
+                              - AR
+                              - AS
+                              - AT
+                              - AU
+                              - AW
+                              - AX
+                              - AZ
+                              - BA
+                              - BB
+                              - BD
+                              - BE
+                              - BF
+                              - BG
+                              - BH
+                              - BI
+                              - BJ
+                              - BL
+                              - BM
+                              - BN
+                              - BO
+                              - BQ
+                              - BR
+                              - BS
+                              - BT
+                              - BU
+                              - BV
+                              - BW
+                              - BY
+                              - BZ
+                              - CA
+                              - CC
+                              - CD
+                              - CF
+                              - CG
+                              - CH
+                              - CI
+                              - CK
+                              - CL
+                              - CM
+                              - CN
+                              - CO
+                              - CP
+                              - CR
+                              - CS
+                              - CU
+                              - CV
+                              - CW
+                              - CX
+                              - CY
+                              - CZ
+                              - DE
+                              - DG
+                              - DJ
+                              - DK
+                              - DM
+                              - DO
+                              - DZ
+                              - EA
+                              - EC
+                              - EE
+                              - EG
+                              - EH
+                              - ER
+                              - ES
+                              - ET
+                              - EU
+                              - EZ
+                              - FI
+                              - FJ
+                              - FK
+                              - FM
+                              - FO
+                              - FR
+                              - FX
+                              - GA
+                              - GB
+                              - GD
+                              - GE
+                              - GF
+                              - GG
+                              - GH
+                              - GI
+                              - GL
+                              - GM
+                              - GN
+                              - GP
+                              - GQ
+                              - GR
+                              - GS
+                              - GT
+                              - GU
+                              - GW
+                              - GY
+                              - HK
+                              - HM
+                              - HN
+                              - HR
+                              - HT
+                              - HU
+                              - IC
+                              - ID
+                              - IE
+                              - IL
+                              - IM
+                              - IN
+                              - IO
+                              - IQ
+                              - IR
+                              - IS
+                              - IT
+                              - JE
+                              - JM
+                              - JO
+                              - JP
+                              - KE
+                              - KG
+                              - KH
+                              - KI
+                              - KM
+                              - KN
+                              - KP
+                              - KR
+                              - KW
+                              - KY
+                              - KZ
+                              - LA
+                              - LB
+                              - LC
+                              - LI
+                              - LK
+                              - LR
+                              - LS
+                              - LT
+                              - LU
+                              - LV
+                              - LY
+                              - MA
+                              - MC
+                              - MD
+                              - ME
+                              - MF
+                              - MG
+                              - MH
+                              - MK
+                              - ML
+                              - MM
+                              - MN
+                              - MO
+                              - MP
+                              - MQ
+                              - MR
+                              - MS
+                              - MT
+                              - MU
+                              - MV
+                              - MW
+                              - MX
+                              - MY
+                              - MZ
+                              - NA
+                              - NC
+                              - NE
+                              - NF
+                              - NG
+                              - NI
+                              - NL
+                              - 'NO'
+                              - NP
+                              - NR
+                              - NT
+                              - NU
+                              - NZ
+                              - OM
+                              - PA
+                              - PE
+                              - PF
+                              - PG
+                              - PH
+                              - PK
+                              - PL
+                              - PM
+                              - PN
+                              - PR
+                              - PS
+                              - PT
+                              - PW
+                              - PY
+                              - QA
+                              - RE
+                              - RO
+                              - RS
+                              - RU
+                              - RW
+                              - SA
+                              - SB
+                              - SC
+                              - SD
+                              - SE
+                              - SF
+                              - SG
+                              - SH
+                              - SI
+                              - SJ
+                              - SK
+                              - SL
+                              - SM
+                              - SN
+                              - SO
+                              - SR
+                              - SS
+                              - ST
+                              - SU
+                              - SV
+                              - SX
+                              - SY
+                              - SZ
+                              - TA
+                              - TC
+                              - TD
+                              - TF
+                              - TG
+                              - TH
+                              - TJ
+                              - TK
+                              - TL
+                              - TM
+                              - TN
+                              - TO
+                              - TP
+                              - TR
+                              - TT
+                              - TV
+                              - TW
+                              - TZ
+                              - UA
+                              - UG
+                              - UK
+                              - UM
+                              - US
+                              - UY
+                              - UZ
+                              - VA
+                              - VC
+                              - VE
+                              - VG
+                              - VI
+                              - VN
+                              - VU
+                              - WF
+                              - WS
+                              - XI
+                              - XU
+                              - XK
+                              - YE
+                              - YT
+                              - YU
+                              - ZA
+                              - ZM
+                              - ZR
+                              - ZW
+                          description: Address.
+                      description: Purchase Order Contact Details.
+                    shipping_contact:
+                      type: object
+                      properties:
+                        contact_name:
+                          type: string
+                          description: Name of the contact person.
+                        company_name:
+                          type: string
+                          description: Name of the company.
+                        email:
+                          type: string
+                          description: Email address.
+                        phone_number:
+                          type: string
+                          description: Phone number in E.164 format.
+                        address:
+                          type: object
+                          properties:
+                            street_address:
+                              type: string
+                              description: Street address line.
+                            city:
+                              type: string
+                              description: City, district, suburb, or town.
+                            state:
+                              type: string
+                              description: State, province, or region.
+                            postcode:
+                              type: string
+                              description: Postal/ZIP code.
+                            country_code:
+                              type: string
+                              description: Country code (ISO 3166-1 alpha-2).
+                              enum:
+                              - UNDEFINED
+                              - AC
+                              - AD
+                              - AE
+                              - AF
+                              - AG
+                              - AI
+                              - AL
+                              - AM
+                              - AN
+                              - AO
+                              - AQ
+                              - AR
+                              - AS
+                              - AT
+                              - AU
+                              - AW
+                              - AX
+                              - AZ
+                              - BA
+                              - BB
+                              - BD
+                              - BE
+                              - BF
+                              - BG
+                              - BH
+                              - BI
+                              - BJ
+                              - BL
+                              - BM
+                              - BN
+                              - BO
+                              - BQ
+                              - BR
+                              - BS
+                              - BT
+                              - BU
+                              - BV
+                              - BW
+                              - BY
+                              - BZ
+                              - CA
+                              - CC
+                              - CD
+                              - CF
+                              - CG
+                              - CH
+                              - CI
+                              - CK
+                              - CL
+                              - CM
+                              - CN
+                              - CO
+                              - CP
+                              - CR
+                              - CS
+                              - CU
+                              - CV
+                              - CW
+                              - CX
+                              - CY
+                              - CZ
+                              - DE
+                              - DG
+                              - DJ
+                              - DK
+                              - DM
+                              - DO
+                              - DZ
+                              - EA
+                              - EC
+                              - EE
+                              - EG
+                              - EH
+                              - ER
+                              - ES
+                              - ET
+                              - EU
+                              - EZ
+                              - FI
+                              - FJ
+                              - FK
+                              - FM
+                              - FO
+                              - FR
+                              - FX
+                              - GA
+                              - GB
+                              - GD
+                              - GE
+                              - GF
+                              - GG
+                              - GH
+                              - GI
+                              - GL
+                              - GM
+                              - GN
+                              - GP
+                              - GQ
+                              - GR
+                              - GS
+                              - GT
+                              - GU
+                              - GW
+                              - GY
+                              - HK
+                              - HM
+                              - HN
+                              - HR
+                              - HT
+                              - HU
+                              - IC
+                              - ID
+                              - IE
+                              - IL
+                              - IM
+                              - IN
+                              - IO
+                              - IQ
+                              - IR
+                              - IS
+                              - IT
+                              - JE
+                              - JM
+                              - JO
+                              - JP
+                              - KE
+                              - KG
+                              - KH
+                              - KI
+                              - KM
+                              - KN
+                              - KP
+                              - KR
+                              - KW
+                              - KY
+                              - KZ
+                              - LA
+                              - LB
+                              - LC
+                              - LI
+                              - LK
+                              - LR
+                              - LS
+                              - LT
+                              - LU
+                              - LV
+                              - LY
+                              - MA
+                              - MC
+                              - MD
+                              - ME
+                              - MF
+                              - MG
+                              - MH
+                              - MK
+                              - ML
+                              - MM
+                              - MN
+                              - MO
+                              - MP
+                              - MQ
+                              - MR
+                              - MS
+                              - MT
+                              - MU
+                              - MV
+                              - MW
+                              - MX
+                              - MY
+                              - MZ
+                              - NA
+                              - NC
+                              - NE
+                              - NF
+                              - NG
+                              - NI
+                              - NL
+                              - 'NO'
+                              - NP
+                              - NR
+                              - NT
+                              - NU
+                              - NZ
+                              - OM
+                              - PA
+                              - PE
+                              - PF
+                              - PG
+                              - PH
+                              - PK
+                              - PL
+                              - PM
+                              - PN
+                              - PR
+                              - PS
+                              - PT
+                              - PW
+                              - PY
+                              - QA
+                              - RE
+                              - RO
+                              - RS
+                              - RU
+                              - RW
+                              - SA
+                              - SB
+                              - SC
+                              - SD
+                              - SE
+                              - SF
+                              - SG
+                              - SH
+                              - SI
+                              - SJ
+                              - SK
+                              - SL
+                              - SM
+                              - SN
+                              - SO
+                              - SR
+                              - SS
+                              - ST
+                              - SU
+                              - SV
+                              - SX
+                              - SY
+                              - SZ
+                              - TA
+                              - TC
+                              - TD
+                              - TF
+                              - TG
+                              - TH
+                              - TJ
+                              - TK
+                              - TL
+                              - TM
+                              - TN
+                              - TO
+                              - TP
+                              - TR
+                              - TT
+                              - TV
+                              - TW
+                              - TZ
+                              - UA
+                              - UG
+                              - UK
+                              - UM
+                              - US
+                              - UY
+                              - UZ
+                              - VA
+                              - VC
+                              - VE
+                              - VG
+                              - VI
+                              - VN
+                              - VU
+                              - WF
+                              - WS
+                              - XI
+                              - XU
+                              - XK
+                              - YE
+                              - YT
+                              - YU
+                              - ZA
+                              - ZM
+                              - ZR
+                              - ZW
+                          description: Address.
+                      description: Purchase Order Contact Details.
+                    billing_contact:
+                      type: object
+                      properties:
+                        contact_name:
+                          type: string
+                          description: Name of the contact person.
+                        company_name:
+                          type: string
+                          description: Name of the company.
+                        email:
+                          type: string
+                          description: Email address.
+                        phone_number:
+                          type: string
+                          description: Phone number in E.164 format.
+                        address:
+                          type: object
+                          properties:
+                            street_address:
+                              type: string
+                              description: Street address line.
+                            city:
+                              type: string
+                              description: City, district, suburb, or town.
+                            state:
+                              type: string
+                              description: State, province, or region.
+                            postcode:
+                              type: string
+                              description: Postal/ZIP code.
+                            country_code:
+                              type: string
+                              description: Country code (ISO 3166-1 alpha-2).
+                              enum:
+                              - UNDEFINED
+                              - AC
+                              - AD
+                              - AE
+                              - AF
+                              - AG
+                              - AI
+                              - AL
+                              - AM
+                              - AN
+                              - AO
+                              - AQ
+                              - AR
+                              - AS
+                              - AT
+                              - AU
+                              - AW
+                              - AX
+                              - AZ
+                              - BA
+                              - BB
+                              - BD
+                              - BE
+                              - BF
+                              - BG
+                              - BH
+                              - BI
+                              - BJ
+                              - BL
+                              - BM
+                              - BN
+                              - BO
+                              - BQ
+                              - BR
+                              - BS
+                              - BT
+                              - BU
+                              - BV
+                              - BW
+                              - BY
+                              - BZ
+                              - CA
+                              - CC
+                              - CD
+                              - CF
+                              - CG
+                              - CH
+                              - CI
+                              - CK
+                              - CL
+                              - CM
+                              - CN
+                              - CO
+                              - CP
+                              - CR
+                              - CS
+                              - CU
+                              - CV
+                              - CW
+                              - CX
+                              - CY
+                              - CZ
+                              - DE
+                              - DG
+                              - DJ
+                              - DK
+                              - DM
+                              - DO
+                              - DZ
+                              - EA
+                              - EC
+                              - EE
+                              - EG
+                              - EH
+                              - ER
+                              - ES
+                              - ET
+                              - EU
+                              - EZ
+                              - FI
+                              - FJ
+                              - FK
+                              - FM
+                              - FO
+                              - FR
+                              - FX
+                              - GA
+                              - GB
+                              - GD
+                              - GE
+                              - GF
+                              - GG
+                              - GH
+                              - GI
+                              - GL
+                              - GM
+                              - GN
+                              - GP
+                              - GQ
+                              - GR
+                              - GS
+                              - GT
+                              - GU
+                              - GW
+                              - GY
+                              - HK
+                              - HM
+                              - HN
+                              - HR
+                              - HT
+                              - HU
+                              - IC
+                              - ID
+                              - IE
+                              - IL
+                              - IM
+                              - IN
+                              - IO
+                              - IQ
+                              - IR
+                              - IS
+                              - IT
+                              - JE
+                              - JM
+                              - JO
+                              - JP
+                              - KE
+                              - KG
+                              - KH
+                              - KI
+                              - KM
+                              - KN
+                              - KP
+                              - KR
+                              - KW
+                              - KY
+                              - KZ
+                              - LA
+                              - LB
+                              - LC
+                              - LI
+                              - LK
+                              - LR
+                              - LS
+                              - LT
+                              - LU
+                              - LV
+                              - LY
+                              - MA
+                              - MC
+                              - MD
+                              - ME
+                              - MF
+                              - MG
+                              - MH
+                              - MK
+                              - ML
+                              - MM
+                              - MN
+                              - MO
+                              - MP
+                              - MQ
+                              - MR
+                              - MS
+                              - MT
+                              - MU
+                              - MV
+                              - MW
+                              - MX
+                              - MY
+                              - MZ
+                              - NA
+                              - NC
+                              - NE
+                              - NF
+                              - NG
+                              - NI
+                              - NL
+                              - 'NO'
+                              - NP
+                              - NR
+                              - NT
+                              - NU
+                              - NZ
+                              - OM
+                              - PA
+                              - PE
+                              - PF
+                              - PG
+                              - PH
+                              - PK
+                              - PL
+                              - PM
+                              - PN
+                              - PR
+                              - PS
+                              - PT
+                              - PW
+                              - PY
+                              - QA
+                              - RE
+                              - RO
+                              - RS
+                              - RU
+                              - RW
+                              - SA
+                              - SB
+                              - SC
+                              - SD
+                              - SE
+                              - SF
+                              - SG
+                              - SH
+                              - SI
+                              - SJ
+                              - SK
+                              - SL
+                              - SM
+                              - SN
+                              - SO
+                              - SR
+                              - SS
+                              - ST
+                              - SU
+                              - SV
+                              - SX
+                              - SY
+                              - SZ
+                              - TA
+                              - TC
+                              - TD
+                              - TF
+                              - TG
+                              - TH
+                              - TJ
+                              - TK
+                              - TL
+                              - TM
+                              - TN
+                              - TO
+                              - TP
+                              - TR
+                              - TT
+                              - TV
+                              - TW
+                              - TZ
+                              - UA
+                              - UG
+                              - UK
+                              - UM
+                              - US
+                              - UY
+                              - UZ
+                              - VA
+                              - VC
+                              - VE
+                              - VG
+                              - VI
+                              - VN
+                              - VU
+                              - WF
+                              - WS
+                              - XI
+                              - XU
+                              - XK
+                              - YE
+                              - YT
+                              - YU
+                              - ZA
+                              - ZM
+                              - ZR
+                              - ZW
+                          description: Address.
+                      description: Purchase Order Contact Details.
+                  description: Purchase Order Contact Information.
+                attachments:
+                  type: array
+                  description: List of file IDs to attach to the purchase order. Upload each file with [Upload a file](/docs/api/supporting_services/file_service/upload_files) first, setting `purpose` to `SPEND_ATTACHMENT`.
+                  items:
+                    type: string
+                    format: uuid
+                    description: Unique identifier of an uploaded file.
+              description: Purchase Order Creation Payload.
+        required: true
+      responses:
+        '201':
+          description: Purchase order created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Spend_PurchaseOrder'
+        '400':
+          description: Invalid Request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/spend/purchase_orders/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          attachments:
+          - cea842bd-b6b8-4f70-bfa5-4d28e7978db7
+          request_id: 985461d5-016f-4e1f-a387-5f1380b42d92
+          external_id: PO-EXT-001
+          legal_entity_id: le_U3jlHqQRNHWn2zAKeeT8sg
+          vendor_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+          purchase_order_number: PO-0001
+          sync_status: SYNCED
+          billing_currency: USD
+          owner_email: example@airwallex.com
+          recurrence:
+            frequency: MONTHLY
+            iterations: 12
+          line_items:
+          - description: Office supplies.
+            quantity: '10'
+            unit_price: '500.0'
+            accounting_field_selections:
+            - type: GENERAL_LEDGER_ACCOUNT
+              source_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+          description: This is a description of the purchase order.
+          note: Please deliver between 9AM-5PM
+          net_payment_terms_in_days: 30
+          promise_date: '2025-01-10'
+          contacts:
+            vendor_contact:
+              contact_name: John Doe
+              company_name: Airwallex Pty Ltd
+              email: example@airwallex.com
+              phone_number: '+61499999999'
+              address:
+                street_address: 123 Main Street
+                city: San Francisco
+                state: California
+                postcode: '94105'
+                country_code: US
+            shipping_contact:
+              contact_name: John Doe
+              company_name: Airwallex Pty Ltd
+              email: example@airwallex.com
+              phone_number: '+61499999999'
+              address:
+                street_address: 123 Main Street
+                city: San Francisco
+                state: California
+                postcode: '94105'
+                country_code: US
+            billing_contact:
+              contact_name: John Doe
+              company_name: Airwallex Pty Ltd
+              email: example@airwallex.com
+              phone_number: '+61499999999'
+              address:
+                street_address: 123 Main Street
+                city: San Francisco
+                state: California
+                postcode: '94105'
+                country_code: US
+        response_body:
+          id: 985461d5-016f-4e1f-a387-5f1380b42d92
+          legal_entity_id: le_U3jlHqQRNHWn2zAKeeT8sg
+          vendor_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+          billing_currency: USD
+          recurring_amount: '5000.0'
+          total_amount: '60000.0'
+          billed_amount: '3000.0'
+          purchase_order_number: PO-0001
+          external_id: PO-EXT-001
+          status: OPEN
+          sync_status: SYNCED
+          sync_error_message: 'Failed to sync purchase order: this purchase order number already exists.'
+          recurrence:
+            frequency: MONTHLY
+            iterations: 12
+          description: Annual software license renewal for Q1 2025.
+          note: Please deliver between 9AM-5PM
+          net_payment_terms_in_days: 30
+          promise_date: '2025-01-10'
+          approvers:
+          - approver1@airwallex.com
+          - approver2@airwallex.com
+          owner_email: example@airwallex.com
+          contacts:
+            vendor_contact:
+              contact_name: John Doe
+              company_name: Airwallex Pty Ltd
+              email: example@airwallex.com
+              phone_number: '+61499999999'
+              address:
+                street_address: 123 Main Street
+                city: San Francisco
+                state: California
+                postcode: '94105'
+                country_code: US
+            shipping_contact:
+              contact_name: John Doe
+              company_name: Airwallex Pty Ltd
+              email: example@airwallex.com
+              phone_number: '+61499999999'
+              address:
+                street_address: 123 Main Street
+                city: San Francisco
+                state: California
+                postcode: '94105'
+                country_code: US
+            billing_contact:
+              contact_name: John Doe
+              company_name: Airwallex Pty Ltd
+              email: example@airwallex.com
+              phone_number: '+61499999999'
+              address:
+                street_address: 123 Main Street
+                city: San Francisco
+                state: California
+                postcode: '94105'
+                country_code: US
+          attachments:
+          - id: cea842bd-b6b8-4f70-bfa5-4d28e7978db7
+            content_type: application/pdf
+            file_name: purchase_quote.pdf
+            file_url: https://www.airwallex.com/purchase_quote.pdf
+            created_at: '2025-02-02T00:00:00Z'
+          line_items:
+          - id: 985461d5-016f-4e1f-a387-5f1380b42d92
+            description: Office supplies.
+            quantity: '10'
+            unit_price: '500.0'
+            accounting_field_selections:
+            - type: OTHER
+              source_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+              name: Cost Center
+              external_id: 1036f6f7-87e4-4508-b865-f670b1926022
+              value: Office Expense
+              value_label: Office Expense
+          comments:
+          - content: Expense approved - valid business purpose confirmed
+            created_by: manager@company.com
+            created_at: '2025-01-01T00:00:00Z'
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-02-02T00:00:00Z'
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: spend.purchase_order:write
+        group: Spend
+        resource_name: Purchase Orders
+      x-domain: Spend
+      x-resource: Purchase Orders
+      x-urlPath: create
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/spend/purchase_orders/{id}:
+    get:
+      tags:
+      - Spend > Purchase Orders
+      x-stage: beta
+      summary: 2|Retrieve a Purchase Order
+      description: Retrieves the details of an existing purchase order.
+      operationId: retrievePurchaseOrder
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the purchase order.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Spend_PurchaseOrder'
+        '400':
+          description: Invalid Request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/spend/purchase_orders/purchase_order_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: 985461d5-016f-4e1f-a387-5f1380b42d92
+          legal_entity_id: le_U3jlHqQRNHWn2zAKeeT8sg
+          vendor_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+          billing_currency: USD
+          recurring_amount: '5000.0'
+          total_amount: '60000.0'
+          billed_amount: '3000.0'
+          purchase_order_number: PO-0001
+          external_id: PO-EXT-001
+          status: OPEN
+          sync_status: SYNCED
+          sync_error_message: 'Failed to sync purchase order: this purchase order number already exists.'
+          recurrence:
+            frequency: MONTHLY
+            iterations: 12
+          description: Annual software license renewal for Q1 2025.
+          note: Please deliver between 9AM-5PM
+          net_payment_terms_in_days: 30
+          promise_date: '2025-01-10'
+          approvers:
+          - approver1@airwallex.com
+          - approver2@airwallex.com
+          owner_email: example@airwallex.com
+          contacts:
+            vendor_contact:
+              contact_name: John Doe
+              company_name: Airwallex Pty Ltd
+              email: example@airwallex.com
+              phone_number: '+61499999999'
+              address:
+                street_address: 123 Main Street
+                city: San Francisco
+                state: California
+                postcode: '94105'
+                country_code: US
+            shipping_contact:
+              contact_name: John Doe
+              company_name: Airwallex Pty Ltd
+              email: example@airwallex.com
+              phone_number: '+61499999999'
+              address:
+                street_address: 123 Main Street
+                city: San Francisco
+                state: California
+                postcode: '94105'
+                country_code: US
+            billing_contact:
+              contact_name: John Doe
+              company_name: Airwallex Pty Ltd
+              email: example@airwallex.com
+              phone_number: '+61499999999'
+              address:
+                street_address: 123 Main Street
+                city: San Francisco
+                state: California
+                postcode: '94105'
+                country_code: US
+          attachments:
+          - id: cea842bd-b6b8-4f70-bfa5-4d28e7978db7
+            content_type: application/pdf
+            file_name: purchase_quote.pdf
+            file_url: https://www.airwallex.com/purchase_quote.pdf
+            created_at: '2025-02-02T00:00:00Z'
+          line_items:
+          - id: 985461d5-016f-4e1f-a387-5f1380b42d92
+            description: Office supplies.
+            quantity: '10'
+            unit_price: '500.0'
+            accounting_field_selections:
+            - type: OTHER
+              source_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+              name: Cost Center
+              external_id: 1036f6f7-87e4-4508-b865-f670b1926022
+              value: Office Expense
+              value_label: Office Expense
+          comments:
+          - content: Expense approved - valid business purpose confirmed
+            created_by: manager@company.com
+            created_at: '2025-01-01T00:00:00Z'
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-02-02T00:00:00Z'
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: spend.purchase_order:read
+        group: Spend
+        resource_name: Purchase Orders
+      x-domain: Spend
+      x-resource: Purchase Orders
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/spend/purchase_orders:
+    get:
+      tags:
+      - Spend > Purchase Orders
+      x-stage: beta
+      summary: 3|List all Purchase Orders
+      description: Returns a list of purchase orders filtered by the specified query parameters.
+      operationId: listPurchaseOrders
+      parameters:
+      - name: page
+        in: query
+        description: A bookmark for use in pagination to retrieve either the next page or the previous page of results. You can fetch the value for this identifier from the response of the previous API call.
+        required: false
+        schema:
+          type: string
+      - name: page_size
+        in: query
+        description: The number of items returned per page, between 1 and 100. The default is 100.
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 100
+      - name: from_created_at
+        in: query
+        description: Filter by purchase orders created after this timestamp (inclusive) in ISO8601 format. If not specified, defaults to last 30 days from `to_created_at`.
+        required: false
+        schema:
+          type: string
+      - name: to_created_at
+        in: query
+        description: Filter by purchase orders created before this timestamp (exclusive) in ISO8601 format. If not specified, defaults to now.
+        required: false
+        schema:
+          type: string
+      - name: from_updated_at
+        in: query
+        description: Filter by purchase orders updated after this timestamp (inclusive) in ISO8601 format.
+        required: false
+        schema:
+          type: string
+      - name: to_updated_at
+        in: query
+        description: Filter by purchase orders updated before this timestamp (exclusive) in ISO8601 format.
+        required: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: Filter by purchase order status.
+        required: false
+        schema:
+          type: string
+          enum:
+          - OPEN
+          - COMPLETED
+          - ARCHIVED
+          - CLOSED
+      - name: sync_status
+        in: query
+        description: Filter by sync status.
+        required: false
+        schema:
+          type: string
+          enum:
+          - NOT_SYNCED
+          - SYNCED
+          - SYNC_FAILED
+      - name: legal_entity_id
+        in: query
+        description: Filter by legal entity unique identifier.
+        required: false
+        schema:
+          type: string
+      - name: external_id
+        in: query
+        description: Filter by purchase order external unique identifier.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseOrderPagination'
+        '400':
+          description: Invalid Request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/spend/purchase_orders
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - id: 985461d5-016f-4e1f-a387-5f1380b42d92
+            legal_entity_id: le_U3jlHqQRNHWn2zAKeeT8sg
+            vendor_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+            billing_currency: USD
+            recurring_amount: '5000.0'
+            total_amount: '60000.0'
+            billed_amount: '3000.0'
+            purchase_order_number: PO-0001
+            external_id: PO-EXT-001
+            status: OPEN
+            sync_status: SYNCED
+            sync_error_message: 'Failed to sync purchase order: this purchase order number already exists.'
+            recurrence:
+              frequency: MONTHLY
+              iterations: 12
+            description: Annual software license renewal for Q1 2025.
+            note: Please deliver between 9AM-5PM
+            net_payment_terms_in_days: 30
+            promise_date: '2025-01-10'
+            approvers:
+            - approver1@airwallex.com
+            - approver2@airwallex.com
+            owner_email: example@airwallex.com
+            contacts:
+              vendor_contact:
+                contact_name: John Doe
+                company_name: Airwallex Pty Ltd
+                email: example@airwallex.com
+                phone_number: '+61499999999'
+                address:
+                  street_address: 123 Main Street
+                  city: San Francisco
+                  state: California
+                  postcode: '94105'
+                  country_code: US
+              shipping_contact:
+                contact_name: John Doe
+                company_name: Airwallex Pty Ltd
+                email: example@airwallex.com
+                phone_number: '+61499999999'
+                address:
+                  street_address: 123 Main Street
+                  city: San Francisco
+                  state: California
+                  postcode: '94105'
+                  country_code: US
+              billing_contact:
+                contact_name: John Doe
+                company_name: Airwallex Pty Ltd
+                email: example@airwallex.com
+                phone_number: '+61499999999'
+                address:
+                  street_address: 123 Main Street
+                  city: San Francisco
+                  state: California
+                  postcode: '94105'
+                  country_code: US
+            attachments:
+            - id: cea842bd-b6b8-4f70-bfa5-4d28e7978db7
+              content_type: application/pdf
+              file_name: purchase_quote.pdf
+              file_url: https://www.airwallex.com/purchase_quote.pdf
+              created_at: '2025-02-02T00:00:00Z'
+            line_items:
+            - id: 985461d5-016f-4e1f-a387-5f1380b42d92
+              description: Office supplies.
+              quantity: '10'
+              unit_price: '500.0'
+              accounting_field_selections:
+              - type: OTHER
+                source_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+                name: Cost Center
+                external_id: 1036f6f7-87e4-4508-b865-f670b1926022
+                value: Office Expense
+                value_label: Office Expense
+            comments:
+            - content: Expense approved - valid business purpose confirmed
+              created_by: manager@company.com
+              created_at: '2025-01-01T00:00:00Z'
+            created_at: '2025-01-01T00:00:00Z'
+            updated_at: '2025-02-02T00:00:00Z'
+          page_after: eyJwYWdlX2JlZm9yZSI6IjIwMjUtMDctMDFUMDA6MDA6MDBaIn0=
+          page_before: eyJwYWdlX2JlZm9yZSI6IjIwMjUtMDctMDFUMDA6MDA6MDBaIn0=
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: spend.purchase_order:read
+        group: Spend
+        resource_name: Purchase Orders
+      x-domain: Spend
+      x-resource: Purchase Orders
+      x-urlPath: list
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/spend/purchase_orders/{id}/sync:
+    post:
+      tags:
+      - Spend > Purchase Orders
+      x-stage: beta
+      summary: 4|Update Purchase Order Sync Status
+      description: Updates the sync status of a purchase order.
+      operationId: syncPurchaseOrders
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier for the purchase order.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - sync_status
+              properties:
+                sync_status:
+                  type: string
+                  description: Sync status for an accounting system.
+                  enum:
+                  - NOT_SYNCED
+                  - SYNCED
+                  - SYNC_FAILED
+                sync_error_message:
+                  type: string
+                  description: Error message for sync failures. Only applicable when sync_status is `SYNC_FAILED`.
+              description: Purchase Order Update Sync Status Payload.
+        required: true
+      responses:
+        '200':
+          description: Purchase order sync status updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Spend_PurchaseOrder'
+        '400':
+          description: Invalid Request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/spend/purchase_orders/purchase_order_id/sync
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          sync_status: SYNC_FAILED
+          sync_error_message: 'Failed to sync purchase order: this purchase order number already exists.'
+        response_body:
+          id: 985461d5-016f-4e1f-a387-5f1380b42d92
+          legal_entity_id: le_U3jlHqQRNHWn2zAKeeT8sg
+          vendor_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+          billing_currency: USD
+          recurring_amount: '5000.0'
+          total_amount: '60000.0'
+          billed_amount: '3000.0'
+          purchase_order_number: PO-0001
+          external_id: PO-EXT-001
+          status: OPEN
+          sync_status: SYNCED
+          sync_error_message: 'Failed to sync purchase order: this purchase order number already exists.'
+          recurrence:
+            frequency: MONTHLY
+            iterations: 12
+          description: Annual software license renewal for Q1 2025.
+          note: Please deliver between 9AM-5PM
+          net_payment_terms_in_days: 30
+          promise_date: '2025-01-10'
+          approvers:
+          - approver1@airwallex.com
+          - approver2@airwallex.com
+          owner_email: example@airwallex.com
+          contacts:
+            vendor_contact:
+              contact_name: John Doe
+              company_name: Airwallex Pty Ltd
+              email: example@airwallex.com
+              phone_number: '+61499999999'
+              address:
+                street_address: 123 Main Street
+                city: San Francisco
+                state: California
+                postcode: '94105'
+                country_code: US
+            shipping_contact:
+              contact_name: John Doe
+              company_name: Airwallex Pty Ltd
+              email: example@airwallex.com
+              phone_number: '+61499999999'
+              address:
+                street_address: 123 Main Street
+                city: San Francisco
+                state: California
+                postcode: '94105'
+                country_code: US
+            billing_contact:
+              contact_name: John Doe
+              company_name: Airwallex Pty Ltd
+              email: example@airwallex.com
+              phone_number: '+61499999999'
+              address:
+                street_address: 123 Main Street
+                city: San Francisco
+                state: California
+                postcode: '94105'
+                country_code: US
+          attachments:
+          - id: cea842bd-b6b8-4f70-bfa5-4d28e7978db7
+            content_type: application/pdf
+            file_name: purchase_quote.pdf
+            file_url: https://www.airwallex.com/purchase_quote.pdf
+            created_at: '2025-02-02T00:00:00Z'
+          line_items:
+          - id: 985461d5-016f-4e1f-a387-5f1380b42d92
+            description: Office supplies.
+            quantity: '10'
+            unit_price: '500.0'
+            accounting_field_selections:
+            - type: OTHER
+              source_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+              name: Cost Center
+              external_id: 1036f6f7-87e4-4508-b865-f670b1926022
+              value: Office Expense
+              value_label: Office Expense
+          comments:
+          - content: Expense approved - valid business purpose confirmed
+            created_by: manager@company.com
+            created_at: '2025-01-01T00:00:00Z'
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-02-02T00:00:00Z'
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: spend.purchase_order:write
+        group: Spend
+        resource_name: Purchase Orders
+      x-domain: Spend
+      x-resource: Purchase Orders
+      x-urlPath: sync
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    Comment:
+      type: object
+      required:
+      - content
+      - created_at
+      properties:
+        content:
+          type: string
+          description: Text body of the comment.
+        created_by:
+          type: string
+          description: Email address of the user who created this comment. Used for attribution, notifications, and audit trail tracking.
+        created_at:
+          type: string
+          description: Timestamp for when the resource was created in ISO8601 format.
+      description: User comment or note providing additional context, clarification, or communication related to expenses, reimbursements, or approval workflows. Used for audit trails and collaboration.
+    Recurrence:
+      type: object
+      required:
+      - frequency
+      - iterations
+      properties:
+        frequency:
+          type: string
+          description: Frequency for recurring purchase orders.
+          enum:
+          - WEEKLY
+          - MONTHLY
+          - QUARTERLY
+          - YEARLY
+        iterations:
+          type: integer
+          format: int32
+          description: Number of occurrences for recurring purchase orders.
+      description: Defines the schedule and duration for a recurring purchase order.
+    Spend_Address:
+      type: object
+      properties:
+        street_address:
+          type: string
+          description: Street address line.
+        city:
+          type: string
+          description: City, district, suburb, or town.
+        state:
+          type: string
+          description: State, province, or region.
+        postcode:
+          type: string
+          description: Postal/ZIP code.
+        country_code:
+          type: string
+          description: Country code (ISO 3166-1 alpha-2).
+          enum:
+          - UNDEFINED
+          - AC
+          - AD
+          - AE
+          - AF
+          - AG
+          - AI
+          - AL
+          - AM
+          - AN
+          - AO
+          - AQ
+          - AR
+          - AS
+          - AT
+          - AU
+          - AW
+          - AX
+          - AZ
+          - BA
+          - BB
+          - BD
+          - BE
+          - BF
+          - BG
+          - BH
+          - BI
+          - BJ
+          - BL
+          - BM
+          - BN
+          - BO
+          - BQ
+          - BR
+          - BS
+          - BT
+          - BU
+          - BV
+          - BW
+          - BY
+          - BZ
+          - CA
+          - CC
+          - CD
+          - CF
+          - CG
+          - CH
+          - CI
+          - CK
+          - CL
+          - CM
+          - CN
+          - CO
+          - CP
+          - CR
+          - CS
+          - CU
+          - CV
+          - CW
+          - CX
+          - CY
+          - CZ
+          - DE
+          - DG
+          - DJ
+          - DK
+          - DM
+          - DO
+          - DZ
+          - EA
+          - EC
+          - EE
+          - EG
+          - EH
+          - ER
+          - ES
+          - ET
+          - EU
+          - EZ
+          - FI
+          - FJ
+          - FK
+          - FM
+          - FO
+          - FR
+          - FX
+          - GA
+          - GB
+          - GD
+          - GE
+          - GF
+          - GG
+          - GH
+          - GI
+          - GL
+          - GM
+          - GN
+          - GP
+          - GQ
+          - GR
+          - GS
+          - GT
+          - GU
+          - GW
+          - GY
+          - HK
+          - HM
+          - HN
+          - HR
+          - HT
+          - HU
+          - IC
+          - ID
+          - IE
+          - IL
+          - IM
+          - IN
+          - IO
+          - IQ
+          - IR
+          - IS
+          - IT
+          - JE
+          - JM
+          - JO
+          - JP
+          - KE
+          - KG
+          - KH
+          - KI
+          - KM
+          - KN
+          - KP
+          - KR
+          - KW
+          - KY
+          - KZ
+          - LA
+          - LB
+          - LC
+          - LI
+          - LK
+          - LR
+          - LS
+          - LT
+          - LU
+          - LV
+          - LY
+          - MA
+          - MC
+          - MD
+          - ME
+          - MF
+          - MG
+          - MH
+          - MK
+          - ML
+          - MM
+          - MN
+          - MO
+          - MP
+          - MQ
+          - MR
+          - MS
+          - MT
+          - MU
+          - MV
+          - MW
+          - MX
+          - MY
+          - MZ
+          - NA
+          - NC
+          - NE
+          - NF
+          - NG
+          - NI
+          - NL
+          - 'NO'
+          - NP
+          - NR
+          - NT
+          - NU
+          - NZ
+          - OM
+          - PA
+          - PE
+          - PF
+          - PG
+          - PH
+          - PK
+          - PL
+          - PM
+          - PN
+          - PR
+          - PS
+          - PT
+          - PW
+          - PY
+          - QA
+          - RE
+          - RO
+          - RS
+          - RU
+          - RW
+          - SA
+          - SB
+          - SC
+          - SD
+          - SE
+          - SF
+          - SG
+          - SH
+          - SI
+          - SJ
+          - SK
+          - SL
+          - SM
+          - SN
+          - SO
+          - SR
+          - SS
+          - ST
+          - SU
+          - SV
+          - SX
+          - SY
+          - SZ
+          - TA
+          - TC
+          - TD
+          - TF
+          - TG
+          - TH
+          - TJ
+          - TK
+          - TL
+          - TM
+          - TN
+          - TO
+          - TP
+          - TR
+          - TT
+          - TV
+          - TW
+          - TZ
+          - UA
+          - UG
+          - UK
+          - UM
+          - US
+          - UY
+          - UZ
+          - VA
+          - VC
+          - VE
+          - VG
+          - VI
+          - VN
+          - VU
+          - WF
+          - WS
+          - XI
+          - XU
+          - XK
+          - YE
+          - YT
+          - YU
+          - ZA
+          - ZM
+          - ZR
+          - ZW
+      description: Address.
+    Spend_PurchaseOrder:
+      type: object
+      required:
+      - approvers
+      - attachments
+      - billed_amount
+      - billing_currency
+      - comments
+      - created_at
+      - id
+      - legal_entity_id
+      - line_items
+      - purchase_order_number
+      - status
+      - sync_status
+      - total_amount
+      - updated_at
+      - vendor_id
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the purchase order.
+        legal_entity_id:
+          type: string
+          description: Unique identifier of the legal entity associated with the purchase order.
+        vendor_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the vendor associated with the purchase order.
+        billing_currency:
+          type: string
+          description: Currency of the purchase order, as an ISO 4217 currency code.
+          enum:
+          - UNDEFINED
+          - AED
+          - AFN
+          - ALL
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BOV
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BYR
+          - BZD
+          - CAD
+          - CDF
+          - CHE
+          - CHF
+          - CHW
+          - CLF
+          - CLP
+          - CNY
+          - COP
+          - COU
+          - CRC
+          - CUC
+          - CUP
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - EUR
+          - FJD
+          - FKP
+          - GBP
+          - GEL
+          - GHS
+          - GIP
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IQD
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LBP
+          - LKR
+          - LRD
+          - LSL
+          - LTL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRO
+          - MRU
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MXV
+          - MYR
+          - MZN
+          - NAD
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - NZD
+          - OMR
+          - PAB
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RUR
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SHP
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STD
+          - STN
+          - SVC
+          - SYP
+          - SZL
+          - THB
+          - TJS
+          - TMT
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UGX
+          - USD
+          - USN
+          - USS
+          - UYI
+          - UYU
+          - UZS
+          - VEF
+          - VES
+          - VND
+          - VUV
+          - WST
+          - XAF
+          - XAG
+          - XAU
+          - XBA
+          - XBB
+          - XBC
+          - XBD
+          - XCD
+          - XDR
+          - XOF
+          - XPD
+          - XPF
+          - XPT
+          - XSU
+          - XTS
+          - XUA
+          - XXX
+          - YER
+          - ZAR
+          - ZMW
+          - ZWL
+        recurring_amount:
+          type: string
+          description: Tax-exclusive amount per occurrence for recurring purchase orders. This field is null for one-time purchase orders.
+        total_amount:
+          type: string
+          description: Total tax-exclusive amount of this purchase order. For recurring purchase orders, this is the cumulative amount across all occurrences.
+        billed_amount:
+          type: string
+          description: Total tax-exclusive amount already billed against this purchase order.
+        purchase_order_number:
+          type: string
+          description: Unique reference number for this purchase order.
+        external_id:
+          type: string
+          description: External identifier for this purchase order in your system.
+        status:
+          type: string
+          description: Purchase order status.
+          enum:
+          - OPEN
+          - COMPLETED
+          - ARCHIVED
+          - CLOSED
+        sync_status:
+          type: string
+          description: Sync status for an accounting system.
+          enum:
+          - NOT_SYNCED
+          - SYNCED
+          - SYNC_FAILED
+        sync_error_message:
+          type: string
+          description: Error message describing the sync failure reason, populated when the sync status is updated via the API. Null when no sync error has occurred.
+        recurrence:
+          $ref: '#/components/schemas/Recurrence'
+        description:
+          type: string
+          description: Description of the purchase order.
+        note:
+          type: string
+          description: Additional note or instruction for the vendor regarding this purchase order.
+        net_payment_terms_in_days:
+          type: integer
+          format: int32
+          description: Net payment terms in days.
+        promise_date:
+          type: string
+          description: Expected delivery date for the goods or services, in ISO8601 format.
+        approvers:
+          type: array
+          description: List of user emails who can approve the purchase order.
+          items:
+            type: string
+            description: List of user emails who can approve the purchase order.
+        owner_email:
+          type: string
+          description: Email of the internal owner responsible for managing this purchase order.
+        contacts:
+          $ref: '#/components/schemas/PurchaseOrderContacts'
+        attachments:
+          type: array
+          description: List of file attachments associated with the purchase order.
+          items:
+            $ref: '#/components/schemas/Attachment'
+        line_items:
+          type: array
+          description: List of line items on the purchase order.
+          items:
+            $ref: '#/components/schemas/PurchaseOrderLineItem'
+        comments:
+          type: array
+          description: List of comments on the purchase order.
+          items:
+            $ref: '#/components/schemas/Comment'
+        created_at:
+          type: string
+          description: Timestamp for when the resource was created in ISO8601 format.
+        updated_at:
+          type: string
+          description: Timestamp for when the resource was updated in ISO8601 format.
+      description: Purchase order representing a commitment to purchase goods or services from a vendor, including line items, billing details, contact information, and optional recurrence settings.
+    Attachment:
+      type: object
+      required:
+      - content_type
+      - created_at
+      - file_name
+      - file_url
+      - id
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the attachment.
+        content_type:
+          type: string
+          description: MIME type of the attached file. Common types include `image/jpeg`, `image/png`, and `application/pdf`.
+        file_name:
+          type: string
+          description: Original filename of the uploaded attachment, including the file extension.
+        file_url:
+          type: string
+          description: URL to access and download the attachment file.
+        created_at:
+          type: string
+          description: Timestamp for when the resource was created in ISO8601 format.
+      description: File attachment containing supporting documentation such as receipts, invoices, or other proof of expense. Used for compliance, audit trails, and approval workflows.
+    PurchaseOrderContactDetails:
+      type: object
+      properties:
+        contact_name:
+          type: string
+          description: Name of the contact person.
+        company_name:
+          type: string
+          description: Name of the company.
+        email:
+          type: string
+          description: Email address.
+        phone_number:
+          type: string
+          description: Phone number in E.164 format.
+        address:
+          $ref: '#/components/schemas/Spend_Address'
+      description: Purchase Order Contact Details.
+    AccountingFieldSelection:
+      type: object
+      required:
+      - source_id
+      - type
+      - value
+      properties:
+        source_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the selected general ledger (GL) account, tax code, or accounting field value.
+        type:
+          type: string
+          description: Type of accounting field.
+          enum:
+          - GENERAL_LEDGER_ACCOUNT
+          - TAX_CODE
+          - OTHER
+          x-enumDescriptions:
+            GENERAL_LEDGER_ACCOUNT: General ledger (GL) account assigned to the line item.
+            TAX_CODE: Tax code applied to the line item.
+            OTHER: Custom accounting field defined in your ERP. The field name is provided in `name`.
+        name:
+          type: string
+          description: Name of the accounting field in the ERP software. This field is populated only when `type` is set to `OTHER`.
+        external_id:
+          type: string
+          description: External unique identifier of the accounting field value in the ERP.
+        value:
+          type: string
+          description: Name of the accounting field value in the ERP.
+        value_label:
+          type: string
+          description: Name of the accounting field value displayed in Airwallex.
+    PurchaseOrderLineItem:
+      type: object
+      required:
+      - accounting_field_selections
+      - id
+      - quantity
+      - unit_price
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the line item.
+        description:
+          type: string
+          description: Description of the line item.
+        quantity:
+          type: string
+          description: Quantity of the line item.
+        unit_price:
+          type: string
+          description: Unit price of the line item (tax-exclusive). Tax is applied separately based on the selected tax rate.
+        accounting_field_selections:
+          type: array
+          description: List of accounting fields selected for the line item.
+          items:
+            $ref: '#/components/schemas/AccountingFieldSelection'
+      description: Purchase order line item.
+    PurchaseOrderContacts:
+      type: object
+      properties:
+        vendor_contact:
+          $ref: '#/components/schemas/PurchaseOrderContactDetails'
+        shipping_contact:
+          $ref: '#/components/schemas/PurchaseOrderContactDetails'
+        billing_contact:
+          $ref: '#/components/schemas/PurchaseOrderContactDetails'
+      description: Purchase Order Contact Information.
+    PurchaseOrderPagination:
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          description: List of items returned.
+          items:
+            $ref: '#/components/schemas/Spend_PurchaseOrder'
+        page_after:
+          type: string
+          description: A pointer to the end of the page list used in pagination to retrieve the next page of results.
+        page_before:
+          type: string
+          description: A pointer to the start of the page list use in pagination to retrieve the previous page of results.
+      description: Paginated list of purchase orders.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

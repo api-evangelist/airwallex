@@ -1,0 +1,1020 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Payment Acceptance > Payment Links API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Payment Acceptance > Payment Links
+  description: 'The **Payment Links** API allows you to accept payments from shoppers using a payment link URL. The payment link URL takes your shopper to an Airwallex hosted secure checkout page where they can make the payment with their preferred payment method.
+
+
+    The Payment Link supports two pricing options:
+
+
+    1. Fixed pricing - Both the payment `amount` and `currency` are locked. The shopper must pay the exact amount in the given currency.
+
+    2. Flexible pricing - The shopper chooses to pay from a list of supported currencies you specify and decide on the exact amount to pay.'
+  x-domain: Payment Acceptance
+  x-resource: Payment Links
+  x-urlPath: payments/payment_links
+paths:
+  /api/v1/pa/payment_links/create:
+    post:
+      tags:
+      - Payment Acceptance > Payment Links
+      summary: 1|Create a Payment Link
+      description: Create a new payment link.
+      operationId: createPaymentLink
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - reusable
+              - title
+              properties:
+                amount:
+                  type: number
+                  description: The payment amount. For Fixed pricing only.
+                collectable_shopper_info:
+                  type: object
+                  description: Every payment link requires the shopper to enter their name and email address. Additionally, you can request information for the following fields on each payment link.
+                  properties:
+                    billing_address:
+                      type: boolean
+                      description: Defaults to `false`. If true, the shopper is required to input their billing address.
+                    message:
+                      type: boolean
+                      description: Defaults to `true`. This is an optional field for the shopper to leave a message with their payment.
+                    phone_number:
+                      type: boolean
+                      description: Defaults to `false`. If true, the shopper is required to input their phone number.
+                    reference:
+                      type: boolean
+                      description: Defaults to `false`. If true, the shopper is required to input a reference.
+                    shipping_address:
+                      type: boolean
+                      description: Defaults to `false`. If true, the shopper is required to input their shipping address.
+                connected_account_id:
+                  type: string
+                  description: 'Airwallex assigned account identifier of the connected entity(another account which is linked with platform). It is to be used by the platform to indicate the connected entity in the transaction where platform is the owner of transaction. Notice: This can not be used with x-on-behalf-of header together.'
+                currency:
+                  type: string
+                  description: The payment currency. For Fixed pricing only.
+                customer_id:
+                  type: string
+                  description: The Customer who is paying for this Payment Link. Only applicable for links with `reusable` equals to `false`. This field is required if you want the payer to see the payment methods saved in the previous checkouts.
+                default_currency:
+                  type: string
+                  description: The default payment currency from the list of `supported_currencies`. The shopper can change the payment currency during checkout. For Flexible pricing only.
+                description:
+                  type: string
+                  description: The additional description text that appears under the title in the payment checkout page.
+                  minLength: 0
+                  maxLength: 500
+                expires_at:
+                  type: string
+                  format: date-time
+                  description: Payment link expiry timestamp in ISO 8601 format.
+                metadata:
+                  type: object
+                  description: A set of key-value pairs that you can attach to the Payment Link for storing additional information.
+                  additionalProperties:
+                    type: string
+                reference:
+                  type: string
+                  description: A reference only visible to the merchant.
+                  minLength: 0
+                  maxLength: 200
+                reusable:
+                  type: boolean
+                  description: Specifies whether the payment link can be used once or multiple times.
+                supported_currencies:
+                  type: array
+                  description: List of supported currencies the shopper may choose from. For Flexible pricing only.
+                  items:
+                    type: string
+                ui_options:
+                  type: object
+                  description: UI configuration for the payment checkout page.
+                  properties:
+                    theme_id:
+                      type: string
+                      description: ID of the theme to apply to this payment link, overriding the theme configured for its account. You can find the theme ID in the Airwallex web app under Settings > Themes.
+                title:
+                  type: string
+                  description: The title of the payment link that is displayed in the payment checkout page.
+                  minLength: 0
+                  maxLength: 200
+        description: Request to create a new payment link.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentLink'
+        '201':
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `configuration_error`, `resource_not_found`(invalid `customer_id`)'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/payment_links/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          amount: 165.15
+          collectable_shopper_info:
+            billing_address: false
+            message: true
+            phone_number: false
+            reference: false
+            shipping_address: false
+          connected_account_id: acct_4lnVokTfP3ulKDlzLDJdjg
+          currency: EUR
+          customer_id: cus_ps8e0ZgQzd2QnCxVpzJrHD6KOVu
+          default_currency: EUR
+          description: shoes and dress.
+          expires_at: '2021-11-04T16:00:00Z'
+          metadata:
+            customer_id: '12345678'
+          reference: '1529'
+          reusable: false
+          supported_currencies:
+          - EUR
+          - AUD
+          ui_options:
+            theme_id: tm_sgpdvff8whip0bfgzzt
+          title: 'Order #1529'
+        response_body:
+          active: true
+          amount: 165.15
+          collectable_shopper_info:
+            billing_address: false
+            message: true
+            phone_number: false
+            reference: false
+            shipping_address: false
+          created_at: '2021-08-17T11:00:00+00:00'
+          currency: EUR
+          customer_id: cus_ps8e0ZgQzd2QnCxVpzJrHD6KOVu
+          default_currency: EUR
+          description: shoes and dress.
+          expires_at: '2021-11-04T16:00:00+00:00'
+          id: 475dc845-bc7c-47eb-b2b0-52782b9d078d
+          latest_successful_payment_intent_id: int_e65tkXCSzJrsMpTrzoFrjaau53
+          metadata:
+            customer_id: '12345678'
+          reference: '1529'
+          reusable: true
+          status: PAID
+          successful_payment_intent_count: 1
+          supported_currencies:
+          - EUR
+          - AUD
+          ui_options:
+            theme_id: tm_sgpdvff8whip0bfgzzt
+          title: 'Order #1529'
+          updated_at: '2021-08-17T11:05:00+00:00'
+          url: https://pay.airwallex.com/hkdab0d955b5
+      x-scope:
+      - scope: payment_acceptance:write
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      - scope: payment_link:write
+        group: Payment Acceptance
+        resource_name: Payment Links
+      x-domain: Payment Acceptance
+      x-resource: Payment Links
+      x-urlPath: create
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/payment_links/{id}:
+    get:
+      tags:
+      - Payment Acceptance > Payment Links
+      summary: 2|Retrieve a Payment Link
+      description: Retrieve information about an existing payment link.
+      operationId: retrievePaymentLink
+      parameters:
+      - name: id
+        in: path
+        description: Payment link unique identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: 475dc845-bc7c-47eb-b2b0-52782b9d078d
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentLink'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url), `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/payment_links/payment_link_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          active: true
+          amount: 165.15
+          collectable_shopper_info:
+            billing_address: false
+            message: true
+            phone_number: false
+            reference: false
+            shipping_address: false
+          created_at: '2021-08-17T11:00:00+00:00'
+          currency: EUR
+          customer_id: cus_ps8e0ZgQzd2QnCxVpzJrHD6KOVu
+          default_currency: EUR
+          description: shoes and dress.
+          expires_at: '2021-11-04T16:00:00+00:00'
+          id: 475dc845-bc7c-47eb-b2b0-52782b9d078d
+          latest_successful_payment_intent_id: int_e65tkXCSzJrsMpTrzoFrjaau53
+          metadata:
+            customer_id: '12345678'
+          reference: '1529'
+          reusable: true
+          status: PAID
+          successful_payment_intent_count: 1
+          supported_currencies:
+          - EUR
+          - AUD
+          ui_options:
+            theme_id: tm_sgpdvff8whip0bfgzzt
+          title: 'Order #1529'
+          updated_at: '2021-08-17T11:05:00+00:00'
+          url: https://pay.airwallex.com/hkdab0d955b5
+      x-scope:
+      - scope: payment_acceptance:read
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      - scope: payment_link:read
+        group: Payment Acceptance
+        resource_name: Payment Links
+      - scope: payment_link:write
+        group: Payment Acceptance
+        resource_name: Payment Links
+      x-domain: Payment Acceptance
+      x-resource: Payment Links
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/payment_links:
+    get:
+      tags:
+      - Payment Acceptance > Payment Links
+      summary: 3|List all Payment Links
+      description: Retrieves a list of payment links that a merchant has created previously.
+      operationId: listPaymentLinks
+      parameters:
+      - name: active
+        in: query
+        description: The payment link's active status, either `true` or `false`.
+        required: false
+        schema:
+          type: boolean
+      - name: from_created_at
+        in: query
+        description: Specifies start time (inclusive) in ISO 8601 for a range query by created timestamp.
+        required: false
+        schema:
+          type: string
+          format: date-time
+          default: '2021-08-01T00:00:00Z'
+      - name: page_num
+        in: query
+        description: Page number starting from 0.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          minimum: 0
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of payment links to be listed per page.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000
+          default: 100
+      - name: reusable
+        in: query
+        description: Specifies whether the payment link can be used once or multiple times.
+        required: false
+        schema:
+          type: boolean
+      - name: status
+        in: query
+        description: Status of the payment link, one of `UNPAID` or `PAID`.
+        required: false
+        schema:
+          type: string
+      - name: to_created_at
+        in: query
+        description: Specifies end time (exclusive) in ISO 8601 for a range query by created timestamp.
+        required: false
+        schema:
+          type: string
+          format: date-time
+          default: '2021-08-17T11:00:00Z'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: List items.
+                    items:
+                      $ref: '#/components/schemas/PaymentLink'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/payment_links
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - active: true
+            amount: 165.15
+            collectable_shopper_info:
+              billing_address: false
+              message: true
+              phone_number: false
+              reference: false
+              shipping_address: false
+            created_at: '2021-08-17T11:00:00+00:00'
+            currency: EUR
+            customer_id: cus_ps8e0ZgQzd2QnCxVpzJrHD6KOVu
+            default_currency: EUR
+            description: shoes and dress.
+            expires_at: '2021-11-04T16:00:00+00:00'
+            id: 475dc845-bc7c-47eb-b2b0-52782b9d078d
+            latest_successful_payment_intent_id: int_e65tkXCSzJrsMpTrzoFrjaau53
+            metadata:
+              customer_id: '12345678'
+            reference: '1529'
+            reusable: true
+            status: PAID
+            successful_payment_intent_count: 1
+            supported_currencies:
+            - EUR
+            - AUD
+            title: 'Order #1529'
+            ui_options:
+              theme_id: tm_sgpdvff8whip0bfgzzt
+            updated_at: '2021-08-17T11:05:00+00:00'
+            url: https://pay.airwallex.com/hkdab0d955b5
+      x-scope:
+      - scope: payment_acceptance:read
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      - scope: payment_link:read
+        group: Payment Acceptance
+        resource_name: Payment Links
+      - scope: payment_link:write
+        group: Payment Acceptance
+        resource_name: Payment Links
+      x-domain: Payment Acceptance
+      x-resource: Payment Links
+      x-urlPath: list
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/payment_links/{id}/update:
+    post:
+      tags:
+      - Payment Acceptance > Payment Links
+      summary: 4|Update a Payment Link
+      description: Update attributes of an existing payment link.
+      operationId: updatePaymentLink
+      parameters:
+      - name: id
+        in: path
+        description: Payment link unique identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: 475dc845-bc7c-47eb-b2b0-52782b9d078d
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  description: The payment amount. For Fixed pricing only.
+                collectable_shopper_info:
+                  type: object
+                  description: Every payment link requires the shopper to enter their name and email address. Additionally, you can request information for the following fields on each payment link.
+                  properties:
+                    billing_address:
+                      type: boolean
+                      description: Defaults to `false`. If true, the shopper is required to input their billing address.
+                    message:
+                      type: boolean
+                      description: Defaults to `true`. This is an optional field for the shopper to leave a message with their payment.
+                    phone_number:
+                      type: boolean
+                      description: Defaults to `false`. If true, the shopper is required to input their phone number.
+                    reference:
+                      type: boolean
+                      description: Defaults to `false`. If true, the shopper is required to input a reference.
+                    shipping_address:
+                      type: boolean
+                      description: Defaults to `false`. If true, the shopper is required to input their shipping address.
+                currency:
+                  type: string
+                  description: The payment currency. For Fixed pricing only.
+                default_currency:
+                  type: string
+                  description: The default payment currency from the list of `supported_currencies`. The shopper can change the payment currency during checkout. For Flexible pricing only.
+                description:
+                  type: string
+                  description: The additional description text that appears under the title in the payment checkout page.
+                  minLength: 0
+                  maxLength: 500
+                metadata:
+                  type: object
+                  description: A set of key-value pairs that you can attach to the Payment Link for storing additional information.
+                  additionalProperties:
+                    type: string
+                reference:
+                  type: string
+                  description: A reference only visible to the merchant.
+                  minLength: 0
+                  maxLength: 200
+                supported_currencies:
+                  type: array
+                  description: List of supported currencies the shopper may choose from. For Flexible pricing only.
+                  items:
+                    type: string
+                ui_options:
+                  type: object
+                  description: UI configuration for the payment checkout page.
+                  properties:
+                    theme_id:
+                      type: string
+                      description: ID of the theme to apply to this payment link, overriding the theme configured for its account. You can find the theme ID in the Airwallex web app under Settings > Themes.
+                title:
+                  type: string
+                  description: The title of the payment link that is displayed in the payment checkout page.
+                  minLength: 0
+                  maxLength: 200
+        description: Request to update the payment link.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentLink'
+        '201':
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `invalid_status_for_operation`, `configuration_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url), `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/payment_links/payment_link_id/update
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          amount: 165.15
+          collectable_shopper_info:
+            billing_address: false
+            message: true
+            phone_number: false
+            reference: false
+            shipping_address: false
+          currency: EUR
+          default_currency: EUR
+          description: shoes and dress.
+          metadata:
+            customer_id: '12345678'
+          reference: '1529'
+          supported_currencies:
+          - EUR
+          - AUD
+          ui_options:
+            theme_id: tm_sgpdvff8whip0bfgzzt
+          title: 'Order #1529'
+        response_body:
+          active: true
+          amount: 165.15
+          collectable_shopper_info:
+            billing_address: false
+            message: true
+            phone_number: false
+            reference: false
+            shipping_address: false
+          created_at: '2021-08-17T11:00:00+00:00'
+          currency: EUR
+          customer_id: cus_ps8e0ZgQzd2QnCxVpzJrHD6KOVu
+          default_currency: EUR
+          description: shoes and dress.
+          expires_at: '2021-11-04T16:00:00+00:00'
+          id: 475dc845-bc7c-47eb-b2b0-52782b9d078d
+          latest_successful_payment_intent_id: int_e65tkXCSzJrsMpTrzoFrjaau53
+          metadata:
+            customer_id: '12345678'
+          reference: '1529'
+          reusable: true
+          status: PAID
+          successful_payment_intent_count: 1
+          supported_currencies:
+          - EUR
+          - AUD
+          ui_options:
+            theme_id: tm_sgpdvff8whip0bfgzzt
+          title: 'Order #1529'
+          updated_at: '2021-08-17T11:05:00+00:00'
+          url: https://pay.airwallex.com/hkdab0d955b5
+      x-scope:
+      - scope: payment_acceptance:write
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      - scope: payment_link:write
+        group: Payment Acceptance
+        resource_name: Payment Links
+      x-domain: Payment Acceptance
+      x-resource: Payment Links
+      x-urlPath: update
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/payment_links/{id}/notify_shopper:
+    post:
+      tags:
+      - Payment Acceptance > Payment Links
+      summary: 5|Send a Payment Link
+      description: Send an email notification to shopper with a payment link.
+      operationId: notifyShopper
+      parameters:
+      - name: id
+        in: path
+        description: Payment link unique identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: 475dc845-bc7c-47eb-b2b0-52782b9d078d
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - shopper_email
+              properties:
+                shopper_email:
+                  type: string
+                  description: Shopper email address.
+                  minLength: 0
+                  maxLength: 100
+        description: Request with the shopper email address and the payment link.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+        '201':
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `configuration_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url), `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/payment_links/payment_link_id/notify_shopper
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          shopper_email: jane.miller@email.com
+        response_body: <string>
+      x-scope:
+      - scope: payment_acceptance:write
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      - scope: payment_link:write
+        group: Payment Acceptance
+        resource_name: Payment Links
+      x-domain: Payment Acceptance
+      x-resource: Payment Links
+      x-urlPath: notify_shopper
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/payment_links/{id}/activate:
+    post:
+      tags:
+      - Payment Acceptance > Payment Links
+      summary: 6|Activate a Payment Link
+      description: Activates an inactive payment link.
+      operationId: paymentLinks_activate
+      parameters:
+      - name: id
+        in: path
+        description: Payment link unique identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: 475dc845-bc7c-47eb-b2b0-52782b9d078d
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentLink'
+        '201':
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `invalid_status_for_operation`, `configuration_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url), `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/payment_links/payment_link_id/activate
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          active: true
+          amount: 165.15
+          collectable_shopper_info:
+            billing_address: false
+            message: true
+            phone_number: false
+            reference: false
+            shipping_address: false
+          created_at: '2021-08-17T11:00:00+00:00'
+          currency: EUR
+          customer_id: cus_ps8e0ZgQzd2QnCxVpzJrHD6KOVu
+          default_currency: EUR
+          description: shoes and dress.
+          expires_at: '2021-11-04T16:00:00+00:00'
+          id: 475dc845-bc7c-47eb-b2b0-52782b9d078d
+          latest_successful_payment_intent_id: int_e65tkXCSzJrsMpTrzoFrjaau53
+          metadata:
+            customer_id: '12345678'
+          reference: '1529'
+          reusable: true
+          status: PAID
+          successful_payment_intent_count: 1
+          supported_currencies:
+          - EUR
+          - AUD
+          title: 'Order #1529'
+          ui_options:
+            theme_id: tm_sgpdvff8whip0bfgzzt
+          updated_at: '2021-08-17T11:05:00+00:00'
+          url: https://pay.airwallex.com/hkdab0d955b5
+      x-scope:
+      - scope: payment_acceptance:write
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      - scope: payment_link:write
+        group: Payment Acceptance
+        resource_name: Payment Links
+      x-domain: Payment Acceptance
+      x-resource: Payment Links
+      x-urlPath: activate
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/payment_links/{id}/deactivate:
+    post:
+      tags:
+      - Payment Acceptance > Payment Links
+      summary: 7|Deactivate a Payment Link
+      description: Deactivates an active payment link.
+      operationId: paymentLinks_deactivate
+      parameters:
+      - name: id
+        in: path
+        description: Payment link unique identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: 475dc845-bc7c-47eb-b2b0-52782b9d078d
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentLink'
+        '201':
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `invalid_status_for_operation`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url), `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/payment_links/payment_link_id/deactivate
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          active: true
+          amount: 165.15
+          collectable_shopper_info:
+            billing_address: false
+            message: true
+            phone_number: false
+            reference: false
+            shipping_address: false
+          created_at: '2021-08-17T11:00:00+00:00'
+          currency: EUR
+          customer_id: cus_ps8e0ZgQzd2QnCxVpzJrHD6KOVu
+          default_currency: EUR
+          description: shoes and dress.
+          expires_at: '2021-11-04T16:00:00+00:00'
+          id: 475dc845-bc7c-47eb-b2b0-52782b9d078d
+          latest_successful_payment_intent_id: int_e65tkXCSzJrsMpTrzoFrjaau53
+          metadata:
+            customer_id: '12345678'
+          reference: '1529'
+          reusable: true
+          status: PAID
+          successful_payment_intent_count: 1
+          supported_currencies:
+          - EUR
+          - AUD
+          title: 'Order #1529'
+          ui_options:
+            theme_id: tm_sgpdvff8whip0bfgzzt
+          updated_at: '2021-08-17T11:05:00+00:00'
+          url: https://pay.airwallex.com/hkdab0d955b5
+      x-scope:
+      - scope: payment_acceptance:write
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      - scope: payment_link:write
+        group: Payment Acceptance
+        resource_name: Payment Links
+      x-domain: Payment Acceptance
+      x-resource: Payment Links
+      x-urlPath: deactivate
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    PaymentLink:
+      type: object
+      properties:
+        active:
+          type: boolean
+          description: The payment link’s active status, either `true` or `false`.
+        amount:
+          type: number
+          description: The payment amount for Fixed pricing.
+        collectable_shopper_info:
+          $ref: '#/components/schemas/CollectableShopperInfo'
+          description: Every payment link requires the shopper to enter their name and email address. Additionally, you can request information for the following fields on each payment link.
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp in ISO 8601 format when the payment link was created.
+        currency:
+          type: string
+          description: The payment currency for Fixed pricing.
+        customer_id:
+          type: string
+          description: The Customer who is paying for this Payment Link. Only applicable for links with `reusable` equals to `false`. This field is required if you want the payer to see the payment methods saved in the previous checkouts.
+        default_currency:
+          type: string
+          description: The default currency for Flexible pricing.
+        description:
+          type: string
+          description: The additional description text that appears under the title in the payment checkout page.
+        expires_at:
+          type: string
+          format: date-time
+          description: Payment link expiry timestamp in ISO 8601 format.
+        id:
+          type: string
+          format: uuid
+          description: Payment link unique identifier.
+        latest_successful_payment_intent_id:
+          type: string
+          description: Payment Intent unique identifier of the latest payment (if any) successfully paid by your shopper via the payment link.
+        metadata:
+          type: object
+          description: A set of key-value pairs that you can attach to the Payment Link for storing additional information.
+          additionalProperties:
+            type: string
+        reference:
+          type: string
+          description: A reference only visible to the merchant.
+        reusable:
+          type: boolean
+          description: Specifies whether the payment link can be used once or multiple times.
+        status:
+          type: string
+          description: Status of the payment link, one of `UNPAID` or `PAID`. The payment link transitions from `UNPAID` to `PAID` when a payment is received.
+        successful_payment_intent_count:
+          type: integer
+          format: int64
+          description: The number of Payment Intents successfully paid by your shopper via the payment link.
+        supported_currencies:
+          type: array
+          description: The supported currencies for Flexible pricing.
+          items:
+            type: string
+        ui_options:
+          type: object
+          description: UI configuration for the payment checkout page.
+          properties:
+            theme_id:
+              type: string
+              description: ID of the theme to apply to this payment link, overriding the theme configured for its account.
+        title:
+          type: string
+          description: The title of the payment link that is displayed in the payment checkout page.
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp in ISO 8601 format when the payment link was last updated.
+        url:
+          type: string
+          description: The payment URL to the checkout page.
+    CollectableShopperInfo:
+      type: object
+      properties:
+        billing_address:
+          type: boolean
+          description: Defaults to `false`. If true, the shopper is required to input their billing address.
+        message:
+          type: boolean
+          description: Defaults to `true`. This is an optional field for the shopper to leave a message with their payment.
+        phone_number:
+          type: boolean
+          description: Defaults to `false`. If true, the shopper is required to input their phone number.
+        reference:
+          type: boolean
+          description: Defaults to `false`. If true, the shopper is required to input a reference.
+        shipping_address:
+          type: boolean
+          description: Defaults to `false`. If true, the shopper is required to input their shipping address.
+      description: Every payment link requires the shopper to enter their name and email address. Additionally, you can request information for the following fields on each payment link.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

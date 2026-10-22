@@ -1,0 +1,740 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Payment Acceptance > Config API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Payment Acceptance > Config
+  description: The **Config** API allows you to query for active merchant configurations.
+  x-domain: Payment Acceptance
+  x-resource: Config
+  x-urlPath: payments/config
+paths:
+  /api/v1/pa/config/reserve_plan:
+    get:
+      tags:
+      - Payment Acceptance > Config
+      summary: 1|Retrieve the Current Reserve Plan
+      description: Retrieves reserve plan configuration details for your Airwallex account.
+      operationId: retrieveReservePlan
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservePlan'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '403':
+          description: '["account_not_authorised_for_operation"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: '["resource_not_found"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too many requests
+        '500':
+          description: '["internal_server_error"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/config/reserve_plan
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          delayed:
+            delay_in_days: 3
+          delayed_rolling:
+            delay_in_days: 3
+            rolling_percentage: 10
+            rolling_window_in_days: 5
+          rolling:
+            rolling_percentage: 10
+            rolling_window_in_days: 5
+          type: DELAYED_ROLLING
+      x-scope:
+      - scope: payment_acceptance:read
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Config
+      x-urlPath: reserve_plan
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/config/payment_method_types:
+    get:
+      tags:
+      - Payment Acceptance > Config
+      summary: 2|List all Available Payment Method Types
+      description: 'Retrieve configuration for available payment method types with different transaction modes.
+
+
+        Note that the payment method types can be duplicate when it supports different transaction modes.
+
+        A transaction mode refer to how merchant trigger transactions. It can be one-off and recurring.
+
+
+        For oneoff, refer to Payment Intent API.
+
+        For recurring, refer to Payment Consent API.'
+      operationId: listPaymentMethodTypes
+      parameters:
+      - name: active
+        in: query
+        description: Indicate whether the payment method type is active.
+        required: false
+        schema:
+          type: boolean
+          default: true
+      - name: country_code
+        in: query
+        description: The supported country code of the shopper.
+        required: false
+        schema:
+          type: string
+          default: AU
+      - name: page_num
+        in: query
+        description: Page number starting from 0.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of payment method types to be listed per page. Default value is 100. Maximum is 1000. The value greater than the maximum will be capped to the maximum.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: transaction_currency
+        in: query
+        description: The supported transaction currency. `transaction_currency` is required when `country_code` is given.
+        required: false
+        schema:
+          type: string
+          default: USD
+      - name: transaction_mode
+        in: query
+        description: The supported transaction mode. One of `oneoff`, `recurring`.
+        required: false
+        schema:
+          type: string
+          default: oneoff
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: List items.
+                    items:
+                      $ref: '#/components/schemas/PaymentMethodTypeConfig'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/config/payment_method_types
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        query_params:
+          country_code: US
+          page_num: 0
+          page_size: 10
+          transaction_currency: USD
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - active: true
+            flows: []
+            name: card
+            transaction_currencies:
+            - AUD
+            - USD
+            - SGD
+            - EUR
+            - JPY
+            transaction_mode: oneoff
+          - active: true
+            flows: []
+            name: applepay
+            transaction_currencies:
+            - '*'
+            transaction_mode: recurring
+      x-domain: Payment Acceptance
+      x-resource: Config
+      x-urlPath: payment_method_types
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/config/banks:
+    get:
+      tags:
+      - Payment Acceptance > Config
+      summary: 3|List all Available Bank Names
+      description: Some payment method types such as `online_banking` require the `bank_name` to be filled when confirming a Payment Intent. You may call this API to retrieve a list of available banks and let the shopper choose one before confirming a Payment Intent. Refer to confirm.
+      operationId: listBanks
+      parameters:
+      - name: country_code
+        in: query
+        description: "Country code to filter the available banks. Use the two-character ISO Standard Country Codes.  \n  \nFor payment method type like `online_banking` and `bank_transfer`, the available bank list differs by different countries and `country_code` is needed to get the bank list.  \n  \nFor other payment method types, `country_code` will be ignored."
+        required: false
+        schema:
+          type: string
+          default: MY
+      - name: page_num
+        in: query
+        description: Page number starting from 0.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of banks to be listed per page. Default value is 100. Maximum is 1000. The value greater than the maximum will be capped to the maximum.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: payment_method_type
+        in: query
+        description: The payment method type to find the available banks. For other payment methods that don't require `bank_name`, an empty list will be returned.
+        required: true
+        schema:
+          type: string
+          default: bank_transfer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: List items.
+                    items:
+                      $ref: '#/components/schemas/BankConfig'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/config/banks
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        query_params:
+          country_code: NL
+          page_num: 0
+          page_size: 10
+          payment_method_type: ideal
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - bank_name: asn
+            display_name: ASN Bank
+            resources:
+              logo_url: https://checkout.airwallex.com/static/media/asn.257601a1.svg
+          - bank_name: knab
+            display_name: Knab
+            resources:
+              logo_url: https://checkout.airwallex.com/static/media/knab.38031ef6.svg
+      x-domain: Payment Acceptance
+      x-resource: Config
+      x-urlPath: banks
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/config/applepay/registered_domains:
+    get:
+      tags:
+      - Payment Acceptance > Config
+      summary: 4|List all Apple Pay Domains
+      description: Get all the web domains registered in Apple Pay.
+      operationId: listApplepayRegisteredDomains
+      parameters:
+      - name: x-on-behalf-of
+        in: header
+        description: The account unique identifier that this request is on behalf of.
+        required: false
+        schema:
+          type: string
+          default: acct_JD0UmuRLNcytX7sBj0lfWA
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplePayRegisteredDomains'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/config/applepay/registered_domains
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - domain1.com
+          - domain2.com
+      x-scope:
+      - scope: payment_acceptance:read
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Config
+      x-urlPath: registered_domains
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/config/applepay/registered_domains/add_items:
+    post:
+      tags:
+      - Payment Acceptance > Config
+      summary: 5|Add Apple Pay Domains
+      description: Register one or more web domains to Apple Pay.
+      operationId: applepayRegisteredDomainsAddItems
+      parameters:
+      - name: x-on-behalf-of
+        in: header
+        description: The account unique identifier that this request is on behalf of.
+        required: false
+        schema:
+          type: string
+          default: acct_JD0UmuRLNcytX7sBj0lfWA
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - items
+              properties:
+                items:
+                  type: array
+                  description: A list of domains to be registered.
+                  items:
+                    type: string
+        description: Apple pay domains register request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplePayRegisteredDomains'
+        '201':
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/config/applepay/registered_domains/add_items
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          items:
+          - domain3.com
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - domain1.com
+          - domain2.com
+          - domain3.com
+      x-scope:
+      - scope: payment_acceptance:write
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Config
+      x-urlPath: add_items_registered_domains
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/config/applepay/registered_domains/remove_items:
+    post:
+      tags:
+      - Payment Acceptance > Config
+      summary: 6|Remove Apple Pay Domains
+      description: Remove one or more registered web domains from Apple Pay.
+      operationId: applepayRegisteredDomainsRemoveItems
+      parameters:
+      - name: x-on-behalf-of
+        in: header
+        description: The account unique identifier that this request is on behalf of.
+        required: false
+        schema:
+          type: string
+          default: acct_JD0UmuRLNcytX7sBj0lfWA
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - items
+              properties:
+                items:
+                  type: array
+                  description: A list of domains to be removed.
+                  items:
+                    type: string
+                reason:
+                  type: string
+                  description: The reason for removing these domains. Maximum length is 500.
+        description: Apple pay domains unregister request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplePayRegisteredDomains'
+        '201':
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/config/applepay/registered_domains/remove_items
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          items:
+          - domain3.com
+          reason: Not used anymore.
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - domain1.com
+          - domain2.com
+      x-scope:
+      - scope: payment_acceptance:write
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Config
+      x-urlPath: remove_items_registered_domains
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/config/convertible_shopper_currencies:
+    get:
+      tags:
+      - Payment Acceptance > Config
+      summary: 7|List all Convertible Shopper Currencies
+      description: Retrieves a list of shopper currencies enabled for creating a conversion quote, which can be used as selectable options for payment currency conversion.
+      operationId: listConvertibleShopperCurrencies
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConvertibleShopperCurrencies'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/config/convertible_shopper_currencies
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - AUD
+          - USD
+          - SGD
+          - EUR
+          - JPY
+      x-scope:
+      - scope: payment_acceptance:read
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Config
+      x-urlPath: convertible_shopper_currencies
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    DelayedPlan:
+      type: object
+      properties:
+        delay_in_days:
+          type: integer
+          format: int32
+          description: the number of days that transaction amount will be held in your reserve account before they are released.
+      description: '`DELAYED` reserve plan.'
+    ConvertibleShopperCurrencies:
+      type: object
+      properties:
+        items:
+          type: array
+          description: A list of shopper currencies available for currency conversion. Each currency is represented by a 3-letter ISO-4217 code.
+          items:
+            type: string
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    BankResources:
+      type: object
+      properties:
+        logo_url:
+          type: string
+          description: URLs of the bank logos.
+      description: The resources provided to render your bank list.
+    ApplePayRegisteredDomains:
+      type: object
+      properties:
+        items:
+          type: array
+          description: All registered domains.
+          items:
+            type: string
+    ReservePlan:
+      type: object
+      properties:
+        delayed:
+          $ref: '#/components/schemas/DelayedPlan'
+          description: '`DELAYED` reserve plan.'
+        delayed_rolling:
+          $ref: '#/components/schemas/DelayedRollingPlan'
+          description: '`DELAYED_ROLLING` reserve plan.'
+        rolling:
+          $ref: '#/components/schemas/RollingPlan'
+          description: '`ROLLING` reserve plan.'
+        type:
+          type: string
+          description: "The type of the reserve plan. Possible values:  \n  \n\n-   `DELAYED`: All funds will settle to your wallet `delayed.delay_in_days` days after transaction.\n-   `ROLLING`: `rolling.rolling_percentage` percent of funds will be held for `rolling.rolling_window_in_days` days, while the rest will settle in 2-3 days after transaction.\n-   `DELAYED_ROLLING`: Combination of `DELAYED` and `ROLLING` reserve plans. All funds will be held for `delayed_rolling.delay_in_days` days and `delayed_rolling.rolling_percentage` percent of funds will be held for additional `delayed_rolling.rolling_window_in_days` after transaction."
+    PaymentMethodTypeConfig:
+      type: object
+      properties:
+        active:
+          type: boolean
+          description: Indicate whether the payment method type is active.
+        flows:
+          type: array
+          description: The supported flows for the payment method type and the transaction mode. One of `qrcode`, `mobile_web`, `mobile_app`.
+          items:
+            type: string
+        name:
+          type: string
+          description: 'The type of payment method. Can be `card`, `wechatpay`, `alipaycn`, `alipayhk`, `kakaopay`, `tng`, `truemoney`, `dana`, `gcash`, etc. '
+        transaction_currencies:
+          type: array
+          description: The supported transaction currencies for the payment method type and the transaction mode.
+          items:
+            type: string
+        transaction_mode:
+          type: string
+          description: 'Indicate in which mode you trigger transactions with the payment method type. One of `oneoff`, `recurring`.
+
+            '
+    RollingPlan:
+      type: object
+      properties:
+        rolling_percentage:
+          type: number
+          description: the percentage of the transaction amount that will be held in the reserve account.
+        rolling_window_in_days:
+          type: integer
+          format: int32
+          description: the number of days that the reserved funds will be held before they are released.
+      description: '`ROLLING` reserve plan.'
+    DelayedRollingPlan:
+      type: object
+      properties:
+        delay_in_days:
+          type: integer
+          format: int32
+          description: the number of days that transaction amount will be held in your reserve account after transaction.
+        rolling_percentage:
+          type: number
+          description: the percentage of the transaction amount that will be held in the reserve account after `delay_in_days`.
+        rolling_window_in_days:
+          type: integer
+          format: int32
+          description: the number of days that the reserved funds will be held in the reserve account after `delay_in_days`.
+      description: '`DELAYED_ROLLING` reserve plan.'
+    BankConfig:
+      type: object
+      required:
+      - bank_name
+      - display_name
+      - resources
+      properties:
+        bank_name:
+          type: string
+          description: The code name of the bank. Pass it to confirm Payment Intent if `bank_name` is needed.
+        display_name:
+          type: string
+          description: The bank name for display.
+        resources:
+          $ref: '#/components/schemas/BankResources'
+          description: The resources provided to render your bank list.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

@@ -24,7 +24,7 @@ example:
   message: Value is too short
   details:
     reason: First name must contain at least three characters.
-status_codes:
+problems:
 - status: 200
   title: OK
   description: The request was processed successfully

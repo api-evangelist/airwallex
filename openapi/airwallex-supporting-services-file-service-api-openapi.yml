@@ -1,0 +1,259 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Supporting Services > File Service API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Supporting Services > File Service
+  description: Represents files uploaded to Airwallex for secure storage and retrieval via download links. Each file can be referenced in other API endpoints using its unique file identifier.
+  x-domain: Supporting Services
+  x-resource: File Service
+  x-urlPath: supporting_services/file_service
+paths:
+  /api/v1/files/upload:
+    post:
+      tags:
+      - Supporting Services > File Service
+      summary: 1|Upload a File
+      description: Upload a file to Airwallex using this endpoint of the `files.airwallex.com` subdomain. The max size of upload file is up to 20MB. When you upload a file, the API responds with a `file_id`. This file unique identifier can then be referenced as required as part of the attachments object in our other endpoints.
+      operationId: upload
+      x-oboSupported: false
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  description: The file to upload, max length of filename is 50 characters.
+                  type: string
+                  format: binary
+                notes:
+                  description: The notes of the uploaded file, max length is 50 characters.
+                  type: string
+                purpose:
+                  description: The intended use case of the file. Files are general-purpose by default; set a purpose when the endpoint you'll pass the file to requires one, so the file is provisioned correctly for that use case. Omit otherwise.
+                  type: string
+                  enum:
+                  - SPEND_ATTACHMENT
+                  x-enumDescriptions:
+                    SPEND_ATTACHMENT: Attaching a supporting document to a Spend resource as evidence, such as an expense receipt or purchase order invoice.
+              required:
+              - file
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileInformation'
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/files/upload
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: multipart/form-data
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          file: '@your_file.pdf'
+          notes: <string>
+        response_body:
+          created: 0
+          file_id: <string>
+          filename: <string>
+          notes: <string>
+          object_type: <string>
+          size: 0
+      x-scope:
+      - scope: file:write
+        group: Supporting Services
+        resource_name: Upload Files
+      servers:
+      - url: https://files.airwallex.com
+        description: Production
+      - url: https://files.sandbox.airwallex.com
+        description: Sandbox
+      x-domain: Supporting Services
+      x-resource: File Service
+      x-urlPath: upload_files
+      x-oauthSupported: true
+      x-resourceLevel: account
+  /api/v1/files/download_links:
+    post:
+      tags:
+      - Supporting Services > File Service
+      summary: 2|List all File Download Links
+      description: Populate the download request with a list of file unique identifiers and the API responds with associated download links. Links will be valid for 1 day. Files do not exceed 20MB. Can also be used by Scale platforms to download files for connected accounts using the x-on-behalf-of header.
+      operationId: filesDownloadLinks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                file_ids:
+                  type: array
+                  description: List of file unique identifiers to retrieve download links for.
+                  items:
+                    type: string
+        description: fileIdsRequest
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DownloadLinks'
+        '400':
+          description: '["field_required","invalid_argument","validation_failed"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/files/download_links
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          file_ids: []
+        response_body:
+          absent_files:
+          - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+          files:
+          - content_type: application/octet-stream
+            download_link_valid_until: '2022-01-18T21:38:52Z'
+            file_id: YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+            filename: registration_certificate.pdf
+            size: 120591
+            url: https://airwallex-upload-shenzhen-dev.oss-accelerate.aliyuncs.com/YmVkOI2MDIxOQ%3D%3D?Expires=1637271532&OSSAccessKeyId=&Signature=GNGvvv0%3D
+      x-scope:
+      - scope: file:write
+        group: Supporting Services
+        resource_name: Upload Files
+      x-oauthSupported: false
+      x-domain: Supporting Services
+      x-resource: File Service
+      x-urlPath: download_links_files
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    DownloadLinks:
+      type: object
+      properties:
+        absent_files:
+          type: array
+          description: File unique identifiers that could not be found.
+          items:
+            type: string
+        files:
+          type: array
+          description: File download links.
+          items:
+            $ref: '#/components/schemas/FileDownloadLink'
+    FileInformation:
+      type: object
+      properties:
+        created:
+          type: integer
+          format: int64
+          description: created time of file.
+        file_id:
+          type: string
+          description: Unique identifier of file, to be referenced in other endpoints.
+        filename:
+          type: string
+          description: Name of file.
+        notes:
+          type: string
+          description: notes of file.
+        object_type:
+          type: string
+          description: type of object. Can be file or list.
+        size:
+          type: integer
+          format: int64
+          description: Size in bytes.
+    FileDownloadLink:
+      type: object
+      properties:
+        content_type:
+          type: string
+          description: Content type.
+        download_link_valid_until:
+          type: string
+          description: File download URL expiration date.
+        file_id:
+          type: string
+          description: File unique identifier.
+        filename:
+          type: string
+          description: File name, if provided during upload.
+        size:
+          type: integer
+          format: int64
+          description: File size in bytes.
+        url:
+          type: string
+          description: File download URL.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

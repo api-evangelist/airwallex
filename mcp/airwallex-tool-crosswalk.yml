@@ -1,167 +1,1028 @@
-generated: '2026-08-30'
+generated: '2026-10-20'
 method: derived
-source: mcp/airwallex-mcp.yml
-note: >-
-  Airwallex has BOTH an MCP surface and an OpenAPI, so this crosswalk is emitted - but the honest
-  shape of it is unusual and worth stating plainly. The only anonymously-enumerable tool list is the
-  two-tool Docs MCP, and neither of those tools maps to a REST operation: they are documentation
-  retrieval, not account actions. The production AgentOS and sandbox Developer servers DO expose
-  account operations, but their tools/list is OAuth-gated, so their tool NAMES are not public. What
-  IS public for those servers is their OAuth scope set (RFC 9728), and a scope is the closest
-  public proxy for a capability. The scope-to-capability rows below are therefore recorded as
-  `capability_crosswalk`, at low-to-medium confidence, and are NOT presented as tool names.
-  Nothing here was invented; where a mapping could not be established it is left in rest_only or
-  marked gated.
+source:
+- openapi/airwallex-openapi.yml
+- well-known/airwallex-oauth-protected-resource-mcp.json
+- well-known/airwallex-oauth-protected-resource-developer.json
+- https://mcp.sandbox.airwallex.com/docs
+note: Rebuilt 2026-10-20 against the new verbatim contract openapi/airwallex-openapi.yml (468 operations, assembled
+  from the per-category OpenAPI fragments the Airwallex API reference serves), which replaced the 18-operation reconstruction
+  the previous crosswalk was bound to. The only anonymously enumerable tool list is the two-tool Docs MCP (tools/list
+  re-run live 2026-10-20), and neither tool invokes a REST operation, so crosswalk[] is honestly empty and both
+  tools sit in mcp_only. The AgentOS (production) and Developer (sandbox) servers gate tools/list behind OAuth,
+  so their tool NAMES are not public; their OAuth scopes ARE public (RFC 9728). capability_crosswalk binds each
+  public MCP scope to the operations whose own x-scope extension in the spec carries the equivalent API scope. binding
+  x-scope = same name in both vocabularies (r:org_action:billing.invoice_view <-> billing.invoice:read); x-scope-alias
+  = our mapping between differently named resources (balances_view <-> balance:read), medium confidence. Write-scope
+  rows list every operation whose x-scope names the :write scope, which in the spec includes some reads.
 surfaces:
   openapi:
-    files:
-      - openapi/airwallex-authentication-api-openapi.yml
-      - openapi/airwallex-balances-api-openapi.yml
-      - openapi/airwallex-beneficiaries-api-openapi.yml
-      - openapi/airwallex-customers-api-openapi.yml
-      - openapi/airwallex-payment-intents-api-openapi.yml
-      - openapi/airwallex-payouts-api-openapi.yml
-      - openapi/airwallex-refunds-api-openapi.yml
-      - openapi/airwallex-transfers-api-openapi.yml
+    file: openapi/airwallex-openapi.yml
+    operations: 468
     gated: false
-    provenance_warning: >-
-      These specs derive from openapi/_original/airwallex-openapi.yml, which describes itself as a
-      "best-effort OpenAPI 3.1 representation ... derived from https://www.airwallex.com/docs/api".
-      They are an API Evangelist reconstruction, not an Airwallex-published contract. Airwallex's
-      own 48 dated OpenAPI documents are named in its docs application but are not downloadable
-      (see lifecycle/airwallex-lifecycle.yml contract_discovery). Confidence on every rest[] binding
-      below is capped accordingly.
+    provenance: Verbatim fragments of airwallex-openapi-2026-08-21.yaml served by https://www.airwallex.com/docs/api
+      as page data; see openapi/_original/.
   graphql:
     present: false
   mcp:
-    - url: https://mcp.sandbox.airwallex.com/docs
-      gated: false
-      tools_enumerated: true
-      tool_count: 2
-    - url: https://mcp.airwallex.com/mcp
-      gated: true
-      tools_enumerated: false
-      scopes_public: 35
-    - url: https://mcp.sandbox.airwallex.com/developer
-      gated: true
-      tools_enumerated: false
-      scopes_public: 47
+  - name: airwallex-docs
+    url: https://mcp.sandbox.airwallex.com/docs
+    gated: false
+    tools_enumerated: true
+    tool_count: 2
+    probed: '2026-10-20'
+    http_status: 200
+  - name: airwallex-agentos
+    url: https://mcp.airwallex.com/mcp
+    gated: true
+    tools_enumerated: false
+    scopes_public: 35
+    http_status: 401
+  - name: airwallex-developer
+    url: https://mcp.sandbox.airwallex.com/developer
+    gated: true
+    tools_enumerated: false
+    scopes_public: 47
   cli:
     binary: airwallex
-    note: >-
-      The CLI is the third agent surface and the only one that self-describes without auth on the
-      user's own machine - `airwallex --tree` enumerates every command and
-      `airwallex <cmd> --api-schema-only` prints the backing endpoint's schema. For an agent that
-      can shell out, that is a richer crosswalk than anything published on the web.
     artifact: cli/airwallex-cli.yml
-crosswalk:
-  - tool: read_integration_best_practices
-    category: documentation
-    server: airwallex-docs
-    rest: []
-    binding: none
-    confidence: high
-    note: Documentation retrieval tool; no backing REST operation by design.
-  - tool: search_public_docs
-    category: documentation
-    server: airwallex-docs
-    rest: []
-    binding: none
-    confidence: high
-    note: >-
-      Documentation search over Airwallex product, API and SDK docs. Parameters question, source.
-      No backing REST operation.
+crosswalk: []
 mcp_only:
-  - tool: read_integration_best_practices
-    reason: documentation tool, deliberately not an API operation
-  - tool: search_public_docs
-    reason: documentation search over the docs corpus, not the account API
+- tool: read_integration_best_practices
+  server: airwallex-docs
+  reason: documentation retrieval over the Airwallex docs corpus; no backing REST operation
+- tool: search_public_docs
+  server: airwallex-docs
+  reason: documentation retrieval over the Airwallex docs corpus; no backing REST operation
 capability_crosswalk:
-  note: >-
-    Public OAuth scopes on the gated MCP servers, mapped to the OpenAPI operations in this repo that
-    fall inside them. This is a capability mapping, not a tool mapping - the scope grants access to
-    a family of operations, and the server's actual tool names are unknown until an authenticated
-    tools/list is run.
+  note: Scope-to-operation mapping, NOT tool-to-operation. Tool names on the gated servers are unknown until an
+    authenticated tools/list is run.
   rows:
-    - scope: r:awx_action:balances_view
-      servers: [production, sandbox]
-      rest: [getCurrentBalances]
-      confidence: high
-    - scope: r:awx_action:pa_view
-      servers: [production, sandbox]
-      rest: [getPaymentIntent, getRefund]
-      confidence: medium
-      note: pa = payment acceptance; the read side of payment intents, refunds, disputes and payment methods
-    - scope: w:awx_action:pa_edit
-      servers: [sandbox]
-      rest: [createPaymentIntent, confirmPaymentIntent, capturePaymentIntent, cancelPaymentIntent, createRefund]
-      confidence: medium
-      note: >-
-        SANDBOX ONLY. The production scope set has no pa_edit, which is the machine-readable form of
-        Airwallex's stated "no money-out actions by default" guardrail.
-    - scope: r:awx_action:transfers_view
-      servers: [production, sandbox]
-      rest: [getTransfer, getPayout]
-      confidence: medium
-    - scope: w:awx_action:transfers_edit
-      servers: [sandbox]
-      rest: [createTransfer, createPayout]
-      confidence: medium
-      note: SANDBOX ONLY - absent from the production scope set.
-    - scope: r:awx_action:contact_management_view
-      servers: [production, sandbox]
-      rest: [listBeneficiaries, getBeneficiary]
-      confidence: medium
-      note: beneficiaries/payees are managed under contact management
-    - scope: w:awx_action:contact_management_edit
-      servers: [production, sandbox]
-      rest: [createBeneficiary]
-      confidence: medium
-    - scope: r:org_action:billing.customer_view
-      servers: [production, sandbox]
-      rest: [getCustomer]
-      confidence: low
-      note: >-
-        The Billing customer object and the payment-acceptance Customer object are different
-        entities in Airwallex; this row is low confidence for exactly that reason.
-    - scope: w:org_action:billing.customer_edit
-      servers: [production, sandbox]
-      rest: [createCustomer]
-      confidence: low
-    - scope: r:awx_action:conversions_view
-      servers: [production, sandbox]
-      rest: []
-      confidence: high
-      note: Transactional FX conversions - no operation for this in the reconstructed spec (rest_only gap in reverse).
-    - scope: r:awx_action:issuing_cards_view
-      servers: [production, sandbox]
-      rest: []
-      confidence: high
-      note: Issuing is entirely absent from the reconstructed spec.
-    - scope: w:awx_action:simulation_edit
-      servers: [sandbox]
-      rest: []
-      confidence: high
-      note: >-
-        Sandbox simulation APIs (drive a transfer/authorization/dispute state machine forward). No
-        equivalent exists in production, and none in the reconstructed spec.
+  - scope: r:awx_action:balances_view
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - balance:read
+    rest:
+    - listCurrent
+    - listHistory
+    binding: x-scope-alias
+    confidence: medium
+  - scope: r:awx_action:contact_management_view
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - beneficiary:read
+    rest:
+    - retrieveBeneficiary
+    - listBeneficiaries
+    - beneficiaries_schema
+    - listSupportedFinancialInstitutions
+    - createPayer
+    - retrievePayer
+    - listPayers
+    - updatePayer
+    - payers_validate
+    - deletePayer
+    - payers_schema
+    binding: x-scope-alias
+    confidence: low
+    note: Contact management is mapped to the spec's beneficiary scope, which the spec also assigns to the payer
+      operations; the equivalence of the two vocabularies is our inference.
+  - scope: r:awx_action:conversions_view
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - fx.conversion:read
+    rest:
+    - retrieveConversion
+    - listConversion
+    - retrieveConversionAmendment
+    - listConversionAmendments
+    - retrieveQuote
+    - retrieveCurrent
+    binding: x-scope-alias
+    confidence: medium
+  - scope: r:awx_action:deposits_view
+    servers:
+    - sandbox
+    spec_scope:
+    - deposit:read
+    rest:
+    - retrieveDeposit
+    - listDeposits
+    binding: x-scope-alias
+    confidence: medium
+  - scope: r:awx_action:direct_debits_view
+    servers:
+    - sandbox
+    spec_scope:
+    - direct_debit:read
+    rest:
+    - retrieveDirectDebit
+    - listDirectDebits
+    binding: x-scope-alias
+    confidence: medium
+  - scope: r:awx_action:global_accounts_view
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - global_account:read
+    rest:
+    - retrieveGlobalAccount
+    - listGlobalAccount
+    - retrieveAliases
+    - listAliases
+    - globalAccount_retrieveMandate
+    - listMandates
+    - globalAccount_listTransactions
+    binding: x-scope-alias
+    confidence: medium
+  - scope: r:awx_action:issuing_cardholders_view
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - issuing.cardholder:read
+    rest:
+    - retrieveCardholder
+    - listCardholders
+    binding: x-scope-alias
+    confidence: medium
+  - scope: r:awx_action:issuing_cards_view
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - issuing.card:read
+    rest:
+    - retrieveCard
+    - listCards
+    - listDetails
+    - listLimits
+    binding: x-scope-alias
+    confidence: medium
+  - scope: r:awx_action:issuing_transactions_view
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - issuing.transaction:read
+    rest:
+    - retrieveAuthorization
+    - listAuthorizations
+    - retrieveCardTransactionEvent
+    - listCardTransactionEvents
+    - retrieveLifecycles
+    - listLifecycles
+    - retrieveCardTransaction
+    - listCardTransactions
+    - retrieveTransaction
+    - transactions_listTransactions
+    binding: x-scope-alias
+    confidence: medium
+  - scope: r:awx_action:linked_accounts_view
+    servers:
+    - sandbox
+    spec_scope:
+    - linked_account:read
+    rest:
+    - retrieveLinkedAccount
+    - listLinkedAccounts
+    - listBalances
+    - linkedAccounts_retrieveMandate
+    - updateMandate
+    binding: x-scope-alias
+    confidence: medium
+  - scope: r:awx_action:pa_view
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - payment_acceptance:read
+    rest:
+    - retrieveReservePlan
+    - listApplepayRegisteredDomains
+    - listConvertibleShopperCurrencies
+    - retrieveConversionQuote
+    - retrieveCustomer
+    - listCustomers
+    - retrievePaymentAttempt
+    - listPaymentAttempts
+    - retrievePaymentConsent
+    - listPaymentConsents
+    - retrievePaymentIntent
+    - listPaymentIntents
+    - retrievePaymentLink
+    - listPaymentLinks
+    - retrievePaymentMethod
+    - listPaymentMethods
+    - lookupBin
+    - retrieveRefund
+    - listRefunds
+    binding: x-scope-alias
+    confidence: medium
+  - scope: r:awx_action:payment_dispute_view
+    servers:
+    - sandbox
+    spec_scope:
+    - payment_dispute:read
+    rest:
+    - retrievePaymentDispute
+    - listPaymentDisputes
+    - listRelatedPaymentIntents
+    binding: x-scope
+    confidence: high
+  - scope: r:awx_action:payment_links_view
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - payment_link:read
+    rest:
+    - retrievePaymentLink
+    - listPaymentLinks
+    binding: x-scope-alias
+    confidence: medium
+  - scope: r:awx_action:settings.account_details_view
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - settings.account_details:read
+    rest: []
+    binding: none
+    confidence: high
+    note: No operation in the spec carries a matching x-scope; left unbound rather than guessed.
+  - scope: r:awx_action:transfers_view
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - payouts.transfer:read
+    - transfer:read
+    rest:
+    - confirmationLettersCreate
+    - retrieveBatchTransfer
+    - listBatchTransfers
+    - batchTransfers_listItems
+    - retrieveTransfer
+    - listTransfers
+    - listSupportedCurrencies
+    binding: x-scope-alias
+    confidence: medium
+  - scope: r:org_action:billing.customer_view
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - billing.customer:read
+    rest:
+    - retrieveBillingCustomer
+    - listBillingCustomerBankTransferInstructions
+    - listBillingCustomers
+    binding: x-scope
+    confidence: high
+  - scope: r:org_action:billing.discount_view
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - billing.discount:read
+    rest:
+    - retrieveCoupon
+    - listCoupons
+    binding: x-scope
+    confidence: high
+  - scope: r:org_action:billing.invoice_view
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - billing.invoice:read
+    rest:
+    - retrieveInvoice
+    - listInvoices
+    - invoices_preview
+    - invoices_retrieveLineItem
+    - invoices_listLineItems
+    - retrieveLineItemGroups
+    - listLineItemGroups
+    binding: x-scope
+    confidence: high
+  - scope: r:org_action:billing.payment_source_view
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - billing.payment_source:read
+    rest:
+    - retrievePaymentSource
+    - listPaymentSources
+    binding: x-scope
+    confidence: high
+  - scope: r:org_action:billing.price_view
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - billing.price:read
+    rest:
+    - retrievePrice
+    - listPrices
+    - retrieveRateCard
+    - listRateCards
+    - retrieveRateCardVersion
+    - listRateCardVersions
+    - retrieveRateCardVersionItem
+    - listRateCardVersionItems
+    binding: x-scope
+    confidence: high
+  - scope: r:org_action:billing.product_view
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - billing.product:read
+    rest:
+    - retrieveProduct
+    - listProducts
+    binding: x-scope
+    confidence: high
+  - scope: r:org_action:billing.subscription_view
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - billing.subscription:read
+    rest:
+    - retrieveSubscription
+    - listSubscriptions
+    - retrieveItem
+    - subscriptions_listItems
+    binding: x-scope
+    confidence: high
+  - scope: r:org_action:billing.transaction_view
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - billing.transaction:read
+    rest:
+    - retrieveBillingTransaction
+    - listBillingTransactions
+    binding: x-scope
+    confidence: high
+  - scope: r:org_action:billing.usage_metering_view
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - billing.usage_metering:read
+    rest:
+    - retrieveMeter
+    - listMeters
+    - listSummaries
+    binding: x-scope
+    confidence: high
+  - scope: r:org_action:expense_management.expense:api_view
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - spend.expense:read
+    rest:
+    - retrieveExpense
+    - listExpenses
+    - retrieveReimbursement
+    - retrieveReimbursementReports
+    - retrieveTransfers
+    - listReimbursements
+    - listReimbursementReports
+    binding: x-scope-alias
+    confidence: medium
+  - scope: r:org_action:spend.bills:api_view
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - spend.bill:read
+    rest:
+    - retrieveBill
+    - listBills
+    binding: x-scope-alias
+    confidence: medium
+  - scope: r:org_action:spend.vendors:api_view
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - spend.vendor:read
+    rest:
+    - retrieveVendor
+    - listVendors
+    binding: x-scope-alias
+    confidence: medium
+  - scope: w:awx_action:contact_management_edit
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - beneficiary:write
+    rest:
+    - createBeneficiary
+    - updateBeneficiary
+    - beneficiaries_validate
+    - verifyAccount
+    - deleteBeneficiary
+    - generateApiSchemas
+    - generateFormSchemas
+    - beneficiaries_schema
+    - createPayer
+    - retrievePayer
+    - listPayers
+    - updatePayer
+    - payers_validate
+    - deletePayer
+    - payers_schema
+    binding: x-scope-alias
+    confidence: low
+    note: Contact management is mapped to the spec's beneficiary scope, which the spec also assigns to the payer
+      operations; the equivalence of the two vocabularies is our inference.
+  - scope: w:awx_action:conversions_edit
+    servers:
+    - sandbox
+    spec_scope:
+    - fx.conversion:write
+    rest:
+    - createConversion
+    - createConversionAmendment
+    - conversionAmendments_quote
+    - createQuote
+    binding: x-scope-alias
+    confidence: medium
+  - scope: w:awx_action:deposits_create
+    servers:
+    - sandbox
+    spec_scope:
+    - deposit:write
+    rest:
+    - createDeposit
+    binding: x-scope-alias
+    confidence: medium
+    note: Sandbox-only scope (absent from production), bound to createDeposit via its deposit:write x-scope.
+  - scope: w:awx_action:devx.feedback_write
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - devx.feedback:write
+    rest: []
+    binding: none
+    confidence: high
+    note: Feedback channel of the MCP server itself (see the marketplace references/feedback.md); not an account
+      API operation.
+  - scope: w:awx_action:issuing_cardholders_edit
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - issuing.cardholder:write
+    rest:
+    - createCardholder
+    - updateCardholder
+    - deleteCardholder
+    binding: x-scope-alias
+    confidence: medium
+  - scope: w:awx_action:issuing_cards_edit
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - issuing.card:write
+    rest:
+    - createCard
+    - updateCard
+    - cards_activate
+    - provisionDigitalToken
+    binding: x-scope-alias
+    confidence: medium
+  - scope: w:awx_action:linked_accounts_edit
+    servers:
+    - sandbox
+    spec_scope:
+    - linked_account:write
+    rest:
+    - createLinkedAccount
+    - auth
+    - linkedAccounts_refresh
+    - verifyMicrodeposits
+    - linkedAccounts_suspend
+    - linkedAccounts_confirm
+    - completeAuth
+    - linkedAccounts_retrieveMandate
+    - updateMandate
+    binding: x-scope-alias
+    confidence: medium
+  - scope: w:awx_action:pa_edit
+    servers:
+    - sandbox
+    spec_scope:
+    - payment_acceptance:write
+    rest:
+    - applepayRegisteredDomainsAddItems
+    - applepayRegisteredDomainsRemoveItems
+    - createConversionQuote
+    - createCustomer
+    - updateCustomer
+    - createPaymentConsent
+    - updatePaymentConsent
+    - verify
+    - verifyContinue
+    - paymentConsents_disable
+    - createPaymentIntent
+    - updatePaymentIntent
+    - paymentIntents_confirm
+    - capture
+    - confirmContinue
+    - incrementAuthorization
+    - paymentIntents_cancel
+    - createPaymentLink
+    - updatePaymentLink
+    - notifyShopper
+    - paymentLinks_activate
+    - paymentLinks_deactivate
+    - createPaymentMethod
+    - updatePaymentMethod
+    - paymentMethods_disable
+    - createRefund
+    binding: x-scope-alias
+    confidence: medium
+  - scope: w:awx_action:payment_dispute_edit
+    servers:
+    - sandbox
+    spec_scope:
+    - payment_dispute:write
+    rest:
+    - retrievePaymentDispute
+    - listPaymentDisputes
+    - updatePaymentDispute
+    - accept
+    - challenge
+    - listRelatedPaymentIntents
+    binding: x-scope
+    confidence: high
+  - scope: w:awx_action:payment_links_edit
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - payment_link:write
+    rest:
+    - createPaymentLink
+    - retrievePaymentLink
+    - listPaymentLinks
+    - updatePaymentLink
+    - notifyShopper
+    - paymentLinks_activate
+    - paymentLinks_deactivate
+    binding: x-scope-alias
+    confidence: medium
+  - scope: w:awx_action:simulation_edit
+    servers:
+    - sandbox
+    spec_scope:
+    - simulation:write
+    rest:
+    - simulation_approveAmendment
+    - simulation_rejectAmendment
+    - simulation_updateStatus
+    - simulation_failPaymentSourceNextAutocharge
+    - simulation_createDeposit
+    - simulation_reverse
+    - simulation_settle
+    - simulation_reject
+    - simulation_createIssuing
+    - simulation_refund
+    - simulation_passReviewCardholder
+    - simulation_notifyThreeds
+    - simulation_acceptMandate
+    - simulation_rejectMandate
+    - simulation_cancelMandate
+    - simulation_failMicrodeposits
+    - simulation_cancelOffboarding
+    - simulation_completeOffboarding
+    - simulation_createShopperAction
+    - simulation_createPaymentDispute
+    - simulation_resolvePaymentDispute
+    - simulation_escalatePaymentDispute
+    - simulation_createRequestForInformationRfi
+    - simulation_followup
+    - simulation_close
+    - simulation_transition
+    binding: x-scope
+    confidence: high
+  - scope: w:awx_action:transfers_edit
+    servers:
+    - sandbox
+    spec_scope:
+    - payouts.transfer:write
+    - transfer:write
+    rest:
+    - confirmationLettersCreate
+    - createBatchTransfer
+    - addItems
+    - batchTransfers_quote
+    - batchTransfers_submit
+    - deleteBatchTransfer
+    - deleteItems
+    - beneficiaries_schema
+    - createPayer
+    - retrievePayer
+    - listPayers
+    - updatePayer
+    - payers_validate
+    - deletePayer
+    - payers_schema
+    - createTransfer
+    - transfers_validate
+    - transfers_cancel
+    - listSupportedCurrencies
+    binding: x-scope-alias
+    confidence: medium
+  - scope: w:org_action:billing.checkout_edit
+    servers:
+    - sandbox
+    spec_scope:
+    - billing.checkout:write
+    rest:
+    - createBillingCheckout
+    - retrieveBillingCheckout
+    - listBillingCheckouts
+    - updateBillingCheckout
+    - billingCheckouts_cancel
+    binding: x-scope
+    confidence: high
+  - scope: w:org_action:billing.customer_edit
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - billing.customer:write
+    rest:
+    - createBillingCustomer
+    - retrieveBillingCustomer
+    - listBillingCustomerBankTransferInstructions
+    - listBillingCustomers
+    - updateBillingCustomer
+    binding: x-scope
+    confidence: high
+  - scope: w:org_action:billing.discount_edit
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - billing.discount:write
+    rest:
+    - createCoupon
+    - retrieveCoupon
+    - listCoupons
+    - updateCoupon
+    binding: x-scope
+    confidence: high
+  - scope: w:org_action:billing.invoice_edit
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - billing.invoice:write
+    rest:
+    - createInvoice
+    - retrieveInvoice
+    - listInvoices
+    - updateInvoice
+    - invoices_preview
+    - invoices_finalize
+    - markAsPaid
+    - payInvoice
+    - deleteInvoice
+    - invoices_void
+    - invoices_addLineItems
+    - invoices_retrieveLineItem
+    - invoices_listLineItems
+    - invoices_updateLineItems
+    - invoices_deleteLineItems
+    - retrieveLineItemGroups
+    - listLineItemGroups
+    binding: x-scope
+    confidence: high
+  - scope: w:org_action:billing.price_edit
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - billing.price:write
+    rest:
+    - createPrice
+    - retrievePrice
+    - listPrices
+    - updatePrice
+    - createRateCard
+    - retrieveRateCard
+    - listRateCards
+    - updateRateCard
+    - createRateCardVersion
+    - retrieveRateCardVersion
+    - listRateCardVersions
+    - retrieveRateCardVersionItem
+    - listRateCardVersionItems
+    binding: x-scope
+    confidence: high
+  - scope: w:org_action:billing.product_edit
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - billing.product:write
+    rest:
+    - createProduct
+    - retrieveProduct
+    - listProducts
+    - updateProduct
+    binding: x-scope
+    confidence: high
+  - scope: w:org_action:billing.subscription_edit
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - billing.subscription:write
+    rest:
+    - createSubscription
+    - retrieveSubscription
+    - listSubscriptions
+    - updateSubscription
+    - subscriptions_cancel
+    - retrieveItem
+    - subscriptions_listItems
+    binding: x-scope
+    confidence: high
+  - scope: w:org_action:billing.usage_metering_edit
+    servers:
+    - production
+    - sandbox
+    spec_scope:
+    - billing.usage_metering:write
+    rest:
+    - createMeter
+    - retrieveMeter
+    - listMeters
+    - updateMeter
+    - restore
+    - archive
+    - listSummaries
+    - ingest
+    - batchIngest
+    - usageEvents_void
+    binding: x-scope
+    confidence: high
 rest_only:
-  - capability: Authentication
-    operations: [login]
-    reason: >-
-      Token exchange is handled by the connector itself (CLI/MCP OAuth), so it is never exposed as
-      an agent tool.
-uncovered_products:
-  note: >-
-    Products Airwallex documents and prices, that the OpenAPI in this repo does not describe at all.
-    Recorded so the gap is visible rather than implied.
-  products: [Issuing, Transactional FX, Billing, Spend, Connected Accounts, Global Treasury, Banking as a Service, Linked Accounts, Deposits, Disputes, Payment Links]
+  count: 218
+  note: Operations whose x-scope matches no public MCP OAuth scope (e.g. accounting, connected accounts, PSP settlement,
+    terminals, risk, reconciliation, authentication_login). Agents reach these through the Airwallex CLI or the
+    API directly, not through AgentOS MCP.
+  operations:
+  - retrieveAccountCapability
+  - apply
+  - enable
+  - listFundingLimits
+  - createAccountingFieldValue
+  - retrieveAccountingFieldValue
+  - listAccountingFieldValues
+  - updateAccountingFieldValue
+  - createAccountingField
+  - retrieveAccountingField
+  - listAccountingFields
+  - updateAccountingField
+  - createGLAccount
+  - retrieveGLAccount
+  - listGLAccounts
+  - updateGLAccount
+  - createTaxCode
+  - retrieveTaxCode
+  - listTaxCodes
+  - updateTaxCode
+  - authentication_login
+  - embeddedComponents_authorize
+  - createAutoPayment
+  - retrieveAutoPayment
+  - listAutoPayments
+  - updateAutoPayment
+  - enableAutoPayments
+  - disableAutoPayments
+  - listTask
+  - createCreditNote
+  - retrieveCreditNote
+  - listCreditNotes
+  - updateCreditNote
+  - creditNotes_preview
+  - creditNotes_finalize
+  - deleteCreditNote
+  - creditNotes_void
+  - creditNotes_addLineItems
+  - creditNotes_retrieveLineItem
+  - creditNotes_listLineItems
+  - creditNotes_updateLineItems
+  - creditNotes_deleteLineItems
+  - retrieveEInvoicingDocument
+  - listEInvoicingDocuments
+  - createPaymentSource
+  - createCheckoutSession
+  - retrieveCheckoutSession
+  - listCheckoutSessions
+  - updateCheckoutSession
+  - cancelCheckoutSession
+  - directDebits_cancel
+  - createGlobalAccount
+  - updateGlobalAccount
+  - generateStatementLetter
+  - close
+  - aliasesCreate
+  - aliasesInitiatePort
+  - aliasesSubmitVerificationCode
+  - aliasesRequestNewVerificationCode
+  - aliasesCancel
+  - mandatesCancel
+  - createFinancialReport
+  - retrieveFinancialReport
+  - listFinancialReports
+  - listContent
+  - retrieveFinancialTransaction
+  - listFinancialTransactions
+  - retrieveSettlement
+  - listSettlement
+  - listReport
+  - listConfig
+  - updateConfig
+  - retrieveDigitalWalletToken
+  - listDigitalWalletTokens
+  - lifecycle
+  - retrieveMerchantBrand
+  - listMerchantBrands
+  - createTransactionDispute
+  - retrieveTransactionDispute
+  - listTransactionDisputes
+  - updateTransactionDispute
+  - transactionDisputes_submit
+  - transactionDisputes_cancel
+  - createBorrower
+  - listBorrower
+  - retrieveBorrower
+  - updateBorrower
+  - retrieveLender
+  - listPaymentMethodTypes
+  - listBanks
+  - retrieveCustomerBalanceTransaction
+  - generateClientSecret
+  - createCustomsDeclaration
+  - retrieveCustomsDeclaration
+  - updateCustomsDeclaration
+  - redeclare
+  - createFundsSplitReversal
+  - retrieveFundsSplitReversal
+  - listFundsSplitReversals
+  - createFundsSplit
+  - retrieveFundsSplit
+  - listFundsSplits
+  - fundsSplits_release
+  - listSettlementRecords
+  - createTerminal
+  - retrieveTerminal
+  - listTerminals
+  - updateTerminal
+  - terminals_activate
+  - processPaymentIntent
+  - resetPassword
+  - terminals_deactivate
+  - terminate
+  - cancelCurrentOperation
+  - confirmFunding
+  - listReconciliationBalances
+  - tcBalancesRequests
+  - listReconciliationTransactions
+  - tcTransactionsRequests
+  - createReserve
+  - unreserve
+  - issuingFraudFeedback
+  - retrieveRequestForInformationRfi
+  - listRequestForInformationRfi
+  - respond
+  - retrieveRiskReport
+  - generateRiskReport
+  - createSeller
+  - retrieveSeller
+  - sellers_deactivate
+  - retrieveWatchlist
+  - listWatchlist
+  - updateWatchlist
+  - createWatchlist
+  - createAccount
+  - retrieveAccount
+  - detail
+  - listAccounts
+  - updateAccount
+  - accounts_submit
+  - agreeTermsAndConditions
+  - accounts_suspend
+  - reactivate
+  - createAmendment
+  - retrieveAmendment
+  - retrieveWalletInfo
+  - createCharge
+  - retrieveCharge
+  - listCharges
+  - createConnectedAccountTransfer
+  - retrieveConnectedAccountTransfer
+  - listConnectedAccountTransfers
+  - createHostedFlow
+  - retrieveHostedFlow
+  - hostedFlows_authorize
+  - createInvitationLink
+  - retrieveInvitationLink
+  - createOffboarding
+  - retrieveOffboarding
+  - listOffboarding
+  - retrievePlatformLiquidityProgram
+  - deposit
+  - withdraw
+  - createProgramSpendingAccount
+  - retrieveProgramSpendingAccounts
+  - listProgramSpendingAccounts
+  - programSpendingAccountsAdjustLimits
+  - platformLiquidityPrograms_listTransactions
+  - createPlatformReport
+  - retrievePlatformReport
+  - listPspSettlementDeposits
+  - createPspSettlementIntent
+  - retrievePspSettlementIntent
+  - listPspSettlementIntents
+  - updatePspSettlementIntent
+  - pspSettlementIntents_submit
+  - pspSettlementIntents_cancel
+  - retrievePspSettlementSplit
+  - listPspSettlementSplits
+  - splitPspSettlementIntent
+  - pspSettlementSplits_release
+  - pspSettlementSplits_cancel
+  - settlementReportsPrepare
+  - retrieveSettlementReports
+  - listSecurityAuditLogs
+  - simulation_captureTransaction
+  - simulation_reverseTransaction
+  - simulation_geneerateActivationCode
+  - simulation_turnOn
+  - simulation_turnOff
+  - simulation_confirrmPaymentIntent
+  - simulation_listPaymentScenarios
+  - createBill
+  - markBillAsPaid
+  - syncBills
+  - addExpenseLineItems
+  - deleteExpenseLineItems
+  - updateExpense
+  - updateExpenseLineItems
+  - syncExpenses
+  - createPurchaseOrder
+  - retrievePurchaseOrder
+  - listPurchaseOrders
+  - syncPurchaseOrders
+  - spendReimbursementReportsSync
+  - spendReimbursementReportsTransfersSync
+  - spendReimbursementReportsMarkAsPaid
+  - createVendor
+  - syncVendors
+  - retrieveConnectedStore
+  - listConnectedStores
+  - upload
+  - filesDownloadLinks
+  - listIndustryCategories
+  - listInvalidConversionDates
+  - retrieveExpiringQuota
+  - retrieveQuota
+  - uploadOrderItems
 coverage:
   tools_named: 2
   tools_bound_to_rest: 0
   mcp_only: 2
   mcp_servers_gated: 2
-  scopes_public_total: 82
-  capability_rows: 12
-  rest_operations_total: 18
-  rest_operations_with_a_capability_row: 17
+  scopes_public_production: 35
+  scopes_public_sandbox: 47
+  capability_rows: 47
+  capability_rows_unbound: 2
+  rest_operations_total: 468
+  rest_operations_with_a_capability_row: 250
+  rest_only: 218

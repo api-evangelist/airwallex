@@ -69,7 +69,8 @@ schemes:
   - https://mcp.airwallex.com/.well-known/oauth-protected-resource/mcp/
   scopes_artifact: scopes/airwallex-scopes.yml
   revocation: https://www.airwallex.com/app/integrations/home
-docs:
+docs: https://www.airwallex.com/docs/api/getting_started
+docs_links:
   getting_started: https://www.airwallex.com/docs/api/getting_started
   manage_api_keys: https://www.airwallex.com/docs/developer-tools/api/manage-api-keys
   api_key_best_practices: https://www.airwallex.com/docs/developer-tools/api/api-key-best-practices

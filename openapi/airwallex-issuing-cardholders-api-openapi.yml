@@ -1,0 +1,1177 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Issuing > Cardholders API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Issuing > Cardholders
+  description: 'You can create cardholders, which are authorized representatives of your business that can be issued cards.
+
+
+    Please note, this API version is incompatible with any Airwallex Business Account Products such as "Borderless Cards" or "Expense Management" via Airwallex web or mobile applications. If you''re using any of these products, please use API version 2024-02-22. Contact your account manager for more information and to verify compatibility.'
+  x-domain: Issuing
+  x-resource: Cardholders
+  x-urlPath: issuing/cardholders
+paths:
+  /api/v1/issuing/cardholders/create:
+    post:
+      tags:
+      - Issuing > Cardholders
+      summary: 1|Create a Cardholder
+      description: 'Cardholders are an authorized representative of your business. Two types of cardholder are permissible, Individual and Delegate.
+
+        `INDIVIDUAL`: A cardholder who is associated with a named individual that is a representative of your business. Can be associated with a personalized or non-personalized card.
+
+        `DELEGATE`: A cardholder who may be assigned to non-personalized cards only and acts as an authorized user of the card.
+
+
+        Any cards attached to delegate cardholders are associated with the name of your business. Creation of cardholders involves passing a name screening process which requires some basic details about the cardholder.'
+      operationId: createCardholder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - email
+              - individual
+              - type
+              properties:
+                email:
+                  type: string
+                  description: Email address of the cardholder.
+                individual:
+                  type: object
+                  required:
+                  - address
+                  - date_of_birth
+                  - express_consent_obtained
+                  - name
+                  description: Details about the cardholder. Only relevant for individual cardholder type.
+                  properties:
+                    address:
+                      type: object
+                      required:
+                      - city
+                      - country
+                      - line1
+                      - postcode
+                      description: Street address of the cardholder.
+                      properties:
+                        city:
+                          type: string
+                          description: City of address.
+                        country:
+                          type: string
+                          description: ISO country code of address.
+                        line1:
+                          type: string
+                          description: Address line 1.
+                        line2:
+                          type: string
+                          description: Address line 2.
+                        postcode:
+                          type: string
+                          description: Address postcode or ZIP code.
+                        state:
+                          type: string
+                          description: Address state or region.
+                    cardholder_agreement_terms_consent_obtained:
+                      type: string
+                      description: For Canada entities only - By setting this field to yes you confirm that you have the express consent of this.
+                    date_of_birth:
+                      type: string
+                      format: date
+                      description: The individual's date of birth, in the format `YYYY-MM-DD`.
+                    employers:
+                      type: array
+                      description: Information of the individual's employers.
+                      items:
+                        type: object
+                        properties:
+                          business_identifiers:
+                            type: array
+                            description: Local business registration number i.e. an official signal of identification for the business.
+                            items:
+                              type: object
+                              properties:
+                                country_code:
+                                  type: string
+                                  description: Country code. (2-letter ISO 3166-2 country code).
+                                number:
+                                  type: string
+                                  description: Local business registration number i.e. an official signal of identification for the business.
+                                type:
+                                  type: string
+                                  description: Type of business registration number, depending on what's applicable to the country the business is registered in.
+                                  enum:
+                                  - BRN
+                                  - EIN
+                                  - SSN
+                                  - VAT
+                          business_name:
+                            type: string
+                            description: Name of the employer.
+                    express_consent_obtained:
+                      type: string
+                      description: By setting this field to `yes` you confirm that you have the express consent of this cardholder for Airwallex to perform name and sanction screening or any further identity verification if required.
+                    identification:
+                      type: object
+                      required:
+                      - country
+                      - expiry_date
+                      - number
+                      - type
+                      description: Identification of the individual cardholder. This object is optional and is only required if name screening fails or if Airwallex deem necessary for your integration.
+                      properties:
+                        country:
+                          type: string
+                          description: ISO country code of identification document.
+                        document_back_file_id:
+                          type: string
+                          description: The unique identifier for an image of the back of the given document. This can be retrieved by uploading a file to the file upload endpoint within the API.
+                        document_front_file_id:
+                          type: string
+                          description: The unique identifier for an image of the front of the given document. This can be retrieved by uploading a file to the file upload endpoint within the API.
+                        expiry_date:
+                          type: string
+                          format: date
+                          description: Expiry date of the identification document provided, in the format YYYY-MM-DD.
+                        gender:
+                          type: string
+                          description: Gender as specified on UK drivers license. Not required for other identification types.
+                          enum:
+                          - M
+                          - F
+                        number:
+                          type: string
+                          description: Document number. May be a license number or passport number.
+                        state:
+                          type: string
+                          description: State the document was issued in. Required only if type is DRIVERS_LICENSE and country is AU.
+                        type:
+                          type: string
+                          description: Type of identification being provided.
+                          enum:
+                          - PASSPORT
+                          - DRIVERS_LICENSE
+                          - ID_CARD
+                    name:
+                      type: object
+                      required:
+                      - first_name
+                      - last_name
+                      description: The full name of the Individual. Only characters in English are supported.
+                      properties:
+                        first_name:
+                          type: string
+                          description: First name of cardholder.
+                        last_name:
+                          type: string
+                          description: Last name for cardholder.
+                        middle_name:
+                          type: string
+                          description: Optional middle name of cardholder.
+                        title:
+                          type: string
+                          description: Optional title of cardholder.
+                    nationality:
+                      type: string
+                      description: The 2-letter ISO country code for the individual's nationality.
+                    paperless_notification_consent_obtained:
+                      type: string
+                      description: For Canada entities only - By setting this field to yes you confirm that you consent to paperless notifications. You agree to the Electronic Communications Consent Agreement which states that we may provide you with all disclosures, notices and other communications, about Airwallex's services including this Agreement and any further amendments, in electronic form.
+                    privacy_policy_terms_consent_obtained:
+                      type: string
+                      description: For Canada entities only - By setting this field to yes you confirm that you consent to the terms of the Privacy Policy.
+                    tax_identification_number:
+                      type: string
+                      description: The tax identification number for the individual cardholder. Used for customs or regulatory reporting when required by the shipping destination. Format and requirements may differ by country.
+                mobile_number:
+                  type: string
+                  description: Mobile number of the cardholder.
+                postal_address:
+                  type: object
+                  required:
+                  - city
+                  - country
+                  - line1
+                  - postcode
+                  description: Optional postal address of the cardholder. Only required if different to address and physical cards are to be issued.
+                  properties:
+                    city:
+                      type: string
+                      description: City of address.
+                    country:
+                      type: string
+                      description: ISO country code of address.
+                    line1:
+                      type: string
+                      description: Address line 1.
+                    line2:
+                      type: string
+                      description: Address line 2.
+                    postcode:
+                      type: string
+                      description: Address postcode or ZIP code.
+                    state:
+                      type: string
+                      description: Address state or region.
+                type:
+                  type: string
+                  description: "The type of cardholder. One of INDIVIDUAL or DELEGATE, which are defined as follows:  \n`INDIVIDUAL`: A cardholder who is associated with a named individual that is a representative of your business. Can be associated with a personalized or non-personalized card.  \n`DELEGATE`: A cardholder who may be assigned to non-personalized cards only and acts as an authorized user of the card."
+        description: newCardholderRequest.
+        required: true
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonPciCardholder'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/issuing/cardholders/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 202
+        reason_phrase: Accepted
+        request_body:
+          email: john@example.com
+          individual:
+            address:
+              city: Melbourne
+              country: AU
+              line1: 44 Gillespie St
+              line2: Unit 2
+              postcode: '3121'
+              state: VIC
+            cardholder_agreement_terms_consent_obtained: 'yes'
+            date_of_birth: '1982-11-02'
+            employers:
+            - business_identifiers:
+              - country_code: US
+                number: A1098762872
+                type: BRN
+            express_consent_obtained: 'yes'
+            identification:
+              country: AU
+              document_back_file_id: NzI3ZDAxM2ItZjMzMC00ZDIyLTk4YTQtMTE3ZTA0MjdhZTUyLHwsaG9uZ2tvbmcsfCxwYXNzcG9ydC5qcGdfMTYwNzY0MDI4OQ==
+              document_front_file_id: NzI3ZDAxM2ItZjMzMC00ZDIyLTk4YTQtMTE3ZTA0MjdhZTUyLHwsaG9uZ2tvbmcsfCxwYXNzcG9ydC5qcGdfMTYwNzY0MDI4OQ==
+              expiry_date: '2028-08-28'
+              gender: F
+              number: 001238243
+              state: NT
+              type: DRIVERS_LICENSE
+            name:
+              first_name: John
+              last_name: Smith
+              middle_name: Fitzgerald
+              title: Mr
+            nationality: UK
+            paperless_notification_consent_obtained: 'yes'
+            privacy_policy_terms_consent_obtained: 'yes'
+            tax_identification_number: <string>
+          mobile_number: '61432100100'
+          postal_address:
+            city: Melbourne
+            country: AU
+            line1: 44 Gillespie St
+            line2: Unit 2
+            postcode: '3121'
+            state: VIC
+          type: INDIVIDUAL
+        response_body:
+          cardholder_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          email: jill@example.com
+          individual:
+            address:
+              city: Melbourne
+              country: AU
+              line1: 44 Gillespie St
+              line2: Unit 2
+              postcode: '3121'
+              state: VIC
+            date_of_birth: '1982-11-02'
+            employers:
+            - business_identifiers:
+              - country_code: US
+                number: A1098762872
+                type: BRN
+            name:
+              first_name: John
+              last_name: Smith
+              middle_name: Fitzgerald
+              title: Mr
+            tax_identification_number: <string>
+          mobile_number: 61-9922334321
+          postal_address:
+            city: Melbourne
+            country: AU
+            line1: 44 Gillespie St
+            line2: Unit 2
+            postcode: '3121'
+            state: VIC
+          status: PENDING
+          type: INDIVIDUAL
+      x-scope:
+      - scope: issuing.cardholder:write
+        group: Issuing
+        resource_name: Cardholders
+      x-domain: Issuing
+      x-resource: Cardholders
+      x-urlPath: create
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/issuing/cardholders/{id}:
+    get:
+      tags:
+      - Issuing > Cardholders
+      summary: 2|Retrieve the Cardholder Details
+      description: Retrieve details for a cardholder.
+      operationId: retrieveCardholder
+      parameters:
+      - name: id
+        in: path
+        description: Unique Identifier for the cardholder.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonPciCardholder'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/issuing/cardholders/cardholder_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          cardholder_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          email: jill@example.com
+          individual:
+            address:
+              city: Melbourne
+              country: AU
+              line1: 44 Gillespie St
+              line2: Unit 2
+              postcode: '3121'
+              state: VIC
+            date_of_birth: '1982-11-02'
+            employers:
+            - business_identifiers:
+              - country_code: US
+                number: A1098762872
+                type: BRN
+            name:
+              first_name: John
+              last_name: Smith
+              middle_name: Fitzgerald
+              title: Mr
+            tax_identification_number: <string>
+          mobile_number: 61-9922334321
+          postal_address:
+            city: Melbourne
+            country: AU
+            line1: 44 Gillespie St
+            line2: Unit 2
+            postcode: '3121'
+            state: VIC
+          status: PENDING
+          type: INDIVIDUAL
+      x-scope:
+      - scope: issuing.cardholder:read
+        group: Issuing
+        resource_name: Cardholders
+      x-domain: Issuing
+      x-resource: Cardholders
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/issuing/cardholders:
+    get:
+      tags:
+      - Issuing > Cardholders
+      summary: 3|List all Cardholders
+      description: Get all cardholders created within an account.
+      operationId: listCardholders
+      parameters:
+      - name: cardholder_status
+        in: query
+        description: Cardholder status.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          enum:
+          - PENDING
+          - READY
+          - DISABLED
+          - INCOMPLETE
+      - name: email
+        in: query
+        description: Email address of the cardholder to filter by.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: page_num
+        in: query
+        description: Page number, starts from 0.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of results per page, between 10 and 200. The default is 100.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - has_more
+                - items
+                properties:
+                  has_more:
+                    type: boolean
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NonPciCardholder'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/issuing/cardholders
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - cardholder_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+            email: jill@example.com
+            individual:
+              address:
+                city: Melbourne
+                country: AU
+                line1: 44 Gillespie St
+                line2: Unit 2
+                postcode: '3121'
+                state: VIC
+              date_of_birth: '1982-11-02'
+              employers:
+              - business_identifiers:
+                - country_code: US
+                  number: A1098762872
+                  type: BRN
+              name:
+                first_name: John
+                last_name: Smith
+                middle_name: Fitzgerald
+                title: Mr
+            mobile_number: 61-9922334321
+            postal_address:
+              city: Melbourne
+              country: AU
+              line1: 44 Gillespie St
+              line2: Unit 2
+              postcode: '3121'
+              state: VIC
+            status: PENDING
+            type: INDIVIDUAL
+      x-scope:
+      - scope: issuing.cardholder:read
+        group: Issuing
+        resource_name: Cardholders
+      x-domain: Issuing
+      x-resource: Cardholders
+      x-urlPath: list
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/issuing/cardholders/{id}/update:
+    post:
+      tags:
+      - Issuing > Cardholders
+      summary: 4|Update a Cardholder
+      description: Update a cardholder with selected information. All fields are optional, and only those provided will be updated. If a composite object, e.g. `name` is provided, then all of its child fields must be provided and valid. Updating the cardholder may re-trigger the name screening process.
+      operationId: updateCardholder
+      parameters:
+      - name: id
+        in: path
+        description: Unique Identifier for the card.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                individual:
+                  type: object
+                  required:
+                  - address
+                  - date_of_birth
+                  - express_consent_obtained
+                  - name
+                  description: Details about the cardholder. Only relevant for individual cardholder type.
+                  properties:
+                    address:
+                      type: object
+                      required:
+                      - city
+                      - country
+                      - line1
+                      - postcode
+                      description: Street address of the cardholder.
+                      properties:
+                        city:
+                          type: string
+                          description: City of address.
+                        country:
+                          type: string
+                          description: ISO country code of address.
+                        line1:
+                          type: string
+                          description: Address line 1.
+                        line2:
+                          type: string
+                          description: Address line 2.
+                        postcode:
+                          type: string
+                          description: Address postcode or ZIP code.
+                        state:
+                          type: string
+                          description: Address state or region.
+                    cardholder_agreement_terms_consent_obtained:
+                      type: string
+                      description: For Canada entities only - By setting this field to yes you confirm that you have the express consent of this.
+                    date_of_birth:
+                      type: string
+                      format: date
+                      description: The individual's date of birth, in the format `YYYY-MM-DD`.
+                    employers:
+                      type: array
+                      description: Information of the individual's employers.
+                      items:
+                        type: object
+                        properties:
+                          business_identifiers:
+                            type: array
+                            description: Local business registration number i.e. an official signal of identification for the business.
+                            items:
+                              type: object
+                              properties:
+                                country_code:
+                                  type: string
+                                  description: Country code. (2-letter ISO 3166-2 country code).
+                                number:
+                                  type: string
+                                  description: Local business registration number i.e. an official signal of identification for the business.
+                                type:
+                                  type: string
+                                  description: Type of business registration number, depending on what's applicable to the country the business is registered in.
+                                  enum:
+                                  - BRN
+                                  - EIN
+                                  - SSN
+                                  - VAT
+                          business_name:
+                            type: string
+                            description: Name of the employer.
+                    express_consent_obtained:
+                      type: string
+                      description: By setting this field to `yes` you confirm that you have the express consent of this cardholder for Airwallex to perform name and sanction screening or any further identity verification if required.
+                    identification:
+                      type: object
+                      required:
+                      - country
+                      - expiry_date
+                      - number
+                      - type
+                      description: Identification of the individual cardholder. This object is optional and is only required if name screening fails or if Airwallex deem necessary for your integration.
+                      properties:
+                        country:
+                          type: string
+                          description: ISO country code of identification document.
+                        document_back_file_id:
+                          type: string
+                          description: The unique identifier for an image of the back of the given document. This can be retrieved by uploading a file to the file upload endpoint within the API.
+                        document_front_file_id:
+                          type: string
+                          description: The unique identifier for an image of the front of the given document. This can be retrieved by uploading a file to the file upload endpoint within the API.
+                        expiry_date:
+                          type: string
+                          format: date
+                          description: Expiry date of the identification document provided, in the format YYYY-MM-DD.
+                        gender:
+                          type: string
+                          description: Gender as specified on UK drivers license. Not required for other identification types.
+                          enum:
+                          - M
+                          - F
+                        number:
+                          type: string
+                          description: Document number. May be a license number or passport number.
+                        state:
+                          type: string
+                          description: State the document was issued in. Required only if type is DRIVERS_LICENSE and country is AU.
+                        type:
+                          type: string
+                          description: Type of identification being provided.
+                          enum:
+                          - PASSPORT
+                          - DRIVERS_LICENSE
+                          - ID_CARD
+                    name:
+                      type: object
+                      required:
+                      - first_name
+                      - last_name
+                      description: The full name of the Individual. Only characters in English are supported.
+                      properties:
+                        first_name:
+                          type: string
+                          description: First name of cardholder.
+                        last_name:
+                          type: string
+                          description: Last name for cardholder.
+                        middle_name:
+                          type: string
+                          description: Optional middle name of cardholder.
+                        title:
+                          type: string
+                          description: Optional title of cardholder.
+                    nationality:
+                      type: string
+                      description: The 2-letter ISO country code for the individual's nationality.
+                    paperless_notification_consent_obtained:
+                      type: string
+                      description: For Canada entities only - By setting this field to yes you confirm that you consent to paperless notifications. You agree to the Electronic Communications Consent Agreement which states that we may provide you with all disclosures, notices and other communications, about Airwallex's services including this Agreement and any further amendments, in electronic form.
+                    privacy_policy_terms_consent_obtained:
+                      type: string
+                      description: For Canada entities only - By setting this field to yes you confirm that you consent to the terms of the Privacy Policy.
+                    tax_identification_number:
+                      type: string
+                      description: The tax identification number for the individual cardholder. Used for customs or regulatory reporting when required by the shipping destination. Format and requirements may differ by country.
+                mobile_number:
+                  type: string
+                  description: Mobile number of the cardholder.
+                postal_address:
+                  type: object
+                  required:
+                  - city
+                  - country
+                  - line1
+                  - postcode
+                  description: Optional postal address of the cardholder. Only required if different to address and physical cards are to be issued.
+                  properties:
+                    city:
+                      type: string
+                      description: City of address.
+                    country:
+                      type: string
+                      description: ISO country code of address.
+                    line1:
+                      type: string
+                      description: Address line 1.
+                    line2:
+                      type: string
+                      description: Address line 2.
+                    postcode:
+                      type: string
+                      description: Address postcode or ZIP code.
+                    state:
+                      type: string
+                      description: Address state or region.
+                type:
+                  type: string
+                  description: "The type of cardholder. One of INDIVIDUAL or DELEGATE, which are defined as follows:  \n`INDIVIDUAL`: A cardholder who is associated with a named individual that is a representative of your business. Can be associated with a personalized or non-personalized card.  \n`DELEGATE`: A cardholder who may be assigned to non-personalized cards only and acts as an authorized user of the card."
+        description: updateCardholderRequest.
+        required: true
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonPciCardholder'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/issuing/cardholders/cardholder_id/update
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 202
+        reason_phrase: Accepted
+        request_body:
+          individual:
+            address:
+              city: Melbourne
+              country: AU
+              line1: 44 Gillespie St
+              line2: Unit 2
+              postcode: '3121'
+              state: VIC
+            cardholder_agreement_terms_consent_obtained: 'yes'
+            date_of_birth: '1982-11-02'
+            employers:
+            - business_identifiers:
+              - country_code: US
+                number: A1098762872
+                type: BRN
+            express_consent_obtained: 'yes'
+            identification:
+              country: AU
+              document_back_file_id: NzI3ZDAxM2ItZjMzMC00ZDIyLTk4YTQtMTE3ZTA0MjdhZTUyLHwsaG9uZ2tvbmcsfCxwYXNzcG9ydC5qcGdfMTYwNzY0MDI4OQ==
+              document_front_file_id: NzI3ZDAxM2ItZjMzMC00ZDIyLTk4YTQtMTE3ZTA0MjdhZTUyLHwsaG9uZ2tvbmcsfCxwYXNzcG9ydC5qcGdfMTYwNzY0MDI4OQ==
+              expiry_date: '2028-08-28'
+              gender: F
+              number: 001238243
+              state: NT
+              type: DRIVERS_LICENSE
+            name:
+              first_name: John
+              last_name: Smith
+              middle_name: Fitzgerald
+              title: Mr
+            nationality: UK
+            paperless_notification_consent_obtained: 'yes'
+            privacy_policy_terms_consent_obtained: 'yes'
+            tax_identification_number: <string>
+          mobile_number: '61432100100'
+          postal_address:
+            city: Melbourne
+            country: AU
+            line1: 44 Gillespie St
+            line2: Unit 2
+            postcode: '3121'
+            state: VIC
+          type: INDIVIDUAL
+        response_body:
+          cardholder_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          email: jill@example.com
+          individual:
+            address:
+              city: Melbourne
+              country: AU
+              line1: 44 Gillespie St
+              line2: Unit 2
+              postcode: '3121'
+              state: VIC
+            date_of_birth: '1982-11-02'
+            employers:
+            - business_identifiers:
+              - country_code: US
+                number: A1098762872
+                type: BRN
+            name:
+              first_name: John
+              last_name: Smith
+              middle_name: Fitzgerald
+              title: Mr
+            tax_identification_number: <string>
+          mobile_number: 61-9922334321
+          postal_address:
+            city: Melbourne
+            country: AU
+            line1: 44 Gillespie St
+            line2: Unit 2
+            postcode: '3121'
+            state: VIC
+          status: PENDING
+          type: INDIVIDUAL
+      x-scope:
+      - scope: issuing.cardholder:write
+        group: Issuing
+        resource_name: Cardholders
+      x-domain: Issuing
+      x-resource: Cardholders
+      x-urlPath: update
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/issuing/cardholders/{id}/delete:
+    post:
+      tags:
+      - Issuing > Cardholders
+      summary: 5|Delete a Cardholder
+      description: Deletes the cardholder with the corresponding unique identifier. Deleting the cardholder will also cause all employee cards that are linked to the cardholder to also be closed.
+      operationId: deleteCardholder
+      parameters:
+      - name: id
+        in: path
+        description: Unique Identifier for the cardholder.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonPciDeleteCardholder'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/issuing/cardholders/cardholder_id/delete
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          cardholder_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          deleted: true
+      x-scope:
+      - scope: issuing.cardholder:write
+        group: Issuing
+        resource_name: Cardholders
+      x-domain: Issuing
+      x-resource: Cardholders
+      x-urlPath: delete
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    NonPciAddress:
+      type: object
+      required:
+      - city
+      - country
+      - line1
+      - postcode
+      properties:
+        city:
+          type: string
+          description: City of address.
+        country:
+          type: string
+          description: ISO country code of address.
+        line1:
+          type: string
+          description: Address line 1.
+        line2:
+          type: string
+          description: Address line 2.
+        postcode:
+          type: string
+          description: Address postcode or ZIP code.
+        state:
+          type: string
+          description: Address state or region.
+      description: Optional postal address of physical card delivery.
+    NonPciIndividual:
+      type: object
+      required:
+      - date_of_birth
+      - name
+      properties:
+        address:
+          $ref: '#/components/schemas/NonPciAddress'
+          description: Address of the cardholder.
+        date_of_birth:
+          type: string
+          format: date
+          description: The individual's date of birth, in the format `YYYY-MM-DD`.
+        employers:
+          type: array
+          description: Information of the individual's employers.
+          items:
+            $ref: '#/components/schemas/NonPciEmployer'
+        name:
+          $ref: '#/components/schemas/NonPciCardholderName'
+          description: The full name of the Individual. Only characters in English are supported.
+        tax_identification_number:
+          type: string
+          description: The tax identification number for the individual cardholder. Used for customs or regulatory reporting when required by the shipping destination. Format and requirements may differ by country.
+      description: Details about the cardholder. Only relevant for individual cardholder type.
+    NonPciDeleteCardholder:
+      type: object
+      properties:
+        cardholder_id:
+          type: string
+          format: uuid
+          description: Unique Identifier for the cardholder.
+        deleted:
+          type: boolean
+          description: Will be set to true if the cardholder was deleted successfully.
+    NonPciBusinessIdentifier:
+      type: object
+      properties:
+        country_code:
+          type: string
+          description: Country code. (2-letter ISO 3166-2 country code).
+        number:
+          type: string
+          description: Local business registration number i.e. an official signal of identification for the business.
+        type:
+          type: string
+          description: Type of business registration number, depending on what's applicable to the country the business is registered in.
+          enum:
+          - BRN
+          - EIN
+          - SSN
+          - VAT
+    NonPciCardholderName:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: First name of cardholder.
+        last_name:
+          type: string
+          description: Last name for cardholder.
+        middle_name:
+          type: string
+          description: Optional middle name of cardholder.
+        title:
+          type: string
+          description: Optional title of cardholder.
+      description: The full name of the Individual. Only characters in English are supported.
+    NonPciCardholder:
+      type: object
+      properties:
+        cardholder_id:
+          type: string
+          format: uuid
+          description: Unique Identifier for the cardholder.
+        email:
+          type: string
+          description: Email address of the cardholder.
+        individual:
+          $ref: '#/components/schemas/NonPciIndividual'
+          description: Details about the cardholder. Only relevant for individual cardholder type.
+        mobile_number:
+          type: string
+          description: The mobile number of the cardholder.
+        postal_address:
+          $ref: '#/components/schemas/NonPciAddress'
+          description: Postal address for the cardholder.
+        status:
+          type: string
+          description: The status of the cardholder.
+          enum:
+          - INCOMPLETE
+          - PENDING
+          - READY
+          - DISABLED
+          - DELETED
+          x-enumDescriptions:
+            INCOMPLETE: Cardholder record has incomplete information or more data is required to move them to READY.
+            PENDING: Cardholder is currently in review.
+            READY: Cardholder is ready to be issued cards.
+            DISABLED: Cardholder record has been disabled.
+            DELETED: Cardholder record has been deleted.
+        type:
+          type: string
+          description: The type of cardholder.
+          enum:
+          - INDIVIDUAL
+          - DELEGATE
+          x-enumDescriptions:
+            INDIVIDUAL: A cardholder who is associated with a named individual that is a representative of your business. Can be associated with a personalized or non-personalized card.
+            DELEGATE: A cardholder who may be assigned to non-personalized cards only and acts as an authorized user of the card.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    NonPciEmployer:
+      type: object
+      properties:
+        business_identifiers:
+          type: array
+          description: Local business registration number i.e. an official signal of identification for the business.
+          items:
+            $ref: '#/components/schemas/NonPciBusinessIdentifier'
+        business_name:
+          type: string
+          description: Name of the employer.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

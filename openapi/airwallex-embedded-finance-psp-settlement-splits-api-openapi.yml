@@ -1,0 +1,598 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Embedded Finance > PSP Settlement Splits API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Embedded Finance > PSP Settlement Splits
+  description: 'Platforms must share PSP Settlement Split information with Airwallex before funds settle to the holding account, by calling the Split a PSP Settlement Intent API. This data typically originates from the pay-in PSP''s reporting feed.
+
+
+    Funds in the holding account are inaccessible to all parties until the funds are released to other connected accounts. A Platform can choose to release a PSP Settlement Split anytime. On release, funds are transferred to a connected account for the recipient, such as a seller.
+
+
+    If a Platform wants to apply a transaction fee to the seller, they can create one split for the amount due to the seller, and can create another split for the fee to the platform''s own account.
+
+    A Platform can trigger a payout from any connected account to an **external bank account** at any time (for example, at the end of a payout cycle).
+
+    PSP Settlement Splits form part of the PSP-agnostic payout solution.'
+  x-domain: Embedded Finance
+  x-resource: PSP Settlement Splits
+  x-urlPath: scale/psp_settlement_splits
+paths:
+  /api/v1/psp_settlement_splits/{id}:
+    get:
+      tags:
+      - Embedded Finance > PSP Settlement Splits
+      summary: 1|Retrieve a PSP Settlement Split
+      description: Get details for a PSP settlement split by specifying the split unique identifier.
+      operationId: retrievePspSettlementSplit
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the PSP settlement split to retrieve.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettlementSplit'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid","credentials_expired"]'
+        '404':
+          description: NOT FOUND
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/psp_settlement_splits/psp_settlement_split_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          amount: '10000'
+          created_at: 2022-09-22T16:08:02+1100
+          id: pss_78acasfou09cja
+          settlement_type: CREDIT
+          status: NEW
+          target_account_id: acct_5SF2d1wFPZ-4WIHUBzOXXw
+      x-oauthSupported: false
+      x-scope:
+      - scope: psp_settlement_split:read
+        group: Embedded Finance
+        resource_name: PSP Settlement Splits
+      - scope: psp_settlement_split:write
+        group: Embedded Finance
+        resource_name: PSP Settlement Splits
+      x-domain: Embedded Finance
+      x-resource: PSP Settlement Splits
+      x-urlPath: retrieve
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/psp_settlement_splits:
+    get:
+      tags:
+      - Embedded Finance > PSP Settlement Splits
+      summary: 2|List all PSP Settlement Splits
+      description: Get list of PSP settlement splits created by your account. The splits returned are sorted by creation time in descending order.
+      operationId: listPspSettlementSplits
+      x-oboSupported: false
+      parameters:
+      - name: from_created_at
+        in: query
+        description: The start date of `created_at` in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: global_account_id
+        in: query
+        description: Global account unique identifier that accepted the deposit for the splits.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: holding_account_id
+        in: query
+        description: Airwallex holding account unique identifier.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: identifier
+        in: query
+        description: The value you select to identify while creating the split.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: page_num
+        in: query
+        description: Page number, starts from 0.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of results per page. Default value is 100, minimum 10, maximum 100.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: psp_settlement_intent_id
+        in: query
+        description: Unique identifier of the PSP settlement intent associated with the PSP settlement splits.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: settlement_type
+        in: query
+        description: PSP Settlement Split settlement type. Could be either `CREDIT` or `DEBIT`.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: PSP Settlement Split status. One of `NEW`, `RELEASED`, `PENDING`, `FAILED`, `SETTLED` or `CANCELLED`.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: target_account_id
+        in: query
+        description: Airwallex target account unique identifier.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: to_created_at
+        in: query
+        description: The end date of `created_at` in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: Paged results.
+                    items:
+                      $ref: '#/components/schemas/SettlementSplit'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid","credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/psp_settlement_splits
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - amount: '10000'
+            created_at: 2022-09-22T16:08:02+1100
+            id: pss_78acasfou09cja
+            settlement_type: CREDIT
+            status: NEW
+            target_account_id: acct_5SF2d1wFPZ-4WIHUBzOXXw
+      x-oauthSupported: false
+      x-scope:
+      - scope: psp_settlement_split:read
+        group: Embedded Finance
+        resource_name: PSP Settlement Splits
+      - scope: psp_settlement_split:write
+        group: Embedded Finance
+        resource_name: PSP Settlement Splits
+      x-domain: Embedded Finance
+      x-resource: PSP Settlement Splits
+      x-urlPath: list
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/psp_settlement_intents/{psp_settlement_intent_id}/split:
+    post:
+      tags:
+      - Embedded Finance > PSP Settlement Splits
+      summary: 3|Split a PSP Settlement Intent
+      description: 'Use this endpoint to share data with Airwallex on the *funds* to be transferred to or from a target account as part of the PSP Settlement. When `settlement_type` is `CREDIT`, this is a payment to the target account. When `settlement_type` is `DEBIT`, this is a refund or chargeback.
+
+
+        Data on the amounts within a PSP Settlement should be shared with Airwallex before funds from the pay-in PSP settle in the holding account.
+
+
+        Each PSP settlement split is created with an initial status of `NEW`.'
+      operationId: splitPspSettlementIntent
+      x-oboSupported: false
+      parameters:
+      - name: psp_settlement_intent_id
+        in: path
+        description: Unique identifier of the PSP settlement intent to split.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              - splits
+              properties:
+                request_id:
+                  type: string
+                  description: Unique request identifier. Max length 50 characters.
+                splits:
+                  type: array
+                  description: A (partial) list of PSP Settlement Splits that comprise the PSP Settlement Intent. Maximum 2000 PSP Settlement Splits per call to this endpoint.
+                  items:
+                    type: object
+                    required:
+                    - amount
+                    - identifier
+                    - settlement_type
+                    - target_account_id
+                    properties:
+                      amount:
+                        type: string
+                        description: Amount of the PSP settlement split, representing how much to disburse to the account. Must always be positive.
+                      identifier:
+                        type: string
+                        description: A value you select to identify this split, must be unique per PSP settlement intent, max length 40 symbols.
+                      settlement_type:
+                        type: string
+                        description: Settlement type of the split, One of `CREDIT` or `DEBIT`.
+                      target_account_id:
+                        type: string
+                        description: The Airwallex account receiving the credit or paying the debit.
+        description: PSP Settlement Splits included in the PSP Settlement Intent.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateIntentSplit'
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateIntentSplit'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid","credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/psp_settlement_intents/psp_settlement_intent_id/split
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          splits:
+          - amount: '1000.5'
+            identifier: PMT1936398
+            settlement_type: CREDIT
+            target_account_id: acct_5SF2d1wFPZ-4WIHUBzOXXw
+        response_body:
+          psp_settlement_intent_id: <string>
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+      x-oauthSupported: false
+      x-scope:
+      - scope: psp_settlement_intent:write
+        group: Embedded Finance
+        resource_name: PSP Settlement Intents
+      x-domain: Embedded Finance
+      x-resource: PSP Settlement Splits
+      x-urlPath: split_psp_settlement_intents
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/psp_settlement_splits/{id}/release:
+    post:
+      tags:
+      - Embedded Finance > PSP Settlement Splits
+      summary: 4|Release a PSP Settlement Split
+      description: 'Release the split when your Platform considers a seller ready to receive funds (for example, when a shopper has received goods). Funds are deducted from the holding account''s balance, and are credited to the available balance of the respective seller connected accounts.
+
+
+        Releasing a credit split results in net movement of funds from the holding account to the seller wallet. Releasing a debit split results in movement of funds in the opposite direction (from the connected account to the holding account).
+
+
+        Status of the split is moved to state `PENDING` first when we receive the request and then updated as `SETTLED` when the funds movement between holding account and target account completed successfully.'
+      operationId: pspSettlementSplits_release
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the PSP settlement split to release.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              properties:
+                request_id:
+                  type: string
+                  description: Unique request identifier. 1-50 characters long.
+        description: Request the release of a PSP settlement split.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettlementSplit'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid","credentials_expired"]'
+        '404':
+          description: NOT FOUND
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/psp_settlement_splits/psp_settlement_split_id/release
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+        response_body:
+          amount: '10000'
+          created_at: 2022-09-22T16:08:02+1100
+          id: pss_78acasfou09cja
+          settlement_type: CREDIT
+          status: NEW
+          target_account_id: acct_5SF2d1wFPZ-4WIHUBzOXXw
+      x-oauthSupported: false
+      x-scope:
+      - scope: psp_settlement_split:write
+        group: Embedded Finance
+        resource_name: PSP Settlement Splits
+      x-domain: Embedded Finance
+      x-resource: PSP Settlement Splits
+      x-urlPath: release
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/psp_settlement_splits/{id}/cancel:
+    post:
+      tags:
+      - Embedded Finance > PSP Settlement Splits
+      summary: 5|Cancel a PSP Settlement Split
+      description: If the PSP settlement split has not yet been matched, it can be cancelled (for example, if data had been shared wrongly previously.) After cancelling, the associated PSP settlement intent status becomes `NEW`. A new PSP settlement split should be created after cancellation to ensure all funds in the holding account are allocated to a seller, and the PSP settlement intent should be submitted again.
+      operationId: pspSettlementSplits_cancel
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the PSP settlement split to cancel.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettlementSplit'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid","credentials_expired"]'
+        '404':
+          description: NOT FOUND
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/psp_settlement_splits/psp_settlement_split_id/cancel
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          amount: '10000'
+          created_at: 2022-09-22T16:08:02+1100
+          id: pss_78acasfou09cja
+          settlement_type: CREDIT
+          status: NEW
+          target_account_id: acct_5SF2d1wFPZ-4WIHUBzOXXw
+      x-oauthSupported: false
+      x-scope:
+      - scope: psp_settlement_split:write
+        group: Embedded Finance
+        resource_name: PSP Settlement Splits
+      x-domain: Embedded Finance
+      x-resource: PSP Settlement Splits
+      x-urlPath: cancel
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    CreateIntentSplit:
+      type: object
+      required:
+      - psp_settlement_intent_id
+      - request_id
+      properties:
+        psp_settlement_intent_id:
+          type: string
+          description: PSP Settlement Intent unique identifier for which this PSP Settlement Split is a part. The value is returned by the API endpoint for creating or getting a PSP Settlement Intent.
+        request_id:
+          type: string
+          description: Unique request identifier. Max length 50 characters.
+    SettlementSplit:
+      type: object
+      properties:
+        amount:
+          type: string
+          description: Amount of the transfer in `currency` specified in the request.
+        created_at:
+          type: string
+          description: The time this PSP settlement split was created.
+        id:
+          type: string
+          description: Unique identifier for the PSP settlement split.
+        settlement_type:
+          type: string
+          description: settlement type of the split, could be either `CREDIT` or `DEBIT`.
+        status:
+          type: string
+          description: 'Status of the PSP settlement split. One of: `NEW`, `MATCHED`, `CANCELLED`, `PENDING`,`FAILED`,`SETTLED`.'
+        target_account_id:
+          type: string
+          description: Airwallex target account unique identifier specified in the request.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

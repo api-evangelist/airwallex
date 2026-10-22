@@ -1,0 +1,419 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Embedded Finance > Charges API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Embedded Finance > Charges
+  description: A Scale Charge can be used to charge a Connected Account and credit the Platform account's wallet. This action may support processing fees and charges from your clients or business partners. Source Connected Account to be charged must have passed KYC and be in state `ACTIVE`.
+  x-domain: Embedded Finance
+  x-resource: Charges
+  x-urlPath: scale/charges
+paths:
+  /api/v1/charges/create:
+    post:
+      tags:
+      - Embedded Finance > Charges
+      summary: 1|Create a Charge
+      description: Create a charge to be applied to a connected account.
+      operationId: createCharge
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - amount
+              - currency
+              - reason
+              - reference
+              - request_id
+              - source
+              properties:
+                amount:
+                  type: string
+                  description: Amount of the charge in `currency`, representing how much to charge.
+                currency:
+                  type: string
+                  description: Currency (3-letter ISO-4217 code).
+                reason:
+                  type: string
+                  description: 'Reason for the charge instruction.  One of: `wages_salary`, `donation_charitable_contribution`, `personal_remittance`, `transfer_to_own_account`, `pension`, `family_support`, `living_expenses`, `education_training`, `travel`, `investment_proceeds`, `investment_capital`, `loan_credit_repayment`, `taxes`, `goods_purchased`, `business_expenses`, `medical_services`, `professional_business_services`, `technical_services`, `other_services`, `construction`, `freight`, `real_estate`.'
+                reference:
+                  type: string
+                  description: User specified reference that will be displayed to the beneficiary.  1-140 characters long.
+                request_id:
+                  type: string
+                  description: Unique request identifier.  1-50 characters long.
+                source:
+                  type: string
+                  description: Airwallex account unique identifier.
+        description: chargeRequestDto.
+        required: true
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Charge'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid","credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/charges/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          amount: '10000'
+          currency: AUD
+          reason: travel
+          reference: PMT1936398
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          source: '1936398'
+        response_body:
+          amount: '10000'
+          created_at: 2017-03-22T16:08:02+1100
+          currency: AUD
+          fee: 10
+          id: d9af1614-a6a1-4d45-aae7-6858fc6d9ede
+          reason: travel
+          reference: PMT1936398
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          short_reference_id: D220926-QZ7BTZE
+          source: '1936398'
+          status: NEW
+          updated_at: 2018-03-22T16:08:02+1100
+      x-oauthSupported: false
+      x-scope:
+      - scope: platform_charge:write
+        group: Embedded Finance
+        resource_name: Charges
+      x-domain: Embedded Finance
+      x-resource: Charges
+      x-urlPath: create
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/charges/{id}:
+    get:
+      tags:
+      - Embedded Finance > Charges
+      summary: 2|Retrieve a Charge
+      description: Get the details of a charge that has previously been created. Supply the unique charge identifier that was returned at the time your created a new charge and Airwallex will return details of the corresponding charge.
+      operationId: retrieveCharge
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the charge to retrieve.
+        required: true
+        schema:
+          type: string
+          default: d9af1614-a6a1-4d45-aae7-6858fc6d9ede
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Charge'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid","credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/charges/charge_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          amount: 10000
+          created_at: 2017-03-22T16:08:02+1100
+          currency: AUD
+          fee: 10
+          id: d9af1614-a6a1-4d45-aae7-6858fc6d9ede
+          reason: travel
+          reference: PMT1936398
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          short_reference_id: D220926-QZ7BTZE
+          source: '1936398'
+          status: NEW
+          updated_at: 2018-03-22T16:08:02+1100
+      x-oauthSupported: false
+      x-scope:
+      - scope: platform_charge:read
+        group: Embedded Finance
+        resource_name: Charges
+      x-domain: Embedded Finance
+      x-resource: Charges
+      x-urlPath: retrieve
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/charges:
+    get:
+      tags:
+      - Embedded Finance > Charges
+      summary: 3|List all Charges
+      description: Get a list of charges created by your Airwallex account. The charges returned will be sorted by creation time.
+      operationId: listCharges
+      parameters:
+      - name: currency
+        in: query
+        description: Currency (3-letter ISO-4217 code).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: USD
+      - name: from_created_at
+        in: query
+        description: The start date of `created_at` in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: '2017-04-01'
+      - name: page_num
+        in: query
+        description: Page number, starts from 0.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of results per page. Default value is 100, minimum 10, maximum 2000.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: request_id
+        in: query
+        description: Charge `request_id`.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: source
+        in: query
+        description: Airwallex account unique identifier.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+      - name: status
+        in: query
+        description: 'Status of the charge, one of: `NEW`, `PENDING`, `SETTLED`,`SUSPENDED`, `FAILED`.'
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: NEW
+      - name: to_created_at
+        in: query
+        description: The end date of `created_at` in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: 2017-04-01T03:52:34+0000
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: Paged results.
+                    items:
+                      $ref: '#/components/schemas/Charge'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid","credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/charges
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - amount: 10000
+            created_at: 2017-03-22T16:08:02+1100
+            currency: AUD
+            fee: 10
+            id: d9af1614-a6a1-4d45-aae7-6858fc6d9ede
+            reason: travel
+            reference: PMT1936398
+            request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+            short_reference_id: D220926-QZ7BTZE
+            source: '1936398'
+            status: NEW
+            updated_at: 2018-03-22T16:08:02+1100
+      x-oauthSupported: false
+      x-scope:
+      - scope: platform_charge:read
+        group: Embedded Finance
+        resource_name: Charges
+      x-domain: Embedded Finance
+      x-resource: Charges
+      x-urlPath: list
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    Charge:
+      type: object
+      required:
+      - amount
+      - created_at
+      - currency
+      - fee
+      - id
+      - reason
+      - reference
+      - request_id
+      - short_reference_id
+      - source
+      - status
+      - updated_at
+      properties:
+        amount:
+          type: number
+          description: Amount of the charge in `currency` specified in the request.
+        created_at:
+          type: string
+          description: The time this charge was created.
+        currency:
+          type: string
+          description: Currency (3-letter ISO-4217 code) specified in the request.
+        fee:
+          type: number
+          description: Fee of the charge in `currency` specified in the request.
+        id:
+          type: string
+          description: Unique identifier for the charge.
+        reason:
+          type: string
+          description: Reason for the charge instruction specified in the request.
+        reference:
+          type: string
+          description: User specified reference that will be displayed to the beneficiary specified in the request.
+        request_id:
+          type: string
+          description: Unique request identifier specified in the request.
+        short_reference_id:
+          type: string
+          description: Short reference for support purposes.
+        source:
+          type: string
+          description: Airwallex account unique identifier specified in the request.
+        status:
+          type: string
+          description: 'Status of the charge. One of: `NEW`, `PENDING`,`SETTLED`,`SUSPENDED`, `FAILED`.'
+        updated_at:
+          type: string
+          description: The time this charge was updated.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

@@ -1,0 +1,2559 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Payment Acceptance > Payment Consents API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Payment Acceptance > Payment Consents
+  description: '**Payment Consent** is an API resource to represent the agreement between merchant and Customer of making subsequent payments using the provided Payment Method. In general, we can categorize the usages of Payment Consent into two groups.
+
+
+    - Merchant can initiate the payment without customer''s presence (MIT). For example, membership subscription and utilities.
+
+    - Customer can initiate the payment without having to input payment method information again (CIT). For example, fast checkout with saved method.
+
+
+    To make payments, you can confirm a Payment Intent with the reference of Payment Consent, which must be in the status of `VERIFIED`, `REQUIRES_PAYMENT_METHOD` or `REQUIRES_CUSTOMER_ACTION`. The latter two are only allowed for card and direct debit payment methods as they can be verified directly by the success of the initial payment.'
+  x-domain: Payment Acceptance
+  x-resource: Payment Consents
+  x-urlPath: payments/payment_consents
+paths:
+  /api/v1/pa/payment_consents/create:
+    post:
+      tags:
+      - Payment Acceptance > Payment Consents
+      summary: 1|Create a Payment Consent
+      description: Create a Payment Consent.
+      operationId: createPaymentConsent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - customer_id
+              - next_triggered_by
+              - request_id
+              properties:
+                connected_account_id:
+                  type: string
+                  description: 'Airwallex assigned account identifier of the connected entity(another account which is linked with platform). It is to be used by the platform to indicate the connected entity in the transaction where platform is the owner of transaction. Notice: This can not be used with x-on-behalf-of header together.'
+                customer_id:
+                  type: string
+                  description: Unique identifier from Airwallex of the customer who will make the payment with this Payment Consent.
+                merchant_trigger_reason:
+                  type: string
+                  description: "Indicate whether the subsequent payments are scheduled. Only applicable when `next_triggered_by` is `merchant`.\n  \nDefault: `unscheduled`."
+                  enum:
+                  - installments
+                  - scheduled
+                  - unscheduled
+                metadata:
+                  type: object
+                  description: A set of key-value pairs that can be attached to this Payment Consent. You can specify up to 50 keys with key names up to 50 characters long and values up to 500 characters long.
+                next_triggered_by:
+                  type: string
+                  description: The party to trigger subsequent payments.
+                  enum:
+                  - customer
+                  - merchant
+                request_id:
+                  type: string
+                  description: Unique request identifier specified by the merchant. Maximum length is 64.
+                terms_of_use:
+                  type: object
+                  required:
+                  - payment_amount_type
+                  description: Terms to specify how this Payment Consent will be used.
+                  properties:
+                    billing_cycle_charge_day:
+                      type: integer
+                      format: int32
+                      description: The granularity per billing cycle. Required when payment_schedule.period_unit is WEEK, MONTH, or YEAR. (e.g. charge_day_per_billing_cycle= 5, payment_schedule.period_unit  = MONTH, payment_schedule.period = 1 if collect payment on the 5th of each month).
+                    end_date:
+                      type: string
+                      description: End date to expect payment request.
+                    first_payment_amount:
+                      type: number
+                      description: The first payment. It could include the costs associated with the first debited amount.Optional if payment agreement type is `VARIABLE`.
+                    fixed_payment_amount:
+                      type: number
+                      description: The fixed payment amount that can be charged for a single payment.Required if payment agreement type is `FIXED`.
+                    max_payment_amount:
+                      type: number
+                      description: The maximum payment amount that can be charged for a single payment.Optional if payment agreement type is `VARIABLE`.
+                    min_payment_amount:
+                      type: number
+                      description: The minimum payment amount that can be charged for a single payment.Optional if payment agreement type is `VARIABLE`.
+                    payment_amount_type:
+                      type: string
+                      description: 'The agreed type of amounts for subsequent payment. Should be one of `FIXED`, `VARIABLE`.
+
+
+                        - **FIXED**: payment amount is fixed. A specific amount is required.
+
+                        - **VARIABLE**: payment amount is variable at each collection. A max limit is recommended.'
+                    payment_currency:
+                      type: string
+                      description: The currency of this payment. Please refer to [supported currencies](/docs/payments/supported-currencies).
+                    payment_schedule:
+                      type: object
+                      properties:
+                        period:
+                          type: integer
+                          format: int32
+                          description: The number of period units between billing cycles. For example, the payment cycle is one month if period=1 and period_unit=MONTH. Required when merchant_trigger_reason = scheduled.
+                        period_unit:
+                          type: string
+                          description: Specifies billing frequency. One of `DAY`, `WEEK`,  `MONTH`, and `YEAR`. Required when merchant_trigger_reason = scheduled.
+                    start_date:
+                      type: string
+                      description: Start date to expect payment request.
+                    total_billing_cycles:
+                      type: integer
+                      format: int32
+                      description: 'The total number of billing cycles. For example, the mandate will last for 1 year if `total_billing_cycles`=12, `payment_schedule.period`=1 and `payment_schedule.period_unit`=MONTH if the `merchant_trigger_reason` is `scheduled`. Merchant can bill customers 12 times when `total_billing_cycles`=12 if the `merchant_trigger_reason` is `unscheduled`The mandate will continue indefinitely if total_billing_cycles is null. '
+        description: Payment Consent creation request.
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentConsent'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `duplicate_request`, `suspended_from_online_payments`, `resource_not_found`(invalid `customer_id`)'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/payment_consents/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          customer_id: cus_hkpdsjz4vg1x3uscdj
+          metadata:
+            subscriptionNumber: '2025040700000001'
+          next_triggered_by: merchant
+          merchant_trigger_reason: scheduled
+          request_id: 0a0753bb-ec35-4a29-34bf-1fa712bc162d
+        status_code: 201
+        reason_phrase: Created
+        response_body:
+          id: cst_hkpdsjz1vg0x1uscdj
+          request_id: 0a0753bb-ec35-4a29-34bf-1fa712bc162d
+          customer_id: cus_hkpdsjz4vg1x3uscdj
+          status: REQUIRES_PAYMENT_METHOD
+          next_triggered_by: merchant
+          merchant_trigger_reason: scheduled
+          metadata:
+            subscriptionNumber: '2025040700000001'
+          client_secret: eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzgzMDY2MzAsImV4cCI6MTczODMxMDIzMCwidHlwZSI6ImNsaWVudC1zZWNyZXQiLCJwYWRjIjoiSEsiLCJhY2NvdW50X2lkIjoiN2EwYzQ3YzctNzM0Zi00NzdmLTk1OWItMzIxNTQyNzgxYTgyIiwiY29uc2VudF9pZCI6ImNzdF9oa3Bkc2p6MXZnMHgxdXNjZGoiLCJjdXN0b21lcl9pZCI6ImN1c19oa3Bkc2p6NHZnMXgzdXNjZGoifQ.c8zs0QlpUy_NwWy_JsHqHSiRpbtpGnIVWNsVHsSvJQ0
+          created_at: '2021-08-31T06:57:15+00:00'
+          updated_at: '2021-08-31T06:57:15+00:00'
+      x-scope:
+      - scope: payment_acceptance:write
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Payment Consents
+      x-urlPath: create
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/payment_consents/{id}:
+    get:
+      tags:
+      - Payment Acceptance > Payment Consents
+      summary: 2|Retrieve a Payment Consent
+      description: Retrieve a Payment Consent by unique identifier.
+      operationId: retrievePaymentConsent
+      parameters:
+      - name: id
+        in: path
+        description: Payment Consent unique identifier.
+        required: true
+        schema:
+          type: string
+          default: cst_u79lnfufjxxfdc0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentConsent'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url), `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/payment_consents/cst_hkpdsjz1vg0x1uscdj
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: cst_hkpdsjz1vg0x1uscdj
+          request_id: cf682fd8-ce4b-483f-a003-f2533d0a58d2
+          customer_id: cus_hkpdsjz4vg1x3uscdj
+          status: REQUIRES_CUSTOMER_ACTION
+          next_triggered_by: merchant
+          merchant_trigger_reason: scheduled
+          initial_payment_intent_id: int_hkpdskz7vg1xc7uscdj
+          payment_method:
+            type: card
+            id: mtd_hkpds1z4zh00i2eb1h
+            card:
+              expiry_month: '03'
+              expiry_year: '2030'
+              name: John Doe
+              bin: '403550'
+              last4: 0008
+              brand: visa
+              issuer_country_code: US
+              card_type: CREDIT
+              fingerprint: AKvN4TqxI04SNFZ+oYRXaECtDA==
+              billing:
+                first_name: John
+                last_name: Doe
+                email: john.doe@example.com
+                phone_number: +1 1234567890
+                address:
+                  country_code: US
+                  state: CA
+                  city: San Francisco
+                  street: 1460 Mission St.#02W101
+                  postcode: '94103'
+              issuer_name: JPMorgan Chase
+              is_commercial: false
+              number_type: PAN
+          metadata:
+            amount: '10'
+            subscriptionNumber: '2025040700000001'
+          mandate: {}
+          next_action:
+            type: redirect_iframe
+            method: GET
+            url: https://www.example.com/redirect
+            stage: WAITING_DEVICE_DATA_COLLECTION
+          created_at: '2021-08-31T06:57:15+00:00'
+          updated_at: '2021-08-31T07:01:15+00:00'
+      x-scope:
+      - scope: payment_acceptance:read
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Payment Consents
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/payment_consents:
+    get:
+      tags:
+      - Payment Acceptance > Payment Consents
+      summary: 3|List all Payment Consents
+      description: List all Payment Consents.
+      operationId: listPaymentConsents
+      parameters:
+      - name: customer_id
+        in: query
+        description: The unique identifier of a customer.
+        required: false
+        schema:
+          type: string
+          default: cus_RZh8rHfqOIxyuwrFyqZpmyBdX7m
+      - name: from_created_at
+        in: query
+        description: The start time of `created_at` in ISO8601 format. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`).
+        required: false
+        schema:
+          type: string
+          default: '2021-04-01T03:52:34Z'
+      - name: merchant_trigger_reason
+        in: query
+        description: One of `scheduled`, `unscheduled`.
+        required: false
+        schema:
+          type: string
+          default: scheduled
+      - name: next_triggered_by
+        in: query
+        description: One of `merchant`, `customer`.
+        required: false
+        schema:
+          type: string
+          default: merchant
+      - name: page_num
+        in: query
+        description: Page number starting from 0.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of Payment Consents to be listed per page. Default value is 10. Maximum is 1000. The value greater than the maximum will be capped to the maximum.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: payment_method_id
+        in: query
+        description: The unique identifier of a Payment Method.
+        required: false
+        schema:
+          type: string
+          default: mtd_u79lnfufjxxfdc0
+      - name: status
+        in: query
+        description: Status of Payment Consent.
+        required: false
+        schema:
+          type: string
+          default: REQUIRES_PAYMENT_METHOD
+      - name: to_created_at
+        in: query
+        description: The end time of `created_at` in ISO8601 format. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`).
+        required: false
+        schema:
+          type: string
+          default: '2021-04-01T03:52:34Z'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: List items.
+                    items:
+                      $ref: '#/components/schemas/PaymentConsent'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/payment_consents
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        query_params:
+          page_num: 1
+          page_size: 10
+          status: REQUIRES_PAYMENT_METHOD,REQUIRES_CUSTOMER_ACTION
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - id: cst_hkpdsjz1vg0x1uscdj
+            request_id: 0a0753bb-ec35-4a29-34bf-1fa712bc162d
+            customer_id: cus_hkpdsjz4vg1x3uscdj
+            next_triggered_by: merchant
+            merchant_trigger_reason: scheduled
+            metadata:
+              subscriptionNumber: '2025040700000001'
+            status: REQUIRES_CUSTOMER_ACTION
+            created_at: '2021-08-31T06:57:15+00:00'
+            updated_at: '2021-08-31T06:57:15+00:00'
+            client_secret: eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzgzMDY2MzAsImV4cCI6MTczODMxMDIzMCwidHlwZSI6ImNsaWVudC1zZWNyZXQiLCJwYWRjIjoiSEsiLCJhY2NvdW50X2lkIjoiN2EwYzQ3YzctNzM0Zi00NzdmLTk1OWItMzIxNTQyNzgxYTgyIiwiY29uc2VudF9pZCI6ImNzdF9oa3Bkc2p6MXZnMHgxdXNjZGoiLCJjdXN0b21lcl9pZCI6ImN1c19oa3Bkc2p6NHZnMXgzdXNjZGoifQ.c8zs0QlpUy_NwWy_JsHqHSiRpbtpGnIVWNsVHsSvJQ0
+      x-scope:
+      - scope: payment_acceptance:read
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Payment Consents
+      x-urlPath: list
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/payment_consents/{id}/update:
+    post:
+      tags:
+      - Payment Acceptance > Payment Consents
+      summary: 4|Update a Payment Consent
+      description: Update the metadata of a Payment Consent.
+      operationId: updatePaymentConsent
+      parameters:
+      - name: id
+        in: path
+        description: Payment Consent unique identifier.
+        required: true
+        schema:
+          type: string
+          default: cst_u79lnfufjxxfdc0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              properties:
+                metadata:
+                  type: object
+                  description: A set of key-value pairs that will be updated for this Payment Consent. You can specify up to 50 keys with key names up to 50 characters long and values up to 500 characters long.
+                request_id:
+                  type: string
+                  description: Unique request identifier specified by the merchant. Maximum length is 64.
+        description: Payment Consent update request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentConsent'
+        '201':
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `duplicate_request`, `suspended_from_online_payments`, `invalid_status_for_operation`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url), `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/payment_consents/cst_hkpdsjz1vg0x1uscdj/update
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          request_id: 60ee1700-fdc4-48b2-87e4-0cf21cd2de5e
+          metadata:
+            foo: bar
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: cst_hkpdsjz1vg0x1uscdj
+          request_id: 60ee1700-fdc4-48b2-87e4-0cf21cd2de5e
+          customer_id: cus_hkpdsjz4vg1x3uscdj
+          status: VERIFIED
+          next_triggered_by: merchant
+          merchant_trigger_reason: scheduled
+          initial_payment_intent_id: int_hkpdskz7vg1xc7uscdj
+          payment_method:
+            type: card
+            id: mtd_hkpds1z4zh00i2eb1h
+          metadata:
+            amount: '10'
+            subscriptionNumber: '2025040700000001'
+          mandate: {}
+          created_at: '2021-08-31T06:57:15+00:00'
+          updated_at: '2021-08-31T07:01:15+00:00'
+      x-scope:
+      - scope: payment_acceptance:write
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Payment Consents
+      x-urlPath: update
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/payment_consents/{id}/verify:
+    post:
+      tags:
+      - Payment Acceptance > Payment Consents
+      summary: 5|Verify a Payment Consent
+      description: 'Verify the Payment Consent with the `payment_method` details (or `payment_method.id` if reusing an existing one) when the customer is ready to store payment credentials into the Payment Consent for subsequent payments.
+
+
+        Additional customer actions might be required to complete the verification for some payment methods. In that case, `next_action` will be returned to guide you through the process and the Payment Consent `status` will be updated to `REQUIRES_CUSTOMER_ACTION`.
+
+
+        Once the `status` becomes `VERIFIED`, the Payment Consent is ready for making subsequent payments.
+
+
+        When verifying a Payment Consent initiated by `customer`, if an existing `VERIFIED` Payment Consent already references the provided card or bank account number, the request will be declined with `resource_already_exists` to avoid generating multiple identical Payment Consents.'
+      operationId: verify
+      parameters:
+      - name: id
+        in: path
+        description: Payment Consent unique identifier.
+        required: true
+        schema:
+          type: string
+          default: cst_u79lnfufjxxfdc0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              properties:
+                descriptor:
+                  type: string
+                  description: Descriptor that may be displayed to the customer during the verification.
+                device_data:
+                  type: object
+                  description: Client device information. It is recommended to provide this data to increase the odds of having frictionless 3DS.
+                  properties:
+                    accept_header:
+                      type: string
+                      description: Accept header value.
+                    browser:
+                      type: object
+                      description: Browser specific data.
+                      properties:
+                        java_enabled:
+                          type: boolean
+                          description: Is Java enabled?
+                        javascript_enabled:
+                          type: boolean
+                          description: Is JavaScript enabled?
+                        user_agent:
+                          type: string
+                          description: User Agent header value.
+                    device_id:
+                      type: string
+                      description: Device unique identifier or Advertisement unique identifier or IMEI.
+                    ip_address:
+                      type: string
+                      description: Public IP address, both IPv4 and IPv6 are supported.
+                    language:
+                      type: string
+                      description: Language or locale.
+                    location:
+                      type: object
+                      description: Location data.
+                      properties:
+                        lat:
+                          type: string
+                          description: Latitude.
+                        lon:
+                          type: string
+                          description: Longitude.
+                    mobile:
+                      type: object
+                      description: Mobile specific data.
+                      properties:
+                        device_model:
+                          type: string
+                          description: Device model.
+                        os_type:
+                          type: string
+                          description: OS type.
+                        os_version:
+                          type: string
+                          description: OS version.
+                    screen_color_depth:
+                      type: integer
+                      format: int32
+                      description: Screen color depth in bits.
+                    screen_height:
+                      type: integer
+                      format: int32
+                      description: Screen height in pixels.
+                    screen_width:
+                      type: integer
+                      format: int32
+                      description: Screen width in pixels.
+                    timezone:
+                      type: string
+                      description: Timezone offset to UTC in hours, with added minutes if necessary.
+                payment_method:
+                  type: object
+                  required:
+                  - type
+                  description: "Payment Method information that will be used for subsequent payments.  \n  \nWhen `payment_method.type` is set to `card`, `ach_direct_debit`, `bacs_direct_debit`, `becs_direct_debit`, `sepa_direct_debit`, `eft_direct_debit`, `googlepay`, `applepay`, caller must provide either the `payment_method.id` of an existing Payment Method or the full payload of payment method information with which we will generate a new Payment Method."
+                  properties:
+                    ach_direct_debit:
+                      type: object
+                      description: ACH Direct Debit information.
+                      properties:
+                        aba_routing_number:
+                          type: string
+                          description: 9-digit number to identify a bank in the US. Required when verification method is `micro_deposit`. Should not be set when verification method is `plaid`.
+                        account_number:
+                          type: string
+                          description: 4-17 digits number to identify a bank account in the US. Required when verification method is `micro_deposit`. Should not be set when verification method is `plaid`.
+                        business_account:
+                          type: boolean
+                          description: Indicate whether the account is a business account. Default to `false`.
+                        mandate_version:
+                          type: string
+                          description: The version of mandate language. Custom mandate version if you render your own mandate document to the payer instead of the default version provided by Airwallex.
+                        owner_email:
+                          type: string
+                          description: Account holder's email. Required when verification method is `micro_deposit`.
+                        owner_name:
+                          type: string
+                          description: Account holder name. Required when verification method is `micro_deposit`.
+                        verification_method:
+                          type: string
+                          description: 'Verification method. Can be `plaid` or `micro_deposit`. Default: `micro_deposit`.'
+                    alipaycn:
+                      type: object
+                      required:
+                      - flow
+                      description: Alipaycn information. `flow` can be one of `qrcode`, `mobile_web`, `mobile_app`.
+                      properties:
+                        flow:
+                          type: string
+                          description: Refer to the specification above.
+                        os_type:
+                          type: string
+                          description: One of `ios`, `android`. `os_type` must be set when `flow` is `mobile_web`, `mobile_app`.
+                    alipayhk:
+                      type: object
+                      required:
+                      - flow
+                      description: Alipayhk information. `flow` can be one of `qrcode`, `mobile_web`, `mobile_app`.
+                      properties:
+                        flow:
+                          type: string
+                          description: Refer to the specification above.
+                        os_type:
+                          type: string
+                          description: One of `ios`, `android`. `os_type` must be set when `flow` is `mobile_web`, `mobile_app`.
+                    applepay:
+                      type: object
+                      description: Apple pay information.
+                      properties:
+                        billing:
+                          type: object
+                          description: Billing information.
+                          properties:
+                            address:
+                              type: object
+                              required:
+                              - country_code
+                              description: The billing address as it appears on the credit card issuer’s records.
+                              properties:
+                                city:
+                                  type: string
+                                  description: City of the address. Maximum of 100 characters.
+                                country_code:
+                                  type: string
+                                  description: The two-letter country code in ISO 3166-1 alpha-2 format.
+                                postcode:
+                                  type: string
+                                  description: Postcode of the address. Maximum of 10 characters.
+                                state:
+                                  type: string
+                                  description: State or province of the address. Maximum of 100 characters.
+                                street:
+                                  type: string
+                                  description: Street of the address. Maximum of 1000 characters.
+                            email:
+                              type: string
+                              description: Email address of the customer.
+                            first_name:
+                              type: string
+                              description: First name of the customer. Maximum length is 128.
+                            last_name:
+                              type: string
+                              description: Last name of the customer. Maximum length is 128.
+                            phone_number:
+                              type: string
+                              description: Phone number of the customer.
+                        encrypted_payment_token:
+                          type: string
+                          description: Payment data from Apple Pay Payment Token.
+                        payment_data_type:
+                          type: string
+                          description: Type of the payment data details. One of `tokenized_card` or `encrypted_payment_token`.
+                        tokenized_card:
+                          type: object
+                          required:
+                          - expiry_month
+                          - expiry_year
+                          - number
+                          description: Payment data with the tokenized card details.
+                          properties:
+                            authentication_method:
+                              type: object
+                              required:
+                              - type
+                              description: Authentication method.
+                              properties:
+                                emv:
+                                  type: object
+                                  required:
+                                  - emv_data
+                                  description: EMV data.
+                                  properties:
+                                    emv_data:
+                                      type: string
+                                      description: Output from the Secure Element.
+                                    encrypted_pin_data:
+                                      type: string
+                                      description: The PIN encrypted using the bank’s key.
+                                three_ds:
+                                  type: object
+                                  required:
+                                  - online_payment_cryptogram
+                                  description: 3D-Secure authentication data.
+                                  properties:
+                                    eci_indicator:
+                                      type: string
+                                      description: Electronic Commerce Indicator, as defined by 3-D Secure.
+                                    online_payment_cryptogram:
+                                      type: string
+                                      description: Online payment cryptogram, as defined by 3-D Secure.
+                                type:
+                                  type: string
+                                  description: The authentication method type. One of `emv` or `three_ds`.
+                            device_manufacturer_identifier:
+                              type: string
+                              description: Device manufacturer identifier.
+                            expiry_month:
+                              type: string
+                              description: Two digit number representing the card’s expiration month.
+                            expiry_year:
+                              type: string
+                              description: Four digit number representing the card’s expiration year.
+                            name:
+                              type: string
+                              description: Cardholder name.
+                            number:
+                              type: string
+                              description: Card number.
+                    bacs_direct_debit:
+                      type: object
+                      description: BACS Direct Debit information.
+                      properties:
+                        account_number:
+                          type: string
+                          description: Required when verification method is `micro_deposit`. Should not be set when verification method is `truelayer`.
+                        address:
+                          type: object
+                          required:
+                          - line1
+                          - postcode
+                          - town
+                          description: Account holder's address. Required when verification method is `micro_deposit`.
+                          properties:
+                            country_code:
+                              type: string
+                              description: Country code of the address. Use the two-character ISO Standard Country Codes. One of `GB`, `US`. Default to `GB` if not provided.
+                            line1:
+                              type: string
+                              description: House number and street name, e.g., `777 Casino Drive`.
+                            line2:
+                              type: string
+                              description: Locality name, e.g., `Apartment 123`.
+                            postcode:
+                              type: string
+                              description: Postcode of the address.
+                            state:
+                              type: string
+                              description: State or province of the address. Should be provided if country code is `US`. Use the two-character ISO3166-2:US state code.
+                            town:
+                              type: string
+                              description: Post town.
+                        bank_name:
+                          type: string
+                          description: Bank of the account. Required when verification method is `truelayer`. Should not be set when verification method is `micro_deposit`.
+                        business_account:
+                          type: boolean
+                          description: Indicate whether the account is a business account. Default to `false`.
+                        mandate_version:
+                          type: string
+                          description: The version of mandate language. Custom mandate version if you render your own mandate document to the payer instead of the default version provided by Airwallex.
+                        owner_email:
+                          type: string
+                          description: Account holder's email. Required when verification method is `micro_deposit`.
+                        owner_name:
+                          type: string
+                          description: Account holder name. Required when verification method is `micro_deposit`.
+                        sort_code:
+                          type: string
+                          description: 6-digit number to identify a bank in the UK. Required when verification method is `micro_deposit`. Should not be set when verification method is `truelayer`.
+                        verification_method:
+                          type: string
+                          description: 'Verification method. Can be `truelayer` or `micro_deposit`. Default: `micro_deposit`.'
+                    becs_direct_debit:
+                      type: object
+                      required:
+                      - account_number
+                      - bsb_number
+                      - owner_email
+                      - owner_name
+                      description: BECS Direct Debit information.
+                      properties:
+                        account_number:
+                          type: string
+                          description: 4-9 digits number to identify a bank account in Australia.
+                        bsb_number:
+                          type: string
+                          description: 6-digit Bank-State-Branch number.
+                        business_account:
+                          type: boolean
+                          description: Indicate whether the account is a business account. Default to `false`.
+                        mandate_version:
+                          type: string
+                          description: The version of mandate language. Custom mandate version if you render your own mandate document to the payer instead of the default version provided by Airwallex.
+                        owner_email:
+                          type: string
+                          description: Account holder's email.
+                        owner_name:
+                          type: string
+                          description: Account holder name.
+                    card:
+                      type: object
+                      description: Card information.
+                      properties:
+                        additional_info:
+                          type: object
+                          description: Additional information of external network token requestor. Should be provided when number_type is `EXTERNAL_NETWORK_TOKEN`.
+                          properties:
+                            merchant_verification_value:
+                              type: string
+                              description: 'Merchant Verification Value (Provided by VISA during onboarding)
+
+                                or
+
+                                MasterCard Assigned ID (Provided by MasterCard during onboarding).'
+                            token_requestor_id:
+                              type: string
+                              description: Token requestor unique identifier (Provided by card schemes during onboarding).
+                        billing:
+                          type: object
+                          description: Billing information.
+                          properties:
+                            address:
+                              type: object
+                              required:
+                              - country_code
+                              description: The billing address as it appears on the credit card issuer’s records.
+                              properties:
+                                city:
+                                  type: string
+                                  description: City of the address. Maximum of 100 characters.
+                                country_code:
+                                  type: string
+                                  description: The two-letter country code in ISO 3166-1 alpha-2 format.
+                                postcode:
+                                  type: string
+                                  description: Postcode of the address. Maximum of 10 characters.
+                                state:
+                                  type: string
+                                  description: State or province of the address. Maximum of 100 characters.
+                                street:
+                                  type: string
+                                  description: Street of the address. Maximum of 1000 characters.
+                            email:
+                              type: string
+                              description: Email address of the customer.
+                            first_name:
+                              type: string
+                              description: First name of the customer. Maximum length is 128.
+                            last_name:
+                              type: string
+                              description: Last name of the customer. Maximum length is 128.
+                            phone_number:
+                              type: string
+                              description: Phone number of the customer.
+                        cryptogram:
+                          type: string
+                          description: The cryptogram value. Must be provided if `card.number_type` is `EXTERNAL_NETWORK_TOKEN`. Maximum length is 28.
+                        cvc:
+                          type: string
+                          description: CVC of this card. Required except using external network tokenized.
+                        expiry_month:
+                          type: string
+                          description: Two digit number representing the card’s expiration month.
+                        expiry_year:
+                          type: string
+                          description: Four digit number representing the card’s expiration year.
+                        external_three_ds:
+                          type: object
+                          description: Authentication data from an external 3D-Secure provider (3RI for MIT subsequent transaction).
+                          properties:
+                            authentication_value:
+                              type: string
+                              description: Authentication value, will be used to provide proof of authentication for 3DS v2.
+                            ds_transaction_id:
+                              type: string
+                              format: uuid
+                              description: UUID assigned by the Directory Server to identify a single transaction for 3DS v2.
+                            eci:
+                              type: string
+                              description: Electronic Commerce Indicator provided by the ACS or DS to indicate the results of the attempt to authenticate the Cardholder.
+                            three_ds_exemption:
+                              type: string
+                              description: Add the SCA exemptions if your 3DS provider decides any exemptions are applicable. One of `TRA`, `LVP`, `ANONYMOUS`.
+                            three_ds_server_transaction_id:
+                              type: string
+                              format: uuid
+                              description: UUID assigned by the 3DS server to identify a single transaction for 3DS v2.
+                            version:
+                              type: string
+                              description: 3DS version in the format major.minor.patch.
+                        name:
+                          type: string
+                          description: Card holder name. Maximum length is 128.
+                        number:
+                          type: string
+                          description: Card number.
+                        number_type:
+                          type: string
+                          description: 'Type of the number. One of `PAN`, `EXTERNAL_NETWORK_TOKEN`. Default: `PAN`.'
+                        three_ds_action:
+                          type: string
+                          description: Set it to `FORCE_3DS` if you want to enforce 3DS with our 3DS provider. Set it to EXTERNAL_3DS if you want to use your own 3DS provider, in this case `payment_method_options.card.external_three_ds` should be provided in the confirm request. Set it to SKIP_3DS if you want to skip 3DS regardless of the risk score. `null` by default.
+                    dana:
+                      type: object
+                      required:
+                      - flow
+                      description: Dana information. `flow` can be one of `qrcode`, `mobile_web`.
+                      properties:
+                        flow:
+                          type: string
+                          description: Refer to the specification above.
+                        os_type:
+                          type: string
+                          description: One of `ios`, `android`. `os_type` must be set when `flow` is `mobile_web`, `mobile_app`.
+                    eft_direct_debit:
+                      type: object
+                      description: EFT Direct Debit information.
+                      properties:
+                        account_number:
+                          type: string
+                          description: 4-17 digits number to identify a bank account in Canada. Required when verification method is `micro_deposit` or `micro_deposit_and_debit`. Should not be set when verification method is `plaid`.
+                        business_account:
+                          type: boolean
+                          description: Indicate whether the account is a business account. Default to `false`.
+                        institution_number:
+                          type: string
+                          description: 3-digit number to identify a institution in Canada. Required when verification method is `micro_deposit` or `micro_deposit_and_debit`.Should not be set when verification method is `plaid`.
+                        mandate_version:
+                          type: string
+                          description: The version of mandate language. Custom mandate version if you render your own mandate document to the payer instead of the default version provided by Airwallex.
+                        owner_email:
+                          type: string
+                          description: Account holder's email. Required when verification method is `micro_deposit` or `micro_deposit_and_debit`.
+                        owner_name:
+                          type: string
+                          description: Account holder name. Required when verification method is `micro_deposit` or `micro_deposit_and_debit`.
+                        transit_number:
+                          type: string
+                          description: 5-digit number to identify a bank in Canada. Required when verification method is `micro_deposit` or `micro_deposit_and_debit`. Should not be set when verification method is `plaid`.
+                        verification_method:
+                          type: string
+                          description: 'Verification method. Can be `micro_deposit` or `micro_deposit_and_debit`. Default: `micro_deposit`.'
+                    gcash:
+                      type: object
+                      required:
+                      - flow
+                      description: Gcash information. `flow` can be one of `qrcode`, `mobile_web`, `mobile_app`.
+                      properties:
+                        flow:
+                          type: string
+                          description: Refer to the specification above.
+                        os_type:
+                          type: string
+                          description: One of `ios`, `android`. `os_type` must be set when `flow` is `mobile_web`, `mobile_app`.
+                    googlepay:
+                      type: object
+                      description: Google pay information.
+                      properties:
+                        billing:
+                          type: object
+                          description: Billing information.
+                          properties:
+                            address:
+                              type: object
+                              required:
+                              - country_code
+                              description: The billing address as it appears on the credit card issuer’s records.
+                              properties:
+                                city:
+                                  type: string
+                                  description: City of the address. Maximum of 100 characters.
+                                country_code:
+                                  type: string
+                                  description: The two-letter country code in ISO 3166-1 alpha-2 format.
+                                postcode:
+                                  type: string
+                                  description: Postcode of the address. Maximum of 10 characters.
+                                state:
+                                  type: string
+                                  description: State or province of the address. Maximum of 100 characters.
+                                street:
+                                  type: string
+                                  description: Street of the address. Maximum of 1000 characters.
+                            email:
+                              type: string
+                              description: Email address of the customer.
+                            first_name:
+                              type: string
+                              description: First name of the customer. Maximum length is 128.
+                            last_name:
+                              type: string
+                              description: Last name of the customer. Maximum length is 128.
+                            phone_number:
+                              type: string
+                              description: Phone number of the customer.
+                        encrypted_payment_token:
+                          type: string
+                          description: A UTF-8 encoded, serialized JSON object with the keys specified.
+                        external_three_ds:
+                          type: object
+                          description: Authentication data from an external 3D-Secure provider. Only applicable when Google Pay `PAN_ONLY` authentication method is used.
+                          properties:
+                            authentication_value:
+                              type: string
+                              description: Authentication value, will be used to provide proof of authentication for 3DS v2.
+                            ds_transaction_id:
+                              type: string
+                              format: uuid
+                              description: UUID assigned by the Directory Server to identify a single transaction for 3DS v2.
+                            eci:
+                              type: string
+                              description: Electronic Commerce Indicator provided by the ACS or DS to indicate the results of the attempt to authenticate the Cardholder.
+                            three_ds_exemption:
+                              type: string
+                              description: Add the SCA exemptions if your 3DS provider decides any exemptions are applicable. One of `TRA`, `LVP`, `ANONYMOUS`.
+                            three_ds_server_transaction_id:
+                              type: string
+                              format: uuid
+                              description: UUID assigned by the 3DS server to identify a single transaction for 3DS v2.
+                            version:
+                              type: string
+                              description: 3DS version in the format major.minor.patch.
+                        payment_data_type:
+                          type: string
+                          description: Type of the payment data details.  One of `tokenized_card` or `encrypted_payment_token`.
+                        tokenized_card:
+                          type: object
+                          required:
+                          - expiry_month
+                          - expiry_year
+                          - number
+                          description: Payment data with the tokenized card details.
+                          properties:
+                            authentication_method:
+                              type: object
+                              required:
+                              - type
+                              description: Authentication method.
+                              properties:
+                                emv:
+                                  type: object
+                                  required:
+                                  - emv_data
+                                  description: EMV data.
+                                  properties:
+                                    emv_data:
+                                      type: string
+                                      description: Output from the Secure Element.
+                                    encrypted_pin_data:
+                                      type: string
+                                      description: The PIN encrypted using the bank’s key.
+                                three_ds:
+                                  type: object
+                                  required:
+                                  - online_payment_cryptogram
+                                  description: 3D-Secure authentication data.
+                                  properties:
+                                    eci_indicator:
+                                      type: string
+                                      description: Electronic Commerce Indicator, as defined by 3-D Secure.
+                                    online_payment_cryptogram:
+                                      type: string
+                                      description: Online payment cryptogram, as defined by 3-D Secure.
+                                type:
+                                  type: string
+                                  description: The authentication method type. One of `emv` or `three_ds`.
+                            device_manufacturer_identifier:
+                              type: string
+                              description: Device manufacturer identifier.
+                            expiry_month:
+                              type: string
+                              description: Two digit number representing the card’s expiration month.
+                            expiry_year:
+                              type: string
+                              description: Four digit number representing the card’s expiration year.
+                            name:
+                              type: string
+                              description: Cardholder name.
+                            number:
+                              type: string
+                              description: Card number.
+                    id:
+                      type: string
+                      description: Unique identifier of the Payment Method attached for subsequent payments.
+                    kakaopay:
+                      type: object
+                      required:
+                      - flow
+                      description: Kakaopay information. `flow` can be one of `qrcode`, `mobile_web`, `mobile_app`.
+                      properties:
+                        flow:
+                          type: string
+                          description: Refer to the specification above.
+                        os_type:
+                          type: string
+                          description: One of `ios`, `android`. `os_type` must be set when `flow` is `mobile_web`, `mobile_app`.
+                    payto:
+                      type: object
+                      description: Payto information.
+                      properties:
+                        bsb:
+                          type: object
+                          required:
+                          - account_name
+                          - account_number
+                          - bsb_number
+                          properties:
+                            account_name:
+                              type: string
+                              description: The account name.
+                            account_number:
+                              type: string
+                              description: 4-9 digits number to identify a bank account in Australia.
+                            bsb_number:
+                              type: string
+                              description: 6-digit Bank-State-Branch number.
+                        pay_id:
+                          type: object
+                          properties:
+                            australian_business_number:
+                              type: string
+                              description: 11 digits number to identify the Pay Id. Required when `phone_number`, `owner_email`, and `organisation_id` is null.
+                            organisation_id:
+                              type: string
+                              description: The organisation id of the recipient. The Pay ID must be in the format of `payid:airwallex.com`.
+                            owner_email:
+                              type: string
+                              description: owner email to identify the Pay Id. Required when `phone_number`, `australian_business_number`, and `organisation_id` is null.
+                            payer_name:
+                              type: string
+                              description: Payer name of the Pay Id.
+                            phone_number:
+                              type: string
+                              description: The phone number of the Pay Id. Required when `owner_email`, `australian_business_number`, and `organisation_id` is null.
+                    rabbit_line_pay:
+                      type: object
+                      required:
+                      - flow
+                      description: Rabbit LINE Pay information. `flow` can be one of `qrcode`, `mobile_web`, `mobile_app`.
+                      properties:
+                        flow:
+                          type: string
+                          description: Refer to the specification above.
+                        os_type:
+                          type: string
+                          description: One of `ios`, `android`. `os_type` must be set when `flow` is `mobile_web`, `mobile_app`.
+                    sepa_direct_debit:
+                      type: object
+                      description: SEPA Direct Debit information.
+                      properties:
+                        address:
+                          type: object
+                          required:
+                          - postcode
+                          - street
+                          - town
+                          description: Account holder's address.
+                          properties:
+                            country_code:
+                              type: string
+                              description: Country code of the address. Use the two-character ISO Standard Country Codes.
+                            postcode:
+                              type: string
+                              description: Postcode of the address.
+                            street:
+                              type: string
+                              description: 'street of the address. '
+                            town:
+                              type: string
+                              description: town of the address.
+                        bank_name:
+                          type: string
+                          description: Bank of the account. Required when verification method is `truelayer`. You can call [API to retrieve the available bank names](/docs/api/payments/config/banks).
+                        business_account:
+                          type: boolean
+                          description: Indicate whether the account is a business account. Default to `false`.
+                        country_code:
+                          type: string
+                          description: The 2-letter ISO country/region code of the bank account. Required when verification method is `truelayer`. One of `GB`, `AT`, `BE`, `DE`, `ES`, `FI`, `FR`, `IE`, `IT`, `LT`, `NL`, `PL`, `PT`, `SE`.
+                        iban:
+                          type: string
+                          description: IBAN of the bank account. Required when verification method is `micro_deposit`. Should not be set when verification method is `truelayer`.
+                        mandate_version:
+                          type: string
+                          description: The version of mandate language. Custom mandate version if you render your own mandate document to the payer instead of the default version provided by Airwallex.
+                        owner_email:
+                          type: string
+                          description: Account holder's email. Required when verification method is `micro_deposit`.
+                        owner_name:
+                          type: string
+                          description: Account holder name. Required when verification method is `micro_deposit`.
+                        verification_method:
+                          type: string
+                          description: 'Verification method. Can be `truelayer` or `micro_deposit`. Default: `micro_deposit`.'
+                    tng:
+                      type: object
+                      required:
+                      - flow
+                      description: Tng information. `flow` can be one of `qrcode`, `mobile_web`, `mobile_app`.
+                      properties:
+                        flow:
+                          type: string
+                          description: Refer to the specification above.
+                        os_type:
+                          type: string
+                          description: One of `ios`, `android`. `os_type` must be set when `flow` is `mobile_web`, `mobile_app`.
+                    truemoney:
+                      type: object
+                      required:
+                      - flow
+                      description: Truemoney information. `flow` can be one of `qrcode`, `mobile_web`, `mobile_app`.
+                      properties:
+                        flow:
+                          type: string
+                          description: Refer to the specification above.
+                        os_type:
+                          type: string
+                          description: One of `ios`, `android`. `os_type` must be set when `flow` is `mobile_web`, `mobile_app`.
+                    type:
+                      type: string
+                      description: Type of the Payment Method. One of `card`, `googlepay`, `applepay`, `alipayhk`, `truemoney`, `gcash`, `dana`, `kakaopay`, `tng`, `alipaycn`, `rabbit_line_pay`, `wechatpay`, `ach_direct_debit`, `bacs_direct_debit`, `becs_direct_debit`, `sepa_direct_debit`, `eft_direct_debit`.
+                    wechatpay:
+                      type: object
+                      required:
+                      - flow
+                      description: Wechat information.
+                      properties:
+                        channel:
+                          type: string
+                          description: 'Payment channel. Default: `ecom`.'
+                          enum:
+                          - pos
+                          - ecom
+                          x-enumDescriptions:
+                            pos: A point-of-sale (POS) transaction.
+                            ecom: A online e-commerce transaction.
+                        flow:
+                          type: string
+                          description: The specific WeChat Pay flow to use.  One of `qrcode`, `official_account`, `mini_program`, `mobile_app`, `mobile_web`.
+                        open_id:
+                          type: string
+                          description: Required when `flow` is `mini_program`.
+                request_id:
+                  type: string
+                  description: Unique request identifier specified by the merchant. Maximum length is 64.
+                return_url:
+                  type: string
+                  description: The web page URL or application scheme URI to redirect the customer after Payment Consent verification.
+                risk_control_options:
+                  type: object
+                  description: Risk Control Options.
+                  properties:
+                    skip_risk_processing:
+                      type: boolean
+                      description: 'Set it to `true` if you want to skip fraud processing. Please contact your account manager to enable the feature to take effect. Defaults to `false`. '
+                    tra_applicable:
+                      type: boolean
+                      description: Set it to 'true' if you want to use TRA exemption when create payment intent, only applicable when you skip risk processing.
+                verification_options:
+                  type: object
+                  description: Additional information needed to verify a Payment Consent.
+                  properties:
+                    applepay:
+                      type: object
+                      required:
+                      - currency
+                      description: Apple pay information for verifying Payment Consent.
+                      properties:
+                        amount:
+                          type: number
+                          description: 'The alternative amount of verification if zero amount is not acceptable for the provider.
+
+                            The transaction of this amount should be reverted once the verification process finished.
+
+                            Must be greater than 0. Please refer to [supported currencies](/docs/payments/supported-currencies) for supported minor units.'
+                        currency:
+                          type: string
+                          description: 'Currency of the initial Payment Intent to verify the Payment Consent.
+
+                            Three-letter ISO 4217 currency code. Must be a [supported currency](/docs/payments/supported-currencies).'
+                    card:
+                      type: object
+                      required:
+                      - currency
+                      description: Card information for verifying Payment Consent.
+                      properties:
+                        amount:
+                          type: number
+                          description: 'The alternative amount of verification if zero amount is not acceptable for the provider.
+
+                            The transaction of this amount should be reverted once the verification process finished.
+
+                            Must be greater than 0. Please refer to [supported currencies](/docs/payments/supported-currencies) for supported minor units.'
+                        currency:
+                          type: string
+                          description: 'Currency of the initial Payment Intent to verify the Payment Consent.
+
+                            Three-letter ISO currency code. Must be a [supported currency](/docs/payments/supported-currencies).'
+                    googlepay:
+                      type: object
+                      required:
+                      - currency
+                      description: Google pay information for verifying Payment Consent.
+                      properties:
+                        amount:
+                          type: number
+                          description: 'The alternative amount of verification if zero amount is not acceptable for the provider.
+
+                            The transaction of this amount should be reverted once the verification process finished.
+
+                            Must be greater than 0. Please refer to [supported currencies](/docs/payments/supported-currencies) for supported minor units.'
+                        currency:
+                          type: string
+                          description: 'Currency of the initial Payment Intent to verify the Payment Consent.
+
+                            Three-letter ISO currency code. Must be a [supported currency](/docs/payments/supported-currencies).'
+                        external_three_ds:
+                          type: object
+                          description: Authentication data from an external 3D-Secure provider (3RI for MIT subsequent transaction).
+                          properties:
+                            authentication_value:
+                              type: string
+                              description: Authentication value, will be used to provide proof of authentication for 3DS v2.
+                            ds_transaction_id:
+                              type: string
+                              format: uuid
+                              description: UUID assigned by the Directory Server to identify a single transaction for 3DS v2.
+                            eci:
+                              type: string
+                              description: Electronic Commerce Indicator provided by the ACS or DS to indicate the results of the attempt to authenticate the Cardholder.
+                            three_ds_exemption:
+                              type: string
+                              description: Add the SCA exemptions if your 3DS provider decides any exemptions are applicable. One of `TRA`, `LVP`, `ANONYMOUS`.
+                            three_ds_server_transaction_id:
+                              type: string
+                              format: uuid
+                              description: UUID assigned by the 3DS server to identify a single transaction for 3DS v2.
+                            version:
+                              type: string
+                              description: 3DS version in the format major.minor.patch.
+                        three_ds_action:
+                          type: string
+                          description: Set it to `FORCE_3DS` if you want to enforce 3DS with our 3DS provider. Set it to EXTERNAL_3DS if you want to use your own 3DS provider, in this case `payment_method_options.card.external_three_ds` should be provided in the confirm request. Set it to SKIP_3DS if you want to skip 3DS regardless of the risk score. `null` by default.
+                    wechatpay:
+                      type: object
+                      description: WeChat Pay information for verifying Payment Consent.
+                      properties:
+                        currency:
+                          type: string
+                          description: Indicates the currency of subsequent Payment Intent that will be processed with this Payment Consent. Please refer to [supported currencies](/docs/payments/supported-currencies).
+        description: Payment Consent verify request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentConsent'
+        '201':
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `duplicate_request`, `suspended_from_online_payments`, `frequency_above_limit`, `invalid_status_for_operation`, `provider_unavailable`, `configuration_error`, `authentication_declined`, `risk_declined`, `resource_already_exists`, `provider_declined`, `quote_expired`, `payment_method_not_allowed`, `card_brand_not_supported`, `issuer_declined`, `no_3ds_liability_shift`, `3ds_not_supported`, `rejected_by_routing_rules`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url), `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/payment_consents/cst_hkpdsjz1vg0x1uscdj/verify
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          request_id: 3a3bafab-79ac-4e75-a966-01cf6c62056f
+          device_data:
+            device_id: 59ec5db9-399c-4043-9a6c-fcd1a48d99aa
+            language: en-AU
+            screen_color_depth: 32
+            screen_height: 800
+            screen_width: 390
+          payment_method:
+            type: card
+            card:
+              number: '4035501000000008'
+              expiry_month: '03'
+              expiry_year: '2030'
+              name: John Doe
+              cvc: '737'
+          verification_options:
+            card:
+              amount: 0.01
+              currency: USD
+          return_url: https://www.airwallex.com
+          should_check_duplicate_cit_consent: false
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: cst_hkpdsjz1vg0x1uscdj
+          request_id: 3a3bafab-79ac-4e75-a966-01cf6c62056f
+          customer_id: cus_hkpdsjz4vg1x3uscdj
+          status: REQUIRES_CUSTOMER_ACTION
+          next_triggered_by: merchant
+          merchant_trigger_reason: scheduled
+          initial_payment_intent_id: int_hkpdskz7vg1xc7uscdj
+          payment_method:
+            type: card
+            id: mtd_hkpds1z4zh00i2eb1h
+            card:
+              expiry_month: '03'
+              expiry_year: '2030'
+              name: John Doe
+              bin: '403550'
+              last4: 0008
+              brand: visa
+              issuer_country_code: US
+              card_type: CREDIT
+              fingerprint: AKvN4TqxI04SNFZ+oYRXaECtDA==
+              billing:
+                first_name: John
+                last_name: Doe
+                email: john.doe@example.com
+                phone_number: +1 1234567890
+                address:
+                  country_code: US
+                  state: CA
+                  city: San Francisco
+                  street: 1460 Mission St.#02W101
+                  postcode: '94103'
+              issuer_name: JPMorgan Chase
+              is_commercial: false
+              number_type: PAN
+          metadata:
+            amount: '10'
+            subscriptionNumber: '2025040700000001'
+          mandate: {}
+          next_action:
+            type: redirect_iframe
+            method: GET
+            url: https://www.example.com/redirect
+            stage: WAITING_DEVICE_DATA_COLLECTION
+          created_at: '2021-08-31T06:57:15+00:00'
+          updated_at: '2021-08-31T07:01:15+00:00'
+      x-scope:
+      - scope: payment_acceptance:write
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Payment Consents
+      x-urlPath: verify
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/payment_consents/{id}/verify_continue:
+    post:
+      tags:
+      - Payment Acceptance > Payment Consents
+      summary: 6|Continue To Verify a Payment Consent
+      description: Continue verify a payment Consent, required when verification method is micro-deposit. Merchants can use this api to verify the amount of micro-deposit if the payment consent wait for the verification result of micro-deposit. Micro-debit is triggered when micro-deposit is triggered, micro-debit is not part of micro-deposit verification. If micro-deposit is success and micro-debit failed, merchants can use this api to retry micro-debit.
+      operationId: verifyContinue
+      parameters:
+      - name: id
+        in: path
+        description: Payment Consent unique identifier.
+        required: true
+        schema:
+          type: string
+          default: cst_u79lnfufjxxfdc0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              properties:
+                micro_deposit:
+                  type: object
+                  description: The verification request of micro-deposit, required only if type is `verify_micro_deposits`.
+                  properties:
+                    amounts:
+                      type: array
+                      description: The amounts of the micro-deposit in the shopper’s bank statement. Please refer to [supported currencies](/docs/payments/supported-currencies) for supported minor units.
+                      items:
+                        type: number
+                request_id:
+                  type: string
+                  description: Unique request identifier specified by the merchant.
+                type:
+                  type: string
+                  description: Type of the continue type.
+                  enum:
+                  - retry_micro_debit
+                  - verify_micro_deposits
+        description: Payment Consent continue verify request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentConsent'
+        '201':
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `duplicate_request`, `suspended_from_online_payments`, `frequency_above_limit`, `invalid_status_for_operation`, `provider_unavailable`, `configuration_error`, `authentication_declined`, `risk_declined`, `resource_already_exists`, `provider_declined`, `quote_expired`, `payment_method_not_allowed`, `card_brand_not_supported`, `issuer_declined`, `no_3ds_liability_shift`, `3ds_not_supported`, `rejected_by_routing_rules`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url), `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/payment_consents/cst_hkpdsjz1vg0x1uscdj/verify_continue
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          request_id: a1b6d685-ce24-4214-afda-71922546c57a
+          type: verify_micro_deposits
+          micro_deposit:
+            amounts:
+            - 0.01
+            - 0.02
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: cst_hkpdsjz1vg0x1uscdj
+          request_id: a1b6d685-ce24-4214-afda-71922546c57a
+          customer_id: cus_hkpdsjz4vg1x3uscdj
+          status: PENDING
+          next_triggered_by: merchant
+          merchant_trigger_reason: scheduled
+          metadata:
+            foo: bar
+          client_secret: eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzgzMDY2MzAsImV4cCI6MTczODMxMDIzMCwidHlwZSI6ImNsaWVudC1zZWNyZXQiLCJwYWRjIjoiSEsiLCJhY2NvdW50X2lkIjoiN2EwYzQ3YzctNzM0Zi00NzdmLTk1OWItMzIxNTQyNzgxYTgyIiwiY29uc2VudF9pZCI6ImNzdF9oa3Bkc2p6MXZnMHgxdXNjZGoiLCJjdXN0b21lcl9pZCI6ImN1c19oa3Bkc2p6NHZnMXgzdXNjZGoifQ.c8zs0QlpUy_NwWy_JsHqHSiRpbtpGnIVWNsVHsSvJQ0
+          mandate:
+            type: verify_micro_deposits
+            sepa_direct_debit:
+              creditor_identifier: DE123456789
+              reference: REF123456789
+            version: '1.0'
+            accepted_at: '2021-08-31T07:01:15+00:00'
+          created_at: '2021-08-31T06:57:15+00:00'
+          updated_at: '2021-08-31T07:01:15+00:00'
+      x-scope:
+      - scope: payment_acceptance:write
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Payment Consents
+      x-urlPath: verify_continue
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/payment_consents/{id}/disable:
+    post:
+      tags:
+      - Payment Acceptance > Payment Consents
+      summary: 7|Disable a Payment Consent
+      description: Disable a Payment Consent by unique identifier. After a Payment Consent is disabled, the status will become `DISABLED` and the Payment Consent cannot be used or updated.
+      operationId: paymentConsents_disable
+      parameters:
+      - name: id
+        in: path
+        description: Payment Consent unique identifier.
+        required: true
+        schema:
+          type: string
+          default: cst_u79lnfufjxxfdc0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              properties:
+                request_id:
+                  type: string
+                  description: Unique request identifier specified by the merchant. Maximum length is 64.
+        description: Payment Consent disable request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentConsent'
+        '201':
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `duplicate_request`, `invalid_status_for_operation`, `provider_declined`, `provider_unavailable`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url), `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/payment_consents/cst_hkpdsjz1vg0x1uscdj/disable
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          request_id: 43c4e930-1130-43ae-bfb2-b60cbfe1297f
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: cst_hkpdsjz1vg0x1uscdj
+          request_id: 43c4e930-1130-43ae-bfb2-b60cbfe1297f
+          customer_id: cus_hkpdsjz4vg1x3uscdj
+          status: DISABLED
+          next_triggered_by: merchant
+          merchant_trigger_reason: scheduled
+          initial_payment_intent_id: int_hkpdskz7vg1xc7uscdj
+          payment_method:
+            type: card
+            id: mtd_hkpds1z4zh00i2eb1h
+            card:
+              expiry_month: '03'
+              expiry_year: '2030'
+              name: John Doe
+              bin: '403550'
+              last4: 0008
+              brand: visa
+              issuer_country_code: US
+              card_type: CREDIT
+              fingerprint: AKvN4TqxI04SNFZ+oYRXaECtDA==
+              billing:
+                first_name: John
+                last_name: Doe
+                email: john.doe@example.com
+                phone_number: +1 1234567890
+                address:
+                  country_code: US
+                  state: CA
+                  city: San Francisco
+                  street: 1460 Mission St.#02W101
+                  postcode: '94103'
+              issuer_name: JPMorgan Chase
+              is_commercial: false
+              number_type: PAN
+          metadata:
+            amount: '10'
+            subscriptionNumber: '2025040700000001'
+          mandate: {}
+          created_at: '2021-08-31T06:57:15+00:00'
+          updated_at: '2021-08-31T07:01:15+00:00'
+      x-scope:
+      - scope: payment_acceptance:write
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Payment Consents
+      x-urlPath: disable
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    BacsDirectDebitAddress:
+      type: object
+      required:
+      - line1
+      - postcode
+      - town
+      properties:
+        country_code:
+          type: string
+          description: Country code of the address. Use the two-character ISO Standard Country Codes. One of `GB`, `US`. Default to `GB` if not provided.
+        line1:
+          type: string
+          description: House number and street name, e.g., `777 Casino Drive`.
+        line2:
+          type: string
+          description: Locality name, e.g., `Apartment 123`.
+        postcode:
+          type: string
+          description: Postcode of the address.
+        state:
+          type: string
+          description: State or province of the address. Should be provided if country code is `US`. Use the two-character ISO3166-2:US state code.
+        town:
+          type: string
+          description: Post town.
+      description: Account holder's address.
+    BacsDirectDebitMandate:
+      type: object
+      properties:
+        ddi_reference:
+          type: string
+          description: Reference of the Direct Debit instrument.
+        service_user_number:
+          type: string
+          description: A unique six-digit number used to identify a business paying or receiving money through a Bacs Direct Debit transaction.
+      description: BACS Direct Debit mandate information.
+    AuthenticationMethod:
+      type: object
+      required:
+      - type
+      properties:
+        emv:
+          $ref: '#/components/schemas/Emv'
+          description: EMV data.
+        three_ds:
+          $ref: '#/components/schemas/ThreeDomainSecure'
+          description: 3D-Secure authentication data.
+        type:
+          type: string
+          description: The authentication method type. One of `CRYPTOGRAM_3DS`, `PAN_ONLY`.
+      description: Authentication method.
+    Applepay:
+      type: object
+      properties:
+        billing:
+          $ref: '#/components/schemas/Billing'
+          description: Billing information.
+        lifecycle_id:
+          type: string
+          description: Identifier used to link the transaction to the original or previous transaction in a subscription or card-on-file chain. Currently supported only for Mastercard.
+        payment_data_type:
+          type: string
+          description: Type of the payment data details. One of `tokenized_card` or `encrypted_payment_token`.
+        tokenized_card:
+          $ref: '#/components/schemas/TokenizedCard'
+          description: Payment data with the tokenized card details.
+      description: Apple pay information.
+    Payment_Acceptance_Address:
+      type: object
+      required:
+      - country_code
+      properties:
+        city:
+          type: string
+          description: City of the address. Maximum of 100 characters.
+        country_code:
+          type: string
+          description: The two-letter country code in ISO 3166-1 alpha-2 format.
+        postcode:
+          type: string
+          description: Postcode of the address. Maximum of 10 characters.
+        state:
+          type: string
+          description: State or province of the address. Maximum of 100 characters.
+        street:
+          type: string
+          description: Street of the address. Maximum of 1000 characters.
+      description: The billing address as it appears on the credit card issuer’s records.
+    ThreeDomainSecure:
+      type: object
+      required:
+      - online_payment_cryptogram
+      properties:
+        eci_indicator:
+          type: string
+          description: Electronic Commerce Indicator, as defined by 3-D Secure.
+        online_payment_cryptogram:
+          type: string
+          description: Online payment cryptogram, as defined by 3-D Secure.
+      description: 3D-Secure authentication data.
+    MicroDepositResult:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The status of micro_deposit.
+      description: The result of micro deposit.
+    BecsDirectDebit:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: 4-9 digits number to identify a bank account in Australia.
+        bsb_number:
+          type: string
+          description: 6-digit Bank-State-Branch number.
+        business_account:
+          type: boolean
+          description: Indicate whether the account is a business account.
+        micro_debit:
+          $ref: '#/components/schemas/MicroDebitResult'
+          description: The result of micro debit.
+        micro_deposit:
+          $ref: '#/components/schemas/MicroDepositResult'
+          description: The result of micro deposit.
+        owner_email:
+          type: string
+          description: Account holder's email.
+        owner_name:
+          type: string
+          description: Account holder name.
+      description: BECS Direct Debit information.
+    SepaDirectDebitMandate:
+      type: object
+      properties:
+        creditor_identifier:
+          type: string
+          description: A unique number used to identify a business paying or receiving money through a SEPA Direct Debit transaction.
+        reference:
+          type: string
+          description: Reference of the Direct Debit mandate.
+      description: SEPA Direct Debit mandate information.
+    Alipaycn:
+      type: object
+      properties:
+        flow:
+          type: string
+          description: One of `qrcode`, `mobile_web`, `mobile_app`, `mini_program`.
+        os_type:
+          type: string
+          description: ios, android.
+        shopper_login_id:
+          type: string
+          description: Alipay's User Login Id (Shopper) for Payment Consent Verification.
+        user_id:
+          type: string
+          description: Unique identifier of a user in payment method provider side. Only present after the payment has been completed or the consent has been verified.
+        channel:
+          type: string
+          description: 'Payment channel. Default: `ecom`.'
+          enum:
+          - pos
+          - ecom
+          x-enumDescriptions:
+            pos: A point-of-sale (POS) transaction.
+            ecom: A online e-commerce transaction.
+      description: Alipay CN information.
+    PaymentConsent:
+      type: object
+      required:
+      - created_at
+      - customer_id
+      - id
+      - next_triggered_by
+      - request_id
+      - status
+      - updated_at
+      properties:
+        client_secret:
+          type: string
+          description: "Payment Consent's client secret for browser or app. Only returned by Payment Consent create API. \n\nThe provided client_secret is valid for 60 minutes."
+        connected_account_id:
+          type: string
+          description: Account identifier of the connected account.
+        created_at:
+          type: string
+          format: date-time
+          description: Time at which this Payment Consent was created.
+        customer_id:
+          type: string
+          description: Unique identifier from Airwallex of the customer who will make the payment with this Payment Consent.
+        disable_reason:
+          type: string
+          description: Disable reason. Only applicable when status is `DISABLED`.
+        failure_reason:
+          $ref: '#/components/schemas/FailureReason'
+          description: Verification failure reason. Only applicable when status is `REQUIRES_PAYMENT_METHOD` and `REQUIRES_CUSTOMER_ACTION`.
+        id:
+          type: string
+          description: Unique identifier of this Payment Consent.
+        initial_payment_intent_id:
+          type: string
+          description: Unique identifier of the initial Payment Intent confirmed with this Payment Consent.
+        mandate:
+          $ref: '#/components/schemas/Payment_Acceptance_Mandate'
+          description: An authorization from shopper to merchant to debit payments from their bank account.
+        merchant_trigger_reason:
+          type: string
+          description: Only applicable when `next_triggered_by` is `merchant`. One of `scheduled`, `unscheduled`, `installments`.
+        metadata:
+          type: object
+          description: A set of key-value pairs that can be attached to this Payment Consent. You can specify up to 50 keys with key names up to 50 characters long and values up to 500 characters long.
+        next_action:
+          $ref: '#/components/schemas/PaymentConsentNextAction'
+          description: Next action for merchant.
+        next_triggered_by:
+          type: string
+          description: The party to trigger subsequent payments. One of `merchant`, `customer`.
+        payment_method:
+          $ref: '#/components/schemas/PaymentMethodDetailsForConsent'
+          description: Payment Method information attached for subsequent payments.
+        request_id:
+          type: string
+          description: Unique request identifier specified by the merchant.
+        status:
+          type: string
+          description: "\n- **REQUIRES_PAYMENT_METHOD**: Populate `payment_method` when calling **verify**.\n  - This value is returned if `payment_method` is either null, or the `payment_method` has failed during verify, and a different `payment_method` should be provided.\n- **REQUIRES_CUSTOMER_ACTION**: Pending customer action, see `next_action` for details.\n- **PENDING**: The mandate of the Payment Consent has been submitted. It only occurs when payment method type is `bacs_direct_debit`. You need to wait for the final result. The status will become `DISABLED` if the mandate is rejected or `VERIFIED` if the mandate is accepted.\n- **PAUSED**: The active mandate of the Payment Consent has been paused. The Payment Consent can be paused only when the previous status was `VERIFIED`. It only occurs when payment method type is `payto`. The status will become `DISABLED` if the mandate is canceled or `VERIFIED` if the mandate is resumed.\n- **VERIFIED**: The Payment Consent has been verified and it can be used for subsequent payments.\n- **DISABLED**: The Payment Consent is disabled. You cannot verify it again.\n"
+        terms_of_use:
+          $ref: '#/components/schemas/TermsOfUse'
+          description: 'The terms of this consent. '
+        updated_at:
+          type: string
+          format: date-time
+          description: Time at which this Payment Consent was last updated.
+    TermsOfUse:
+      type: object
+      required:
+      - payment_amount_type
+      properties:
+        billing_cycle_charge_day:
+          type: integer
+          format: int32
+          description: The granularity per billing cycle. Required when payment_schedule.period_unit is WEEK, MONTH, or YEAR. (e.g. charge_day_per_billing_cycle= 5, payment_schedule.period_unit  = MONTH, payment_schedule.period = 1 if collect payment on the 5th of each month).
+        end_date:
+          type: string
+          description: End date to expect payment request.
+        first_payment_amount:
+          type: number
+          description: The first payment. It could include the costs associated with the first debited amount.Optional if payment agreement type is `VARIABLE`.
+        fixed_payment_amount:
+          type: number
+          description: The fixed payment amount that can be charged for a single payment.Required if payment agreement type is `FIXED`.
+        max_payment_amount:
+          type: number
+          description: The maximum payment amount that can be charged for a single payment.Optional if payment agreement type is `VARIABLE`.
+        min_payment_amount:
+          type: number
+          description: The minimum payment amount that can be charged for a single payment.Optional if payment agreement type is `VARIABLE`.
+        payment_amount_type:
+          type: string
+          description: 'The agreed type of amounts for subsequent payment. Should be one of `FIXED`, `VARIABLE`.
+
+
+            - **FIXED**: payment amount is fixed. A specific amount is required.
+
+            - **VARIABLE**: payment amount is variable at each collection. A max limit is recommended.'
+        payment_currency:
+          type: string
+          description: The currency of this payment. Please refer to [supported currencies](/docs/payments/supported-currencies).
+        payment_schedule:
+          $ref: '#/components/schemas/PaymentSchedule'
+        start_date:
+          type: string
+          description: Start date to expect payment request.
+        total_billing_cycles:
+          type: integer
+          format: int32
+          description: 'The total number of billing cycles. For example, the mandate will last for 1 year if `total_billing_cycles`=12, `payment_schedule.period`=1 and `payment_schedule.period_unit`=MONTH if the `merchant_trigger_reason` is `scheduled`. Merchant can bill customers 12 times when `total_billing_cycles`=12 if the `merchant_trigger_reason` is `unscheduled`The mandate will continue indefinitely if total_billing_cycles is null. '
+      description: Terms to specify how this Payment Consent will be used.
+    EftDirectDebit:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: 4-17 digits number to identify a bank account in Canada.
+        business_account:
+          type: boolean
+          description: Indicate whether the account is a business account.
+        institution_number:
+          type: string
+          description: 3-digit number to identify a bank institution in Canada.
+        micro_debit:
+          $ref: '#/components/schemas/MicroDebitResult'
+          description: The result of micro debit.
+        micro_deposit:
+          $ref: '#/components/schemas/MicroDepositResult'
+          description: The result of micro deposit.
+        owner_email:
+          type: string
+          description: Email of the account holder.
+        owner_name:
+          type: string
+          description: Name of the account holder.
+        transit_number:
+          type: string
+          description: Identify a bank branch transit in Canada.
+      description: EFT Direct Debit information.
+    BacsDirectDebit:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: 8 digits number to identify a bank account in the UK.
+        address:
+          $ref: '#/components/schemas/BacsDirectDebitAddress'
+          description: Account holder's address.
+        bank_name:
+          type: string
+          description: Bank of the account. You can call [API to retrieve the available bank names](/docs/api/payments/config/banks).
+        business_account:
+          type: boolean
+          description: Indicate whether the account is a business account.
+        micro_deposit:
+          $ref: '#/components/schemas/MicroDepositResult'
+          description: The result of micro deposit.
+        owner_email:
+          type: string
+          description: Email of the account holder.
+        owner_name:
+          type: string
+          description: Name of the account holder.
+        sort_code:
+          type: string
+          description: 6-digit number to identify a bank in the UK.
+      description: BACS Direct Debit information.
+    PayId:
+      type: object
+      properties:
+        australian_business_number:
+          type: string
+          description: 11 digits number to identify the Pay Id. Required when `phone_number`, `owner_email`, and `organisation_id` is null.
+        organisation_id:
+          type: string
+          description: The organisation id of the recipient. The Pay ID must be in the format of `payid:airwallex.com`.
+        owner_email:
+          type: string
+          description: owner email to identify the Pay Id. Required when `phone_number`, `australian_business_number`, and `organisation_id` is null.
+        phone_number:
+          type: string
+          description: The phone number of the Pay Id. Required when `owner_email`, `australian_business_number`, and `organisation_id` is null.
+      description: The Pay ID of the recipient.
+    AchDirectDebit:
+      type: object
+      properties:
+        aba_routing_number:
+          type: string
+          description: 9-digit number to identify a bank in the US.
+        account_number:
+          type: string
+          description: 4-17 digits number to identify a bank account in the US.
+        business_account:
+          type: boolean
+          description: Indicate whether the account is a business account.
+        micro_debit:
+          $ref: '#/components/schemas/MicroDebitResult'
+          description: The result of micro debit.
+        micro_deposit:
+          $ref: '#/components/schemas/MicroDepositResult'
+          description: The result of micro deposit.
+        owner_email:
+          type: string
+          description: Email of the account holder.
+        owner_name:
+          type: string
+          description: Name of the account holder.
+      description: ACH Direct Debit information.
+    PaymentSchedule:
+      type: object
+      properties:
+        period:
+          type: integer
+          format: int32
+          description: The number of period units between billing cycles. For example, the payment cycle is one month if period=1 and period_unit=MONTH. Required when merchant_trigger_reason = scheduled.
+        period_unit:
+          type: string
+          description: Specifies billing frequency. One of `DAY`, `WEEK`,  `MONTH`, and `YEAR`. Required when merchant_trigger_reason = scheduled.
+    Billing:
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/Payment_Acceptance_Address'
+          description: The billing address as it appears on the credit card issuer’s records.
+        date_of_birth:
+          type: string
+          description: 'Date of birth of the customer in the format: YYYY-MM-DD.'
+        email:
+          type: string
+          description: Email address of the customer.
+        first_name:
+          type: string
+          description: First name of the customer.
+        last_name:
+          type: string
+          description: Last name of the customer.
+        phone_number:
+          type: string
+          description: Phone number of the customer.
+      description: Billing information.
+    Payment_Acceptance_Card:
+      type: object
+      properties:
+        additional_info:
+          $ref: '#/components/schemas/CardAdditionalInfo'
+          description: Additional information of external network token requestor. Would return when number_type is `EXTERNAL_NETWORK_TOKEN`.
+        billing:
+          $ref: '#/components/schemas/Billing'
+          description: Billing information.
+        bin:
+          type: string
+          description: Bank identify number of this card.
+        brand:
+          type: string
+          description: Brand of the card. One of `mastercard`, `visa`, `union pay`, `american express`, `jcb`, `discover`, `diners club international`.
+        card_type:
+          type: string
+          description: Funding type of the card.
+        expiry_month:
+          type: string
+          description: Two digit number representing the card’s expiration month.
+        expiry_year:
+          type: string
+          description: Four digit number representing the card’s expiration year.
+        fingerprint:
+          type: string
+          description: Fingerprint of the card.
+        is_commercial:
+          type: boolean
+          description: A boolean field referring whether the card is commercial or not.
+        issuer_country_code:
+          type: string
+          description: Country code of the card issuer.
+        issuer_name:
+          type: string
+          description: Issuer name.
+        korean_card:
+          $ref: '#/components/schemas/KoreanCardData'
+          description: Information for Korean Card.
+        last4:
+          type: string
+          description: Last four digits of the card number.
+        lifecycle_id:
+          type: string
+          description: Identifier used to link the transaction to the original or previous transaction in a subscription or card-on-file chain. Currently supported only for Mastercard.
+        name:
+          type: string
+          description: Card holder name.
+        number_type:
+          type: string
+          description: Type of the number. One of `PAN`, `EXTERNAL_NETWORK_TOKEN`, `AIRWALLEX_NETWORK_TOKEN`.
+      description: Card information. Only provided when `type` is `card`.
+    FailureReason:
+      type: object
+      properties:
+        code:
+          type: string
+          description: The failure code returned by Airwallex.
+        details:
+          type: object
+          description: The verification failure details.
+        message:
+          type: string
+          description: Consent verification failed. Please retry the consent verification or select a different payment method.
+      description: Verification failure reason. Only applicable when status is `REQUIRES_PAYMENT_METHOD` and `REQUIRES_CUSTOMER_ACTION`.
+    PaymentMethodDetailsForConsent:
+      type: object
+      required:
+      - type
+      properties:
+        ach_direct_debit:
+          $ref: '#/components/schemas/AchDirectDebit'
+          description: ACH Direct Debit information. Only provided when `type` is `ach_direct_debit`.
+        alipaycn:
+          $ref: '#/components/schemas/Alipaycn'
+          description: Alipay CN information. Only provided when `type` is `alipaycn`.
+        alipayhk:
+          $ref: '#/components/schemas/AlipayConnect'
+          description: Alipay HK information. Only provided when `type` is `alipayhk`.
+        applepay:
+          $ref: '#/components/schemas/Applepay'
+          description: Apple pay information. Only provided when `type` is `applepay`.
+        bacs_direct_debit:
+          $ref: '#/components/schemas/BacsDirectDebit'
+          description: BACS Direct Debit information. Only provided when `type` is `bacs_direct_debit`.
+        becs_direct_debit:
+          $ref: '#/components/schemas/BecsDirectDebit'
+          description: BECS Direct Debit information. Only provided when `type` is `becs_direct_debit`.
+        card:
+          $ref: '#/components/schemas/Payment_Acceptance_Card'
+          description: Card information. Only provided when `type` is card.
+        dana:
+          $ref: '#/components/schemas/AlipayConnect'
+          description: DANA information. Only provided when `type` is `dana`.
+        eft_direct_debit:
+          $ref: '#/components/schemas/EftDirectDebit'
+          description: EFT Direct Debit information. Only provided when `type` is `eft_direct_debit`.
+        gcash:
+          $ref: '#/components/schemas/AlipayConnect'
+          description: GCASH information. Only provided when `type` is `gcash`.
+        googlepay:
+          $ref: '#/components/schemas/Googlepay'
+          description: Google pay information. Only provided when `type` is `googlepay`.
+        id:
+          type: string
+          description: Unique identifier of the Payment Method attached for subsequent payments. Only provided when `type` is card.
+        kakaopay:
+          $ref: '#/components/schemas/AlipayConnect'
+          description: KAKAOPAY information. Only provided when `type` is `kakaopay`.
+        payto:
+          $ref: '#/components/schemas/Payto'
+          description: Payto information. Only provided when `type` is `payto`.
+        sepa_direct_debit:
+          $ref: '#/components/schemas/SepaDirectDebit'
+          description: SEPA Direct Debit information. Only provided when `type` is `sepa_direct_debit`.
+        type:
+          type: string
+          description: Type of the Payment Method. One of `card`, `googlepay`, `applepay`, `alipayhk`, `truemoney`, `gcash`, `dana`, `kakaopay`, `tng`, `alipaycn`, `rabbit_line_pay`, `wechatpay`, `ach_direct_debit`, `bacs_direct_debit`, `becs_direct_debit`, `sepa_direct_debit`, `eft_direct_debit`.
+      description: Payment Method information attached for subsequent payments.
+    MicroDebitResult:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The status of micro_debit.
+      description: The result of micro debit.
+    Emv:
+      type: object
+      required:
+      - emv_data
+      properties:
+        emv_data:
+          type: string
+          description: Output from the Secure Element.
+        encrypted_pin_data:
+          type: string
+          description: The PIN encrypted using the bank’s key.
+      description: EMV data.
+    Payto:
+      type: object
+      properties:
+        bsb:
+          $ref: '#/components/schemas/Bsb'
+        pay_id:
+          $ref: '#/components/schemas/PayId'
+          description: The Pay ID of the recipient.
+      description: Payto information.
+    Googlepay:
+      type: object
+      properties:
+        billing:
+          $ref: '#/components/schemas/Billing'
+          description: Billing information.
+        lifecycle_id:
+          type: string
+          description: Identifier used to link the transaction to the original or previous transaction in a subscription or card-on-file chain. Currently supported only for Mastercard.
+        payment_data_type:
+          type: string
+          description: Type of the payment data details. One of `tokenized_card` or `encrypted_payment_token`.
+        tokenized_card:
+          $ref: '#/components/schemas/TokenizedCard'
+          description: Payment data with the tokenized card details.
+      description: Google pay information.
+    SepaDirectDebitAddress:
+      type: object
+      required:
+      - postcode
+      - street
+      - town
+      properties:
+        country_code:
+          type: string
+          description: Country code of the address. Use the two-character ISO Standard Country Codes.
+        postcode:
+          type: string
+          description: Postcode of the address.
+        street:
+          type: string
+          description: 'street of the address. '
+        town:
+          type: string
+          description: town of the address.
+      description: Account holder's address.
+    CardAdditionalInfo:
+      type: object
+      properties:
+        merchant_verification_value:
+          type: string
+          description: 'Merchant Verification Value (Provided by VISA during onboarding)
+
+            or
+
+            MasterCard Assigned ID (Provided by MasterCard during onboarding).'
+        token_requestor_id:
+          type: string
+          description: Token requestor unique identifier (Provided by card schemes during onboarding).
+      description: Additional information of external network token requestor. Would return when number_type is `EXTERNAL_NETWORK_TOKEN`.
+    Bsb:
+      type: object
+      properties:
+        account_name:
+          type: string
+          description: The account name.
+        account_number:
+          type: string
+          description: 4-9 digits number to identify a bank account in Australia.
+        bsb_number:
+          type: string
+          description: 6-digit Bank-State-Branch number.
+    PaymentConsentNextAction:
+      type: object
+      properties:
+        content_type:
+          type: string
+          description: The content type of the request when `method` is `POST`. If not provided, the content type should be `application/json`.
+        data:
+          type: object
+          description: The additional data that can be used to complete this action.
+        email:
+          type: string
+          description: Email address to send the Micro Deposit verification link. Appears if type is `notify_micro_deposits`.
+        fallback_url:
+          type: string
+          description: Fallback url to redirect the shopper to the web page if the redirection to the app fails. Returned only if the flow is `mobile_app`.
+        method:
+          type: string
+          description: The redirect method if the action type is `redirect`. One of `GET`, `POST`.
+        micro_deposit_count:
+          type: integer
+          format: int32
+          description: Number of funds that will be deposited into shopper account. Appears if type is `notify_micro_deposits`.
+        package_name:
+          type: string
+          description: Android package name. Returned only if the flow is `mobile_app` and the os_type is `android`.
+        qrcode:
+          type: string
+          description: QR Code text representation if the action type is `redirect`, only applicable to `wechatpay`.
+        remaining_attempts:
+          type: integer
+          format: int32
+          description: the remaining attempts to verify micro_deposit or retry micro_debit.
+        stage:
+          type: string
+          description: Stage of the request flow.
+        type:
+          type: string
+          description: Type of next action can be either `redirect`, `redirect_iframe`, `notify_micro_deposits` or `retry_micro_debit`.
+        url:
+          type: string
+          description: The redirect url.
+      description: Next action for merchant.
+    AlipayConnect:
+      type: object
+      properties:
+        flow:
+          type: string
+          description: One of `qrcode`, `mobile_web`, `mobile_app`.
+        os_type:
+          type: string
+          description: ios, android.
+        shopper_login_id:
+          type: string
+          description: Alipay's User Login Id (Shopper) for Payment Consent Verification.
+        user_id:
+          type: string
+          description: Unique identifier of a user in payment method provider side. Only present after the payment has been completed or the consent has been verified.
+        channel:
+          type: string
+          description: 'Payment channel. Default: `ecom`.'
+          enum:
+          - pos
+          - ecom
+          x-enumDescriptions:
+            pos: A point-of-sale (POS) transaction.
+            ecom: A online e-commerce transaction.
+      description: Alipay HK information.
+    Payment_Acceptance_Mandate:
+      type: object
+      properties:
+        accepted_at:
+          type: string
+          format: date-time
+          description: The time at which shopper accepts the mandate.
+        bacs_direct_debit:
+          $ref: '#/components/schemas/BacsDirectDebitMandate'
+          description: BACS Direct Debit mandate information.
+        sepa_direct_debit:
+          $ref: '#/components/schemas/SepaDirectDebitMandate'
+          description: SEPA Direct Debit mandate information.
+        type:
+          type: string
+          description: The payment method type of the mandate. Can be `ach_direct_debit`, `bacs_direct_debit`, `becs_direct_debit`, `sepa_direct_debit`, `eft_direct_debit`.
+        version:
+          type: string
+          description: The version of the mandate.
+      description: An authorization from shopper to merchant to debit payments from their bank account.
+    TokenizedCard:
+      type: object
+      required:
+      - expiry_month
+      - expiry_year
+      properties:
+        authentication_method:
+          $ref: '#/components/schemas/AuthenticationMethod'
+          description: Authentication method.
+        bin:
+          type: string
+          description: Bank identify number of this card.
+        brand:
+          type: string
+          description: Brand of the card. One of `visa`, `mastercard`, `maestro`, `chinaunionpay`.
+        device_manufacturer_identifier:
+          type: string
+          description: Device manufacturer identifier.
+        expiry_month:
+          type: string
+          description: Two digit number representing the card’s expiration month.
+        expiry_year:
+          type: string
+          description: Four digit number representing the card’s expiration year.
+        fingerprint:
+          type: string
+          description: Fingerprint of the card.
+        is_commercial:
+          type: boolean
+          description: A boolean field referring whether the card is commercial or not.
+        issuer_country_code:
+          type: string
+          description: Country code of the card issuer.
+        issuer_name:
+          type: string
+          description: Issuer name.
+        last4:
+          type: string
+          description: Last four digits of the card number.
+        name:
+          type: string
+          description: Cardholder name.
+        type:
+          type: string
+          description: The card's type of payment. One of `credit` or `debit`.
+      description: Payment data with the tokenized card details.
+    SepaDirectDebit:
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/SepaDirectDebitAddress'
+          description: Account holder's address.
+        bank_name:
+          type: string
+          description: Bank of the account. You can call [API to retrieve the available bank names](/docs/api/payments/config/banks).
+        business_account:
+          type: boolean
+          description: Indicate whether the account is a business account.
+        country_code:
+          type: string
+          description: The 2-letter ISO country/region code from which the consumer will be paying.
+        iban:
+          type: string
+          description: 15–34 characters to identify a bank account.
+        micro_debit:
+          $ref: '#/components/schemas/MicroDebitResult'
+          description: The result of micro debit.
+        micro_deposit:
+          $ref: '#/components/schemas/MicroDepositResult'
+          description: The result of micro deposit.
+        owner_email:
+          type: string
+          description: Email of the account holder.
+        owner_name:
+          type: string
+          description: Name of the account holder.
+      description: SEPA Direct Debit information.
+    KoreanCardData:
+      type: object
+      properties:
+        business_number:
+          type: string
+          description: A 10-digit business number of the company.
+        date_of_birth:
+          type: string
+          description: A 6-digit date of birth in the format of YYMMDD.
+        password_first2:
+          type: string
+          description: Card password first 2 digits.
+      description: Information for Korean Card.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

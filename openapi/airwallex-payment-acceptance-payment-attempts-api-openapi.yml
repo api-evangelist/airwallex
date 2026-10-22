@@ -1,0 +1,2066 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Payment Acceptance > Payment Attempts API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Payment Acceptance > Payment Attempts
+  description: 'A **Payment Attempt** object is created whenever a customer makes a payment with the chosen Payment Method. This API allows you to find out how your customer paid for your order.
+
+
+    A customer may attempt to pay for the same order multiple times. However, only one attempt should succeed. Use the List all Payment Attempts endpoint to list each and every Payment Attempt made by your customer.
+
+
+    Data Retention Policy: You can query Payment Attempt resources for a maximum of 2 years since creation.'
+  x-domain: Payment Acceptance
+  x-resource: Payment Attempts
+  x-urlPath: payments/payment_attempts
+paths:
+  /api/v1/pa/payment_attempts/{id}:
+    get:
+      tags:
+      - Payment Acceptance > Payment Attempts
+      summary: 1|Retrieve a Payment Attempt
+      operationId: retrievePaymentAttempt
+      parameters:
+      - name: id
+        in: path
+        description: Payment Attempt unique identifier.
+        required: true
+        schema:
+          type: string
+          default: att_tHambObszjrtrCbazat45Im1F0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentAttempt'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url), `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/payment_attempts/att_hkpd12a3456hi7
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: att_hkpd12a3456hi7
+          amount: 100
+          currency: USD
+          payment_method:
+            type: card
+            card:
+              expiry_month: '03'
+              expiry_year: '2030'
+              name: John Doe
+              bin: '403550'
+              last4: 0008
+              brand: visa
+              issuer_country_code: US
+              card_type: CREDIT
+              fingerprint: AKvN4TqxI04SNFZ+oYRXaECtDA==
+              billing:
+                first_name: John
+                last_name: Doe
+                email: john.doe@example.com
+                phone_number: +1 1234567890
+                address:
+                  country_code: US
+                  state: CA
+                  city: San Francisco
+                  street: 1460 Mission St.#02W101
+                  postcode: '94103'
+              issuer_name: JPMorgan Chase
+              is_commercial: false
+              number_type: PAN
+          merchant_order_id: D202503210001
+          payment_intent_id: int_hkpdskz7vg1xc7uscdj
+          status: CAPTURE_REQUESTED
+          payment_method_transaction_id: '1234567890'
+          acquirer_reference_number: '1234567890'
+          provider_original_response_code: '00'
+          authorization_code: '123456'
+          captured_amount: 100
+          refunded_amount: 0
+          settle_via: airwallex
+          authentication_data:
+            ds_data: {}
+          created_at: '2023-10-01T12:00:00+00:00'
+          updated_at: '2023-10-01T12:00:00+00:00'
+      x-scope:
+      - scope: payment_acceptance:read
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Payment Attempts
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/payment_attempts:
+    get:
+      tags:
+      - Payment Acceptance > Payment Attempts
+      summary: 2|List all Payment Attempts
+      description: List all Payment Attempts. Specify a value for `payment_intent_id` to list the Payment Attempts made on the Payment Intent. You may filter out the results further by `method` and/or `status`.
+      operationId: listPaymentAttempts
+      parameters:
+      - name: currency
+        in: query
+        description: Payment Attempt currency.
+        required: false
+        schema:
+          type: string
+          default: USD
+      - name: from_created_at
+        in: query
+        description: The start time of `created_at` in ISO8601 format. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`).
+        required: false
+        schema:
+          type: string
+          default: '2021-05-01T03:52:34+00:00'
+      - name: page_num
+        in: query
+        description: Page number starting from 0.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of Payment Attempts to be listed per page. Default value is 10. Maximum is 1000. The value greater than the maximum will be capped to the maximum.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: payment_intent_id
+        in: query
+        description: Payment Intent unique identifier of the attempt.
+        required: false
+        schema:
+          type: string
+          default: int_e65tkXCSzJrsMpTrzoFrjaau53
+      - name: status
+        in: query
+        description: Payment Attempt status.
+        required: false
+        schema:
+          type: string
+          default: AUTHORIZED
+      - name: to_created_at
+        in: query
+        description: The end time of `created_at` in ISO8601 format. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`).
+        required: false
+        schema:
+          type: string
+          default: '2017-04-01T03:52:34+00:00'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: List items.
+                    items:
+                      $ref: '#/components/schemas/PaymentAttempt'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/payment_attempts
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        query_params:
+          page_num: 0
+          page_size: 10
+          status: CAPTURE_REQUESTED,SETTLED,PAID,CAPTURE_REQUESTED,CANCELLED
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - id: att_hkpd12a3456hi7
+            amount: 100
+            currency: USD
+            payment_method:
+              type: card
+              card:
+                expiry_month: '03'
+                expiry_year: '2030'
+                name: John Doe
+                bin: '403550'
+                last4: 0008
+                brand: visa
+                issuer_country_code: US
+                card_type: CREDIT
+                fingerprint: AKvN4TqxI04SNFZ+oYRXaECtDA==
+                billing:
+                  first_name: John
+                  last_name: Doe
+                  email: john.doe@example.com
+                  phone_number: +1 1234567890
+                  address:
+                    country_code: US
+                    state: CA
+                    city: San Francisco
+                    street: 1460 Mission St.#02W101
+                    postcode: '94103'
+                issuer_name: JPMorgan Chase
+                is_commercial: false
+                number_type: PAN
+            merchant_order_id: D202503210001
+            payment_intent_id: int_hkpdskz7vg1xc7uscdj
+            status: CAPTURE_REQUESTED
+            payment_method_transaction_id: '1234567890'
+            acquirer_reference_number: '1234567890'
+            provider_original_response_code: '00'
+            authorization_code: '123456'
+            captured_amount: 100
+            refunded_amount: 0
+            created_at: '2023-10-01T12:00:00+00:00'
+            updated_at: '2023-10-01T12:00:00+00:00'
+            settle_via: airwallex
+            authentication_data:
+              ds_data: {}
+      x-scope:
+      - scope: payment_acceptance:read
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Payment Attempts
+      x-urlPath: list
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    Skrill:
+      type: object
+      properties:
+        country_code:
+          type: string
+          description: The 2-letter ISO country/region code from which the consumer will be paying. Applicable worldwide except for blacklisted countries. For the forbidden countries, please refer to [Skrill Non-serviced Countries](https://www.skrill.com/en/footer/terms-conditions/non-serviced-countries/).
+        shopper_email:
+          type: string
+          description: Email address of the shopper.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Skrill information.
+    FamilyMart:
+      type: object
+      properties:
+        shopper_email:
+          type: string
+          description: Email address of the shopper.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+        shopper_phone:
+          type: string
+          description: Phone number of the shopper.
+      description: Family Mart information.
+    ThreeDomainSecure:
+      type: object
+      required:
+      - online_payment_cryptogram
+      properties:
+        eci_indicator:
+          type: string
+          description: Electronic Commerce Indicator, as defined by 3-D Secure.
+        online_payment_cryptogram:
+          type: string
+          description: Online payment cryptogram, as defined by 3-D Secure.
+      description: 3D-Secure authentication data.
+    BankTransfer:
+      type: object
+      properties:
+        bank_name:
+          type: string
+          description: The name of the bank.
+        country_code:
+          type: string
+          description: The 2-letter ISO country/region code from which the consumer will be paying.
+        expires_at:
+          type: string
+          description: Expiry time of this attempt, in [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) format.
+        ga_mode:
+          type: string
+          description: The type of GA mode.
+        shopper_email:
+          type: string
+          description: Email address of the shopper.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Bank Transfer information.
+    Trustly:
+      type: object
+      properties:
+        country_code:
+          type: string
+          description: The 2-letter ISO country/region code from which the consumer will be paying. One of `DE`, `DK`, `EE`, `ES`, `FI`, `GB`, `LT`, `LV`, `NL`, `NO`, `PL`, `SE`, `SK`.
+        shopper_email:
+          type: string
+          description: Email address of the shopper.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Trustly information.
+    Maxima:
+      type: object
+      properties:
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Maxima information.
+    PayId:
+      type: object
+      properties:
+        australian_business_number:
+          type: string
+          description: 11 digits number to identify the Pay Id. Required when `phone_number`, `owner_email`, and `organisation_id` is null.
+        organisation_id:
+          type: string
+          description: The organisation id of the recipient. The Pay ID must be in the format of `payid:airwallex.com`.
+        owner_email:
+          type: string
+          description: owner email to identify the Pay Id. Required when `phone_number`, `australian_business_number`, and `organisation_id` is null.
+        phone_number:
+          type: string
+          description: The phone number of the Pay Id. Required when `owner_email`, `australian_business_number`, and `organisation_id` is null.
+      description: The Pay ID of the recipient.
+    Paypal:
+      type: object
+      properties:
+        country_code:
+          type: string
+          description: The 2-letter ISO country/region code from which the consumer will be paying.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Pay Pal information.
+    CashAppPay:
+      type: object
+      properties:
+        cashtag:
+          type: string
+          description: A unique identifier for individuals and businesses using Cash App. Only present for Payment Intents with verified consent.
+          example: $example_cashtag
+      description: Cash App Pay information.
+    Klarna:
+      type: object
+      required:
+      - country_code
+      properties:
+        billing:
+          $ref: '#/components/schemas/Billing'
+          description: Billing information.
+        country_code:
+          type: string
+          description: The ISO 3166 alpha-2 standard country/region code from which the consumer will be paying. One of `AT`, `BE`, `CH`, `CZ`, `DE`, `DK`, `ES`, `FI`, `FR`, `GB`, `GR`, `IE`, `IT`, `NL`, `NO`, `PL`, `PT`, `SE`, `US`.
+        language:
+          type: string
+          description: "The ISO 639-1 alpha-2 language code. Default value is `en`. Besides `en`, you can specify other local languages (see below) for some countries to render the payment page.  \nAT: `de`; BE: `be`, `nl`, `fr`; CH: `it`, `de`, `fr`; CZ: `cs`; DE: `de`; DK: `da`; ES: `es`; FI: `fi`, `sv`; FR: `fr`; GR: `el`; IT: `it`; NL: `nl`; NO: `nb`; PL: `pl`; PT: `pt`; SE: `sv`; US: `es`."
+      description: Klarna information.
+    Paypost:
+      type: object
+      properties:
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Paypost information.
+    Blik:
+      type: object
+      properties:
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: BLIK information.
+    RiskFactor:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Risk factor description.
+    Bancontact:
+      type: object
+      properties:
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Bancontact information.
+    PaymentAttempt:
+      type: object
+      properties:
+        acquirer_reference_number:
+          type: string
+          description: Acquirer reference number of the card payment. Will be populated after the payment attempt has transitioned to the `CAPTURE_REQUESTED` or `SETTLED` status.
+        amount:
+          type: number
+          description: Amount of the Payment Attempt.
+        authentication_data:
+          $ref: '#/components/schemas/AuthenticationData'
+          description: Authentication data which contains AVS result, CVC result, three domain secure result and fraud evaluation result.
+        authorization_code:
+          type: string
+          description: Authorization response code from issuer when the payment is authorized successfully.
+        captured_amount:
+          type: number
+          description: Captured amount.
+        created_at:
+          type: string
+          format: date-time
+          description: Time at which this Payment Attempt was created.
+        currency:
+          type: string
+          description: Currency of the Payment Attempt.
+        dcc_data:
+          $ref: '#/components/schemas/Dcc'
+          description: Present when DCC amount is available and DCC currency is different from Payment Intent currency. DCC could be conducted either by third party or Airwallex when using Airwallex DCC product.
+        failure_code:
+          type: string
+          description: Payment Attempt failure code. One of `authentication_failed`, `capture_failed`, `authorization_failed`, `provider_unavailable`, `system_unavailable`, `fraud_rejected`.
+        failure_details:
+          $ref: '#/components/schemas/Payment_Acceptance_FailureDetails'
+          description: Failure details. Only applicable when status is FAILED.
+        id:
+          type: string
+          description: Unique identifier for the Payment Attempt.
+        merchant_advice_code:
+          type: string
+          description: An advice code from issuer to provide more details about the payment. It can be useful when implementing a retry logic for declined payments.
+        merchant_order_id:
+          type: string
+          description: Merchant order unique identifier of the Payment Attempt.
+        payment_consent_id:
+          type: string
+          description: Payment Consent unique identifier of the Payment Attempt.
+        payment_intent_id:
+          type: string
+          description: Payment Intent unique identifier of the Payment Attempt.
+        payment_method:
+          $ref: '#/components/schemas/AttemptPaymentMethodDetail'
+          description: Payment Method used by the Payment Attempt.
+        payment_method_options:
+          $ref: '#/components/schemas/PaymentMethodOption'
+          description: Options for Payment Method.
+        payment_method_transaction_id:
+          type: string
+          description: The unique transaction identifier for a Payment Attempt, assigned by the payment provider (card issuers or local payment method providers such as Google Pay, i DEAL, etc.).
+        provider_original_response_code:
+          type: string
+          description: The original response code from the payment method provider (or issuer for card).
+        provider_original_response_description:
+          type: string
+          description: Human-readable description of `provider_original_response_code`, describing the reason returned by the issuer.
+        provider_transaction_id:
+          type: string
+          description: "Deprecated.  \n  \nUse `payment_method_transaction_id` instead."
+        refunded_amount:
+          type: number
+          description: Refunded amount.
+        settle_via:
+          type: string
+          description: "Through which channel the merchant will get this payment settled. Possible values are `airwallex`, `paypal`, `amex`. \n\nIf `airwallex` is returned, this payment will be settled to merchant's Airwallex wallet, otherwise it will be settled externally."
+        status:
+          type: string
+          description: '
+
+            - **RECEIVED**: The Payment Attempt has been created upon request.
+
+            - **AUTHENTICATION_REDIRECTED**: The Payment Attempt is waiting for further customer action of authentication, e.g. 3DS verification and QR code scan.
+
+            - **PENDING_AUTHORIZATION**: The Payment Attempt authorization request has been accepted and is pending the final result from the provider.
+
+            - **AUTHORIZED**: The Payment Attempt was successfully authorized. It will either be automatically captured or require a manual capture to finalize the payment. Please be aware that capturing the payment is not possible if the Payment Intent status is **PENDING_REVIEW**.
+
+            - **CAPTURE_REQUESTED**: The Payment Attempt has been successfully requested for capture. The payment is complete.
+
+            - **EXPIRED**: The Payment Attempt expired after the allowed payment time. Please create a new Payment Attempt to retry.
+
+            - **CANCELLED**: The Payment Attempt has been cancelled. The previously authorized amount (if any) will be returned to the customer.
+
+            - **FAILED**: The Payment Attempt has failed. Please create a new Payment Attempt to retry.
+
+            - **SETTLED**: Airwallex has received the settlement from the provider. We will settle the funds in your wallet.
+
+            - **PAID**: Airwallex has settled the funds in your wallet.
+
+            '
+        terminal_id:
+          type: string
+          description: Airwallex terminal unique identifier used to process the payment attempt.
+        updated_at:
+          type: string
+          format: date-time
+          description: Last time at which this Payment Attempt was updated or operated on.
+      description: Latest Payment Attempt that was created under the Payment Intent.
+    Payu:
+      type: object
+      properties:
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Pay U information.
+    AuthenticationData:
+      type: object
+      properties:
+        authentication_type:
+          type: string
+          description: 'The method used to authenticate this transaction. Possible values: passkey, 3ds, none.'
+        avs_result:
+          type: string
+          description: AVS result.
+        cvc_result:
+          type: string
+          description: CVC result.
+        ds_data:
+          $ref: '#/components/schemas/DsData'
+          description: 3DS data.
+        fraud_data:
+          $ref: '#/components/schemas/FraudData'
+          description: Fraud data.
+        passkey_setup_status:
+          type: string
+          description: 'Status of payment passkey setup for the card/device used in the transaction, during cardholder authentication. Possible values: `SETUP_COMPLETED`, `ALREADY_SETUP`, `FAILED_TO_SETUP`, `NOT_TRIGGERED`
+
+            - `SETUP_COMPLETED`: Payment passkey was successfully set up.
+
+            - `ALREADY_SETUP`: Payment passkey was already set up for this card/device combination in a previous transaction.
+
+            - `FAILED_TO_SETUP`: Attempted to set up a payment passkey, but the setup failed.
+
+            - `NOT_TRIGGERED`: Payment passkey setup was not supported or not applicable for this transaction (transaction was not processed via the passkey flow).'
+        sca_exemption:
+          $ref: '#/components/schemas/ScaExemption'
+          description: SCA exemption indicators for this transaction.
+      description: Authentication data which contains AVS result, CVC result, three domain secure result and fraud evaluation result.
+    Googlepay:
+      type: object
+      properties:
+        billing:
+          $ref: '#/components/schemas/Billing'
+          description: Billing information.
+        lifecycle_id:
+          type: string
+          description: Identifier used to link the transaction to the original or previous transaction in a subscription or card-on-file chain. Currently supported only for Mastercard.
+        payment_data_type:
+          type: string
+          description: Type of the payment data details. One of `tokenized_card` or `encrypted_payment_token`.
+        tokenized_card:
+          $ref: '#/components/schemas/TokenizedCard'
+          description: Payment data with the tokenized card details.
+      description: Google pay information.
+    SepaDirectDebitAddress:
+      type: object
+      required:
+      - postcode
+      - street
+      - town
+      properties:
+        country_code:
+          type: string
+          description: Country code of the address. Use the two-character ISO Standard Country Codes.
+        postcode:
+          type: string
+          description: Postcode of the address.
+        street:
+          type: string
+          description: 'street of the address. '
+        town:
+          type: string
+          description: town of the address.
+      description: Account holder's address.
+    CardAdditionalInfo:
+      type: object
+      properties:
+        merchant_verification_value:
+          type: string
+          description: 'Merchant Verification Value (Provided by VISA during onboarding)
+
+            or
+
+            MasterCard Assigned ID (Provided by MasterCard during onboarding).'
+        token_requestor_id:
+          type: string
+          description: Token requestor unique identifier (Provided by card schemes during onboarding).
+      description: Additional information of external network token requestor. Would return when number_type is `EXTERNAL_NETWORK_TOKEN`.
+    HiLife:
+      type: object
+      properties:
+        shopper_email:
+          type: string
+          description: Email address of the shopper.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+        shopper_phone:
+          type: string
+          description: Phone number of the shopper.
+      description: Hi-Life information.
+    Verkkopankki:
+      type: object
+      properties:
+        bank_name:
+          type: string
+          description: The name of the bank.
+        shopper_email:
+          type: string
+          description: Email address of the shopper.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Verkkopankki information.
+    Fpx:
+      type: object
+      properties:
+        bank_name:
+          type: string
+          description: The name of the bank.
+        shopper_email:
+          type: string
+          description: Email address of the shopper.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+        shopper_phone:
+          type: string
+          description: Phone number of the shopper.
+      description: FPX information.
+    TokenizedCard:
+      type: object
+      required:
+      - expiry_month
+      - expiry_year
+      properties:
+        authentication_method:
+          $ref: '#/components/schemas/AuthenticationMethod'
+          description: Authentication method.
+        bin:
+          type: string
+          description: Bank identify number of this card.
+        brand:
+          type: string
+          description: Brand of the card. One of `visa`, `mastercard`, `maestro`, `chinaunionpay`.
+        device_manufacturer_identifier:
+          type: string
+          description: Device manufacturer identifier.
+        expiry_month:
+          type: string
+          description: Two digit number representing the card’s expiration month.
+        expiry_year:
+          type: string
+          description: Four digit number representing the card’s expiration year.
+        fingerprint:
+          type: string
+          description: Fingerprint of the card.
+        is_commercial:
+          type: boolean
+          description: A boolean field referring whether the card is commercial or not.
+        issuer_country_code:
+          type: string
+          description: Country code of the card issuer.
+        issuer_name:
+          type: string
+          description: Issuer name.
+        last4:
+          type: string
+          description: Last four digits of the card number.
+        name:
+          type: string
+          description: Cardholder name.
+        type:
+          type: string
+          description: The card's type of payment. One of `credit` or `debit`.
+      description: Payment data with the tokenized card details.
+    KoreanCardData:
+      type: object
+      properties:
+        business_number:
+          type: string
+          description: A 10-digit business number of the company.
+        date_of_birth:
+          type: string
+          description: A 6-digit date of birth in the format of YYMMDD.
+        password_first2:
+          type: string
+          description: Card password first 2 digits.
+      description: Information for Korean Card.
+    DsData:
+      type: object
+      properties:
+        cavv:
+          type: string
+          description: Cardholder Authentication Verification Value. Base64-encoded 28-character string.
+        challenge_cancellation_reason:
+          type: string
+          description: Challenge cancellation reason.
+        eci:
+          type: string
+          description: 'Electronic Commerce Indicator. As defined by 3D-Secure.
+
+            - `00`: **Mastercard variant**: Authentication failed.
+
+            - `01`: **Mastercard variant**: Authentication attempted.
+
+            - `02`: **Mastercard variant**: Authentication succeeded.
+
+            - `04`: **Mastercard variant**: Frictionless authentication via data only mode.
+
+            - `05`: Authentication succeeded.
+
+            - `06`: Authentication attempted. **Mastercard variant**: Exempted from Strong Customer Authentication.
+
+            - `07`: Authentication failed or exempted. **Mastercard variant**: Recurring transaction successfully authenticated.
+
+            - `null`: Not applicable or 3DS authentication was not performed.
+
+            '
+        enrolled:
+          type: string
+          description: 'Indicates whether the cardholder is enrolled in 3D-Secure.
+
+            - `Y`: Cardholder is enrolled.
+
+            - `N`: Cardholder is not enrolled.
+
+            - `U`: Unable to determine enrollment status.
+
+            - `null`: Not applicable or enrollment check was not performed.
+
+            '
+        frictionless:
+          type: string
+          description: 'Indicates whether 3DS passed in frictionless flow.
+
+            - `Y`: 3DS passed in frictionless flow.
+
+            - `N`: 3DS entered challenge flow.
+
+            - `null`: Not applicable or 3DS authentication was not performed.
+
+            '
+        liability_shift_indicator:
+          type: string
+          description: 'Indicates whether liability has shifted to the card issuer.
+
+            - `Y`: Liability has shifted to the issuer.
+
+            - `N`: Liability has not shifted.
+
+            - `null`: Not applicable or unable to determine.
+
+            '
+        pa_res_status:
+          type: string
+          description: 'Payment Authentication Response (PARes) status.
+
+            - `Y`: Authentication successful.
+
+            - `N`: Authentication failed.
+
+            - `U`: Authentication could not be performed.
+
+            - `A`: Authentication attempted but not completed.
+
+            - `C`: Challenge required.
+
+            - `R`: Authentication rejected.
+
+            - `null`: Not applicable or authentication was not performed.
+
+            '
+        version:
+          type: string
+          description: 3ds version.
+        xid:
+          type: string
+          description: XID
+      description: 3DS data.
+    BacsDirectDebitAddress:
+      type: object
+      required:
+      - line1
+      - postcode
+      - town
+      properties:
+        country_code:
+          type: string
+          description: Country code of the address. Use the two-character ISO Standard Country Codes. One of `GB`, `US`. Default to `GB` if not provided.
+        line1:
+          type: string
+          description: House number and street name, e.g., `777 Casino Drive`.
+        line2:
+          type: string
+          description: Locality name, e.g., `Apartment 123`.
+        postcode:
+          type: string
+          description: Postcode of the address.
+        state:
+          type: string
+          description: State or province of the address. Should be provided if country code is `US`. Use the two-character ISO3166-2:US state code.
+        town:
+          type: string
+          description: Post town.
+      description: Account holder's address.
+    Satispay:
+      type: object
+      properties:
+        country_code:
+          type: string
+          description: The 2-letter ISO country/region code from which the consumer will be paying.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Satispay information.
+    AuthenticationMethod:
+      type: object
+      required:
+      - type
+      properties:
+        emv:
+          $ref: '#/components/schemas/Emv'
+          description: EMV data.
+        three_ds:
+          $ref: '#/components/schemas/ThreeDomainSecure'
+          description: 3D-Secure authentication data.
+        type:
+          type: string
+          description: The authentication method type. One of `CRYPTOGRAM_3DS`, `PAN_ONLY`.
+      description: Authentication method.
+    ShopeePay:
+      type: object
+      properties:
+        shopper_email:
+          type: string
+          description: Email address of the shopper.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+        shopper_phone:
+          type: string
+          description: Phone number of the shopper.
+      description: Boost information.
+    CardUpdaterInfo:
+      type: object
+      properties:
+        expiry_updated:
+          type: boolean
+          description: Expiry was updated (true or false).
+        number_updated:
+          type: boolean
+          description: Account number was updated (true or false).
+      description: Specifies if card information got updated.
+    SevenEleven:
+      type: object
+      properties:
+        shopper_email:
+          type: string
+          description: Email address of the shopper.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+        shopper_phone:
+          type: string
+          description: Phone number of the shopper.
+      description: 7-Eleven information.
+    Dcc:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: DCC amount.
+        currency:
+          type: string
+          description: DCC currency.
+      description: Present when DCC amount is available and DCC currency is different from Payment Intent currency. DCC could be conducted either by third party or Airwallex when using Airwallex DCC product.
+    CardAttempt:
+      type: object
+      properties:
+        additional_info:
+          $ref: '#/components/schemas/CardAdditionalInfo'
+          description: Additional information of external network token requestor. Would return when number_type is `EXTERNAL_NETWORK_TOKEN`.
+        billing:
+          $ref: '#/components/schemas/Billing'
+          description: Billing information.
+        bin:
+          type: string
+          description: Bank identify number of this card.
+        brand:
+          type: string
+          description: Brand of the card. One of `mastercard`, `visa`, `union pay`, `american express`, `jcb`, `discover`, `diners club international`.
+        card_type:
+          type: string
+          description: Funding type of the card.
+        card_updater_info:
+          $ref: '#/components/schemas/CardUpdaterInfo'
+          description: Specifies if card information got updated.
+        expiry_month:
+          type: string
+          description: Two digit number representing the card’s expiration month.
+        expiry_year:
+          type: string
+          description: Four digit number representing the card’s expiration year.
+        fingerprint:
+          type: string
+          description: Fingerprint of the card.
+        is_commercial:
+          type: boolean
+          description: A boolean field referring whether the card is commercial or not.
+        issuer_country_code:
+          type: string
+          description: Country code of the card issuer.
+        issuer_name:
+          type: string
+          description: Issuer name.
+        korean_card:
+          $ref: '#/components/schemas/KoreanCardData'
+          description: Information for Korean Card.
+        last4:
+          type: string
+          description: Last four digits of the card number.
+        lifecycle_id:
+          type: string
+          description: Identifier used to link the transaction to the original or previous transaction in a subscription or card-on-file chain. Currently supported only for Mastercard.
+        name:
+          type: string
+          description: Card holder name.
+        number_type:
+          type: string
+          description: Type of the number. One of `PAN`, `EXTERNAL_NETWORK_TOKEN`, `AIRWALLEX_NETWORK_TOKEN`.
+      description: Card information.
+    AirwallexPay:
+      type: object
+      properties:
+        payer_name:
+          type: string
+          description: Name of the payer. Only returned for successful payments.
+      description: Airwallex Pay information.
+    DuitNow:
+      type: object
+      properties:
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Duit Now information.
+    Alipaycn:
+      type: object
+      properties:
+        flow:
+          type: string
+          description: One of `qrcode`, `mobile_web`, `mobile_app`, `mini_program`.
+        os_type:
+          type: string
+          description: ios, android.
+        shopper_login_id:
+          type: string
+          description: Alipay's User Login Id (Shopper) for Payment Consent Verification.
+        user_id:
+          type: string
+          description: Unique identifier of a user in payment method provider side. Only present after the payment has been completed or the consent has been verified.
+        channel:
+          type: string
+          description: 'Payment channel. Default: `ecom`.'
+          enum:
+          - pos
+          - ecom
+          x-enumDescriptions:
+            pos: A point-of-sale (POS) transaction.
+            ecom: A online e-commerce transaction.
+      description: Alipay CN information.
+    PerlasTerminals:
+      type: object
+      properties:
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Perlas terminals information.
+    Narvesen:
+      type: object
+      properties:
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Narvesen information.
+    Billing:
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/Payment_Acceptance_Address'
+          description: The billing address as it appears on the credit card issuer’s records.
+        date_of_birth:
+          type: string
+          description: 'Date of birth of the customer in the format: YYYY-MM-DD.'
+        email:
+          type: string
+          description: Email address of the customer.
+        first_name:
+          type: string
+          description: First name of the customer.
+        last_name:
+          type: string
+          description: Last name of the customer.
+        phone_number:
+          type: string
+          description: Phone number of the customer.
+      description: Billing information.
+    CardPresent:
+      type: object
+      properties:
+        aid:
+          type: string
+          description: Application Identifier (AID) of the card.
+        bin:
+          type: string
+          description: Bank identify number of this card.
+        brand:
+          type: string
+          description: Brand of the card.
+        card_sequence_number:
+          type: string
+          description: A unique identifier to distinguish among separate cards having the save PAN.
+        card_type:
+          type: string
+          description: Funding type of the card.
+        cardholder_verification_method:
+          type: string
+          description: Cardholder verification method.
+        contactless_card_form_factor:
+          type: string
+          description: Contactless Card Form Factor.
+        emv_tags:
+          type: string
+          description: Tag-length-value (TLV)-encoded data returned by issuers or card schemes.
+        expiry_month:
+          type: string
+          description: Two digit number representing the card’s expiration month.
+        expiry_year:
+          type: string
+          description: Four digit number representing the card’s expiration year.
+        fallback:
+          type: boolean
+          description: Whether fallback happens when reading the card.
+        fallback_reason:
+          type: string
+          description: Fallback reason.
+        fingerprint:
+          type: string
+          description: Fingerprint of the card.
+        is_commercial:
+          type: boolean
+          description: A boolean field referring whether the card is commercial or not.
+        issuer_country_code:
+          type: string
+          description: Country code of the card issuer.
+        issuer_name:
+          type: string
+          description: Issuer name.
+        last4:
+          type: string
+          description: Last four digits of the card number.
+        name:
+          type: string
+          description: Card holder name.
+        pan_entry_mode:
+          type: string
+          description: The way the terminal reads the card information.
+        receipt:
+          $ref: '#/components/schemas/CardPresentReceipt'
+          description: Data used for receipt printing of the transaction.
+        terminal_info:
+          $ref: '#/components/schemas/TerminalInfo'
+          description: Data obtained by the POS terminal from the card and terminal properties.
+      description: Card-present information.
+    CardPresentReceipt:
+      type: object
+      properties:
+        retrieval_reference_number:
+          type: string
+          description: Retrieval reference number of the transaction.
+        system_trace_audit_number:
+          type: string
+          description: System trace audit number of the transaction.
+        terminal_verification_results:
+          type: string
+          description: Terminal verification result (EMV tag 95) of the transaction.
+      description: Data used for receipt printing of the transaction.
+    PaymentMethodOption:
+      type: object
+      properties:
+        card:
+          $ref: '#/components/schemas/CardOption'
+          description: The Payment Method options for card.
+      description: Options for Payment Method.
+    FraudDataDetail:
+      type: object
+      properties:
+        action:
+          type: string
+          description: Fraud action.
+        risk_factors:
+          type: array
+          description: Risk factors.
+          items:
+            $ref: '#/components/schemas/RiskFactor'
+        score:
+          type: string
+          description: Fraud score.
+      description: Post-authorization fraud check data.
+    PayNow:
+      type: object
+      properties:
+        channel:
+          type: string
+          description: 'Payment channel. Default: `ecom`.'
+          enum:
+          - pos
+          - ecom
+          x-enumDescriptions:
+            pos: A point-of-sale (POS) transaction.
+            ecom: A online e-commerce transaction.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Pay Now information.
+    ScaExemption:
+      type: object
+      properties:
+        applied_exemption:
+          type: string
+          description: 'The SCA exemption type actually applied by Airwallex in the authorization request sent downstream. If this field is `null`, SCA exemption was not applied. Possible values: `LOW_RISK_TRANSACTION`, `LOW_VALUE`, `SECURE_CORPORATE_PAYMENT`.'
+        requested_exemption:
+          type: string
+          description: 'The SCA exemption type requested by the merchant for Airwallex to use. Possible values: `LOW_RISK_TRANSACTION`, `LOW_VALUE`, `SECURE_CORPORATE_PAYMENT`, `ANONYMOUS`.'
+    SepaDirectDebit:
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/SepaDirectDebitAddress'
+          description: Account holder's address.
+        bank_name:
+          type: string
+          description: Bank of the account. You can call [API to retrieve the available bank names](/docs/api/payments/config/banks).
+        business_account:
+          type: boolean
+          description: Indicate whether the account is a business account.
+        country_code:
+          type: string
+          description: The 2-letter ISO country/region code from which the consumer will be paying.
+        iban:
+          type: string
+          description: 15–34 characters to identify a bank account.
+        micro_debit:
+          $ref: '#/components/schemas/MicroDebitResult'
+          description: The result of micro debit.
+        micro_deposit:
+          $ref: '#/components/schemas/MicroDepositResult'
+          description: The result of micro deposit.
+        owner_email:
+          type: string
+          description: Email of the account holder.
+        owner_name:
+          type: string
+          description: Name of the account holder.
+      description: SEPA Direct Debit information.
+    Payment_Acceptance_FailureDetails:
+      type: object
+      properties:
+        code:
+          type: string
+          description: The failure code returned by Airwallex.
+        details:
+          type: object
+          description: Additional details that may include `original_response_code`, `original_response_message` from provider, and other contextual information such as card details, risk factors, etc. depending on the specific error code.
+        message:
+          type: string
+          description: The failure description.
+        trace_id:
+          type: string
+          description: The unique identifier for tracing the failure.
+      description: Failure details. Only applicable when status is FAILED.
+    Konbini:
+      type: object
+      properties:
+        shopper_email:
+          type: string
+          description: Email address of the shopper.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+        shopper_phone:
+          type: string
+          description: Phone number of the shopper.
+      description: Konbini information.
+    Payeasy:
+      type: object
+      properties:
+        shopper_email:
+          type: string
+          description: Email address of the shopper.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+        shopper_phone:
+          type: string
+          description: Phone number of the shopper.
+      description: Pay Easy information.
+    Paysafecash:
+      type: object
+      properties:
+        country_code:
+          type: string
+          description: The 2-letter ISO country/region code from which the consumer will be paying.
+        shopper_email:
+          type: string
+          description: Email address of the shopper.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Paysafecash information.
+    Paybybankapp:
+      type: object
+      properties:
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Pay by Bank app information.
+    Fps:
+      type: object
+      properties:
+        flow:
+          type: string
+          description: The specific FPS flow to use. Currently only support `qrcode`.
+      description: FPS information.
+    Boost:
+      type: object
+      properties:
+        shopper_email:
+          type: string
+          description: Email address of the shopper.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+        shopper_phone:
+          type: string
+          description: Phone number of the shopper.
+      description: Boost information.
+    Payment_Acceptance_Address:
+      type: object
+      required:
+      - country_code
+      properties:
+        city:
+          type: string
+          description: City of the address. Maximum of 100 characters.
+        country_code:
+          type: string
+          description: The two-letter country code in ISO 3166-1 alpha-2 format.
+        postcode:
+          type: string
+          description: Postcode of the address. Maximum of 10 characters.
+        state:
+          type: string
+          description: State or province of the address. Maximum of 100 characters.
+        street:
+          type: string
+          description: Street of the address. Maximum of 1000 characters.
+      description: The billing address as it appears on the credit card issuer’s records.
+    Mybank:
+      type: object
+      properties:
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: My Bank information.
+    MicroDepositResult:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The status of micro_deposit.
+      description: The result of micro deposit.
+    Grabpay:
+      type: object
+      properties:
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Grab Pay information.
+    Multibanco:
+      type: object
+      properties:
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Multibanco information.
+    Alfamart:
+      type: object
+      properties:
+        shopper_email:
+          type: string
+          description: Email address of the shopper.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Alfamart information.
+    Atome:
+      type: object
+      properties:
+        shopper_phone:
+          type: string
+          description: Customer's mobile number, formatted in [E.164](https://en.wikipedia.org/wiki/E.164) standard.
+      description: Atome information.
+    Tabby:
+      type: object
+      properties:
+        language:
+          type: string
+          description: The ISO 639-1 alpha-2 language code.
+        shopper_email:
+          type: string
+          description: The email of the shopper.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+        shopper_phone:
+          type: string
+          description: The phone of the shopper.
+      description: Tabby information.
+    AchDirectDebit:
+      type: object
+      properties:
+        aba_routing_number:
+          type: string
+          description: 9-digit number to identify a bank in the US.
+        account_number:
+          type: string
+          description: 4-17 digits number to identify a bank account in the US.
+        business_account:
+          type: boolean
+          description: Indicate whether the account is a business account.
+        micro_debit:
+          $ref: '#/components/schemas/MicroDebitResult'
+          description: The result of micro debit.
+        micro_deposit:
+          $ref: '#/components/schemas/MicroDepositResult'
+          description: The result of micro deposit.
+        owner_email:
+          type: string
+          description: Email of the account holder.
+        owner_name:
+          type: string
+          description: Name of the account holder.
+      description: ACH Direct Debit information.
+    Emv:
+      type: object
+      required:
+      - emv_data
+      properties:
+        emv_data:
+          type: string
+          description: Output from the Secure Element.
+        encrypted_pin_data:
+          type: string
+          description: The PIN encrypted using the bank’s key.
+      description: EMV data.
+    FraudData:
+      type: object
+      properties:
+        action:
+          type: string
+          description: Fraud action.
+        post_authorization_check:
+          $ref: '#/components/schemas/FraudDataDetail'
+          description: Post-authorization fraud check data.
+        risk_factors:
+          type: array
+          description: Risk factors.
+          items:
+            $ref: '#/components/schemas/RiskFactor'
+        score:
+          type: string
+          description: Fraud score.
+      description: Fraud data.
+    Payto:
+      type: object
+      properties:
+        bsb:
+          $ref: '#/components/schemas/Bsb'
+        pay_id:
+          $ref: '#/components/schemas/PayId'
+          description: The Pay ID of the recipient.
+      description: Payto information.
+    P24:
+      type: object
+      properties:
+        shopper_email:
+          type: string
+          description: Email address of the shopper.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: P24 information.
+    GoPay:
+      type: object
+      properties:
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Go Pay information.
+    Dragonpay:
+      type: object
+      properties:
+        shopper_email:
+          type: string
+          description: Email address of the shopper.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+        shopper_phone:
+          type: string
+          description: Phone number of the shopper.
+      description: Dragonpay information.
+    Indomaret:
+      type: object
+      properties:
+        shopper_email:
+          type: string
+          description: Email address of the shopper.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Indomaret information.
+    PromptPay:
+      type: object
+      properties:
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Prompt Pay information.
+    Applepay:
+      type: object
+      properties:
+        billing:
+          $ref: '#/components/schemas/Billing'
+          description: Billing information.
+        lifecycle_id:
+          type: string
+          description: Identifier used to link the transaction to the original or previous transaction in a subscription or card-on-file chain. Currently supported only for Mastercard.
+        payment_data_type:
+          type: string
+          description: Type of the payment data details. One of `tokenized_card` or `encrypted_payment_token`.
+        tokenized_card:
+          $ref: '#/components/schemas/TokenizedCard'
+          description: Payment data with the tokenized card details.
+      description: Apple pay information.
+    Bitpay:
+      type: object
+      properties:
+        country_code:
+          type: string
+          description: The 2-letter ISO country/region code from which the consumer will be paying.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Bit Pay information.
+    WechatPay:
+      type: object
+      properties:
+        channel:
+          type: string
+          description: 'Payment channel. Default: `ecom`.'
+          enum:
+          - pos
+          - ecom
+          x-enumDescriptions:
+            pos: A point-of-sale (POS) transaction.
+            ecom: A online e-commerce transaction.
+        flow:
+          type: string
+          description: The specific Wechat Pay flow to use.  One of `qrcode`, `official_account`, `mobile_app`, `mobile_web`.
+      description: WeChat Pay information.
+    TerminalInfo:
+      type: object
+      required:
+      - pin_entry_capability
+      - supported_pan_entry_modes
+      - terminal_identifier
+      properties:
+        mobile_device:
+          type: boolean
+          description: Indicate whether the POS terminal is a mobile POS device. Default is `false`.
+        pin_entry_capability:
+          type: string
+          description: "Describe the capability of the terminal device to accept PIN.  \n- `unsupported`: Terminal does not have PIN entry capability.  \n- `supported`: Terminal has PIN entry capability. Except the case suitable for software_based.  \n- `software_based`: For a mobile POS device, a user can input PIN through software-based keyboard.  \n- `disabled`: Terminal has PIN entry capability but PIN pad is not currently operative."
+        support_single_tap_with_pin:
+          type: boolean
+          description: Indicate whether the POS terminal could respond to a `request_pin` action. Default is `false`.
+        supported_pan_entry_modes:
+          type: array
+          description: List of `pan_entry_modes` supported by the terminal.
+          items:
+            type: string
+        terminal_identifier:
+          type: string
+          description: An up to 8 digit alphanumeric unique identifier used to identify the terminal at the card acceptor location of the user’s POS system.
+        terminal_type:
+          type: string
+          description: "Type of the POS terminal that processes this payment.  \n- `attended_pos`: dedicated pos devices that attended by a merchant staff.  \n- `unattended_pos`: dedicated pos devices that not attended.  \n- `android_softpos`: android mobile devices that can work as pos device with software.  \n- `ios_softpos`: iOS mobile devices that can work as pos device with software."
+        use_embedded_reader:
+          type: boolean
+          description: Indicate whether the reader is embedded in a mobile POS device. Default is `true`.
+      description: Data obtained by the POS terminal from the card and terminal properties.
+    BecsDirectDebit:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: 4-9 digits number to identify a bank account in Australia.
+        bsb_number:
+          type: string
+          description: 6-digit Bank-State-Branch number.
+        business_account:
+          type: boolean
+          description: Indicate whether the account is a business account.
+        micro_debit:
+          $ref: '#/components/schemas/MicroDebitResult'
+          description: The result of micro debit.
+        micro_deposit:
+          $ref: '#/components/schemas/MicroDepositResult'
+          description: The result of micro deposit.
+        owner_email:
+          type: string
+          description: Account holder's email.
+        owner_name:
+          type: string
+          description: Account holder name.
+      description: BECS Direct Debit information.
+    EftDirectDebit:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: 4-17 digits number to identify a bank account in Canada.
+        business_account:
+          type: boolean
+          description: Indicate whether the account is a business account.
+        institution_number:
+          type: string
+          description: 3-digit number to identify a bank institution in Canada.
+        micro_debit:
+          $ref: '#/components/schemas/MicroDebitResult'
+          description: The result of micro debit.
+        micro_deposit:
+          $ref: '#/components/schemas/MicroDepositResult'
+          description: The result of micro deposit.
+        owner_email:
+          type: string
+          description: Email of the account holder.
+        owner_name:
+          type: string
+          description: Name of the account holder.
+        transit_number:
+          type: string
+          description: Identify a bank branch transit in Canada.
+      description: EFT Direct Debit information.
+    AttemptPaymentMethodDetail:
+      type: object
+      properties:
+        ach_direct_debit:
+          $ref: '#/components/schemas/AchDirectDebit'
+          description: ACH Direct Debit information.
+        airwallex_pay:
+          $ref: '#/components/schemas/AirwallexPay'
+          description: Airwallex Pay information.
+        alfamart:
+          $ref: '#/components/schemas/Alfamart'
+          description: Alfamart information.
+        alipaycn:
+          $ref: '#/components/schemas/Alipaycn'
+          description: Alipay CN information.
+        alipayhk:
+          $ref: '#/components/schemas/AlipayConnect'
+          description: Alipay HK information.
+        applepay:
+          $ref: '#/components/schemas/Applepay'
+          description: Apple pay information.
+        atome:
+          $ref: '#/components/schemas/Atome'
+          description: Atome information.
+        bacs_direct_debit:
+          $ref: '#/components/schemas/BacsDirectDebit'
+          description: BACS Direct Debit information.
+        bancontact:
+          $ref: '#/components/schemas/Bancontact'
+          description: Bancontact information.
+        bank_transfer:
+          $ref: '#/components/schemas/BankTransfer'
+          description: Bank Transfer information.
+        becs_direct_debit:
+          $ref: '#/components/schemas/BecsDirectDebit'
+          description: BECS Direct Debit information.
+        bitpay:
+          $ref: '#/components/schemas/Bitpay'
+          description: Bit Pay information.
+        blik:
+          $ref: '#/components/schemas/Blik'
+          description: BLIK information.
+        boost:
+          $ref: '#/components/schemas/Boost'
+          description: Boost information.
+        card:
+          $ref: '#/components/schemas/CardAttempt'
+          description: Card information.
+        card_present:
+          $ref: '#/components/schemas/CardPresent'
+          description: Card-present information.
+        cash_app_pay:
+          $ref: '#/components/schemas/CashAppPay'
+          description: Cash App Pay information.
+        created_at:
+          type: string
+          format: date-time
+          description: Time at which the Payment Method was created.
+        customer_id:
+          type: string
+          description: Customer id.
+        dana:
+          $ref: '#/components/schemas/AlipayConnect'
+          description: Dana information.
+        doku_ewallet:
+          $ref: '#/components/schemas/DokuEwallet'
+          description: Doku E-Wallet information.
+        dragonpay:
+          $ref: '#/components/schemas/Dragonpay'
+          description: Dragonpay information.
+        duit_now:
+          $ref: '#/components/schemas/DuitNow'
+          description: Duit Now information.
+        eft_direct_debit:
+          $ref: '#/components/schemas/EftDirectDebit'
+          description: EFT Direct Debit information.
+        eps:
+          $ref: '#/components/schemas/Eps'
+          description: EPS information.
+        esun:
+          $ref: '#/components/schemas/Esun'
+          description: ESUN information.
+        family_mart:
+          $ref: '#/components/schemas/FamilyMart'
+          description: Family Mart information.
+        fps:
+          $ref: '#/components/schemas/Fps'
+          description: FPS information.
+        fpx:
+          $ref: '#/components/schemas/Fpx'
+          description: FPX information.
+        gcash:
+          $ref: '#/components/schemas/AlipayConnect'
+          description: Gcash information.
+        go_pay:
+          $ref: '#/components/schemas/GoPay'
+          description: Go Pay information.
+        googlepay:
+          $ref: '#/components/schemas/Googlepay'
+          description: Google pay information.
+        grabpay:
+          $ref: '#/components/schemas/Grabpay'
+          description: Grab Pay information.
+        hi_life:
+          $ref: '#/components/schemas/HiLife'
+          description: Hi-Life information.
+        id:
+          type: string
+          description: Unique identifier for the Payment Method.
+        ideal:
+          $ref: '#/components/schemas/Ideal'
+          description: i DEAL information.
+        indomaret:
+          $ref: '#/components/schemas/Indomaret'
+          description: Indomaret information.
+        jenius_pay:
+          $ref: '#/components/schemas/JeniusPay'
+          description: Jenius Pay information.
+        kakaopay:
+          $ref: '#/components/schemas/AlipayConnect'
+          description: Kakaopay information.
+        klarna:
+          $ref: '#/components/schemas/Klarna'
+          description: Klarna information.
+        konbini:
+          $ref: '#/components/schemas/Konbini'
+          description: Konbini information.
+        linkaja:
+          $ref: '#/components/schemas/Linkaja'
+          description: Link Aja information.
+        maxima:
+          $ref: '#/components/schemas/Maxima'
+          description: Maxima information.
+        metadata:
+          type: object
+          description: A set of key-value pairs that you can attach to the Payment Method. You can specify up to 50 keys with key names up to 50 characters long and values up to 500 characters long.
+          additionalProperties:
+            type: string
+        multibanco:
+          $ref: '#/components/schemas/Multibanco'
+          description: Multibanco information.
+        mybank:
+          $ref: '#/components/schemas/Mybank'
+          description: My Bank information.
+        narvesen:
+          $ref: '#/components/schemas/Narvesen'
+          description: Narvesen information.
+        online_banking:
+          $ref: '#/components/schemas/OnlineBanking'
+          description: Online Banking information.
+        ovo:
+          $ref: '#/components/schemas/Ovo'
+          description: OVO information.
+        p24:
+          $ref: '#/components/schemas/P24'
+          description: P24 information.
+        pay_now:
+          $ref: '#/components/schemas/PayNow'
+          description: Pay Now information.
+        paybybankapp:
+          $ref: '#/components/schemas/Paybybankapp'
+          description: Pay by Bank app information.
+        payeasy:
+          $ref: '#/components/schemas/Payeasy'
+          description: Pay Easy information.
+        paypal:
+          $ref: '#/components/schemas/Paypal'
+          description: Pay Pal information.
+        paypost:
+          $ref: '#/components/schemas/Paypost'
+          description: Paypost information.
+        paysafecard:
+          $ref: '#/components/schemas/Paysafecard'
+          description: paysafecard information.
+        paysafecash:
+          $ref: '#/components/schemas/Paysafecash'
+          description: Paysafecash information.
+        paysera:
+          $ref: '#/components/schemas/Paysera'
+          description: Paysera information.
+        payto:
+          $ref: '#/components/schemas/Payto'
+          description: Payto information.
+        payu:
+          $ref: '#/components/schemas/Payu'
+          description: Pay U information.
+        perlas_terminals:
+          $ref: '#/components/schemas/PerlasTerminals'
+          description: Perlas terminals information.
+        prompt_pay:
+          $ref: '#/components/schemas/PromptPay'
+          description: Prompt Pay information.
+        rabbit_line_pay:
+          $ref: '#/components/schemas/AlipayConnect'
+          description: Rabbit LINE Pay information.
+        satispay:
+          $ref: '#/components/schemas/Satispay'
+          description: Satispay information.
+        sepa_direct_debit:
+          $ref: '#/components/schemas/SepaDirectDebit'
+          description: SEPA Direct Debit information.
+        seven_eleven:
+          $ref: '#/components/schemas/SevenEleven'
+          description: 7-Eleven information.
+        shopee_pay:
+          $ref: '#/components/schemas/ShopeePay'
+          description: Boost information.
+        skrill:
+          $ref: '#/components/schemas/Skrill'
+          description: Skrill information.
+        status:
+          type: string
+          description: Status of the Payment Method. One of `CREATED`, `DISABLED`.
+        tabby:
+          $ref: '#/components/schemas/Tabby'
+          description: Tabby information.
+        tng:
+          $ref: '#/components/schemas/AlipayConnect'
+          description: TNG information.
+        truemoney:
+          $ref: '#/components/schemas/AlipayConnect'
+          description: Truemoney information.
+        trustly:
+          $ref: '#/components/schemas/Trustly'
+          description: Trustly information.
+        type:
+          type: string
+          description: Type of the Payment Method. One of `card`, `card_present`, `applepay`, `wechatpay`, `alipaycn`, `alipayhk`, `googlepay`, `gcash`, `dana`, `kakaopay`, `tng`, `truemoney`, `rabbit_line_pay`, `family_mart`, `hi_life`, `esun`, `boost`, `shopee_pay`, `fpx`, `bank_transfer`, `alfamart`, `doku_ewallet`, `grabpay`, `indomaret`, `konbini`, `online_banking`, `payeasy`, `seven_eleven`, `skrill`, `eps`, `bancontact`, `ideal`, `multibanco`, `p24`, `trustly`, `dragonpay`, `blik`, `mybank`, `paybybankapp`, `verkkopankki`, `maxima`, `narvesen`, `paypost`, `perlas_terminals`, `paysafecash`, `paysafecard`, `paysera`, `satispay`, `atome`, `duit_now`, `pay_now`, `prompt_pay`, `go_pay`, `jenius_pay`, `fps`, `ach_direct_debit`, `bacs_direct_debit`, `becs_direct_debit`, `klarna`, `sepa_direct_debit`, `korean_local_card`, `payco`, `samsung_pay`, `naver_pay`, `toss_pay`, `ovo`, `bitpay`, `linkaja`, `eft_direct_debit`, `zip`, `afterpay`.
+        updated_at:
+          type: string
+          format: date-time
+          description: Last time at which the Payment Method was updated.
+        verkkopankki:
+          $ref: '#/components/schemas/Verkkopankki'
+          description: Verkkopankki information.
+        wechatpay:
+          $ref: '#/components/schemas/WechatPay'
+          description: WeChat Pay information.
+        zip:
+          $ref: '#/components/schemas/Zip'
+          description: Zip information.
+      description: Payment Method used by the Payment Attempt.
+    BacsDirectDebit:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: 8 digits number to identify a bank account in the UK.
+        address:
+          $ref: '#/components/schemas/BacsDirectDebitAddress'
+          description: Account holder's address.
+        bank_name:
+          type: string
+          description: Bank of the account. You can call [API to retrieve the available bank names](/docs/api/payments/config/banks).
+        business_account:
+          type: boolean
+          description: Indicate whether the account is a business account.
+        micro_deposit:
+          $ref: '#/components/schemas/MicroDepositResult'
+          description: The result of micro deposit.
+        owner_email:
+          type: string
+          description: Email of the account holder.
+        owner_name:
+          type: string
+          description: Name of the account holder.
+        sort_code:
+          type: string
+          description: 6-digit number to identify a bank in the UK.
+      description: BACS Direct Debit information.
+    JeniusPay:
+      type: object
+      properties:
+        shopper_email:
+          type: string
+          description: Email address of the shopper.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Jenius Pay information.
+    CardOption:
+      type: object
+      properties:
+        authorization_type:
+          type: string
+          description: The authorization type of the card payment. One of `final_auth`, `pre_auth`. Default to `final_auth`. Currently only available when `brand` is `visa` or `mastercard`.
+        auto_capture:
+          type: boolean
+          description: Specifies whether the funds should be requested automatically after the payment is authorized. Default to `true`.
+      description: The Payment Method options for card.
+    Esun:
+      type: object
+      properties:
+        shopper_email:
+          type: string
+          description: Email address of the shopper.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+        shopper_phone:
+          type: string
+          description: Phone number of the shopper.
+      description: ESUN information.
+    Eps:
+      type: object
+      properties:
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: EPS information.
+    MicroDebitResult:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The status of micro_debit.
+      description: The result of micro debit.
+    Paysera:
+      type: object
+      properties:
+        bank_name:
+          type: string
+          description: The name of the bank.
+        country_code:
+          type: string
+          description: The 2-letter ISO country/region code from which the consumer will be paying.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Paysera information.
+    Bsb:
+      type: object
+      properties:
+        account_name:
+          type: string
+          description: The account name.
+        account_number:
+          type: string
+          description: 4-9 digits number to identify a bank account in Australia.
+        bsb_number:
+          type: string
+          description: 6-digit Bank-State-Branch number.
+    Ideal:
+      type: object
+      properties:
+        bank_name:
+          type: string
+          description: The name of the bank.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: i DEAL information.
+    Paysafecard:
+      type: object
+      properties:
+        country_code:
+          type: string
+          description: The 2-letter ISO country/region code from which the consumer will be paying.
+        shopper_email:
+          type: string
+          description: Email address of the shopper.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: paysafecard information.
+    DokuEwallet:
+      type: object
+      properties:
+        shopper_email:
+          type: string
+          description: Email address of the shopper.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Doku E-Wallet information.
+    AlipayConnect:
+      type: object
+      properties:
+        flow:
+          type: string
+          description: One of `qrcode`, `mobile_web`, `mobile_app`.
+        os_type:
+          type: string
+          description: ios, android.
+        shopper_login_id:
+          type: string
+          description: Alipay's User Login Id (Shopper) for Payment Consent Verification.
+        user_id:
+          type: string
+          description: Unique identifier of a user in payment method provider side. Only present after the payment has been completed or the consent has been verified.
+        channel:
+          type: string
+          description: 'Payment channel. Default: `ecom`.'
+          enum:
+          - pos
+          - ecom
+          x-enumDescriptions:
+            pos: A point-of-sale (POS) transaction.
+            ecom: A online e-commerce transaction.
+      description: Alipay HK information.
+    Ovo:
+      type: object
+      properties:
+        shopper_email:
+          type: string
+          description: Email address of the shopper.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: OVO information.
+    OnlineBanking:
+      type: object
+      properties:
+        bank_name:
+          type: string
+          description: The name of the bank.
+        country_code:
+          type: string
+          description: The 2-letter ISO country/region code from which the consumer will be paying.
+        shopper_email:
+          type: string
+          description: Email address of the shopper.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+        shopper_phone:
+          type: string
+          description: Phone number of the shopper.
+      description: Online Banking information.
+    Linkaja:
+      type: object
+      properties:
+        shopper_email:
+          type: string
+          description: Email address of the shopper.
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Link Aja information.
+    Zip:
+      type: object
+      properties:
+        shopper_name:
+          type: string
+          description: The name of the shopper.
+      description: Zip information.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

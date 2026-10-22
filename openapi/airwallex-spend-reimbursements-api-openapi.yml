@@ -1,0 +1,1088 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Spend > Reimbursements API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Spend > Reimbursements
+  description: Manages out-of-pocket expense reimbursements, including individual requests and grouped reports. Supports approval workflows, receipt attachments, payment processing, and sync with external accounting systems.
+  x-domain: Spend
+  x-resource: Reimbursements
+  x-urlPath: spend/reimbursements
+paths:
+  /api/v1/spend/reimbursement_reports/{id}/reimbursements/{reimbursement_id}:
+    get:
+      x-urlPath: retrieve
+      tags:
+      - Spend > Reimbursements
+      x-stage: beta
+      summary: 1|Retrieve a Reimbursement
+      description: Retrieves a specific reimbursement within a reimbursement report.
+      operationId: retrieveReimbursement
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the reimbursement report.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: reimbursement_id
+        in: path
+        description: Unique identifier of the reimbursement.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reimbursement'
+        '400':
+          description: Invalid Request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/spend/reimbursement_reports/reimbursement_id/reimbursements/reimbursement_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: 2d0a09cc-0a33-4fbd-b132-d3aa858d5491
+          description: Business flight to San Francisco for client meeting - Q4 2024.
+          merchant_name: American Airlines
+          transaction_amount: '1247.5'
+          transaction_currency: EUR
+          billing_amount: '1350.25'
+          transaction_date: '2024-12-15T14:30:00Z'
+          line_items:
+          - id: c9dcab16-f66a-4b4f-bb86-3531187218c8
+            billing_amount: '125.5'
+            transaction_amount: '120.0'
+            tax_amount: '12.5'
+            accounting_field_selections:
+            - type: OTHER
+              source_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+              name: Cost Center
+              external_id: 1036f6f7-87e4-4508-b865-f670b1926022
+              value: Office Expense
+              value_label: Office Expense
+          attachments:
+          - id: 985461d5-016f-4e1f-a387-5f1380b42d92
+            content_type: image/jpeg
+            file_name: flight_receipt_AA1234.jpg
+            file_url: https://files.example.com/receipts/985461d5-016f-4e1f-a387-5f1380b42d92
+            created_at: '2024-12-15T14:45:00Z'
+          - id: 773621a8-912c-4b2d-8756-1e8946d12345
+            content_type: application/pdf
+            file_name: hotel_invoice_hyatt.pdf
+            file_url: https://files.example.com/receipts/773621a8-912c-4b2d-8756-1e8946d12345
+            created_at: '2024-12-16T09:22:00Z'
+          comments:
+          - content: Expense approved - valid business purpose confirmed
+            created_by: manager@company.com
+            created_at: '2025-01-01T00:00:00Z'
+          accounting_field_selections:
+          - type: OTHER
+            source_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+            name: Cost Center
+            external_id: 1036f6f7-87e4-4508-b865-f670b1926022
+            value: Office Expense
+            value_label: Office Expense
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-02-02T00:00:00Z'
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: spend.expense:read
+        group: Spend
+        resource_name: Expenses
+      x-domain: Spend
+      x-resource: Reimbursements
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/spend/reimbursement_reports/{id}:
+    get:
+      tags:
+      - Spend > Reimbursements
+      x-stage: beta
+      summary: 2|Retrieve a Reimbursement Report
+      description: Retrieves the details of an existing reimbursement report.
+      operationId: retrieveReimbursementReports
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the reimbursement report.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReimbursementReportSummary'
+        '400':
+          description: Invalid Request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/spend/reimbursement_reports/reimbursement_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: 126ff4d1-737c-4a62-a862-f76b3f103357
+          legal_entity_id: le_U3jlHqQRNHWn2zAKeeT8sg
+          name: Q4 2024 Business Travel - San Francisco
+          status: MARKED_AS_PAID
+          sync_status: SYNCED
+          billing_currency: USD
+          approvers:
+          - manager@company.com
+          - finance@company.com
+          created_by: employee@company.com
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-02-02T00:00:00Z'
+          beneficiary_id: 55458be4-271c-488d-a12b-5e0709f4a0c0
+          comments:
+          - content: Expense approved - valid business purpose confirmed
+            created_by: manager@company.com
+            created_at: '2025-01-01T00:00:00Z'
+          reimbursement_report_transfer_ids:
+          - 9ee00d7d-76ca-4713-bc62-15fc111eaa0c
+          - 8dd91c6c-65ba-4602-ab51-04fc000dd90b
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: spend.expense:read
+        group: Spend
+        resource_name: Expenses
+      x-domain: Spend
+      x-resource: Reimbursements
+      x-urlPath: retrieve_reimbursement_reports
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/spend/reimbursement_reports/{id}/transfers/{transfer_id}:
+    get:
+      tags:
+      - Spend > Reimbursements
+      x-stage: beta
+      summary: 3|Retrieve a Reimbursement Report Transfer
+      description: Retrieves the details of an existing reimbursement report transfer.
+      operationId: retrieveTransfers
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the reimbursement report.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: transfer_id
+        in: path
+        description: Unique identifier of the reimbursement report transfer.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReimbursementReportTransfer'
+        '400':
+          description: Invalid Request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/spend/reimbursement_reports/reimbursement_id/transfers/transfer_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: 9ee00d7d-76ca-4713-bc62-15fc111eaa0c
+          sync_status: SYNCED
+          account_id: acct_a2y0pxz3m4k5hoZldn97hjzp
+          beneficiary_id: a630598a-ad9c-48c6-a28e-a50ffcda7aa8
+          transfer_id: bc2bd9c5-c942-4117-ab65-a38708d16cde
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: spend.expense:read
+        group: Spend
+        resource_name: Expenses
+      x-domain: Spend
+      x-resource: Reimbursements
+      x-urlPath: retrieve_transfers
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/spend/reimbursement_reports/{id}/reimbursements:
+    get:
+      x-urlPath: list
+      tags:
+      - Spend > Reimbursements
+      x-stage: beta
+      summary: 4|List all Reimbursements
+      description: List reimbursements in a specific reimbursement report.
+      operationId: listReimbursements
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the reimbursement report.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: page
+        in: query
+        description: A bookmark for use in pagination to retrieve either the next page or the previous page of results. You can fetch the value for this identifier from the response of the previous API call.
+        required: false
+        schema:
+          type: string
+      - name: page_size
+        in: query
+        description: The number of items returned per page, between 1 and 100. The default is 100.
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 100
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReimbursementPagination'
+        '400':
+          description: Invalid Request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/spend/reimbursement_reports/reimbursement_id/reimbursements
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - accounting_field_selections: []
+            attachments:
+            - content_type: application/pdf
+              created_at: '2025-11-27T10:00:00Z'
+              file_name: receipt.pdf
+              file_url: https://example.com/receipt.pdf
+              id: 1540326e-f828-4c16-9ef0-2e5045618637
+            billing_amount: '551.00'
+            comments: []
+            created_at: '2025-11-10T12:00:00Z'
+            description: Hotel stay for business trip.
+            id: 1ae9f098-c845-4c31-a7b2-2fc65eb3bbbb
+            line_items:
+            - accounting_field_selections:
+              - name: Department
+                type: OTHER
+                source_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+                value: '123456'
+                value_id: null
+                value_label: Communications
+              id: 1706880f-4257-4f6e-a714-ced27172fdf6
+              tax_amount: '0.00'
+              transaction_amount: '551.00'
+            merchant_name: A Grand Hotel
+            transaction_amount: '551.00'
+            transaction_currency: USD
+            transaction_date: '2024-12-15T00:00:00Z'
+            updated_at: '2025-11-10T00:00:00Z'
+          page_after: eyJwYWdlX2JlZm9yZSI6IjIwMjUtMDctMDFUMDA6MDA6MDBaIn0=
+          page_before: eyJwYWdlX2JlZm9yZSI6IjIwMjUtMDctMDFUMDA6MDA6MDBaIn0=
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: spend.expense:read
+        group: Spend
+        resource_name: Expenses
+      x-domain: Spend
+      x-resource: Reimbursements
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/spend/reimbursement_reports:
+    get:
+      tags:
+      - Spend > Reimbursements
+      x-stage: beta
+      summary: 5|List all Reimbursement Reports
+      description: List reimbursement reports based on the query parameters.
+      operationId: listReimbursementReports
+      parameters:
+      - name: page
+        in: query
+        description: A bookmark for use in pagination to retrieve either the next page or the previous page of results. You can fetch the value for this identifier from the response of the previous API call.
+        required: false
+        schema:
+          type: string
+      - name: page_size
+        in: query
+        description: The number of items returned per page, between 1 and 100. The default is 100.
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 100
+      - name: from_updated_at
+        in: query
+        description: Filter by reimbursement reports updated after this timestamp (inclusive) in ISO8601 format.
+        required: false
+        schema:
+          type: string
+      - name: to_updated_at
+        in: query
+        description: Filter by reimbursement reports updated before this timestamp (exclusive) in ISO8601 format.
+        required: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: Filter by reimbursement report statuses.
+        required: false
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - DRAFT
+            - AWAITING_APPROVAL
+            - AWAITING_PAYMENT
+            - PAYMENT_IN_PROGRESS
+            - PAID
+            - DELETED
+            - REJECTED
+            - MARKED_AS_PAID
+      - name: sync_status
+        in: query
+        description: Filter by sync statuses.
+        required: false
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            description: Sync status for an accounting system.
+            enum:
+            - NOT_SYNCED
+            - SYNCED
+            - SYNC_FAILED
+      - name: legal_entity_id
+        in: query
+        description: Filter by legal entity unique identifier.
+        required: false
+        schema:
+          type: string
+      - name: approver
+        in: query
+        description: Filter by approver user email.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReimbursementReportSummaryPagination'
+        '400':
+          description: Invalid Request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/spend/reimbursement_reports
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - approvers: []
+            beneficiary_id: null
+            billing_currency: USD
+            created_at: '2025-01-01T00:00:00Z'
+            created_by: user1@airwallex.com
+            id: 5ff441f8-1721-4148-b73a-bf690733f0f4
+            legal_entity_id: le_U3jlHqQRNHWn2zAKeeT8sg
+            name: Reimbursement report 2025-11-24
+            status: DRAFT
+            sync_status: NOT_SYNCED
+            updated_at: '2025-02-02T00:00:00Z'
+          page_after: eyJwYWdlX2JlZm9yZSI6IjIwMjUtMDctMDFUMDA6MDA6MDBaIn0=
+          page_before: eyJwYWdlX2JlZm9yZSI6IjIwMjUtMDctMDFUMDA6MDA6MDBaIn0=
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: spend.expense:read
+        group: Spend
+        resource_name: Expenses
+      x-domain: Spend
+      x-resource: Reimbursements
+      x-urlPath: reimbursement_reports
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/spend/reimbursement_reports/{id}/sync:
+    post:
+      tags:
+      - Spend > Reimbursements
+      x-stage: beta
+      summary: 6|Update Reimbursement Report Sync Status
+      description: Updates the sync status of an existing reimbursement report.
+      operationId: spendReimbursementReportsSync
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the reimbursement report.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - sync_status
+              properties:
+                sync_status:
+                  type: string
+                  description: Sync status for an accounting system.
+                  enum:
+                  - NOT_SYNCED
+                  - SYNCED
+                  - SYNC_FAILED
+              description: Reimbursement report Update Payload.
+        description: Update reimbursement report payload.
+        required: true
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReimbursementReportSummary'
+        '400':
+          description: Invalid Request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/spend/reimbursement_reports/reimbursement_id/sync
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          sync_status: SYNCED
+        response_body:
+          id: 126ff4d1-737c-4a62-a862-f76b3f103357
+          legal_entity_id: le_U3jlHqQRNHWn2zAKeeT8sg
+          name: Q4 2024 Business Travel - San Francisco
+          status: MARKED_AS_PAID
+          sync_status: SYNCED
+          billing_currency: USD
+          approvers:
+          - manager@company.com
+          - finance@company.com
+          created_by: employee@company.com
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-02-02T00:00:00Z'
+          beneficiary_id: 55458be4-271c-488d-a12b-5e0709f4a0c0
+          comments:
+          - content: Expense approved - valid business purpose confirmed
+            created_by: manager@company.com
+            created_at: '2025-01-01T00:00:00Z'
+          reimbursement_report_transfer_ids:
+          - 9ee00d7d-76ca-4713-bc62-15fc111eaa0c
+          - 8dd91c6c-65ba-4602-ab51-04fc000dd90b
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: spend.expense:write
+        group: Spend
+        resource_name: Expenses
+      x-domain: Spend
+      x-resource: Reimbursements
+      x-urlPath: sync_reimbursement_reports
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/spend/reimbursement_reports/{id}/transfers/{transfer_id}/sync:
+    post:
+      tags:
+      - Spend > Reimbursements
+      x-stage: beta
+      summary: 7|Update Reimbursement Report Transfer Sync Status
+      description: Updates the sync status of an existing reimbursement report transfer.
+      operationId: spendReimbursementReportsTransfersSync
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the reimbursement report.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: transfer_id
+        in: path
+        description: Unique identifier of the reimbursement report transfer.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - sync_status
+              properties:
+                sync_status:
+                  type: string
+                  description: Sync status for an accounting system.
+                  enum:
+                  - NOT_SYNCED
+                  - SYNCED
+                  - SYNC_FAILED
+              description: Reimbursement report transfer update payload.
+        description: Payload for updating the sync status of a reimbursement report transfer.
+        required: true
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReimbursementReportTransfer'
+        '400':
+          description: Invalid Request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/spend/reimbursement_reports/reimbursement_id/transfers/transfer_id/sync
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          sync_status: SYNCED
+        response_body:
+          id: 9ee00d7d-76ca-4713-bc62-15fc111eaa0c
+          sync_status: SYNCED
+          account_id: acct_a2y0pxz3m4k5hoZldn97hjzp
+          beneficiary_id: a630598a-ad9c-48c6-a28e-a50ffcda7aa8
+          transfer_id: bc2bd9c5-c942-4117-ab65-a38708d16cde
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: spend.expense:write
+        group: Spend
+        resource_name: Expenses
+      x-domain: Spend
+      x-resource: Reimbursements
+      x-urlPath: sync_transfers
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/spend/reimbursement_reports/{id}/mark_as_paid:
+    post:
+      tags:
+      - Spend > Reimbursements
+      x-stage: beta
+      summary: 8|Mark Reimbursement Report As Paid
+      description: Marks a reimbursement report as paid outside of Airwallex.
+      operationId: spendReimbursementReportsMarkAsPaid
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the reimbursement report.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReimbursementReportSummary'
+        '400':
+          description: Invalid Request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/spend/reimbursement_reports/reimbursement_id/mark_as_paid
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: 126ff4d1-737c-4a62-a862-f76b3f103357
+          legal_entity_id: le_U3jlHqQRNHWn2zAKeeT8sg
+          name: Q4 2024 Business Travel - San Francisco
+          status: MARKED_AS_PAID
+          sync_status: SYNCED
+          billing_currency: USD
+          approvers:
+          - manager@company.com
+          - finance@company.com
+          created_by: employee@company.com
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-02-02T00:00:00Z'
+          beneficiary_id: 55458be4-271c-488d-a12b-5e0709f4a0c0
+          comments:
+          - content: Expense approved - valid business purpose confirmed
+            created_by: manager@company.com
+            created_at: '2025-01-01T00:00:00Z'
+          reimbursement_report_transfer_ids:
+          - 9ee00d7d-76ca-4713-bc62-15fc111eaa0c
+          - 8dd91c6c-65ba-4602-ab51-04fc000dd90b
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: spend.expense:write
+        group: Spend
+        resource_name: Expenses
+      x-domain: Spend
+      x-resource: Reimbursements
+      x-urlPath: mark_as_paid_reimbursement_reports
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    Comment:
+      type: object
+      required:
+      - content
+      - created_at
+      properties:
+        content:
+          type: string
+          description: Text body of the comment.
+        created_by:
+          type: string
+          description: Email address of the user who created this comment. Used for attribution, notifications, and audit trail tracking.
+        created_at:
+          type: string
+          description: Timestamp for when the resource was created in ISO8601 format.
+      description: User comment or note providing additional context, clarification, or communication related to expenses, reimbursements, or approval workflows. Used for audit trails and collaboration.
+    ReimbursementLineItem:
+      type: object
+      required:
+      - accounting_field_selections
+      - billing_amount
+      - id
+      - transaction_amount
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the reimbursement line item.
+        billing_amount:
+          type: string
+          description: Amount of this line item, including all taxes.
+        transaction_amount:
+          type: string
+          description: 'Amount of this line item in the transaction currency. '
+        tax_amount:
+          type: string
+          description: Tax amount included in the line item transaction amount. Null when tax information is not available.
+        accounting_field_selections:
+          type: array
+          description: Accounting and categorization fields assigned to this specific line item. Allows for different accounting treatment of individual lines within a single reimbursement.
+          items:
+            $ref: '#/components/schemas/AccountingFieldSelection'
+      description: Individual line item within a reimbursement representing a specific reimbursement line. Allows for detailed itemized breakdown with separate accounting categorization and tax handling.
+    ReimbursementPagination:
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reimbursement'
+        page_after:
+          type: string
+          description: A pointer to the end of the page list used in pagination to retrieve the next page of results.
+        page_before:
+          type: string
+          description: A pointer to the start of the page list use in pagination to retrieve the previous page of results.
+      description: Paginated list of reimbursements.
+    ReimbursementReportTransfer:
+      type: object
+      required:
+      - account_id
+      - beneficiary_id
+      - id
+      - sync_status
+      - transfer_id
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the reimbursement report transfer.
+        sync_status:
+          type: string
+          description: Sync status for an accounting system.
+          enum:
+          - NOT_SYNCED
+          - SYNCED
+          - SYNC_FAILED
+        account_id:
+          type: string
+          description: Unique identifier of the Airwallex account that funds this reimbursement report transfer. This determines which account the transfer amount is debited from.
+        beneficiary_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the person receiving funds from this reimbursement transfer.
+        transfer_id:
+          type: string
+          description: Unique identifier of the transfer used for this reimbursement report transfer.
+      description: Represents a financial transfer generated for reimbursement report's payment processing. Contains details about the payment method, funding source, and synchronization status with external systems.
+    ReimbursementReportSummaryPagination:
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReimbursementReportSummary'
+        page_after:
+          type: string
+          description: A pointer to the end of the page list used in pagination to retrieve the next page of results.
+        page_before:
+          type: string
+          description: A pointer to the start of the page list use in pagination to retrieve the previous page of results.
+      description: Paginated list of reimbursement report Summaries.
+    ReimbursementReportSummary:
+      type: object
+      required:
+      - approvers
+      - comments
+      - created_at
+      - id
+      - legal_entity_id
+      - reimbursement_report_transfer_ids
+      - status
+      - sync_status
+      - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the reimbursement report.
+        legal_entity_id:
+          type: string
+          description: Unique identifier of the legal entity associated with this reimbursement report. Used for accounting segregation and compliance reporting across different legal entities.
+        name:
+          type: string
+          description: User-defined name for the reimbursement report.
+        status:
+          type: string
+          description: Current status of the reimbursement report. Additional values may appear; implementations should handle unknown values gracefully.
+          enum:
+          - DRAFT
+          - AWAITING_APPROVAL
+          - AWAITING_PAYMENT
+          - PAYMENT_IN_PROGRESS
+          - PAID
+          - DELETED
+          - REJECTED
+          - MARKED_AS_PAID
+        sync_status:
+          type: string
+          description: Sync status for an accounting system.
+          enum:
+          - NOT_SYNCED
+          - SYNCED
+          - SYNC_FAILED
+        billing_currency:
+          type: string
+          description: Currency in which the reimbursement is paid to the beneficiary, as an ISO 4217 currency code.
+        approvers:
+          type: array
+          description: Email addresses of users authorized to approve this reimbursement report. Defines the approval workflow and who can authorize payment processing.
+          items:
+            type: string
+            description: Email addresses of users authorized to approve this reimbursement report. Defines the approval workflow and who can authorize payment processing.
+        created_by:
+          type: string
+          description: Email address of the user who submitted this reimbursement report.
+        created_at:
+          type: string
+          description: Timestamp for when the resource was created in ISO8601 format.
+        updated_at:
+          type: string
+          description: Timestamp for when the resource was updated in ISO8601 format.
+        beneficiary_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the person who will receive the reimbursement payment.
+        comments:
+          type: array
+          description: List of comments on reimbursement report.
+          items:
+            $ref: '#/components/schemas/Comment'
+        reimbursement_report_transfer_ids:
+          type: array
+          description: Set of unique identifiers of reimbursement report transfers associated with this report. Contains all transfers that have a valid bank transfer unique identifier and are associated with this report. Empty set when no qualifying transfers exist.
+          items:
+            type: string
+            format: uuid
+            description: Set of unique identifiers of reimbursement report transfers associated with this report. Contains all transfers that have a valid bank transfer unique identifier and are associated with this report. Empty set when no qualifying transfers exist.
+      description: Condensed view of a reimbursement report containing essential information without detailed line items. Used in list views, dashboards, and scenarios where detailed reimbursement data is not required.
+    Attachment:
+      type: object
+      required:
+      - content_type
+      - created_at
+      - file_name
+      - file_url
+      - id
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the attachment.
+        content_type:
+          type: string
+          description: MIME type of the attached file. Common types include `image/jpeg`, `image/png`, and `application/pdf`.
+        file_name:
+          type: string
+          description: Original filename of the uploaded attachment, including the file extension.
+        file_url:
+          type: string
+          description: URL to access and download the attachment file.
+        created_at:
+          type: string
+          description: Timestamp for when the resource was created in ISO8601 format.
+      description: File attachment containing supporting documentation such as receipts, invoices, or other proof of expense. Used for compliance, audit trails, and approval workflows.
+    AccountingFieldSelection:
+      type: object
+      required:
+      - source_id
+      - type
+      - value
+      properties:
+        source_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the selected general ledger (GL) account, tax code, or accounting field value.
+        type:
+          type: string
+          description: Type of accounting field.
+          enum:
+          - GENERAL_LEDGER_ACCOUNT
+          - TAX_CODE
+          - OTHER
+          x-enumDescriptions:
+            GENERAL_LEDGER_ACCOUNT: General ledger (GL) account assigned to the line item.
+            TAX_CODE: Tax code applied to the line item.
+            OTHER: Custom accounting field defined in your ERP. The field name is provided in `name`.
+        name:
+          type: string
+          description: Name of the accounting field in the ERP software. This field is populated only when `type` is set to `OTHER`.
+        external_id:
+          type: string
+          description: External unique identifier of the accounting field value in the ERP.
+        value:
+          type: string
+          description: Name of the accounting field value in the ERP.
+        value_label:
+          type: string
+          description: Name of the accounting field value displayed in Airwallex.
+    Attendee:
+      type: object
+      required:
+      - external
+      - name
+      properties:
+        external:
+          type: boolean
+          description: Indicates whether the attendee is external to the organization.
+        name:
+          type: string
+          description: Name of the attendee.
+        email:
+          type: string
+          description: Email address of the attendee. Present only when `external` is `false`.
+      description: Attendee associated with an expense or reimbursement. Can be an internal employee or an external guest.
+    Reimbursement:
+      type: object
+      required:
+      - accounting_field_selections
+      - attachments
+      - billing_amount
+      - comments
+      - created_at
+      - id
+      - line_items
+      - transaction_amount
+      - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the reimbursement.
+        description:
+          type: string
+          description: User-provided description or purpose of the amount being reimbursed. Typically includes business justification, trip purpose, or transaction details.
+        merchant_name:
+          type: string
+          description: Name of the merchant or service provider where the purchase was made.
+        transaction_amount:
+          type: string
+          description: Total amount of the original purchase in the transaction currency, including all taxes.
+        transaction_currency:
+          type: string
+          description: Currency of the original transaction, as an ISO 4217 currency code. May differ from your account's billing currency. Null when currency information is not available.
+        billing_amount:
+          type: string
+          description: Amount claimed for reimbursement, including all taxes. This is the amount charged to your card or paid out-of-pocket, and may differ from the transaction amount due to currency conversion or exchange rate differences.
+        transaction_date:
+          type: string
+          description: Date of the original purchase or service delivery in ISO8601 format. This is not the submission date.
+        line_items:
+          type: array
+          description: Breakdown of the reimbursement into individual line items, each with its own amount, tax details, and accounting categorization. The sum of all line item amounts equals the total transaction amount.
+          items:
+            $ref: '#/components/schemas/ReimbursementLineItem'
+        attachments:
+          type: array
+          description: Supporting documents uploaded for this reimbursement, such as receipts, invoices, and boarding passes.
+          items:
+            $ref: '#/components/schemas/Attachment'
+        comments:
+          type: array
+          description: Comments and notes related to this reimbursement, added during the review and approval process.
+          items:
+            $ref: '#/components/schemas/Comment'
+        accounting_field_selections:
+          type: array
+          description: Accounting categories and custom fields assigned to this reimbursement for categorization and reporting.
+          items:
+            $ref: '#/components/schemas/AccountingFieldSelection'
+        created_at:
+          type: string
+          description: Timestamp for when the resource was created in ISO8601 format.
+        updated_at:
+          type: string
+          description: Timestamp for when the resource was updated in ISO8601 format.
+        attendees:
+          type: array
+          description: Attendees associated with this reimbursement, including internal employees and external guests.
+          items:
+            $ref: '#/components/schemas/Attendee'
+      description: Represents an individual reimbursement request for out-of-pocket purchases. Contains transaction details, supporting documentation, and accounting categorization for reimbursement processing and approval workflows.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

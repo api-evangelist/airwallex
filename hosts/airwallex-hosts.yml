@@ -1,0 +1,244 @@
+generated: '2026-10-20'
+method: derived
+source: the pre-flight dossier, apis.yml pointers, spec servers, well-known, vendors -- nothing fetched here
+generator: derive-hosts.py
+summary:
+  hosts: 19
+  own: 15
+  other_domain: 0
+  platform: 4
+  roles:
+  - api
+  - collections
+  - other
+  - sandbox
+  - source
+  - status
+  - support
+  - website
+hosts:
+- host: api-demo.airwallex.com
+  found_by:
+  - contract-discovery
+  types: []
+  serves: []
+  registrable_domain: airwallex.com
+  role: other
+  relation: own
+- host: api.airwallex.com
+  found_by:
+  - apis[]
+  - probed
+  - contract-discovery
+  - well-known
+  types: []
+  serves:
+  - api
+  registrable_domain: airwallex.com
+  role: api
+  relation: own
+- host: careers.airwallex.com
+  found_by:
+  - probed
+  - site-links
+  - well-known
+  types: []
+  serves: []
+  registrable_domain: airwallex.com
+  role: other
+  relation: own
+- host: demo-auth0.airwallex.com
+  found_by:
+  - probed
+  - site-links
+  types: []
+  serves: []
+  registrable_domain: airwallex.com
+  role: other
+  relation: own
+- host: dev.airwallex.com
+  found_by:
+  - probed
+  - site-links
+  - namespace-probe
+  - docs-index
+  types: []
+  serves:
+  - docs
+  title: 'Airwallex US: AI Financial Platform for Local &amp; Global Business'
+  status: 200
+  registrable_domain: airwallex.com
+  role: other
+  relation: own
+- host: discover.airwallex.com
+  found_by:
+  - probed
+  - site-links
+  types: []
+  serves: []
+  registrable_domain: airwallex.com
+  role: other
+  relation: own
+- host: github.com
+  found_by:
+  - pointer
+  types:
+  - GitHubOrganization
+  - CLI
+  - SDKs
+  serves: []
+  registrable_domain: github.com
+  role: source
+  relation: platform
+- host: global.airwallex.com
+  found_by:
+  - probed
+  - site-links
+  types: []
+  serves: []
+  registrable_domain: airwallex.com
+  role: other
+  relation: own
+- host: help.airwallex.com
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  - well-known
+  - vendor-detect
+  types:
+  - Security
+  - Support
+  serves:
+  - support
+  vendor: zendesk
+  registrable_domain: airwallex.com
+  role: support
+  relation: own
+- host: mcp.airwallex.com
+  found_by:
+  - probed
+  - contract-discovery
+  - well-known
+  types: []
+  serves: []
+  registrable_domain: airwallex.com
+  role: other
+  relation: own
+- host: mcp.sandbox.airwallex.com
+  found_by:
+  - probed
+  - contract-discovery
+  - well-known
+  types: []
+  serves: []
+  registrable_domain: airwallex.com
+  role: sandbox
+  relation: own
+- host: raw.githubusercontent.com
+  found_by:
+  - pointer
+  types:
+  - SpectralRules
+  - Vocabulary
+  serves: []
+  registrable_domain: githubusercontent.com
+  role: other
+  relation: platform
+- host: security.airwallex.com
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  - well-known
+  types:
+  - Compliance
+  serves: []
+  registrable_domain: airwallex.com
+  role: other
+  relation: own
+- host: staging.airwallex.com
+  found_by:
+  - probed
+  - site-links
+  types: []
+  serves: []
+  registrable_domain: airwallex.com
+  role: sandbox
+  relation: own
+- host: status.airwallex.com
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  - well-known
+  types:
+  - StatusPage
+  serves: []
+  registrable_domain: airwallex.com
+  role: status
+  relation: own
+- host: www.airwallex.com
+  found_by:
+  - pointer
+  - apis[]
+  - probed
+  - docs-index
+  - contract-discovery
+  - well-known
+  - vendor-detect
+  types:
+  - Website
+  - Portal
+  - GettingStarted
+  - Documentation
+  - Authentication
+  - Pricing
+  - TermsOfService
+  - PrivacyPolicy
+  - Blog
+  - Newsroom
+  - Integrations
+  - Deprecation
+  - APIReference
+  - Quickstart
+  - SignUp
+  - Login
+  serves:
+  - docs
+  - cdn
+  vendor: cloudflare
+  registrable_domain: airwallex.com
+  role: website
+  relation: own
+- host: www.linkedin.com
+  found_by:
+  - pointer
+  types:
+  - LinkedIn
+  serves: []
+  registrable_domain: linkedin.com
+  role: other
+  relation: platform
+- host: www.postman.com
+  found_by:
+  - pointer
+  - vendor-detect
+  types:
+  - PostmanWorkspace
+  - Postman
+  serves:
+  - api-collections
+  vendor: postman
+  registrable_domain: postman.com
+  role: collections
+  relation: platform
+- host: www.sandbox.airwallex.com
+  found_by:
+  - probed
+  - site-links
+  types: []
+  serves: []
+  registrable_domain: airwallex.com
+  role: sandbox
+  relation: own

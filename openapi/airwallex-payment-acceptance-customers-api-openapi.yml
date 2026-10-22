@@ -1,0 +1,594 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Payment Acceptance > Customers API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Payment Acceptance > Customers
+  description: '**Customer** is an API resource for you to save your customer''s information, which is required by the Payment Method and Payment Consent APIs.'
+  x-domain: Payment Acceptance
+  x-resource: Customers
+  x-urlPath: payments/customers
+paths:
+  /api/v1/pa/customers/create:
+    post:
+      tags:
+      - Payment Acceptance > Customers
+      summary: 1|Create a Customer
+      description: Create a **Customer** object. We require the Customer unique identifier in the merchant's system as a mandatory field.
+      operationId: createCustomer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - merchant_customer_id
+              - request_id
+              properties:
+                address:
+                  type: object
+                  required:
+                  - country_code
+                  description: Address of the customer.
+                  properties:
+                    city:
+                      type: string
+                      description: City of the address. Maximum of 100 characters.
+                    country_code:
+                      type: string
+                      description: The two-letter country code in ISO 3166-1 alpha-2 format.
+                    postcode:
+                      type: string
+                      description: Postcode of the address. Maximum of 10 characters.
+                    state:
+                      type: string
+                      description: State or province of the address. Maximum of 100 characters.
+                    street:
+                      type: string
+                      description: Street of the address. Maximum of 1000 characters.
+                business_name:
+                  type: string
+                  description: Business name of the customer. Maximum length is 128.
+                email:
+                  type: string
+                  description: Email address of the customer. Maximum length is 256.
+                first_name:
+                  type: string
+                  description: First name of the customer. Maximum length is 128.
+                last_name:
+                  type: string
+                  description: Last name of the customer. Maximum length is 128.
+                merchant_customer_id:
+                  type: string
+                  description: Unique identifier of this customer in merchant's system. Maximum length is 64.
+                metadata:
+                  type: object
+                  description: A set of key-value pairs that you can attach to this customer. You can specify up to 50 keys with key names up to 50 characters long and values up to 500 characters long.
+                  additionalProperties:
+                    type: string
+                phone_number:
+                  type: string
+                  description: Phone number of the customer.
+                request_id:
+                  type: string
+                  description: Unique request identifier specified by the merchant. Maximum length is 64.
+        description: Customer creation request.
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `duplicate_request`, `resource_already_exists`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/customers/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          request_id: 2ed2d823-f8b3-416e-86db-ced8770ce217
+          first_name: John
+          last_name: Doe
+          email: john.doe@example.com
+          phone_number: +1 1234567890
+          merchant_customer_id: 9fafc2fb-4262-4ff8-a205-d60fb4781cb0
+        status_code: 201
+        reason_phrase: Created
+        response_body:
+          id: cus_hkpdh1d0d298uf1
+          request_id: 2ed2d823-f8b3-416e-86db-ced8770ce217
+          merchant_customer_id: 9fafc2fb-4262-4ff8-a205-d60fb4781cb0
+          first_name: John
+          last_name: Doe
+          email: john.doe@example.com
+          phone_number: +1 1234567890
+          client_secret: eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NDQwMTQ3MTAsImV4cCI6MTc0NDAxODMxMCwidHlwZSI6ImNsaWVudC1zZWNyZXQiLCJwYWRjIjoiSEsiLCJhY2NvdW50X2lkIjoiYjlkMmU0NTctOGEwNC00MDMzLWI3MTktZTJkOGNiZmQyZDY1IiwiY3VzdG9tZXJfaWQiOiJDVVMyMDI1MDMyMTAwMDEifQ.vonr_tnn7kA3GE3t9WCJoi5TjVnBu1rGnrwPeTTjU_I
+          created_at: '2021-01-31T06:57:10+00:00'
+          updated_at: '2021-01-31T06:59:10+00:00'
+      x-scope:
+      - scope: payment_acceptance:write
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Customers
+      x-urlPath: create
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/customers/{id}:
+    get:
+      tags:
+      - Payment Acceptance > Customers
+      summary: 2|Retrieve a Customer
+      description: Retrieve a Customer by unique identifier. This unique identifier is first returned when creating a new Customer.
+      operationId: retrieveCustomer
+      parameters:
+      - name: id
+        in: path
+        description: Customer unique identifier.
+        required: true
+        schema:
+          type: string
+          default: cus_ps8e0ZgQzd2QnCxVpzJrHD6KOVu
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url), `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/customers/cus_hkpdh1d0d298uf1
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: cus_hkpdh1d0d298uf1
+          merchant_customer_id: 9fafc2fb-4262-4ff8-a205-d60fb4781cb0
+          first_name: John
+          last_name: Doe
+          email: john.doe@example.com
+          phone_number: +1 1234567890
+          client_secret: eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NDQwMTQ3MTAsImV4cCI6MTc0NDAxODMxMCwidHlwZSI6ImNsaWVudC1zZWNyZXQiLCJwYWRjIjoiSEsiLCJhY2NvdW50X2lkIjoiYjlkMmU0NTctOGEwNC00MDMzLWI3MTktZTJkOGNiZmQyZDY1IiwiY3VzdG9tZXJfaWQiOiJDVVMyMDI1MDMyMTAwMDEifQ.vonr_tnn7kA3GE3t9WCJoi5TjVnBu1rGnrwPeTTjU_I
+          created_at: '2021-01-31T06:57:10+00:00'
+          updated_at: '2021-01-31T06:59:10+00:00'
+      x-scope:
+      - scope: payment_acceptance:read
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Customers
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/customers:
+    get:
+      tags:
+      - Payment Acceptance > Customers
+      summary: 3|List all Customers
+      description: List all Customers.
+      operationId: listCustomers
+      parameters:
+      - name: from_created_at
+        in: query
+        description: The start time of `created_at` in ISO8601 format. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`).
+        required: false
+        schema:
+          type: string
+          default: '2021-03-01T03:52:34+00:00'
+      - name: merchant_customer_id
+        in: query
+        description: The customer unique identifier on merchant side.
+        required: false
+        schema:
+          type: string
+      - name: page_num
+        in: query
+        description: Page number starting from 0.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of Customers to be listed per page. Default value is 10. Maximum is 1000. The value greater than the maximum will be capped to the maximum.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: to_created_at
+        in: query
+        description: The end time of `created_at` in ISO8601 format. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`).
+        required: false
+        schema:
+          type: string
+          default: '2017-04-01T03:52:34+00:00'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: List items.
+                    items:
+                      $ref: '#/components/schemas/Customer'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/customers
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        query_params:
+          merchant_customer_id: 9fafc2fb-4262-4ff8-a205-d60fb4781cb0
+          page_num: 1
+          page_size: 10
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - id: cus_hkpdh1d0d298uf1
+            merchant_customer_id: 9fafc2fb-4262-4ff8-a205-d60fb4781cb0
+            first_name: John
+            last_name: Doe
+            email: john.doe@example.com
+            phone_number: +1 1234567890
+            client_secret: eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NDQwMTQ3MTAsImV4cCI6MTc0NDAxODMxMCwidHlwZSI6ImNsaWVudC1zZWNyZXQiLCJwYWRjIjoiSEsiLCJhY2NvdW50X2lkIjoiYjlkMmU0NTctOGEwNC00MDMzLWI3MTktZTJkOGNiZmQyZDY1IiwiY3VzdG9tZXJfaWQiOiJDVVMyMDI1MDMyMTAwMDEifQ.vonr_tnn7kA3GE3t9WCJoi5TjVnBu1rGnrwPeTTjU_I
+            created_at: '2021-01-31T06:57:10+00:00'
+            updated_at: '2021-01-31T06:59:10+00:00'
+      x-scope:
+      - scope: payment_acceptance:read
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Customers
+      x-urlPath: list
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/customers/{id}/update:
+    post:
+      tags:
+      - Payment Acceptance > Customers
+      summary: 4|Update a Customer
+      description: Update customer's personal information. Use the Payment Methods API to update details of the attached Payment Methods.
+      operationId: updateCustomer
+      parameters:
+      - name: id
+        in: path
+        description: Customer unique identifier.
+        required: true
+        schema:
+          type: string
+          default: cus_ps8e0ZgQzd2QnCxVpzJrHD6KOVu
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              properties:
+                address:
+                  type: object
+                  required:
+                  - country_code
+                  description: Address of the customer.
+                  properties:
+                    city:
+                      type: string
+                      description: City of the address. Maximum of 100 characters.
+                    country_code:
+                      type: string
+                      description: The two-letter country code in ISO 3166-1 alpha-2 format.
+                    postcode:
+                      type: string
+                      description: Postcode of the address. Maximum of 10 characters.
+                    state:
+                      type: string
+                      description: State or province of the address. Maximum of 100 characters.
+                    street:
+                      type: string
+                      description: Street of the address. Maximum of 1000 characters.
+                business_name:
+                  type: string
+                  description: Business name of the customer. Maximum length is 128.
+                email:
+                  type: string
+                  description: Email address of the customer. Maximum length is 256.
+                first_name:
+                  type: string
+                  description: First name of the customer. Maximum length is 128.
+                last_name:
+                  type: string
+                  description: Last name of the customer. Maximum length is 128.
+                merchant_customer_id:
+                  type: string
+                  description: Unique identifier of this customer in merchant's system. Maximum length is 64.
+                metadata:
+                  type: object
+                  description: A set of key-value pairs that you can attach to this customer. You can specify up to 50 keys with key names up to 50 characters long and values up to 500 characters long.
+                  additionalProperties:
+                    type: string
+                phone_number:
+                  type: string
+                  description: Phone number of the customer.
+                request_id:
+                  type: string
+                  description: Unique request identifier specified by the merchant. Maximum length is 64.
+        description: Customer updating request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '201':
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `duplicate_request`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url), `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/customers/cus_hkpdh1d0d298uf1/update
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          request_id: 48dd845a-b4aa-4c7c-a4af-ea3ccfe1839e
+          first_name: John
+          last_name: Doe
+          email: updated_john.doe@example.com
+          phone_number: +1 1234567890
+          merchant_customer_id: 9fafc2fb-4262-4ff8-a205-d60fb4781cb0
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: cus_hkpdh1d0d298uf1
+          request_id: 48dd845a-b4aa-4c7c-a4af-ea3ccfe1839e
+          merchant_customer_id: 9fafc2fb-4262-4ff8-a205-d60fb4781cb0
+          first_name: John
+          last_name: Doe
+          email: updated_john.doe@example.com
+          phone_number: +1 1234567890
+          client_secret: eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NDQwMTQ3MTAsImV4cCI6MTc0NDAxODMxMCwidHlwZSI6ImNsaWVudC1zZWNyZXQiLCJwYWRjIjoiSEsiLCJhY2NvdW50X2lkIjoiYjlkMmU0NTctOGEwNC00MDMzLWI3MTktZTJkOGNiZmQyZDY1IiwiY3VzdG9tZXJfaWQiOiJDVVMyMDI1MDMyMTAwMDEifQ.vonr_tnn7kA3GE3t9WCJoi5TjVnBu1rGnrwPeTTjU_I
+          created_at: '2021-01-31T06:57:10+00:00'
+          updated_at: '2021-01-31T06:59:10+00:00'
+      x-scope:
+      - scope: payment_acceptance:write
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Customers
+      x-urlPath: update
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/customers/{id}/generate_client_secret:
+    get:
+      tags:
+      - Payment Acceptance > Customers
+      summary: 5|Generate a Client Secret for a Customer
+      description: Generate a client secret for a Customer so that the client secret can be used as HTTP header `client-secret` from client-side to create a Payment Method or list Payment Method.
+      operationId: generateClientSecret
+      parameters:
+      - name: id
+        in: path
+        description: Customer unique identifier.
+        required: true
+        schema:
+          type: string
+          default: cus_ps8e0ZgQzd2QnCxVpzJrHD6KOVu
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerClientSecret'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url), `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/customers/customer_id/generate_client_secret
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          client_secret: eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NTk0OTM1NzUsImV4cCI6MTY1OTQ5NzE3NSwidHlwZSI6ImNsaWVudC1zZWNyZXQiLCJwYWRjIjoiU0ciLCJhY2NvdW50X2lkIjoiMGFjZTdkY2EtMzUzOC00NGUwLWI2OGEtYjQwYjY1MWIzMDE5IiwiaW50ZW50X2lkIjoiaW50X3Nnc3RiOXRic2djOG90bndlMGoiLCJidXNpbmVzc19uYW1lIjoiV2lzaGNvbSBTaGFuZ2hhaSJ9.rqKdwFjF4ba8h2hsbppBxkmAhCcPbSdl_YhC7J_i8so
+          expired_time: '2019-09-18T03:11:00+00:00'
+      x-domain: Payment Acceptance
+      x-resource: Customers
+      x-urlPath: generate_client_secret
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    Customer:
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/Payment_Acceptance_Address'
+          description: Address of the customer.
+        business_name:
+          type: string
+          description: Business name of the customer.
+        client_secret:
+          type: string
+          description: "Customer's client secret for browser or app. Only returned by Customer create API. \n\nThe provided client_secret is valid for 60 minutes."
+        created_at:
+          type: string
+          format: date-time
+          description: Time at which the Customer was created.
+        email:
+          type: string
+          description: Email address of the Customer.
+        first_name:
+          type: string
+          description: First name of the Customer.
+        id:
+          type: string
+          description: Unique identifier for the Customer.
+        last_name:
+          type: string
+          description: Last name of the Customer.
+        merchant_customer_id:
+          type: string
+          description: Unique identifier of the Customer in merchant's system. Maximum length is 64.
+        metadata:
+          type: object
+          description: A set of key-value pairs that you can attach to the Customer. You can specify up to 50 keys with key names up to 50 characters long and values up to 500 characters long.
+          additionalProperties:
+            type: string
+        phone_number:
+          type: string
+          description: Phone number of the Customer.
+        request_id:
+          type: string
+          description: Unique request identifier specified by the merchant in the last operation.
+        updated_at:
+          type: string
+          format: date-time
+          description: Last time at which the customer was updated or operated on.
+    CustomerClientSecret:
+      type: object
+      properties:
+        client_secret:
+          type: string
+          description: "Customer's client secret for browser or app. Only returned by Customer create API. \n\nThe provided client_secret is valid for 60 minutes."
+        expired_time:
+          type: string
+          format: date-time
+          description: Time at when the client secret expires.
+    Payment_Acceptance_Address:
+      type: object
+      required:
+      - country_code
+      properties:
+        city:
+          type: string
+          description: City of the address. Maximum of 100 characters.
+        country_code:
+          type: string
+          description: The two-letter country code in ISO 3166-1 alpha-2 format.
+        postcode:
+          type: string
+          description: Postcode of the address. Maximum of 10 characters.
+        state:
+          type: string
+          description: State or province of the address. Maximum of 100 characters.
+        street:
+          type: string
+          description: Street of the address. Maximum of 1000 characters.
+      description: The billing address as it appears on the credit card issuer’s records.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

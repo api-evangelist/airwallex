@@ -1,0 +1,119 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Simulation (Sandbox Only) > Billing API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Simulation (Sandbox Only) > Billing
+  description: Simulate billing operations in the sandbox environment.
+  x-domain: Simulation (Sandbox Only)
+  x-resource: Billing
+  x-urlPath: simulation/billing
+paths:
+  /api/v1/simulation/billing/payment_sources/{id}/fail_next_autocharge:
+    post:
+      servers:
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+      description: Use this endpoint to simulate the failure of the next auto charge execution of a payment source. This will cause the next scheduled auto-charge to fail, allowing you to test error handling and retry logic in your billing workflows. This is only available in the Sandbox environment.
+      operationId: simulation_failPaymentSourceNextAutocharge
+      x-oboSupported: false
+      parameters:
+      - description: Unique identifier of the Payment Source object.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Simulation_Sandbox_Only_PaymentSource'
+          description: OK
+        '400':
+          description: invalid_argument
+        '401':
+          description: credentials_invalid
+        '404':
+          description: not_found
+        '500':
+          description: service_unavailable
+      summary: 1|Fail Next Autocharge
+      tags:
+      - Simulation (Sandbox Only) > Billing
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/simulation/billing/payment_sources/billing_id/fail_next_autocharge
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          billing_customer_id: bcus_hkpd7fedfgb004apkvs
+          created_at: 2022-01-01T10:15:30+0000
+          external_id: cst_u79lnfufjxxfdc0
+          id: psrc_d3Ds20ae5VihKs092
+          linked_payment_account_id: acct_ncI2nypPKSq2VXKxscAcg
+          metadata:
+            foo: bar
+          updated_at: 2022-01-01T10:15:30+0000
+      x-scope:
+      - scope: simulation:write
+        group: Simulations
+        resource_name: Simulations
+      x-domain: Simulation (Sandbox Only)
+      x-resource: Billing
+      x-urlPath: fail_next_autocharge_payment_sources
+      x-oauthSupported: true
+      x-resourceLevel: account
+components:
+  schemas:
+    Simulation_Sandbox_Only_PaymentSource:
+      required:
+      - billing_customer_id
+      - created_at
+      - external_id
+      - id
+      - linked_payment_account_id
+      - updated_at
+      type: object
+      properties:
+        billing_customer_id:
+          type: string
+          description: Unique identifier of the [Billing Customer](/docs/api/billing/billing_customers) that this Payment Source belongs to.
+        created_at:
+          type: string
+          description: Time when this Payment Source was created.
+        external_id:
+          type: string
+          description: Unique identifier of the [Payment Consent](/docs/api/payments/payment_consents) associated with the Payment Source.
+        id:
+          type: string
+          description: Unique identifier of the Payment Source object.
+        linked_payment_account_id:
+          type: string
+          description: Unique identifier of the linked payment account to collect payment. You can find this unique identifier in the Airwallex web app > Settings > Account details, within the Account Information section.
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+            description: A set of string key-value pairs that you can attach to this object for storing additional information.
+          description: A set of string key-value pairs that you can attach to this object for storing additional information.
+        updated_at:
+          type: string
+          description: Time when this Payment Source was last updated.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

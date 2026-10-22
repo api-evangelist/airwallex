@@ -1,0 +1,209 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Payment Acceptance > Conversion Quotes API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Payment Acceptance > Conversion Quotes
+  description: 'A conversion quote locks the conversion rate between the merchant and shopper currencies for a certain period of time. Merchants can repeatedly use it to price payments in the shopper''s local currency during its validity period. Please refer to our product documentation for integration details.
+
+
+    Data Retention Policy: You can query Conversion Quote resources for a maximum of 31 days since creation.'
+  x-domain: Payment Acceptance
+  x-resource: Conversion Quotes
+  x-urlPath: payments/conversion_quotes
+paths:
+  /api/v1/pa/conversion_quotes/create:
+    post:
+      tags:
+      - Payment Acceptance > Conversion Quotes
+      summary: 1|Create a Conversion Quote
+      description: Create a new conversion quote for converting from merchant currency to shopper currency.
+      operationId: createConversionQuote
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - merchant_currency
+              - request_id
+              - shopper_currency
+              properties:
+                merchant_currency:
+                  type: string
+                  description: The currency used by the merchant for pricing or payment (3-letter ISO 4217 code).
+                request_id:
+                  type: string
+                  description: Unique request identifier specified by the merchant. Maximum length is 64.
+                shopper_currency:
+                  type: string
+                  description: The currency that the shopper prefers to use (3-letter ISO-4217 code).
+                validity_period:
+                  type: string
+                  description: The period for which the conversion quote remains valid. If not specified, the default value is `HR_1`.
+                  enum:
+                  - HR_1
+                  - HR_24
+        description: Conversion Quote Create Request.
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConversionQuote'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `duplicate_request`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/conversion_quotes/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          merchant_currency: USD
+          request_id: 71e0ff5a-d4c0-4c1d-b77b-64b2966d5411
+          shopper_currency: SGD
+          validity_period: HR_1
+        response_body:
+          conversion_rate: 1.287532
+          created_at: '2025-07-15T06:15:09Z'
+          expires_at: '2025-07-15T07:15:09Z'
+          id: cvq_hkpd5k6pgfub1fyurc86
+          merchant_currency: USD
+          shopper_currency: SGD
+          status: CREATED
+          validity_period: HR_1
+      x-scope:
+      - scope: payment_acceptance:write
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Conversion Quotes
+      x-urlPath: create
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/conversion_quotes/{id}:
+    get:
+      tags:
+      - Payment Acceptance > Conversion Quotes
+      summary: 2|Retrieve a Conversion Quote
+      description: Get a conversion quote by specifying its unique id.
+      operationId: retrieveConversionQuote
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the conversion quote.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConversionQuote'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/conversion_quotes/conversion_quote_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          conversion_rate: 1.287532
+          created_at: '2025-07-15T06:15:09Z'
+          expires_at: '2025-07-15T07:15:09Z'
+          id: cvq_hkpd5k6pgfub1fyurc86
+          merchant_currency: USD
+          shopper_currency: SGD
+          status: CREATED
+          validity_period: HR_1
+      x-scope:
+      - scope: payment_acceptance:read
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Conversion Quotes
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    ConversionQuote:
+      type: object
+      properties:
+        conversion_rate:
+          type: number
+          description: The conversion rate from the merchant currency to the shopper currency.
+        created_at:
+          type: string
+          description: Time at which this Conversion Quote was created.
+        expires_at:
+          type: string
+          description: Time at which this Conversion Quote expires.
+        id:
+          type: string
+          description: Unique identifier of the Conversion Quote.
+        merchant_currency:
+          type: string
+          description: The currency used by the merchant for pricing or payment (3-letter ISO 4217 code).
+        shopper_currency:
+          type: string
+          description: The currency that the shopper prefers to use (3-letter ISO-4217 code).
+        status:
+          type: string
+          description: "Status of the Conversion Quote \n\n- **CREATED**: The conversion quote has been created and is valid for use.\n- **EXPIRED**: The conversion quote has expired.\n"
+        validity_period:
+          type: string
+          description: The period for which the conversion quote remains valid. One of `HR_1`, `HR_24`.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

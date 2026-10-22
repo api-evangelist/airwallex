@@ -1,0 +1,313 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Payment Acceptance > Funds Split Reversals API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Payment Acceptance > Funds Split Reversals
+  description: 'The **Funds Split Reversal** API helps you reverse an existing **Funds Split** made to a connected account, either entirely or partially.
+
+
+    Data Retention Policy: You can query and operate Funds Split Reversal resources for a maximum of 2 years since creation.'
+  x-domain: Payment Acceptance
+  x-resource: Funds Split Reversals
+  x-urlPath: payments/funds_split_reversals
+paths:
+  /api/v1/pa/funds_split_reversals/create:
+    post:
+      tags:
+      - Payment Acceptance > Funds Split Reversals
+      summary: 1|Create a Funds Split Reversal
+      description: 'Initiate a Funds Split Reversal to take money back from a connected account. You must specify a Funds Split as the source of reversal.
+
+
+        When reversing a Funds Split, You can optionally reverse part of it. You can do so as many times as you wish until the entire Funds Split has been reversed. Once entirely reversed, a Funds Split can’t be reversed again. This method will return an error when called on an already-reversed Funds Split, or when trying to reverse more money than is left on a Funds Split.'
+      operationId: createFundsSplitReversal
+      parameters:
+      - name: x-on-behalf-of
+        in: header
+        description: The account unique identifier that this request is on behalf of.
+        required: false
+        schema:
+          type: string
+          default: acct_JD0UmuRLNcytX7sBj0lfWA
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - amount
+              - funds_split_id
+              - request_id
+              properties:
+                amount:
+                  type: string
+                  description: Amount of this reversal. You can only reverse up to the unreversed amount remaining of the Funds Split. Please refer to [supported currencies](/docs/payments/supported-currencies) for supported minor units.
+                funds_split_id:
+                  type: string
+                  description: Unique identifier of Funds Split on which the Funds Split Reversal is created.
+                metadata:
+                  type: object
+                  description: A set of key-value pairs that you can attach to the Funds Split Reversal. You can specify up to 50 keys with key names up to 50 characters long and values up to 500 characters long.
+                request_id:
+                  type: string
+                  description: Unique request identifier specified by the merchant. Maximum length is 64.
+        description: Funds Split Reversal creation request.
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FundsSplitReversal'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `duplicate_request`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/funds_split_reversals/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          request_id: 1b1fa33d-a733-4884-8d45-bba8076c447d
+          funds_split_id: spt_hkpdkhwr5h1s5nct0l
+          amount: '10'
+          metadata:
+            foo: bar
+        status_code: 201
+        reason_phrase: Created
+        response_body:
+          id: rev_hkpdkhwr5h1375nct0l
+          request_id: 1b1fa33d-a733-4884-8d45-bba8076c447d
+          funds_split_id: spt_hkpdkhwr5h1s5nct0l
+          amount: '10'
+          status: CREATED
+          metadata:
+            foo: bar
+          created_at: '2024-04-09T02:46:19.320490400+00:00'
+      x-scope:
+      - scope: funds_split:write
+        group: Payment Acceptance
+        resource_name: Funds Splits
+      x-domain: Payment Acceptance
+      x-resource: Funds Split Reversals
+      x-urlPath: create
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/funds_split_reversals/{id}:
+    get:
+      tags:
+      - Payment Acceptance > Funds Split Reversals
+      summary: 2|Retrieve a Funds Split Reversal
+      description: Retrieve a Funds Split Reversal by unique identifier.
+      operationId: retrieveFundsSplitReversal
+      parameters:
+      - name: id
+        in: path
+        description: Funds Split Reversal Id.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FundsSplitReversal'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url), `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/funds_split_reversals/rev_hkpdkhwr5h1375nct0l
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: rev_hkpdkhwr5h1375nct0l
+          request_id: ff232fa1-3ebe-4b59-8d96-ea7b6499ef43
+          funds_split_id: spt_hkpdkhwr5h1s5nct0l
+          amount: 10
+          status: RELEASED
+          metadata:
+            foo: bar
+          created_at: '2024-04-09T02:46:19.320490400+00:00'
+      x-scope:
+      - scope: funds_split:read
+        group: Payment Acceptance
+        resource_name: Funds Splits
+      x-domain: Payment Acceptance
+      x-resource: Funds Split Reversals
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/funds_split_reversals:
+    get:
+      tags:
+      - Payment Acceptance > Funds Split Reversals
+      summary: 3|List all Funds Split Reversals
+      description: List all Funds Split Reversals.
+      operationId: listFundsSplitReversals
+      parameters:
+      - name: funds_split_id
+        in: query
+        description: Unique identifier of which funds_split this funds_split_reversal would be created from.
+        required: true
+        schema:
+          type: string
+          default: spt_hkstskz9vg1xc7uscdj
+      - name: page_num
+        in: query
+        description: Page number starting from 0.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of Fund Split Reversals to be listed per page. Default value is 10. Maximum is 1000. The value greater than the maximum will be capped to the maximum.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: List items.
+                    items:
+                      $ref: '#/components/schemas/FundsSplitReversal'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/funds_split_reversals
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        query_params:
+          funds_split_id: rev_hkpdkhwr5h1375nct0l
+          page_num: 0
+          page_size: 10
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - id: rev_hkpdkhwr5h1375nct0l
+            request_id: ff232fa1-3ebe-4b59-8d96-ea7b6499ef43
+            funds_split_id: spt_hkpdkhwr5h1s5nct0l
+            amount: 10
+            status: CREATED
+            metadata:
+              foo: bar
+            created_at: '2024-04-09T02:46:19.320490400+00:00'
+      x-scope:
+      - scope: funds_split:read
+        group: Payment Acceptance
+        resource_name: Funds Splits
+      x-domain: Payment Acceptance
+      x-resource: Funds Split Reversals
+      x-urlPath: list
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    FundsSplitReversal:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: Amount of this reversal. You can only reverse up to the unreversed amount remaining of the Funds Split.
+        created_at:
+          type: string
+          format: date-time
+          description: Instant when this split reversal is created at.
+        funds_split_id:
+          type: string
+          description: Funds Split unique identifier.
+        id:
+          type: string
+          description: Unique identifier for the Funds Split Reversal.
+        metadata:
+          type: object
+          description: A set of key-value pairs that you can attach to the Funds Split Reversal. You can specify up to 50 keys with key names up to 50 characters long and values up to 500 characters long.
+        request_id:
+          type: string
+          description: Unique request identifier specified by the merchant in the last operation.
+        status:
+          type: string
+          description: Status of this reversal, can be CREATED, RELEASED, SETTLED etc.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

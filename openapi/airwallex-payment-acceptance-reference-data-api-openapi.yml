@@ -1,0 +1,150 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Payment Acceptance > Reference Data API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Payment Acceptance > Reference Data
+  description: 'All card schemes publish account range information which helps understand the product, issuer country code, issuer name etc. Hence, merchants can request account range data under a particular PAN thereby enabling business logic such as:
+
+
+    - Merchants query for BIN info using the PAN to get information about card type so that they can surcharge if the card used is commercial / credit or other cases.
+
+    - Merchants would like to know the brand and product information to run discounts and offers on the website. The cart amount will be dynamically updated to reflect the discounted price.
+
+    - Merchants query on the card details like country code to run some risk level checks at their side without depending on the acquirer. Merchants may not want to accept cards issued in a certain country, because sending this to the acquirer may cost them additional charges (gateway fee / authorization fee, etc.).'
+  x-domain: Payment Acceptance
+  x-resource: Reference Data
+  x-urlPath: payments/reference_data
+paths:
+  /api/v1/pa/reference/bin/lookup:
+    get:
+      tags:
+      - Payment Acceptance > Reference Data
+      summary: 1|Retrieve the BIN Info
+      description: Retrieve the BIN info using the PAN passed via header param called `x-pan`.
+      operationId: lookupBin
+      x-oboSupported: false
+      parameters:
+      - name: x-pan
+        in: header
+        description: pan.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IssuerAccountRangeForMerchant'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/reference/bin/lookup
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+          x-pan: '4111111111111111'
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+        - card_brand: visa
+          card_type: credit
+          commercial_card: false
+          issuer_country_code: US
+          issuer_name: An Issuer Name
+          product_code: G
+          product_description: Visa Business
+          product_subtype_code: MS
+          product_subtype_description: Multicurrency Solution
+      x-scope:
+      - scope: payment_acceptance:read
+        group: Payment Acceptance
+        resource_name: Payment Acceptance
+      x-domain: Payment Acceptance
+      x-resource: Reference Data
+      x-urlPath: lookup
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    IssuerAccountRangeForMerchant:
+      type: object
+      required:
+      - card_brand
+      - card_type
+      - commercial_card
+      properties:
+        card_brand:
+          type: string
+          description: One of `visa`, `mastercard`, `union pay`, `american express`.
+        card_type:
+          type: string
+          description: '- Visa: One of `credit`, `debit`, `prepaid`, `charge`, `deferred_debit`, `not_applicable`.
+
+            - Mastercard: One of `debit`, `prepaid`, `credit`, `non_mastercard`.
+
+            - Union Pay: One of `debit`, `prepaid`, `credit`.
+
+            - American Express: One of `consumer`, `corporate`, `small_business`, `debit, prepaid`, `prepaid_reloadable`.'
+        commercial_card:
+          type: boolean
+          description: A boolean field referring whether the card is commercial or not.
+        issuer_country_code:
+          type: string
+          description: Issuer country code.
+        issuer_name:
+          type: string
+          description: Issuer name.
+        product_code:
+          type: string
+          description: '- Visa: it is `Product ID` description. For more details please refer to base-ii-clearing-data-codes Product ID Values section.
+
+            - Mastercard: it will be `IP0040T1.Card_Program_ID`.
+
+            - Union Pay: it will be one of `UNKNOWN`, `UNION_PAY_CLASSIC`, `RESERVED_2`, `UNION_PAY_GOLD`, `UNION_PAY_PLATINUM`, `UNION_PAY_DIAMOND`, `RESERVED_6`.
+
+            '
+        product_description:
+          type: string
+          description: Description for `product_code`.
+        product_subtype_code:
+          type: string
+          description: '- Visa: it will be production `sub-type id` description. For more details please refer to base-ii-clearing-ep-release-4-reports, ''EP-302 — Account Range Table (ARDEF) Field Descriptions'' field `SU TY`.
+
+            - Mastercard: it will be `IP0040T1.GCMS_Product_ID`.
+
+            - Union Pay: it will be `BIN_Update_File.Card_Level`.'
+        product_subtype_description:
+          type: string
+          description: Description for `product_subtype_code`.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

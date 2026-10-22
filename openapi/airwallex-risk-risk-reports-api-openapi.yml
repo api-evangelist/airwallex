@@ -1,0 +1,261 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Risk > Risk Reports API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Risk > Risk Reports
+  description: 'The Risk Reports API lets merchants self-serve their own risk datasets. The currently supported report type is `PAYMENT_FRAUD_REPORT`, which contains payment fraud data reported through acquirer TC40 / SAFE reports for a given date range.
+
+
+    Use Generate a risk report to submit a query and obtain a report `id`, followed by Retrieve a risk report to track the report status. When the report reaches `COMPLETED` status, obtain a short-lived signed download link. Reports are generated asynchronously. Subscribe to the `risk.risk_reports.completed` and `risk.risk_reports.failed` webhook events to be notified when a report is ready or generation has failed.'
+  x-domain: Risk
+  x-resource: Risk Reports
+  x-urlPath: risk/risk_reports
+paths:
+  /api/v1/risk/risk_reports/{id}:
+    get:
+      summary: Retrieve a risk report
+      description: Fetches the status of a risk report and, once the report is `COMPLETED`, returns a short-lived signed download link. The link is regenerated on each poll, so an expired link is replaced with a new link on the next call.
+      operationId: retrieveRiskReport
+      x-oboSupported: false
+      tags:
+      - Risk > Risk Reports
+      parameters:
+      - name: id
+        in: path
+        description: Unique ID of the risk report.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RiskReport'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '403':
+          description: '["permission_denied"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: '["resource_not_found"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: '["internal_server_error"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/risk/risk_reports/320ef695-691a-4827-93f0-227155efca8a
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: 320ef695-691a-4827-93f0-227155efca8a
+          status: COMPLETED
+          start_date: '2026-04-01'
+          end_date: '2026-06-30'
+          type: PAYMENT_FRAUD_REPORT
+          file:
+            name: risk_report_123.csv
+            download_url: https://files.airwallex.com/d/320ef695-691a-4827-93f0-227155efca8a?signature=abc123
+            expires_at: '2026-07-10T02:41:12Z'
+      x-domain: Risk
+      x-resource: Risk Reports
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/risk/risk_reports/generate:
+    post:
+      summary: Generate a risk report
+      description: Submits a risk report query for the authenticated merchant. Returns immediately with an `id`; the report is generated asynchronously. Poll the **Retrieve a risk report** endpoint (`GET /api/v1/risk/risk_reports/{id}`) using the returned `id` to track progress. When the report reaches `COMPLETED` status, obtain a short-lived signed download link.
+      operationId: generateRiskReport
+      x-oboSupported: false
+      tags:
+      - Risk > Risk Reports
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - start_date
+              - end_date
+              - type
+              properties:
+                start_date:
+                  type: string
+                  format: date
+                  description: "Start date (inclusive, in `YYYY-MM-DD` format, UTC) to specify the data records that the report should include. This parameter is a filter for:\n * Fraud reported date in the `PAYMENT_FRAUD_REPORT`\n\nFor example, request a risk report with `start_date` = `2026-04-01` and `end_date` = `2026-06-30` to obtain records from `2026-04-01` to `2026-06-30` inclusive, in UTC.\n\nThe max interval size between `start_date` and `end_date` is 90 days."
+                end_date:
+                  type: string
+                  format: date
+                  description: "End date (inclusive, in `YYYY-MM-DD` format, UTC) to specify the data records that the report should include. This parameter is a filter for:\n * Fraud reported date in the `PAYMENT_FRAUD_REPORT`\n\nFor example, request a risk report with `start_date` = `2026-04-01` and `end_date` = `2026-06-30` to obtain records from `2026-04-01` to `2026-06-30` inclusive, in UTC.\n\nThe max interval size between `start_date` and `end_date` is 90 days."
+                type:
+                  type: string
+                  description: Type of report requested.
+                  enum:
+                  - PAYMENT_FRAUD_REPORT
+                  x-enumDescriptions:
+                    PAYMENT_FRAUD_REPORT: Payment fraud reported data, including the Visa TC40 and Mastercard SAFE reports.
+        description: Risk report query.
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RiskReport'
+        '400':
+          description: '["invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '403':
+          description: '["permission_denied"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: '["internal_server_error"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/risk/risk_reports/generate
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          start_date: '2026-04-01'
+          end_date: '2026-06-30'
+          type: PAYMENT_FRAUD_REPORT
+        response_body:
+          id: 320ef695-691a-4827-93f0-227155efca8a
+          status: PENDING
+          start_date: '2026-04-01'
+          end_date: '2026-06-30'
+          type: PAYMENT_FRAUD_REPORT
+      x-domain: Risk
+      x-resource: Risk Reports
+      x-urlPath: generate
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    RiskReport:
+      description: A risk report represents an asynchronous request to generate and download a merchant's risk dataset for a given date range and report type. It progresses through a simple lifecycle (`PENDING` → `COMPLETED` or `FAILED`). When `COMPLETED`, it exposes a short-lived, signed file download link.
+      type: object
+      required:
+      - id
+      - status
+      properties:
+        id:
+          type: string
+          description: Unique ID of the report.
+        status:
+          type: string
+          enum:
+          - PENDING
+          - COMPLETED
+          - FAILED
+          description: Status of the report.
+        start_date:
+          type: string
+          format: date
+          description: Start date of the report (UTC).
+        end_date:
+          type: string
+          format: date
+          description: End date of the report (UTC).
+        type:
+          type: string
+          enum:
+          - PAYMENT_FRAUD_REPORT
+          description: Type of report requested.
+        file:
+          type: object
+          description: File result. Present when `status` is `COMPLETED`.
+          properties:
+            name:
+              type: string
+              description: File name of the report.
+            download_url:
+              type: string
+              description: File download URL.
+            expires_at:
+              type: string
+              format: date-time
+              description: File download URL expiration date.
+        failure_reason:
+          type: string
+          description: Reason the report failed. Populated when `status` is `FAILED`.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

@@ -1,0 +1,1609 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Payouts > Payers API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Payouts > Payers
+  description: By default you make payments from yourself therefore this resource is optional. However if your Airwallex Account allows paying on behalf of others, you can create new payers and this resource becomes mandatory to be defined which payer you are paying from.
+  x-domain: Payouts
+  x-resource: Payers
+  x-urlPath: payouts/payers
+paths:
+  /api/v1/payers/create:
+    post:
+      tags:
+      - Payouts > Payers
+      summary: 1|Create a Payer
+      description: Create a new payer to be stored on the Airwallex platform.
+      operationId: createPayer
+      x-oboSupported: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - payer
+              properties:
+                nickname:
+                  type: string
+                  description: Nickname of the payer.
+                payer:
+                  type: object
+                  required:
+                  - address
+                  - entity_type
+                  description: Details of the payer.
+                  properties:
+                    additional_info:
+                      type: object
+                      description: Additional information about the payer.
+                      properties:
+                        business_registration_number:
+                          type: string
+                          description: Business registration number.
+                        business_registration_type:
+                          type: string
+                          description: Type of business as registered with the local government authority.
+                        external_id:
+                          type: string
+                          description: Unique identifier of the person in your company.
+                        personal_email:
+                          type: string
+                          description: Personal email.
+                        personal_id_number:
+                          type: string
+                          description: Personal unique identifier number.
+                    address:
+                      type: object
+                      required:
+                      - country_code
+                      description: Payer's address details.
+                      properties:
+                        city:
+                          type: string
+                          description: Payer's city.
+                        country_code:
+                          type: string
+                          description: Payer's country code (2-letter ISO 3166-2 country code).
+                        postcode:
+                          type: string
+                          description: Payer's post code.
+                        state:
+                          type: string
+                          description: Payer's state.
+                        street_address:
+                          type: string
+                          description: Payer's street address.
+                    company_name:
+                      type: string
+                      description: Company name of the payer.
+                    date_of_birth:
+                      type: string
+                      description: Payer's date of birth.
+                    entity_type:
+                      type: string
+                      description: Entity type of the payer.
+                    first_name:
+                      type: string
+                      description: First name of the payer.
+                    last_name:
+                      type: string
+                      description: Last name of the payer.
+              description: The partial payer creation request.  Any subset of fields can be supplied, starting at an empty object (`{}`).
+        description: payerContactRequestDto.
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PayerContact'
+        '400':
+          description: '["validation_failed"
+
+            ,"service_unavailable"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/payers/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          nickname: Complete Concrete Pty Ltd
+          payer:
+            additional_info:
+              business_registration_number: EU300503
+              business_registration_type: Partnership
+              external_id: '1234567890'
+              personal_email: james.smith@google.com
+              personal_id_number: '1234567890'
+            address:
+              city: Melbourne
+              country_code: AU
+              postcode: '3000'
+              state: VIC
+              street_address: 15 William Street
+            company_name: Complete Concrete Pty Ltd
+            date_of_birth: '1976-08-26'
+            entity_type: COMPANY
+            first_name: James
+            last_name: Smith
+        response_body:
+          id: 46c22228-5831-4c53-a4fa-a3ab4954877c
+          nickname: Complete Concrete Pty Ltd
+          payer:
+            additional_info:
+              business_registration_number: EU300503
+              business_registration_type: Partnership
+              external_id: '1234567890'
+              personal_email: james.smith@google.com
+              personal_id_number: '1234567890'
+            address:
+              city: Melbourne
+              country_code: AU
+              postcode: '3000'
+              state: VIC
+              street_address: 15 William Street
+            company_name: Complete Concrete Pty Ltd
+            date_of_birth: '1976-08-26'
+            entity_type: COMPANY
+            first_name: James
+            last_name: Smith
+      x-scope:
+      - scope: beneficiary:read
+        group: Payouts
+        resource_name: Beneficiaries
+      - scope: beneficiary:write
+        group: Payouts
+        resource_name: Beneficiaries
+      - scope: transfer:write
+        group: Authentication
+        resource_name: Embedded Components - Transfers
+      x-domain: Payouts
+      x-resource: Payers
+      x-urlPath: create
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/payers/{id}:
+    get:
+      tags:
+      - Payouts > Payers
+      summary: 2|Retrieve a Payer
+      description: Get a specific payer by specifying the Airwallex payer_id.
+      operationId: retrievePayer
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: id of the payer contact to retrieve.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: 46c22228-5831-4c53-a4fa-a3ab4954877c
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PayerContact'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/payers/payer_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: 46c22228-5831-4c53-a4fa-a3ab4954877c
+          nickname: Complete Concrete Pty Ltd
+          payer:
+            additional_info:
+              business_registration_number: EU300503
+              business_registration_type: Partnership
+              external_id: '1234567890'
+              personal_email: james.smith@google.com
+              personal_id_number: '1234567890'
+            address:
+              city: Melbourne
+              country_code: AU
+              postcode: '3000'
+              state: VIC
+              street_address: 15 William Street
+            company_name: Complete Concrete Pty Ltd
+            date_of_birth: '1976-08-26'
+            entity_type: COMPANY
+            first_name: James
+            last_name: Smith
+      x-scope:
+      - scope: beneficiary:read
+        group: Payouts
+        resource_name: Beneficiaries
+      - scope: beneficiary:write
+        group: Payouts
+        resource_name: Beneficiaries
+      - scope: transfer:write
+        group: Authentication
+        resource_name: Embedded Components - Transfers
+      x-domain: Payouts
+      x-resource: Payers
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/payers:
+    get:
+      tags:
+      - Payouts > Payers
+      summary: 3|List all Payers
+      description: Get list of payers with optional filters on from date/time, to date/time, names and entity type. Results are paginated, with default list limit of 50 results.
+      operationId: listPayers
+      x-oboSupported: false
+      parameters:
+      - name: entity_type
+        in: query
+        description: Filter on entity type of COMPANY or PERSONAL.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: COMPANY
+      - name: from_date
+        in: query
+        description: The start date of `created_at` in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          format: date-time
+          default: '2017-04-01'
+      - name: name
+        in: query
+        description: Filter on name of payer.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: Clare
+      - name: nick_name
+        in: query
+        description: Filter on nickname of payer.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: page_num
+        in: query
+        description: Page number, starts from 0.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of results per page. Default value is 100.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: to_date
+        in: query
+        description: The end date of `created_at` in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          format: date-time
+          default: 2030-01-01T00:00:00+0000
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: Paged results.
+                    items:
+                      $ref: '#/components/schemas/PayerContact'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/payers
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - id: 46c22228-5831-4c53-a4fa-a3ab4954877c
+            nickname: Complete Concrete Pty Ltd
+            payer:
+              additional_info:
+                business_registration_number: EU300503
+                business_registration_type: Partnership
+                external_id: '1234567890'
+                personal_email: james.smith@google.com
+                personal_id_number: '1234567890'
+              address:
+                city: Melbourne
+                country_code: AU
+                postcode: '3000'
+                state: VIC
+                street_address: 15 William Street
+              company_name: Complete Concrete Pty Ltd
+              date_of_birth: '1976-08-26'
+              entity_type: COMPANY
+              first_name: James
+              last_name: Smith
+      x-scope:
+      - scope: beneficiary:read
+        group: Payouts
+        resource_name: Beneficiaries
+      - scope: beneficiary:write
+        group: Payouts
+        resource_name: Beneficiaries
+      - scope: transfer:write
+        group: Authentication
+        resource_name: Embedded Components - Transfers
+      x-domain: Payouts
+      x-resource: Payers
+      x-urlPath: list
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/payers/{id}/update:
+    post:
+      tags:
+      - Payouts > Payers
+      summary: 4|Update an Existing Payer
+      description: Edit an existing payer stored on the Airwallex platform.
+      operationId: updatePayer
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: id of the payer contact to update.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: 46c22228-5831-4c53-a4fa-a3ab4954877c
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - payer
+              properties:
+                nickname:
+                  type: string
+                  description: Nickname of the payer.
+                payer:
+                  type: object
+                  required:
+                  - address
+                  - entity_type
+                  description: Details of the payer.
+                  properties:
+                    additional_info:
+                      type: object
+                      description: Additional information about the payer.
+                      properties:
+                        business_registration_number:
+                          type: string
+                          description: Business registration number.
+                        business_registration_type:
+                          type: string
+                          description: Type of business as registered with the local government authority.
+                        external_id:
+                          type: string
+                          description: Unique identifier of the person in your company.
+                        personal_email:
+                          type: string
+                          description: Personal email.
+                        personal_id_number:
+                          type: string
+                          description: Personal unique identifier number.
+                    address:
+                      type: object
+                      required:
+                      - country_code
+                      description: Payer's address details.
+                      properties:
+                        city:
+                          type: string
+                          description: Payer's city.
+                        country_code:
+                          type: string
+                          description: Payer's country code (2-letter ISO 3166-2 country code).
+                        postcode:
+                          type: string
+                          description: Payer's post code.
+                        state:
+                          type: string
+                          description: Payer's state.
+                        street_address:
+                          type: string
+                          description: Payer's street address.
+                    company_name:
+                      type: string
+                      description: Company name of the payer.
+                    date_of_birth:
+                      type: string
+                      description: Payer's date of birth.
+                    entity_type:
+                      type: string
+                      description: Entity type of the payer.
+                    first_name:
+                      type: string
+                      description: First name of the payer.
+                    last_name:
+                      type: string
+                      description: Last name of the payer.
+              description: The partial payer creation request.  Any subset of fields can be supplied, starting at an empty object (`{}`).
+        description: payerContactRequestDto.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PayerContact'
+        '400':
+          description: '["validation_failed"
+
+            ,"service_unavailable"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/payers/payer_id/update
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          nickname: Complete Concrete Pty Ltd
+          payer:
+            additional_info:
+              business_registration_number: EU300503
+              business_registration_type: Partnership
+              external_id: '1234567890'
+              personal_email: james.smith@google.com
+              personal_id_number: '1234567890'
+            address:
+              city: Melbourne
+              country_code: AU
+              postcode: '3000'
+              state: VIC
+              street_address: 15 William Street
+            company_name: Complete Concrete Pty Ltd
+            date_of_birth: '1976-08-26'
+            entity_type: COMPANY
+            first_name: James
+            last_name: Smith
+        response_body:
+          id: 46c22228-5831-4c53-a4fa-a3ab4954877c
+          nickname: Complete Concrete Pty Ltd
+          payer:
+            additional_info:
+              business_registration_number: EU300503
+              business_registration_type: Partnership
+              external_id: '1234567890'
+              personal_email: james.smith@google.com
+              personal_id_number: '1234567890'
+            address:
+              city: Melbourne
+              country_code: AU
+              postcode: '3000'
+              state: VIC
+              street_address: 15 William Street
+            company_name: Complete Concrete Pty Ltd
+            date_of_birth: '1976-08-26'
+            entity_type: COMPANY
+            first_name: James
+            last_name: Smith
+      x-scope:
+      - scope: beneficiary:read
+        group: Payouts
+        resource_name: Beneficiaries
+      - scope: beneficiary:write
+        group: Payouts
+        resource_name: Beneficiaries
+      - scope: transfer:write
+        group: Authentication
+        resource_name: Embedded Components - Transfers
+      x-domain: Payouts
+      x-resource: Payers
+      x-urlPath: update
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/payers/validate:
+    post:
+      tags:
+      - Payouts > Payers
+      summary: 5|Validate a Payer
+      description: Given a payer request, validate it and return all failed fields as a 400 response. No errors will be `OK` as a 200 response.
+      operationId: payers_validate
+      x-oboSupported: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - payer
+              properties:
+                nickname:
+                  type: string
+                  description: Nickname of the payer.
+                payer:
+                  type: object
+                  required:
+                  - address
+                  - entity_type
+                  description: Details of the payer.
+                  properties:
+                    additional_info:
+                      type: object
+                      description: Additional information about the payer.
+                      properties:
+                        business_registration_number:
+                          type: string
+                          description: Business registration number.
+                        business_registration_type:
+                          type: string
+                          description: Type of business as registered with the local government authority.
+                        external_id:
+                          type: string
+                          description: Unique identifier of the person in your company.
+                        personal_email:
+                          type: string
+                          description: Personal email.
+                        personal_id_number:
+                          type: string
+                          description: Personal unique identifier number.
+                    address:
+                      type: object
+                      required:
+                      - country_code
+                      description: Payer's address details.
+                      properties:
+                        city:
+                          type: string
+                          description: Payer's city.
+                        country_code:
+                          type: string
+                          description: Payer's country code (2-letter ISO 3166-2 country code).
+                        postcode:
+                          type: string
+                          description: Payer's post code.
+                        state:
+                          type: string
+                          description: Payer's state.
+                        street_address:
+                          type: string
+                          description: Payer's street address.
+                    company_name:
+                      type: string
+                      description: Company name of the payer.
+                    date_of_birth:
+                      type: string
+                      description: Payer's date of birth.
+                    entity_type:
+                      type: string
+                      description: Entity type of the payer.
+                    first_name:
+                      type: string
+                      description: First name of the payer.
+                    last_name:
+                      type: string
+                      description: Last name of the payer.
+              description: The partial payer creation request.  Any subset of fields can be supplied, starting at an empty object (`{}`).
+        description: createPayerRequestRaw.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: '["validation_failed"
+
+            ,"service_unavailable"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/payers/validate
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          nickname: Complete Concrete Pty Ltd
+          payer:
+            additional_info:
+              business_registration_number: EU300503
+              business_registration_type: Partnership
+              external_id: '1234567890'
+              personal_email: james.smith@google.com
+              personal_id_number: '1234567890'
+            address:
+              city: Melbourne
+              country_code: AU
+              postcode: '3000'
+              state: VIC
+              street_address: 15 William Street
+            company_name: Complete Concrete Pty Ltd
+            date_of_birth: '1976-08-26'
+            entity_type: COMPANY
+            first_name: James
+            last_name: Smith
+      x-scope:
+      - scope: beneficiary:read
+        group: Payouts
+        resource_name: Beneficiaries
+      - scope: beneficiary:write
+        group: Payouts
+        resource_name: Beneficiaries
+      - scope: transfer:write
+        group: Authentication
+        resource_name: Embedded Components - Transfers
+      x-domain: Payouts
+      x-resource: Payers
+      x-urlPath: validate
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/payers/{id}/delete:
+    post:
+      tags:
+      - Payouts > Payers
+      summary: 6|Delete an Existing Payer
+      description: Delete an existing payer stored on the Airwallex platform.
+      operationId: deletePayer
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: id of the payer contact to update.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: 46c22228-5831-4c53-a4fa-a3ab4954877c
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/payers/payer_id/delete
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body: false
+      x-scope:
+      - scope: beneficiary:read
+        group: Payouts
+        resource_name: Beneficiaries
+      - scope: beneficiary:write
+        group: Payouts
+        resource_name: Beneficiaries
+      - scope: transfer:write
+        group: Authentication
+        resource_name: Embedded Components - Transfers
+      x-domain: Payouts
+      x-resource: Payers
+      x-urlPath: delete
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/payers/schema:
+    post:
+      tags:
+      - Payouts > Payers
+      summary: 7|Retrieve the Payer Schema
+      description: 'Given a partial payer request, return a dynamic schema of all fields. Can be used to generate a dynamic payer form user interface.
+
+
+        [beta]: This is a new endpoint with significant complexity, so the experience of integrating with it will be improved as we obtain more feedback. It is ready for production use, and is currently used internally by Airwallex for our Webapp beneficiary form and dynamic schema documentation. Please get in touch with our support team if you''d like to know more.'
+      operationId: payers_schema
+      x-oboSupported: false
+      x-stage: beta
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                create_payer_request:
+                  type: object
+                  required:
+                  - payer
+                  description: The partial payer creation request.  Any subset of fields can be supplied, starting at an empty object (`{}`).
+                  properties:
+                    nickname:
+                      type: string
+                      description: Nickname of the payer.
+                    payer:
+                      type: object
+                      required:
+                      - address
+                      - entity_type
+                      description: Details of the payer.
+                      properties:
+                        additional_info:
+                          type: object
+                          description: Additional information about the payer.
+                          properties:
+                            business_registration_number:
+                              type: string
+                              description: Business registration number.
+                            business_registration_type:
+                              type: string
+                              description: Type of business as registered with the local government authority.
+                            external_id:
+                              type: string
+                              description: Unique identifier of the person in your company.
+                            personal_email:
+                              type: string
+                              description: Personal email.
+                            personal_id_number:
+                              type: string
+                              description: Personal unique identifier number.
+                        address:
+                          type: object
+                          required:
+                          - country_code
+                          description: Payer's address details.
+                          properties:
+                            city:
+                              type: string
+                              description: Payer's city.
+                            country_code:
+                              type: string
+                              description: Payer's country code (2-letter ISO 3166-2 country code).
+                            postcode:
+                              type: string
+                              description: Payer's post code.
+                            state:
+                              type: string
+                              description: Payer's state.
+                            street_address:
+                              type: string
+                              description: Payer's street address.
+                        company_name:
+                          type: string
+                          description: Company name of the payer.
+                        date_of_birth:
+                          type: string
+                          description: Payer's date of birth.
+                        entity_type:
+                          type: string
+                          description: Entity type of the payer.
+                        first_name:
+                          type: string
+                          description: First name of the payer.
+                        last_name:
+                          type: string
+                          description: Last name of the payer.
+                relaxed_validation:
+                  type: string
+                  description: Whether to use relaxed validation (manual resolution of missing/invalid fields).  This feature is only available to some accounts.
+                use_payer_full_address:
+                  type: string
+                  description: Whether payer address will be specified using a single full address field, or individual address component fields.  This feature is only available to some accounts.
+        description: createPayerSchemaRequestRaw.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchemaResult'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/payers/schema
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          create_payer_request:
+            nickname: Complete Concrete Pty Ltd
+            payer:
+              additional_info:
+                business_registration_number: EU300503
+                business_registration_type: Partnership
+                external_id: '1234567890'
+                personal_email: james.smith@google.com
+                personal_id_number: '1234567890'
+              address:
+                city: Melbourne
+                country_code: AU
+                postcode: '3000'
+                state: VIC
+                street_address: 15 William Street
+              company_name: Complete Concrete Pty Ltd
+              date_of_birth: '1976-08-26'
+              entity_type: COMPANY
+              first_name: James
+              last_name: Smith
+          relaxed_validation: 'false'
+          use_payer_full_address: 'false'
+        response_body:
+          errors: {}
+          schema: {}
+      x-scope:
+      - scope: beneficiary:read
+        group: Payouts
+        resource_name: Beneficiaries
+      - scope: beneficiary:write
+        group: Payouts
+        resource_name: Beneficiaries
+      - scope: transfer:write
+        group: Authentication
+        resource_name: Embedded Components - Transfers
+      x-domain: Payouts
+      x-resource: Payers
+      x-urlPath: schema
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    ErrorDetail:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code.
+        message:
+          type: string
+          description: Error description.
+    SchemaResult:
+      type: object
+      properties:
+        errors:
+          type: object
+          description: If the provided request is invalid, provides a map from field path to field validation failure details.  Similar to the validation endpoint's response.  May be used to both validate existing user form input and retrieve other fields in a single call.
+          additionalProperties:
+            $ref: '#/components/schemas/FieldValidationError'
+        schema:
+          type: object
+          description: The schema for the given request, as a map from field path to field schema.
+          additionalProperties:
+            $ref: '#/components/schemas/Schema'
+    ValidationFunction:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'The validation function identifier.
+
+
+            This can be mapped to a custom error translation or client side validation function.'
+          enum:
+          - AccountCurrencyMatchesPaymentCurrency
+          - Alphanumeric
+          - AlphanumericIncludingPunctuation
+          - AlphanumericIncludingSpaces
+          - LengthOneOf
+          - Boolean
+          - BPayAlphanumeric
+          - ChineseCharacters
+          - ChineseCharactersIncludingPunctuation
+          - CNAccountNameMatchesFirstLastNameInChinese
+          - CNAccountNameNotFI
+          - Date
+          - DateTime
+          - DigitsOnly
+          - NotDigitsOnly
+          - Email
+          - Equal
+          - IbanCountryOneOf
+          - IbanOrAccountNumberIsMandatory
+          - Length
+          - MayNotSpecifyPayer
+          - MaxLength
+          - MinItems
+          - MinLength
+          - MinMaxLength
+          - NumberOfDecimalPlaces
+          - OneOf
+          - PaymentAmountOrSourceAmountIsSpecified
+          - PositiveNumber
+          - SwiftCodeMatchesCountry
+          - NoPOBoxAddress
+          - EmojisIsNotSupported
+          - ShouldNotTransferToSameAccountWithFXForward
+          - ShouldNotFXForwardWithInvalidReason
+          - AccountNumberIsNotVaild
+          - PEPersonalNumberIsVaild
+          - BOPersonalNumberIsVaild
+          - AlphanumericIncludingDotHyphen
+          - ValidPostCode
+          - ShouldNotContainSpace
+          - BRBranchNameIsVaildForBancodoBrasilSA
+          - BRBranchNameIsVaildForBancoSantanderBrasilSAORItauUnibancoSA
+          - BRBranchNameIsVaildForCaixaCEFORBancoBradescoSA
+          - BRBranchNameIsVaild
+          - BRCheckingsAccountNumberIsValidForCaixaCEF
+          - BRSavingsAccountNumberIdValidForCaixaCEF
+          - BRAccountNumberIsValidForBancodoBrasilSA
+          - BRAccountNumberIsValidForBancoSantanderBrasilSA
+          - BRAccountNumberIsValidForBancoBradescoSA
+          - BRAccountNumberIsValidForItauUnibancoSA
+          - BRAccountNumberIsValidForHSBCBankBrasilSA
+          - PhoneNumberFormat
+          - PhoneNumberCountryCode
+          - PhoneNumberLength
+          - BankAccountNumberIsValid
+          - AccountRoutingValue1IsReal
+          - MAMXNZAccountPrefixIsReal
+          - HKAccountPrefixIsReal
+          - BeneficiaryContactExists
+          - BeneficiaryContactIsValid
+          - BeneficiaryContactStreetAddressIsValid
+          - BeneficiaryContactSupportsPaymentMethod
+          - BillerIdIsReal
+          - CNAreaCodeIsReal
+          - CNBankCodeIsReal
+          - NepaleseBankCodeIsReal
+          - GteToday
+          - IbanIsValid
+          - IbanBankIsValid
+          - LocalClearingSystemIrrelevant
+          - MaxAmount
+          - MinAmount
+          - MinMaxAge
+          - PayerContactExists
+          - PayerContactIsValid
+          - PayerFromAccountIsValid
+          - PaymentChannelNotSupported
+          - PaymentOrderInfo_ItemTotalCorrect
+          - PaymentOrderInfo_OrdersAllSameCurrency
+          - PaymentOrderInfo_TotalEqualsPaymentAmount
+          - PaymentOrderInfo_TotalEqualsSourceAmount
+          - ScenarioIsNotSubmit
+          - SwiftCodeIsReal
+          - SwiftCodeIsSupported
+          - WhitespaceTrimmed
+          - MinCNPersonalIdAge
+          - PersonalIdAgeRange
+          - CNPersonalIdIsValid
+          - CNBankNumberIsQualify
+          - MetadataSizeIsValid
+          - PaperCheckEnabled
+          - CNBeneficiaryIsValid
+          - CNBeneficiaryCompanyIsValid
+          - JPBranchCodeIsReal
+          - RecipientIsAccountUBO
+          - MyBankDateSharingIsEnabled
+          - MyBankPaymentCollectionIsEnabled
+          - CABranchCodeIsReal
+          - SecurityQuestionAnswerRequired
+          - StablecoinWalletNetworkIsValid
+        parameters:
+          type: object
+          description: 'Parameters of the validation rule, as an object.
+
+            These can be used to retrieve details of the relevant validation rule, as structured data.
+
+            This can be used for custom rule/error translations, client-side validation, client-side masking, populating dropdowns, etc.
+
+            Please review the parameterized descriptions below to see which parameters are returned for each type of validation function.
+
+            E.g. `{ min: 5, max: 10 }`
+
+
+
+            Validation functions which can be used for client-side validation (simple logic, no server-side dependencies):
+
+
+            | Name | Description |
+
+            | --- | --- |
+
+            | AccountCurrencyMatchesPaymentCurrency | The bank account currency must match the payment currency |
+
+            | Alphanumeric | Should contain alphanumeric characters only |
+
+            | AlphanumericIncludingPunctuation | Should contain alphanumeric characters or punctuation only |
+
+            | AlphanumericIncludingSpaces | Should contain alphanumeric characters or spaces only |
+
+            | Boolean | Should be either true or false |
+
+            | BPayAlphanumeric | Should only contain valid characters for Customer reference number |
+
+            | ChineseCharacters | Should contain Chinese characters only |
+
+            | ChineseCharactersIncludingPunctuation | Should contain Chinese characters or punctuation only |
+
+            | CNAccountNameMatchesFirstLastNameInChinese | The account name should match the first and last names in Chinese |
+
+            | RecipientIsAccountUBO | The beneficiary to add must belongs to one of the UBOs for the given MyBank account |
+
+            | MyBankDateSharingIsEnabled | Data sharing must be enabled for the given MyBank account |
+
+            | MyBankPaymentCollectionIsEnabled | Payment collection must be activated for the given MyBank account |
+
+            | Date | Should be a valid date, formatted in ISO8601 date format |
+
+            | DateTime | Should be a valid date and time, formatted in ISO8601 datetime format |
+
+            | DigitsOnly | Should contain digits only |
+
+            | Email | Should be a valid email address |
+
+            | Equal | Should equal {value} |
+
+            | IbanCountryOneOf | The country code in the IBAN should match the bank country code |
+
+            | Length | Should be {length} characters long |
+
+            | MaxLength | Should contain at most {max} characters |
+
+            | MinItems | Should contain at least {min} item(s) |
+
+            | MinLength | Should contain at least {min} characters |
+
+            | MinMaxLength | Should contain {min} to {max} characters |
+
+            | NumberOfDecimalPlaces | Should have at most {decimalPlaces} decimal places |
+
+            | OneOf | Should be one of the following: [{values}] |
+
+            | PaymentAmountOrSourceAmountIsSpecified | Either payment_amount or source_amount must be specified |
+
+            | PositiveNumber | Should be a positive number |
+
+            | PositivePrice | Should be positive, max. 2 decimal places |
+
+            | SwiftCodeMatchesCountry | The SWIFT code should match the bank country code selected |
+
+
+
+            Validation functions which should only be used for error/rule translation (complex logic or server-side dependencies):
+
+
+            | Name | Description |
+
+            | --- | --- |
+
+            | AccountRoutingValue1IsReal | Should be valid and supported |
+
+            | BeneficiaryContactExists | Should be an existing beneficiary for this account |
+
+            | BeneficiaryContactIsValid | Should pass beneficiary validation |
+
+            | BeneficiaryContactStreetAddressIsValid | Should provide street address |
+
+            | BeneficiaryContactSupportsPaymentMethod | The specified beneficiary should support the specified payment method |
+
+            | BillerIdIsReal | Should be valid and supported |
+
+            | CNAreaCodeIsReal | Should be valid and supported |
+
+            | CNBankCodeIsReal | Should be valid and supported |
+
+            | GteToday | Should be today or a future date |
+
+            | IbanIsValid | Should be valid and supported |
+
+            | MayNotSpecifyPayer | payer or payer_id may not be provided |
+
+            | MaxAmount | Should be at maximum {currency} {max} in value |
+
+            | MinAmount | Should be at minimum {currency} {min} in value |
+
+            | MinMaxAge | Should be between {min} and {max} years old |
+
+            | PayerContactExists | Should be an existing payer for this account |
+
+            | PayerContactIsValid | Should pass payer validation |
+
+            | PaymentChannelNotSupported | This payment channel is not currently supported |
+
+            | PaymentOrderInfo_ItemTotalCorrect | The line total of each item specified must match the unit price multiplied by the quantity |
+
+            | PaymentOrderInfo_OrdersAllSameCurrency | All orders in this payment must be of the same currency |
+
+            | PaymentOrderInfo_TotalEqualsPaymentAmount | The total amount of all orders for the payment must match the payment amount |
+
+            | PaymentOrderInfo_TotalEqualsSourceAmount | The total amount of all orders for the payment must match the source amount |
+
+            | SwiftCodeIsReal | Should be a valid and supported SWIFT code / BIC |
+
+            | SwiftCodeIsSupported | Should be valid and supported |
+
+            | WhitespaceTrimmed | Should not contain leading or trailing whitespace characters |.
+
+
+            '
+        server_side_only:
+          type: boolean
+          description: Whether this validation function is unsuitable for mapping to a client-side validation function.  Generally this indicates a dependence on server-side resources or complex logic.
+    PayerContact:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: id used to uniquely identify this payer contact on the Airwallex platform.
+        nickname:
+          type: string
+          description: Nickname of the payer.
+        payer:
+          $ref: '#/components/schemas/Payouts_Payer'
+          description: Details of the payer.
+    Payouts_Payer:
+      type: object
+      required:
+      - address
+      - entity_type
+      properties:
+        additional_info:
+          $ref: '#/components/schemas/PayerAdditionalInfo'
+          description: Additional information about the payer.
+        address:
+          $ref: '#/components/schemas/PayerAddress'
+          description: Payer's address details.
+        company_name:
+          type: string
+          description: Company name of the payer.
+        date_of_birth:
+          type: string
+          description: Payer's date of birth.
+        entity_type:
+          type: string
+          description: Entity type of the payer.
+        first_name:
+          type: string
+          description: First name of the payer.
+        last_name:
+          type: string
+          description: Last name of the payer.
+      description: Details for the payer in the transfer request. If payer_id provided in the transfer request then payer should be empty.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    Schema:
+      type: object
+      properties:
+        depends_on:
+          type: string
+          description: '
+
+            When dependency error, indicates the field whose value is required to determine this field''s schema.
+
+
+            Applicable for schema unknown reasons: `DEPENDENCY_NOT_PROVIDED`, `DEPENDENCY_INVALID`.
+
+
+            *[test-only]*: This field is for integration debugging purposes only and should not be used in production flows.  It may be removed in future as a backwards-compatible change.
+
+            '
+        relevant:
+          type: boolean
+          description: 'When schema known, indicates whether the field is relevant in this scenario.  This can be used to determine whether to display the field in the user interface.
+
+
+            Applicable when `rules_known` is true.'
+        required:
+          type: boolean
+          description: 'When relevant, indicates whether the field is mandatory (true) or optional (false).
+
+
+            Applicable when `relevant` is true.'
+        rules_known:
+          type: boolean
+          description: Indicates whether the schema could be determined for this field.  If false, refer to `schema_unknown_reason`.
+        schema_input_only:
+          type: boolean
+          description: 'When relevant, indicates that this field is only used for specifying options during schema retrieval.  These options are generally implied during creation requests.
+
+
+            E.g. `locked_amount` is a decision field that specifies whether to use source amount or payment amount.
+
+
+            Applicable when `relevant` is true.'
+        schema_unknown_reason:
+          type: string
+          description: 'When schema rules are unknown, provides the reason why.
+
+
+            Applicable when `rules_known` is false.
+
+
+            *[test-only]*: This field is for integration debugging purposes only and should not be used in production flows.  It may be removed in future as a backwards-compatible change.'
+          enum:
+          - DEPENDENCY_NOT_PROVIDED
+          - DEPENDENCY_INVALID
+          - INTERNAL_ERROR
+          x-enumDescriptions:
+            DEPENDENCY_NOT_PROVIDED: This field's rules could not be determined, as they depend on another field which was not supplied.  Refer to `schema_depends_on` for the other field's path.
+            DEPENDENCY_INVALID: This field's rules could not be determined, as they depend on another field whose value is invalid.  Refer to `schema_depends_on` for the other field's path, and check for a validation error reported against it.
+            INTERNAL_ERROR: An unexpected internal problem has occurred whilst trying to determine the schema for this field.  Please advise support if persists.
+        type:
+          type: string
+          description: 'When relevant, indicates the data type of the field.
+
+
+            Applicable when `rules_known` is true.'
+          enum:
+          - array
+          - boolean
+          - number
+          - object
+          - string
+          - date
+          - enum
+        validation_functions:
+          type: array
+          description: 'When relevant, provides the rules this field must pass to be valid.
+
+
+            These include both textual descriptions and data, allowing for displaying rules/errors, client side validation, dropdown values, client side masking, etc.
+
+
+            Applicable when `relevant` is true.'
+          items:
+            $ref: '#/components/schemas/ValidationFunction'
+    FieldValidationError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: 'The type of error.  This determines the relevance of other error data fields.
+
+
+            | Error code | Description |
+
+            | --- | --- |
+
+            | MISSING_REQUIRED_VALUE | The field is required but was not supplied |
+
+            | FAILED_VALIDATION_FUNCTIONS | The supplied value failed one or more validation rules.  Refer to `validation_functions`. |
+
+            | INVALID_TYPE | The supplied value is not the correct data type.  Refer to `expected_type`. |
+
+            | IRRELEVANT_VALUE | An irrelevant field was supplied, e.g. company name for personal beneficiary. |
+
+            | MISSING_DECISION_VALUE | The value of this field could not be implied from other supplied fields. |
+
+            | SCHEMA_UNKNOWN | The schema for this field could not be determined.  Refer to `schema_unknown_reason`. |
+
+            | INTERNAL_ERROR | An unexpected internal problem has occurred.  Please advise support if persists. |.
+
+            '
+          enum:
+          - INTERNAL_ERROR
+          - INVALID_TYPE
+          - IRRELEVANT_VALUE
+          - MISSING_DECISION_VALUE
+          - MISSING_REQUIRED_VALUE
+          - SCHEMA_UNKNOWN
+          - FAILED_VALIDATION_FUNCTIONS
+          - ERROR_VALIDATION_FAILED
+          - PROVIDER_VERIFICATION_FAILED
+        description:
+          type: string
+          description: 'A display-friendly description of the error code.
+
+
+            E.g. "This field is required"'
+        error_details:
+          type: array
+          description: A list of error detail, supporting validation revamp response standard.
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+        expected_type:
+          type: string
+          description: 'The data type that should have been supplied.
+
+
+            Relevant for error codes: `INVALID_TYPE`.'
+          enum:
+          - array
+          - boolean
+          - number
+          - object
+          - string
+          - date
+          - enum
+        schema_depends_on:
+          type: string
+          description: 'The field whose value is required to determine this field''s schema.
+
+
+            Relevant for schema unknown reasons: `DEPENDENCY_NOT_PROVIDED`, `DEPENDENCY_INVALID`.
+
+
+            *[test-only]*: This field is for integration debugging purposes only and should not be used in production flows.  It may be removed in future as a backwards-compatible change.
+
+            '
+        schema_unknown_reason:
+          type: string
+          description: 'When schema rules are unknown, provides the reason why.
+
+
+            Relevant for error codes: `SCHEMA_UNKNOWN`.
+
+
+            *[test-only]*: This field is for integration debugging purposes only and should not be used in production flows.  It may be removed in future as a backwards-compatible change.'
+          enum:
+          - DEPENDENCY_NOT_PROVIDED
+          - DEPENDENCY_INVALID
+          - INTERNAL_ERROR
+          x-enumDescriptions:
+            DEPENDENCY_NOT_PROVIDED: This field's rules could not be determined, as they depend on another field which was not supplied.  Refer to `schema_depends_on` for the other field's path.
+            DEPENDENCY_INVALID: This field's rules could not be determined, as they depend on another field whose value is invalid.  Refer to `schema_depends_on` for the other field's path, and check for a validation error reported against it.
+            INTERNAL_ERROR: An unexpected internal problem has occurred whilst trying to determine the schema for this field.  Please advise support if persists.
+        validation_functions:
+          type: array
+          description: 'A list of the validation functions which failed, including display-friendly descriptions and structured data for custom translation.
+
+
+            Relevant for error codes: `FAILED_VALIDATION_FUNCTIONS`.'
+          items:
+            $ref: '#/components/schemas/ValidationFunction'
+        value:
+          type: object
+          description: 'The supplied value.
+
+
+            Relevant for error codes: `INVALID_TYPE`, `IRRELEVANT_VALUE`, `SCHEMA_UNKNOWN`, `FAILED_VALIDATION_FUNCTIONS`.'
+    PayerAdditionalInfo:
+      type: object
+      properties:
+        business_registration_number:
+          type: string
+          description: Business registration number.
+        business_registration_type:
+          type: string
+          description: Type of business as registered with the local government authority.
+        external_id:
+          type: string
+          description: Unique identifier of the person in your company.
+        personal_email:
+          type: string
+          description: Personal email.
+        personal_id_number:
+          type: string
+          description: Personal unique identifier number.
+      description: Additional information about the payer.
+    PayerAddress:
+      type: object
+      required:
+      - country_code
+      properties:
+        city:
+          type: string
+          description: Payer's city.
+        country_code:
+          type: string
+          description: Payer's country code (2-letter ISO 3166-2 country code).
+        postcode:
+          type: string
+          description: Payer's post code.
+        state:
+          type: string
+          description: Payer's state.
+        street_address:
+          type: string
+          description: Payer's street address.
+      description: Payer's address details.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

@@ -1,0 +1,6833 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Core Resources > Linked Accounts API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Core Resources > Linked Accounts
+  description: Linked Accounts are external financial accounts associated with your Airwallex account. You can use Linked Accounts to fund your Airwallex wallet via Direct Debit.
+  x-domain: Core Resources
+  x-resource: Linked Accounts
+  x-urlPath: core_resources/linked_accounts
+paths:
+  /api/v1/linked_accounts/create:
+    post:
+      tags:
+      - Core Resources > Linked Accounts
+      summary: 1|Create a Linked Account
+      description: Links an external bank account to your Airwallex account. If you would like to use Open Banking as your verification method, please first call on the `linked_accounts/auth` endpoint to generate an authentication token.
+      operationId: createLinkedAccount
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              - type
+              properties:
+                account_owner_identifier:
+                  type: string
+                  description: Specify an owner unique identifier if verification of the external bank account had already been completed on another Airwallex product. This value should be null unless explicitly agreed upon with your Account Manager.
+                au_bank:
+                  type: object
+                  required:
+                  - account_name
+                  - account_number
+                  - bsb
+                  - currency
+                  - entity_type
+                  description: Australia bank information.
+                  properties:
+                    account_name:
+                      type: string
+                      description: Name of the external bank account owner.
+                    account_number:
+                      type: string
+                      description: External bank account number.
+                    bsb:
+                      type: string
+                      description: BSB code.
+                    currency:
+                      type: string
+                      description: Currency of your bank account.
+                      enum:
+                      - UNDEFINED
+                      - AED
+                      - AFN
+                      - ALL
+                      - AMD
+                      - ANG
+                      - AOA
+                      - ARS
+                      - AUD
+                      - AWG
+                      - AZN
+                      - BAM
+                      - BBD
+                      - BDT
+                      - BGN
+                      - BHD
+                      - BIF
+                      - BMD
+                      - BND
+                      - BOB
+                      - BOV
+                      - BRL
+                      - BSD
+                      - BTN
+                      - BWP
+                      - BYN
+                      - BYR
+                      - BZD
+                      - CAD
+                      - CDF
+                      - CHE
+                      - CHF
+                      - CHW
+                      - CLF
+                      - CLP
+                      - CNY
+                      - COP
+                      - COU
+                      - CRC
+                      - CUC
+                      - CUP
+                      - CVE
+                      - CZK
+                      - DJF
+                      - DKK
+                      - DOP
+                      - DZD
+                      - EGP
+                      - ERN
+                      - ETB
+                      - EUR
+                      - FJD
+                      - FKP
+                      - GBP
+                      - GEL
+                      - GHS
+                      - GIP
+                      - GMD
+                      - GNF
+                      - GTQ
+                      - GYD
+                      - HKD
+                      - HNL
+                      - HRK
+                      - HTG
+                      - HUF
+                      - IDR
+                      - ILS
+                      - INR
+                      - IQD
+                      - IRR
+                      - ISK
+                      - JMD
+                      - JOD
+                      - JPY
+                      - KES
+                      - KGS
+                      - KHR
+                      - KMF
+                      - KPW
+                      - KRW
+                      - KWD
+                      - KYD
+                      - KZT
+                      - LAK
+                      - LBP
+                      - LKR
+                      - LRD
+                      - LSL
+                      - LTL
+                      - LYD
+                      - MAD
+                      - MDL
+                      - MGA
+                      - MKD
+                      - MMK
+                      - MNT
+                      - MOP
+                      - MRO
+                      - MRU
+                      - MUR
+                      - MVR
+                      - MWK
+                      - MXN
+                      - MXV
+                      - MYR
+                      - MZN
+                      - NAD
+                      - NGN
+                      - NIO
+                      - NOK
+                      - NPR
+                      - NZD
+                      - OMR
+                      - PAB
+                      - PEN
+                      - PGK
+                      - PHP
+                      - PKR
+                      - PLN
+                      - PYG
+                      - QAR
+                      - RON
+                      - RSD
+                      - RUB
+                      - RUR
+                      - RWF
+                      - SAR
+                      - SBD
+                      - SCR
+                      - SDG
+                      - SEK
+                      - SGD
+                      - SHP
+                      - SLL
+                      - SOS
+                      - SRD
+                      - SSP
+                      - STD
+                      - STN
+                      - SVC
+                      - SYP
+                      - SZL
+                      - THB
+                      - TJS
+                      - TMT
+                      - TND
+                      - TOP
+                      - TRY
+                      - TTD
+                      - TWD
+                      - TZS
+                      - UAH
+                      - UGX
+                      - USD
+                      - USN
+                      - USS
+                      - UYI
+                      - UYU
+                      - UZS
+                      - VEF
+                      - VES
+                      - VND
+                      - VUV
+                      - WST
+                      - XAF
+                      - XAG
+                      - XAU
+                      - XBA
+                      - XBB
+                      - XBC
+                      - XBD
+                      - XCD
+                      - XDR
+                      - XOF
+                      - XPD
+                      - XPF
+                      - XPT
+                      - XSU
+                      - XTS
+                      - XUA
+                      - XXX
+                      - YER
+                      - ZAR
+                      - ZMW
+                      - ZWL
+                    entity_type:
+                      type: string
+                      description: Type of entity which owns this external bank account.
+                      enum:
+                      - BUSINESS
+                      - INDIVIDUAL
+                au_payid:
+                  type: object
+                  required:
+                  - account_identifier_type
+                  - currency
+                  - entity_type
+                  - payid
+                  description: Australia NPP PayID information.
+                  properties:
+                    account_identifier_type:
+                      type: string
+                      description: Identifier of PayID.
+                      enum:
+                      - EMAIL_ADDRESS
+                      - PHONE_NUMBER
+                      - ABN
+                      - ACN
+                      - ARBN
+                      - ARSN
+                      - ORGANISATION_IDENTIFIER
+                    currency:
+                      type: string
+                      description: Currency of your bank account.
+                      enum:
+                      - UNDEFINED
+                      - AED
+                      - AFN
+                      - ALL
+                      - AMD
+                      - ANG
+                      - AOA
+                      - ARS
+                      - AUD
+                      - AWG
+                      - AZN
+                      - BAM
+                      - BBD
+                      - BDT
+                      - BGN
+                      - BHD
+                      - BIF
+                      - BMD
+                      - BND
+                      - BOB
+                      - BOV
+                      - BRL
+                      - BSD
+                      - BTN
+                      - BWP
+                      - BYN
+                      - BYR
+                      - BZD
+                      - CAD
+                      - CDF
+                      - CHE
+                      - CHF
+                      - CHW
+                      - CLF
+                      - CLP
+                      - CNY
+                      - COP
+                      - COU
+                      - CRC
+                      - CUC
+                      - CUP
+                      - CVE
+                      - CZK
+                      - DJF
+                      - DKK
+                      - DOP
+                      - DZD
+                      - EGP
+                      - ERN
+                      - ETB
+                      - EUR
+                      - FJD
+                      - FKP
+                      - GBP
+                      - GEL
+                      - GHS
+                      - GIP
+                      - GMD
+                      - GNF
+                      - GTQ
+                      - GYD
+                      - HKD
+                      - HNL
+                      - HRK
+                      - HTG
+                      - HUF
+                      - IDR
+                      - ILS
+                      - INR
+                      - IQD
+                      - IRR
+                      - ISK
+                      - JMD
+                      - JOD
+                      - JPY
+                      - KES
+                      - KGS
+                      - KHR
+                      - KMF
+                      - KPW
+                      - KRW
+                      - KWD
+                      - KYD
+                      - KZT
+                      - LAK
+                      - LBP
+                      - LKR
+                      - LRD
+                      - LSL
+                      - LTL
+                      - LYD
+                      - MAD
+                      - MDL
+                      - MGA
+                      - MKD
+                      - MMK
+                      - MNT
+                      - MOP
+                      - MRO
+                      - MRU
+                      - MUR
+                      - MVR
+                      - MWK
+                      - MXN
+                      - MXV
+                      - MYR
+                      - MZN
+                      - NAD
+                      - NGN
+                      - NIO
+                      - NOK
+                      - NPR
+                      - NZD
+                      - OMR
+                      - PAB
+                      - PEN
+                      - PGK
+                      - PHP
+                      - PKR
+                      - PLN
+                      - PYG
+                      - QAR
+                      - RON
+                      - RSD
+                      - RUB
+                      - RUR
+                      - RWF
+                      - SAR
+                      - SBD
+                      - SCR
+                      - SDG
+                      - SEK
+                      - SGD
+                      - SHP
+                      - SLL
+                      - SOS
+                      - SRD
+                      - SSP
+                      - STD
+                      - STN
+                      - SVC
+                      - SYP
+                      - SZL
+                      - THB
+                      - TJS
+                      - TMT
+                      - TND
+                      - TOP
+                      - TRY
+                      - TTD
+                      - TWD
+                      - TZS
+                      - UAH
+                      - UGX
+                      - USD
+                      - USN
+                      - USS
+                      - UYI
+                      - UYU
+                      - UZS
+                      - VEF
+                      - VES
+                      - VND
+                      - VUV
+                      - WST
+                      - XAF
+                      - XAG
+                      - XAU
+                      - XBA
+                      - XBB
+                      - XBC
+                      - XBD
+                      - XCD
+                      - XDR
+                      - XOF
+                      - XPD
+                      - XPF
+                      - XPT
+                      - XSU
+                      - XTS
+                      - XUA
+                      - XXX
+                      - YER
+                      - ZAR
+                      - ZMW
+                      - ZWL
+                    entity_type:
+                      type: string
+                      description: Type of entity which owns this external bank account.
+                      enum:
+                      - BUSINESS
+                      - INDIVIDUAL
+                    payid:
+                      type: string
+                      description: Australia NPP PayID.
+                ca_bank:
+                  type: object
+                  required:
+                  - currency
+                  - entity_type
+                  description: Canada bank information.
+                  properties:
+                    account_name:
+                      type: string
+                      description: Name of the external bank account owner.
+                    account_number:
+                      type: string
+                      description: External bank account number.
+                    currency:
+                      type: string
+                      description: Currency of your bank account.
+                      enum:
+                      - UNDEFINED
+                      - AED
+                      - AFN
+                      - ALL
+                      - AMD
+                      - ANG
+                      - AOA
+                      - ARS
+                      - AUD
+                      - AWG
+                      - AZN
+                      - BAM
+                      - BBD
+                      - BDT
+                      - BGN
+                      - BHD
+                      - BIF
+                      - BMD
+                      - BND
+                      - BOB
+                      - BOV
+                      - BRL
+                      - BSD
+                      - BTN
+                      - BWP
+                      - BYN
+                      - BYR
+                      - BZD
+                      - CAD
+                      - CDF
+                      - CHE
+                      - CHF
+                      - CHW
+                      - CLF
+                      - CLP
+                      - CNY
+                      - COP
+                      - COU
+                      - CRC
+                      - CUC
+                      - CUP
+                      - CVE
+                      - CZK
+                      - DJF
+                      - DKK
+                      - DOP
+                      - DZD
+                      - EGP
+                      - ERN
+                      - ETB
+                      - EUR
+                      - FJD
+                      - FKP
+                      - GBP
+                      - GEL
+                      - GHS
+                      - GIP
+                      - GMD
+                      - GNF
+                      - GTQ
+                      - GYD
+                      - HKD
+                      - HNL
+                      - HRK
+                      - HTG
+                      - HUF
+                      - IDR
+                      - ILS
+                      - INR
+                      - IQD
+                      - IRR
+                      - ISK
+                      - JMD
+                      - JOD
+                      - JPY
+                      - KES
+                      - KGS
+                      - KHR
+                      - KMF
+                      - KPW
+                      - KRW
+                      - KWD
+                      - KYD
+                      - KZT
+                      - LAK
+                      - LBP
+                      - LKR
+                      - LRD
+                      - LSL
+                      - LTL
+                      - LYD
+                      - MAD
+                      - MDL
+                      - MGA
+                      - MKD
+                      - MMK
+                      - MNT
+                      - MOP
+                      - MRO
+                      - MRU
+                      - MUR
+                      - MVR
+                      - MWK
+                      - MXN
+                      - MXV
+                      - MYR
+                      - MZN
+                      - NAD
+                      - NGN
+                      - NIO
+                      - NOK
+                      - NPR
+                      - NZD
+                      - OMR
+                      - PAB
+                      - PEN
+                      - PGK
+                      - PHP
+                      - PKR
+                      - PLN
+                      - PYG
+                      - QAR
+                      - RON
+                      - RSD
+                      - RUB
+                      - RUR
+                      - RWF
+                      - SAR
+                      - SBD
+                      - SCR
+                      - SDG
+                      - SEK
+                      - SGD
+                      - SHP
+                      - SLL
+                      - SOS
+                      - SRD
+                      - SSP
+                      - STD
+                      - STN
+                      - SVC
+                      - SYP
+                      - SZL
+                      - THB
+                      - TJS
+                      - TMT
+                      - TND
+                      - TOP
+                      - TRY
+                      - TTD
+                      - TWD
+                      - TZS
+                      - UAH
+                      - UGX
+                      - USD
+                      - USN
+                      - USS
+                      - UYI
+                      - UYU
+                      - UZS
+                      - VEF
+                      - VES
+                      - VND
+                      - VUV
+                      - WST
+                      - XAF
+                      - XAG
+                      - XAU
+                      - XBA
+                      - XBB
+                      - XBC
+                      - XBD
+                      - XCD
+                      - XDR
+                      - XOF
+                      - XPD
+                      - XPF
+                      - XPT
+                      - XSU
+                      - XTS
+                      - XUA
+                      - XXX
+                      - YER
+                      - ZAR
+                      - ZMW
+                      - ZWL
+                    entity_type:
+                      type: string
+                      description: Type of entity which owns this external bank account.
+                      enum:
+                      - BUSINESS
+                      - INDIVIDUAL
+                    institution_number:
+                      type: string
+                      description: Institution number.
+                    transit_number:
+                      type: string
+                      description: Branch transit number.
+                egiro:
+                  type: object
+                  required:
+                  - auth_id
+                  - auth_reference
+                  description: Required information to verify a Linked Account with EGIRO authentication, which could be parsed from the EGIRO redirect url.
+                  properties:
+                    auth_id:
+                      type: integer
+                      format: int64
+                      description: The value is returned in the redirect url.
+                    auth_reference:
+                      type: string
+                      description: The value is returned in the redirect url.
+                eu_bank:
+                  type: object
+                  required:
+                  - account_name
+                  - currency
+                  - entity_type
+                  - iban
+                  description: Europe bank information.
+                  properties:
+                    account_name:
+                      type: string
+                      description: Name of the external bank account owner.
+                    currency:
+                      type: string
+                      description: Currency of your bank account.
+                      enum:
+                      - UNDEFINED
+                      - AED
+                      - AFN
+                      - ALL
+                      - AMD
+                      - ANG
+                      - AOA
+                      - ARS
+                      - AUD
+                      - AWG
+                      - AZN
+                      - BAM
+                      - BBD
+                      - BDT
+                      - BGN
+                      - BHD
+                      - BIF
+                      - BMD
+                      - BND
+                      - BOB
+                      - BOV
+                      - BRL
+                      - BSD
+                      - BTN
+                      - BWP
+                      - BYN
+                      - BYR
+                      - BZD
+                      - CAD
+                      - CDF
+                      - CHE
+                      - CHF
+                      - CHW
+                      - CLF
+                      - CLP
+                      - CNY
+                      - COP
+                      - COU
+                      - CRC
+                      - CUC
+                      - CUP
+                      - CVE
+                      - CZK
+                      - DJF
+                      - DKK
+                      - DOP
+                      - DZD
+                      - EGP
+                      - ERN
+                      - ETB
+                      - EUR
+                      - FJD
+                      - FKP
+                      - GBP
+                      - GEL
+                      - GHS
+                      - GIP
+                      - GMD
+                      - GNF
+                      - GTQ
+                      - GYD
+                      - HKD
+                      - HNL
+                      - HRK
+                      - HTG
+                      - HUF
+                      - IDR
+                      - ILS
+                      - INR
+                      - IQD
+                      - IRR
+                      - ISK
+                      - JMD
+                      - JOD
+                      - JPY
+                      - KES
+                      - KGS
+                      - KHR
+                      - KMF
+                      - KPW
+                      - KRW
+                      - KWD
+                      - KYD
+                      - KZT
+                      - LAK
+                      - LBP
+                      - LKR
+                      - LRD
+                      - LSL
+                      - LTL
+                      - LYD
+                      - MAD
+                      - MDL
+                      - MGA
+                      - MKD
+                      - MMK
+                      - MNT
+                      - MOP
+                      - MRO
+                      - MRU
+                      - MUR
+                      - MVR
+                      - MWK
+                      - MXN
+                      - MXV
+                      - MYR
+                      - MZN
+                      - NAD
+                      - NGN
+                      - NIO
+                      - NOK
+                      - NPR
+                      - NZD
+                      - OMR
+                      - PAB
+                      - PEN
+                      - PGK
+                      - PHP
+                      - PKR
+                      - PLN
+                      - PYG
+                      - QAR
+                      - RON
+                      - RSD
+                      - RUB
+                      - RUR
+                      - RWF
+                      - SAR
+                      - SBD
+                      - SCR
+                      - SDG
+                      - SEK
+                      - SGD
+                      - SHP
+                      - SLL
+                      - SOS
+                      - SRD
+                      - SSP
+                      - STD
+                      - STN
+                      - SVC
+                      - SYP
+                      - SZL
+                      - THB
+                      - TJS
+                      - TMT
+                      - TND
+                      - TOP
+                      - TRY
+                      - TTD
+                      - TWD
+                      - TZS
+                      - UAH
+                      - UGX
+                      - USD
+                      - USN
+                      - USS
+                      - UYI
+                      - UYU
+                      - UZS
+                      - VEF
+                      - VES
+                      - VND
+                      - VUV
+                      - WST
+                      - XAF
+                      - XAG
+                      - XAU
+                      - XBA
+                      - XBB
+                      - XBC
+                      - XBD
+                      - XCD
+                      - XDR
+                      - XOF
+                      - XPD
+                      - XPF
+                      - XPT
+                      - XSU
+                      - XTS
+                      - XUA
+                      - XXX
+                      - YER
+                      - ZAR
+                      - ZMW
+                      - ZWL
+                    entity_type:
+                      type: string
+                      description: Type of entity which owns this external bank account.
+                      enum:
+                      - BUSINESS
+                      - INDIVIDUAL
+                    iban:
+                      type: string
+                      description: International Bank Account Number.
+                gb_bank:
+                  type: object
+                  required:
+                  - account_name
+                  - account_number
+                  - currency
+                  - entity_type
+                  - sort_code
+                  description: Great Britain bank information.
+                  properties:
+                    account_name:
+                      type: string
+                      description: Name of the external bank account owner.
+                    account_number:
+                      type: string
+                      description: External bank account number.
+                    currency:
+                      type: string
+                      description: Currency of your bank account.
+                      enum:
+                      - UNDEFINED
+                      - AED
+                      - AFN
+                      - ALL
+                      - AMD
+                      - ANG
+                      - AOA
+                      - ARS
+                      - AUD
+                      - AWG
+                      - AZN
+                      - BAM
+                      - BBD
+                      - BDT
+                      - BGN
+                      - BHD
+                      - BIF
+                      - BMD
+                      - BND
+                      - BOB
+                      - BOV
+                      - BRL
+                      - BSD
+                      - BTN
+                      - BWP
+                      - BYN
+                      - BYR
+                      - BZD
+                      - CAD
+                      - CDF
+                      - CHE
+                      - CHF
+                      - CHW
+                      - CLF
+                      - CLP
+                      - CNY
+                      - COP
+                      - COU
+                      - CRC
+                      - CUC
+                      - CUP
+                      - CVE
+                      - CZK
+                      - DJF
+                      - DKK
+                      - DOP
+                      - DZD
+                      - EGP
+                      - ERN
+                      - ETB
+                      - EUR
+                      - FJD
+                      - FKP
+                      - GBP
+                      - GEL
+                      - GHS
+                      - GIP
+                      - GMD
+                      - GNF
+                      - GTQ
+                      - GYD
+                      - HKD
+                      - HNL
+                      - HRK
+                      - HTG
+                      - HUF
+                      - IDR
+                      - ILS
+                      - INR
+                      - IQD
+                      - IRR
+                      - ISK
+                      - JMD
+                      - JOD
+                      - JPY
+                      - KES
+                      - KGS
+                      - KHR
+                      - KMF
+                      - KPW
+                      - KRW
+                      - KWD
+                      - KYD
+                      - KZT
+                      - LAK
+                      - LBP
+                      - LKR
+                      - LRD
+                      - LSL
+                      - LTL
+                      - LYD
+                      - MAD
+                      - MDL
+                      - MGA
+                      - MKD
+                      - MMK
+                      - MNT
+                      - MOP
+                      - MRO
+                      - MRU
+                      - MUR
+                      - MVR
+                      - MWK
+                      - MXN
+                      - MXV
+                      - MYR
+                      - MZN
+                      - NAD
+                      - NGN
+                      - NIO
+                      - NOK
+                      - NPR
+                      - NZD
+                      - OMR
+                      - PAB
+                      - PEN
+                      - PGK
+                      - PHP
+                      - PKR
+                      - PLN
+                      - PYG
+                      - QAR
+                      - RON
+                      - RSD
+                      - RUB
+                      - RUR
+                      - RWF
+                      - SAR
+                      - SBD
+                      - SCR
+                      - SDG
+                      - SEK
+                      - SGD
+                      - SHP
+                      - SLL
+                      - SOS
+                      - SRD
+                      - SSP
+                      - STD
+                      - STN
+                      - SVC
+                      - SYP
+                      - SZL
+                      - THB
+                      - TJS
+                      - TMT
+                      - TND
+                      - TOP
+                      - TRY
+                      - TTD
+                      - TWD
+                      - TZS
+                      - UAH
+                      - UGX
+                      - USD
+                      - USN
+                      - USS
+                      - UYI
+                      - UYU
+                      - UZS
+                      - VEF
+                      - VES
+                      - VND
+                      - VUV
+                      - WST
+                      - XAF
+                      - XAG
+                      - XAU
+                      - XBA
+                      - XBB
+                      - XBC
+                      - XBD
+                      - XCD
+                      - XDR
+                      - XOF
+                      - XPD
+                      - XPF
+                      - XPT
+                      - XSU
+                      - XTS
+                      - XUA
+                      - XXX
+                      - YER
+                      - ZAR
+                      - ZMW
+                      - ZWL
+                    entity_type:
+                      type: string
+                      description: Type of entity which owns this external bank account.
+                      enum:
+                      - BUSINESS
+                      - INDIVIDUAL
+                    sort_code:
+                      type: string
+                      description: Sort code.
+                hk_bank:
+                  type: object
+                  required:
+                  - account_name
+                  - account_number
+                  - bank_code
+                  - currency
+                  - entity_type
+                  description: Hong Kong bank information.
+                  properties:
+                    account_name:
+                      type: string
+                      description: Name of the external bank account owner.
+                    account_number:
+                      type: string
+                      description: External bank account number.
+                    bank_code:
+                      type: string
+                      description: Bank code.
+                    currency:
+                      type: string
+                      description: Currency of your bank account.
+                      enum:
+                      - UNDEFINED
+                      - AED
+                      - AFN
+                      - ALL
+                      - AMD
+                      - ANG
+                      - AOA
+                      - ARS
+                      - AUD
+                      - AWG
+                      - AZN
+                      - BAM
+                      - BBD
+                      - BDT
+                      - BGN
+                      - BHD
+                      - BIF
+                      - BMD
+                      - BND
+                      - BOB
+                      - BOV
+                      - BRL
+                      - BSD
+                      - BTN
+                      - BWP
+                      - BYN
+                      - BYR
+                      - BZD
+                      - CAD
+                      - CDF
+                      - CHE
+                      - CHF
+                      - CHW
+                      - CLF
+                      - CLP
+                      - CNY
+                      - COP
+                      - COU
+                      - CRC
+                      - CUC
+                      - CUP
+                      - CVE
+                      - CZK
+                      - DJF
+                      - DKK
+                      - DOP
+                      - DZD
+                      - EGP
+                      - ERN
+                      - ETB
+                      - EUR
+                      - FJD
+                      - FKP
+                      - GBP
+                      - GEL
+                      - GHS
+                      - GIP
+                      - GMD
+                      - GNF
+                      - GTQ
+                      - GYD
+                      - HKD
+                      - HNL
+                      - HRK
+                      - HTG
+                      - HUF
+                      - IDR
+                      - ILS
+                      - INR
+                      - IQD
+                      - IRR
+                      - ISK
+                      - JMD
+                      - JOD
+                      - JPY
+                      - KES
+                      - KGS
+                      - KHR
+                      - KMF
+                      - KPW
+                      - KRW
+                      - KWD
+                      - KYD
+                      - KZT
+                      - LAK
+                      - LBP
+                      - LKR
+                      - LRD
+                      - LSL
+                      - LTL
+                      - LYD
+                      - MAD
+                      - MDL
+                      - MGA
+                      - MKD
+                      - MMK
+                      - MNT
+                      - MOP
+                      - MRO
+                      - MRU
+                      - MUR
+                      - MVR
+                      - MWK
+                      - MXN
+                      - MXV
+                      - MYR
+                      - MZN
+                      - NAD
+                      - NGN
+                      - NIO
+                      - NOK
+                      - NPR
+                      - NZD
+                      - OMR
+                      - PAB
+                      - PEN
+                      - PGK
+                      - PHP
+                      - PKR
+                      - PLN
+                      - PYG
+                      - QAR
+                      - RON
+                      - RSD
+                      - RUB
+                      - RUR
+                      - RWF
+                      - SAR
+                      - SBD
+                      - SCR
+                      - SDG
+                      - SEK
+                      - SGD
+                      - SHP
+                      - SLL
+                      - SOS
+                      - SRD
+                      - SSP
+                      - STD
+                      - STN
+                      - SVC
+                      - SYP
+                      - SZL
+                      - THB
+                      - TJS
+                      - TMT
+                      - TND
+                      - TOP
+                      - TRY
+                      - TTD
+                      - TWD
+                      - TZS
+                      - UAH
+                      - UGX
+                      - USD
+                      - USN
+                      - USS
+                      - UYI
+                      - UYU
+                      - UZS
+                      - VEF
+                      - VES
+                      - VND
+                      - VUV
+                      - WST
+                      - XAF
+                      - XAG
+                      - XAU
+                      - XBA
+                      - XBB
+                      - XBC
+                      - XBD
+                      - XCD
+                      - XDR
+                      - XOF
+                      - XPD
+                      - XPF
+                      - XPT
+                      - XSU
+                      - XTS
+                      - XUA
+                      - XXX
+                      - YER
+                      - ZAR
+                      - ZMW
+                      - ZWL
+                    entity_type:
+                      type: string
+                      description: Type of entity which owns this external bank account.
+                      enum:
+                      - BUSINESS
+                      - INDIVIDUAL
+                mandate:
+                  type: object
+                  required:
+                  - type
+                  description: Details about the mandate for authorizing direct debits. Enter null if no mandate is signed.
+                  properties:
+                    controls:
+                      type: object
+                      description: Set of characteristics defining the mandate. Controls how Direct Debit can be initiated. Only applicable if mandate type is AU_PAYTO_DEBIT.
+                      properties:
+                        amount_type:
+                          type: string
+                          enum:
+                          - VARIABLE
+                          - FIXED
+                          x-enumDescriptions:
+                            VARIABLE: Amount to be paid from the Linked Account is variable. A max_amount_per_transaction is recommended.
+                            FIXED: Amount to be paid from the Linked Account is fixed. A specific fixed_amount_per_transaction is required.
+                        end_date:
+                          type: string
+                          description: End date to expect to be paid from the Linked Account.
+                        fixed_amount_per_transaction:
+                          type: number
+                          description: The fixed amount that may be paid from the Linked Account, per transaction.
+                        max_amount_per_transaction:
+                          type: number
+                          description: Maximum amount that may be paid from the Linked Account, per transaction.
+                        schedule:
+                          type: object
+                          required:
+                          - period
+                          - period_unit
+                          description: The schedule for recurring transaction cycles. If no schedule is provided, the number of transactions allowed will be unlimited.
+                          properties:
+                            period:
+                              type: integer
+                              format: int32
+                              description: The number of period units between recurring transaction cycles. For example, the transaction cycle is every quarter if period = 3 and period_unit = MONTH.
+                            period_unit:
+                              type: string
+                              description: Specifies transaction frequency.
+                              enum:
+                              - DAY
+                              - WEEK
+                              - MONTH
+                              - YEAR
+                    email:
+                      type: string
+                      description: Email of the signatory. A pdf copy of the mandate will be shared to this address. Required if you are not reusing mandate.
+                    identification_document:
+                      type: object
+                      required:
+                      - type
+                      - value
+                      description: Identification document. Required if mandate type is HK_FPS_DEBIT.
+                      properties:
+                        type:
+                          type: string
+                          description: Id Type.
+                          enum:
+                          - HK_ID
+                          - PASSPORT
+                          - BUSINESS_REGISTRATION_NUMBER
+                          - CERTIFICATE_OF_INCORPORATION_NUMBER
+                          - OTHERS
+                          - NRIC
+                          - FIN
+                          - UEN
+                        value:
+                          type: string
+                          description: Id Value.
+                    preferred_reference:
+                      type: string
+                      description: Preferred reference for mandate. We use this value to generate a unique reference (that may be different from the initial value), then register in payment system.
+                    reuse_mandate_reference:
+                      type: string
+                      description: Reference to the existing mandate in reuse mandate scenario. This value should be null unless explicitly agreed upon with your Account Manager.
+                    signatory:
+                      type: string
+                      description: Name of the signatory of this mandate. This should be the external account owner. Required if you are not reusing mandate.
+                    type:
+                      type: string
+                      description: Type of the source of your funds.
+                      enum:
+                      - AU_BECS_DEBIT
+                      - US_ACH_DEBIT
+                      - US_FEDWIRE_DEBIT
+                      - GB_BACS_DEBIT
+                      - EU_SEPA_DEBIT
+                      - CA_EFT_DEBIT
+                      - HK_FPS_DEBIT
+                      - SG_EGIRO_DEBIT
+                      - AU_PAYTO_DEBIT
+                      - NZ_BECS_DEBIT
+                    version:
+                      type: string
+                      description: Version of the mandate signed. Required if you are not reusing mandate.
+                nz_bank:
+                  type: object
+                  required:
+                  - account_name
+                  - account_number
+                  - currency
+                  - entity_type
+                  description: New Zealand bank information.
+                  properties:
+                    account_name:
+                      type: string
+                      description: Name of the external bank account owner.
+                    account_number:
+                      type: string
+                      description: External bank account number.
+                    currency:
+                      type: string
+                      description: Currency of your bank account.
+                      enum:
+                      - UNDEFINED
+                      - AED
+                      - AFN
+                      - ALL
+                      - AMD
+                      - ANG
+                      - AOA
+                      - ARS
+                      - AUD
+                      - AWG
+                      - AZN
+                      - BAM
+                      - BBD
+                      - BDT
+                      - BGN
+                      - BHD
+                      - BIF
+                      - BMD
+                      - BND
+                      - BOB
+                      - BOV
+                      - BRL
+                      - BSD
+                      - BTN
+                      - BWP
+                      - BYN
+                      - BYR
+                      - BZD
+                      - CAD
+                      - CDF
+                      - CHE
+                      - CHF
+                      - CHW
+                      - CLF
+                      - CLP
+                      - CNY
+                      - COP
+                      - COU
+                      - CRC
+                      - CUC
+                      - CUP
+                      - CVE
+                      - CZK
+                      - DJF
+                      - DKK
+                      - DOP
+                      - DZD
+                      - EGP
+                      - ERN
+                      - ETB
+                      - EUR
+                      - FJD
+                      - FKP
+                      - GBP
+                      - GEL
+                      - GHS
+                      - GIP
+                      - GMD
+                      - GNF
+                      - GTQ
+                      - GYD
+                      - HKD
+                      - HNL
+                      - HRK
+                      - HTG
+                      - HUF
+                      - IDR
+                      - ILS
+                      - INR
+                      - IQD
+                      - IRR
+                      - ISK
+                      - JMD
+                      - JOD
+                      - JPY
+                      - KES
+                      - KGS
+                      - KHR
+                      - KMF
+                      - KPW
+                      - KRW
+                      - KWD
+                      - KYD
+                      - KZT
+                      - LAK
+                      - LBP
+                      - LKR
+                      - LRD
+                      - LSL
+                      - LTL
+                      - LYD
+                      - MAD
+                      - MDL
+                      - MGA
+                      - MKD
+                      - MMK
+                      - MNT
+                      - MOP
+                      - MRO
+                      - MRU
+                      - MUR
+                      - MVR
+                      - MWK
+                      - MXN
+                      - MXV
+                      - MYR
+                      - MZN
+                      - NAD
+                      - NGN
+                      - NIO
+                      - NOK
+                      - NPR
+                      - NZD
+                      - OMR
+                      - PAB
+                      - PEN
+                      - PGK
+                      - PHP
+                      - PKR
+                      - PLN
+                      - PYG
+                      - QAR
+                      - RON
+                      - RSD
+                      - RUB
+                      - RUR
+                      - RWF
+                      - SAR
+                      - SBD
+                      - SCR
+                      - SDG
+                      - SEK
+                      - SGD
+                      - SHP
+                      - SLL
+                      - SOS
+                      - SRD
+                      - SSP
+                      - STD
+                      - STN
+                      - SVC
+                      - SYP
+                      - SZL
+                      - THB
+                      - TJS
+                      - TMT
+                      - TND
+                      - TOP
+                      - TRY
+                      - TTD
+                      - TWD
+                      - TZS
+                      - UAH
+                      - UGX
+                      - USD
+                      - USN
+                      - USS
+                      - UYI
+                      - UYU
+                      - UZS
+                      - VEF
+                      - VES
+                      - VND
+                      - VUV
+                      - WST
+                      - XAF
+                      - XAG
+                      - XAU
+                      - XBA
+                      - XBB
+                      - XBC
+                      - XBD
+                      - XCD
+                      - XDR
+                      - XOF
+                      - XPD
+                      - XPF
+                      - XPT
+                      - XSU
+                      - XTS
+                      - XUA
+                      - XXX
+                      - YER
+                      - ZAR
+                      - ZMW
+                      - ZWL
+                    entity_type:
+                      type: string
+                      description: Type of entity which owns this external bank account.
+                      enum:
+                      - BUSINESS
+                      - INDIVIDUAL
+                plaid:
+                  type: object
+                  required:
+                  - account
+                  - institution
+                  - public_token
+                  description: Required information to verify a Linked Account with Plaid authentication, which could be parsed from the Plaid Modal onSuccess callback.
+                  properties:
+                    account:
+                      type: object
+                      required:
+                      - id
+                      - mask
+                      - name
+                      description: The bank account that was selected in the Plaid Modal.
+                      properties:
+                        id:
+                          type: string
+                          description: Plaid’s unique identifier for the account.
+                        mask:
+                          type: string
+                          description: The last 2-4 alphanumeric characters of an account's official account number.
+                        name:
+                          type: string
+                          description: The name of the account, either assigned by the user or by the financial institution itself.
+                    institution:
+                      type: object
+                      required:
+                      - id
+                      - name
+                      description: The financial institution that was selected in the Plaid Modal.
+                      properties:
+                        id:
+                          type: string
+                          description: The institution identifier assigned by Plaid.
+                        name:
+                          type: string
+                          description: The full financial institution name.
+                    public_token:
+                      type: string
+                      description: The Plaid Public Token.
+                preferred_verification_type:
+                  type: string
+                  description: Type of verification used to link your external account.
+                  enum:
+                  - MICRO_DEPOSIT
+                  - PLATFORM_ENDORSEMENT
+                  - PLAID
+                  - TRUELAYER
+                  - EGIRO
+                  - MANDATE
+                  - BASIQ
+                request_id:
+                  type: string
+                  description: Unique request identifier.
+                sg_bank:
+                  type: object
+                  required:
+                  - account_name
+                  - account_number
+                  - currency
+                  - entity_type
+                  - swift_code
+                  description: Singapore bank information.
+                  properties:
+                    account_name:
+                      type: string
+                      description: Name of the external bank account owner.
+                    account_number:
+                      type: string
+                      description: External bank account number.
+                    currency:
+                      type: string
+                      description: Currency of your bank account.
+                      enum:
+                      - UNDEFINED
+                      - AED
+                      - AFN
+                      - ALL
+                      - AMD
+                      - ANG
+                      - AOA
+                      - ARS
+                      - AUD
+                      - AWG
+                      - AZN
+                      - BAM
+                      - BBD
+                      - BDT
+                      - BGN
+                      - BHD
+                      - BIF
+                      - BMD
+                      - BND
+                      - BOB
+                      - BOV
+                      - BRL
+                      - BSD
+                      - BTN
+                      - BWP
+                      - BYN
+                      - BYR
+                      - BZD
+                      - CAD
+                      - CDF
+                      - CHE
+                      - CHF
+                      - CHW
+                      - CLF
+                      - CLP
+                      - CNY
+                      - COP
+                      - COU
+                      - CRC
+                      - CUC
+                      - CUP
+                      - CVE
+                      - CZK
+                      - DJF
+                      - DKK
+                      - DOP
+                      - DZD
+                      - EGP
+                      - ERN
+                      - ETB
+                      - EUR
+                      - FJD
+                      - FKP
+                      - GBP
+                      - GEL
+                      - GHS
+                      - GIP
+                      - GMD
+                      - GNF
+                      - GTQ
+                      - GYD
+                      - HKD
+                      - HNL
+                      - HRK
+                      - HTG
+                      - HUF
+                      - IDR
+                      - ILS
+                      - INR
+                      - IQD
+                      - IRR
+                      - ISK
+                      - JMD
+                      - JOD
+                      - JPY
+                      - KES
+                      - KGS
+                      - KHR
+                      - KMF
+                      - KPW
+                      - KRW
+                      - KWD
+                      - KYD
+                      - KZT
+                      - LAK
+                      - LBP
+                      - LKR
+                      - LRD
+                      - LSL
+                      - LTL
+                      - LYD
+                      - MAD
+                      - MDL
+                      - MGA
+                      - MKD
+                      - MMK
+                      - MNT
+                      - MOP
+                      - MRO
+                      - MRU
+                      - MUR
+                      - MVR
+                      - MWK
+                      - MXN
+                      - MXV
+                      - MYR
+                      - MZN
+                      - NAD
+                      - NGN
+                      - NIO
+                      - NOK
+                      - NPR
+                      - NZD
+                      - OMR
+                      - PAB
+                      - PEN
+                      - PGK
+                      - PHP
+                      - PKR
+                      - PLN
+                      - PYG
+                      - QAR
+                      - RON
+                      - RSD
+                      - RUB
+                      - RUR
+                      - RWF
+                      - SAR
+                      - SBD
+                      - SCR
+                      - SDG
+                      - SEK
+                      - SGD
+                      - SHP
+                      - SLL
+                      - SOS
+                      - SRD
+                      - SSP
+                      - STD
+                      - STN
+                      - SVC
+                      - SYP
+                      - SZL
+                      - THB
+                      - TJS
+                      - TMT
+                      - TND
+                      - TOP
+                      - TRY
+                      - TTD
+                      - TWD
+                      - TZS
+                      - UAH
+                      - UGX
+                      - USD
+                      - USN
+                      - USS
+                      - UYI
+                      - UYU
+                      - UZS
+                      - VEF
+                      - VES
+                      - VND
+                      - VUV
+                      - WST
+                      - XAF
+                      - XAG
+                      - XAU
+                      - XBA
+                      - XBB
+                      - XBC
+                      - XBD
+                      - XCD
+                      - XDR
+                      - XOF
+                      - XPD
+                      - XPF
+                      - XPT
+                      - XSU
+                      - XTS
+                      - XUA
+                      - XXX
+                      - YER
+                      - ZAR
+                      - ZMW
+                      - ZWL
+                    entity_type:
+                      type: string
+                      description: Type of entity which owns this external bank account.
+                      enum:
+                      - BUSINESS
+                      - INDIVIDUAL
+                    swift_code:
+                      type: string
+                      description: SWIFT code.
+                truelayer:
+                  type: object
+                  required:
+                  - code
+                  - state
+                  description: Required information to verify a Linked Account with Truelayer authentication, which could be parsed from the Truelayer onSuccess callback url.
+                  properties:
+                    code:
+                      type: string
+                      description: The path parameter `code` retrieved from TrueLayer's callback url (redirect_url_host?**code=code_value**&state=state_value).
+                    state:
+                      type: integer
+                      format: int64
+                      description: The path parameter `state` retrieved from TrueLayer's callback url (redirect_url_host?code=code_value&**state=state_value**).
+                type:
+                  type: string
+                  description: Type of Linked Account.
+                  enum:
+                  - AU_BANK
+                  - NZ_BANK
+                  - US_BANK
+                  - GB_BANK
+                  - EU_BANK
+                  - HK_BANK
+                  - SG_BANK
+                  - CA_BANK
+                  - AU_PAYID
+                us_bank:
+                  type: object
+                  required:
+                  - currency
+                  - entity_type
+                  description: United States bank information.
+                  properties:
+                    account_name:
+                      type: string
+                      description: Name of the external bank account owner.
+                    account_number:
+                      type: string
+                      description: External bank account number.
+                    account_type:
+                      type: string
+                      description: External bank account type.
+                      enum:
+                      - CHECKING
+                      - SAVINGS
+                    ach:
+                      type: string
+                      description: ACH routing number.
+                    currency:
+                      type: string
+                      description: Currency of your bank account.
+                      enum:
+                      - UNDEFINED
+                      - AED
+                      - AFN
+                      - ALL
+                      - AMD
+                      - ANG
+                      - AOA
+                      - ARS
+                      - AUD
+                      - AWG
+                      - AZN
+                      - BAM
+                      - BBD
+                      - BDT
+                      - BGN
+                      - BHD
+                      - BIF
+                      - BMD
+                      - BND
+                      - BOB
+                      - BOV
+                      - BRL
+                      - BSD
+                      - BTN
+                      - BWP
+                      - BYN
+                      - BYR
+                      - BZD
+                      - CAD
+                      - CDF
+                      - CHE
+                      - CHF
+                      - CHW
+                      - CLF
+                      - CLP
+                      - CNY
+                      - COP
+                      - COU
+                      - CRC
+                      - CUC
+                      - CUP
+                      - CVE
+                      - CZK
+                      - DJF
+                      - DKK
+                      - DOP
+                      - DZD
+                      - EGP
+                      - ERN
+                      - ETB
+                      - EUR
+                      - FJD
+                      - FKP
+                      - GBP
+                      - GEL
+                      - GHS
+                      - GIP
+                      - GMD
+                      - GNF
+                      - GTQ
+                      - GYD
+                      - HKD
+                      - HNL
+                      - HRK
+                      - HTG
+                      - HUF
+                      - IDR
+                      - ILS
+                      - INR
+                      - IQD
+                      - IRR
+                      - ISK
+                      - JMD
+                      - JOD
+                      - JPY
+                      - KES
+                      - KGS
+                      - KHR
+                      - KMF
+                      - KPW
+                      - KRW
+                      - KWD
+                      - KYD
+                      - KZT
+                      - LAK
+                      - LBP
+                      - LKR
+                      - LRD
+                      - LSL
+                      - LTL
+                      - LYD
+                      - MAD
+                      - MDL
+                      - MGA
+                      - MKD
+                      - MMK
+                      - MNT
+                      - MOP
+                      - MRO
+                      - MRU
+                      - MUR
+                      - MVR
+                      - MWK
+                      - MXN
+                      - MXV
+                      - MYR
+                      - MZN
+                      - NAD
+                      - NGN
+                      - NIO
+                      - NOK
+                      - NPR
+                      - NZD
+                      - OMR
+                      - PAB
+                      - PEN
+                      - PGK
+                      - PHP
+                      - PKR
+                      - PLN
+                      - PYG
+                      - QAR
+                      - RON
+                      - RSD
+                      - RUB
+                      - RUR
+                      - RWF
+                      - SAR
+                      - SBD
+                      - SCR
+                      - SDG
+                      - SEK
+                      - SGD
+                      - SHP
+                      - SLL
+                      - SOS
+                      - SRD
+                      - SSP
+                      - STD
+                      - STN
+                      - SVC
+                      - SYP
+                      - SZL
+                      - THB
+                      - TJS
+                      - TMT
+                      - TND
+                      - TOP
+                      - TRY
+                      - TTD
+                      - TWD
+                      - TZS
+                      - UAH
+                      - UGX
+                      - USD
+                      - USN
+                      - USS
+                      - UYI
+                      - UYU
+                      - UZS
+                      - VEF
+                      - VES
+                      - VND
+                      - VUV
+                      - WST
+                      - XAF
+                      - XAG
+                      - XAU
+                      - XBA
+                      - XBB
+                      - XBC
+                      - XBD
+                      - XCD
+                      - XDR
+                      - XOF
+                      - XPD
+                      - XPF
+                      - XPT
+                      - XSU
+                      - XTS
+                      - XUA
+                      - XXX
+                      - YER
+                      - ZAR
+                      - ZMW
+                      - ZWL
+                    entity_type:
+                      type: string
+                      description: Type of entity which owns this external bank account.
+                      enum:
+                      - BUSINESS
+                      - INDIVIDUAL
+                    fedwire:
+                      type: string
+                      description: FEDWIRE routing number.
+        description: Required information to link an external account.
+        required: true
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinkedAccount'
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/linked_accounts/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          account_owner_identifier: test_account_owner_id_1
+          au_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            bsb: '063001'
+            currency: AUD
+            entity_type: BUSINESS
+          au_payid:
+            account_identifier_type: EMAIL_ADDRESS
+            currency: AUD
+            entity_type: BUSINESS
+            payid: tester_smith@airwallex.com
+          ca_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            currency: AUD
+            entity_type: BUSINESS
+            institution_number: '010'
+            transit_number: '12345'
+          egiro:
+            auth_id: 7829116420292722
+            auth_reference: BOAIR6561Z01AIR20240603071713069163
+          eu_bank:
+            account_name: Tester Smith
+            currency: AUD
+            entity_type: BUSINESS
+            iban: DE372022080000903344401
+          gb_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            currency: AUD
+            entity_type: BUSINESS
+            sort_code: '608382'
+          hk_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            bank_code: '003'
+            currency: AUD
+            entity_type: BUSINESS
+          mandate:
+            controls:
+              amount_type: VARIABLE
+              end_date: '2025-12-31'
+              fixed_amount_per_transaction: 1000
+              max_amount_per_transaction: 1000
+              schedule:
+                period: 3
+                period_unit: MONTH
+            email: tester@test.com
+            identification_document:
+              type: HK_ID
+              value: A123456
+            preferred_reference: AWX
+            reuse_mandate_reference: AWX013
+            signatory: Tester Smith
+            type: AU_BECS_DEBIT
+            version: '1.1'
+          nz_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            currency: AUD
+            entity_type: BUSINESS
+          plaid:
+            account:
+              id: p4aN1gq5MwuAeVv47pkjh63l5K8gV6fJqKepE
+              mask: '0000'
+              name: Business Savings
+            institution:
+              id: ins_3
+              name: Chase
+            public_token: public-sandbox-2a6878ca-0e6b-42cf-ba9b-490401bb5a93
+          preferred_verification_type: MICRO_DEPOSIT
+          request_id: test_unique_id
+          sg_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            currency: AUD
+            entity_type: BUSINESS
+            swift_code: DBSSSGSG
+          truelayer:
+            code: B2D8A5F9896AAA08E34DF3099649A1C249D562996D1416BCE76F66C372E56797
+            state: 6781472155828238
+          type: AU_BANK
+          us_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            account_type: CHECKING
+            ach: 084106768
+            currency: AUD
+            entity_type: BUSINESS
+            fedwire: 084106768
+        response_body:
+          au_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            bsb: '063001'
+            currency: AUD
+            entity_type: BUSINESS
+          au_payid:
+            account_identifier_type: EMAIL_ADDRESS
+            currency: AUD
+            entity_type: BUSINESS
+            payid: tester_smith@airwallex.com
+          ca_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            currency: AUD
+            entity_type: BUSINESS
+            institution_number: '010'
+            transit_number: '12345'
+          capabilities:
+            balance_check: true
+            direct_debit_deposit: true
+          eu_bank:
+            account_name: Tester Smith
+            currency: AUD
+            entity_type: BUSINESS
+            iban: DE372022080000903344401
+            swift_code: DBSSSGSG
+          failure_details:
+            code: other
+            iso_code: NARR
+            provider_failure_details:
+              code: NARR
+              local_clearing_system: GB_FPS
+              message: Other reason
+          gb_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            currency: AUD
+            entity_type: BUSINESS
+            sort_code: '608382'
+          hk_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            bank_code: '003'
+            currency: AUD
+            entity_type: BUSINESS
+          id: 114907b3-a708-483e-b97a-be3742905f6f
+          next_action:
+            candidate_accounts:
+            - account_identity: 56c7b029e0f8ec5a2334fb0ffc2fface
+              bank_country_code: GB
+              currency: GBP
+              entity_type: BUSINESS
+              financial_institution_name: Bank of Scotland
+              iban: GB08CLRB04066800003435
+              name: Transaction account
+              number: '82319424'
+              sort_code: '608382'
+              type: TRUELAYER
+            micro_deposit_count: 2
+            remaining_attempts: 3
+            type: verify_micro_deposits
+            verification_type: PLAID
+          nz_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            bank_code: '03'
+            branch_code: '1234'
+            currency: AUD
+            entity_type: BUSINESS
+          reason: VERIFICATION_FAILED
+          sg_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            currency: AUD
+            entity_type: BUSINESS
+            swift_code: DBSSSGSG
+          status: SUCCEEDED
+          supported_currencies:
+          - AUD
+          type: AU_BANK
+          us_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            account_type: CHECKING
+            ach: 084106768
+            currency: AUD
+            entity_type: BUSINESS
+            fedwire: 084106768
+      x-scope:
+      - scope: linked_account:write
+        group: Core Resources
+        resource_name: Linked Accounts
+      x-domain: Core Resources
+      x-resource: Linked Accounts
+      x-urlPath: create
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/linked_accounts/{id}:
+    get:
+      tags:
+      - Core Resources > Linked Accounts
+      summary: 2|Retrieve a Linked Account
+      description: Retrieves details of a Linked Account using the given Linked Account unique identifier.
+      operationId: retrieveLinkedAccount
+      parameters:
+      - name: id
+        in: path
+        description: The unique identifier of the Linked Account to retrieve.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinkedAccount'
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/linked_accounts/linked_account_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          au_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            bsb: '063001'
+            currency: AUD
+            entity_type: BUSINESS
+          au_payid:
+            account_identifier_type: EMAIL_ADDRESS
+            currency: AUD
+            entity_type: BUSINESS
+            payid: tester_smith@airwallex.com
+          ca_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            currency: AUD
+            entity_type: BUSINESS
+            institution_number: '010'
+            transit_number: '12345'
+          capabilities:
+            balance_check: true
+            direct_debit_deposit: true
+          eu_bank:
+            account_name: Tester Smith
+            currency: AUD
+            entity_type: BUSINESS
+            iban: DE372022080000903344401
+            swift_code: DBSSSGSG
+          failure_details:
+            code: other
+            iso_code: NARR
+            provider_failure_details:
+              code: NARR
+              local_clearing_system: GB_FPS
+              message: Other reason
+          gb_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            currency: AUD
+            entity_type: BUSINESS
+            sort_code: '608382'
+          hk_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            bank_code: '003'
+            currency: AUD
+            entity_type: BUSINESS
+          id: 114907b3-a708-483e-b97a-be3742905f6f
+          next_action:
+            candidate_accounts:
+            - account_identity: 56c7b029e0f8ec5a2334fb0ffc2fface
+              bank_country_code: GB
+              currency: GBP
+              entity_type: BUSINESS
+              financial_institution_name: Bank of Scotland
+              iban: GB08CLRB04066800003435
+              name: Transaction account
+              number: '82319424'
+              sort_code: '608382'
+              type: TRUELAYER
+            micro_deposit_count: 2
+            remaining_attempts: 3
+            type: verify_micro_deposits
+            verification_type: PLAID
+          nz_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            bank_code: '03'
+            branch_code: '1234'
+            currency: AUD
+            entity_type: BUSINESS
+          reason: VERIFICATION_FAILED
+          sg_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            currency: AUD
+            entity_type: BUSINESS
+            swift_code: DBSSSGSG
+          status: SUCCEEDED
+          supported_currencies:
+          - AUD
+          type: AU_BANK
+          us_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            account_type: CHECKING
+            ach: 084106768
+            currency: AUD
+            entity_type: BUSINESS
+            fedwire: 084106768
+      x-scope:
+      - scope: linked_account:read
+        group: Core Resources
+        resource_name: Linked Accounts
+      x-domain: Core Resources
+      x-resource: Linked Accounts
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/linked_accounts:
+    get:
+      tags:
+      - Core Resources > Linked Accounts
+      summary: 3|List all Linked Accounts
+      description: Returns a list of Linked Accounts associated with a specific Airwallex account.
+      operationId: listLinkedAccounts
+      parameters:
+      - name: country_code
+        in: query
+        description: The country where your Linked Account is located.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: from_created_at
+        in: query
+        description: The start date of `created_at` in ISO8601 format (inclusive). If null, response will provide Linked Accounts created in the past 31 days.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: page_num
+        in: query
+        description: Page number, starts from 0.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of results per page. Default value is 100.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: status
+        in: query
+        description: The status of the Linked Account. One of `REQUIRES_ACTION`, `PROCESSING`, `SUCCEEDED`, `FAILED`, `SUSPENDED`.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: to_created_at
+        in: query
+        description: The end date of `created_at` in ISO8601 format (inclusive). If null, response will provide Linked Accounts created in the past 31 days.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: Paged results.
+                    items:
+                      $ref: '#/components/schemas/LinkedAccount'
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/linked_accounts
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - au_bank:
+              account_name: Tester Smith
+              account_number: '89098199202'
+              bsb: '063001'
+              currency: AUD
+              entity_type: BUSINESS
+            au_payid:
+              account_identifier_type: EMAIL_ADDRESS
+              currency: AUD
+              entity_type: BUSINESS
+              payid: tester_smith@airwallex.com
+            ca_bank:
+              account_name: Tester Smith
+              account_number: '89098199202'
+              currency: AUD
+              entity_type: BUSINESS
+              institution_number: '010'
+              transit_number: '12345'
+            capabilities:
+              balance_check: true
+              direct_debit_deposit: true
+            eu_bank:
+              account_name: Tester Smith
+              currency: AUD
+              entity_type: BUSINESS
+              iban: DE372022080000903344401
+              swift_code: DBSSSGSG
+            failure_details:
+              code: other
+              iso_code: NARR
+              provider_failure_details:
+                code: NARR
+                local_clearing_system: GB_FPS
+                message: Other reason
+            gb_bank:
+              account_name: Tester Smith
+              account_number: '89098199202'
+              currency: AUD
+              entity_type: BUSINESS
+              sort_code: '608382'
+            hk_bank:
+              account_name: Tester Smith
+              account_number: '89098199202'
+              bank_code: '003'
+              currency: AUD
+              entity_type: BUSINESS
+            id: 114907b3-a708-483e-b97a-be3742905f6f
+            next_action:
+              candidate_accounts:
+              - account_identity: 56c7b029e0f8ec5a2334fb0ffc2fface
+                bank_country_code: GB
+                currency: GBP
+                entity_type: BUSINESS
+                financial_institution_name: Bank of Scotland
+                iban: GB08CLRB04066800003435
+                name: Transaction account
+                number: '82319424'
+                sort_code: '608382'
+                type: TRUELAYER
+              micro_deposit_count: 2
+              remaining_attempts: 3
+              type: verify_micro_deposits
+              verification_type: PLAID
+            nz_bank:
+              account_name: Tester Smith
+              account_number: '89098199202'
+              bank_code: '03'
+              branch_code: '1234'
+              currency: AUD
+              entity_type: BUSINESS
+            reason: VERIFICATION_FAILED
+            sg_bank:
+              account_name: Tester Smith
+              account_number: '89098199202'
+              currency: AUD
+              entity_type: BUSINESS
+              swift_code: DBSSSGSG
+            status: SUCCEEDED
+            supported_currencies:
+            - AUD
+            type: AU_BANK
+            us_bank:
+              account_name: Tester Smith
+              account_number: '89098199202'
+              account_type: CHECKING
+              ach: 084106768
+              currency: AUD
+              entity_type: BUSINESS
+              fedwire: 084106768
+      x-scope:
+      - scope: linked_account:read
+        group: Core Resources
+        resource_name: Linked Accounts
+      x-domain: Core Resources
+      x-resource: Linked Accounts
+      x-urlPath: list
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/linked_accounts/auth:
+    post:
+      tags:
+      - Core Resources > Linked Accounts
+      summary: 4|Generate a Linked Account Authentication
+      description: Generates a Linked Account authentication. You will retrieve an authentication token with the specified Open Banking provider to verify the ownership of the external bank account, so that the external bank account owner may verify their access to the account.
+      operationId: auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - type
+              properties:
+                egiro:
+                  type: object
+                  required:
+                  - entity_type
+                  - redirect_url
+                  - reference
+                  - swift_code
+                  description: Required information to generate a EGIRO authentication.
+                  properties:
+                    entity_type:
+                      type: string
+                      description: Type of entity which owns this external bank account.
+                      enum:
+                      - BUSINESS
+                      - INDIVIDUAL
+                    redirect_url:
+                      type: string
+                      description: URL to receive authentication result and display the status.
+                    reference:
+                      type: string
+                      description: Customer reference displayed in bank authorization item, with up to 25 characters.
+                    swift_code:
+                      type: string
+                      description: SWIFT code.
+                plaid:
+                  type: object
+                  required:
+                  - client_name
+                  - country_code
+                  description: Required information to generate a Plaid authentication.
+                  properties:
+                    client_name:
+                      type: string
+                      description: The name of your business to be displayed in Plaid Modal. The maximum length of 30 characters. If a value longer than 30 characters is provided, Plaid Modal will display `This Application` instead.
+                    country_code:
+                      type: string
+                      description: Two-letter [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) country code.
+                    language:
+                      type: string
+                      description: The language that Plaid Modal should be displayed in. Two-letter [ISO 639-1](https://en.wikipedia.org/wiki/ISO_639-1) language code. Default is `en`.
+                    link_customization_name:
+                      type: string
+                      description: The name of the Link customization configured on the Plaid Dashboard. If not specified, the `default` customization will be applied.
+                    redirect_url:
+                      type: string
+                      description: URL to handle the Oauth verification flow.
+                truelayer:
+                  type: object
+                  required:
+                  - country_code
+                  - provider_id
+                  - redirect_url
+                  description: Required information to generate a Truelayer authentication.
+                  properties:
+                    country_code:
+                      type: string
+                      description: Two-letter [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) country code.
+                    provider_id:
+                      type: string
+                      description: Unique identifier of the financial institution as provided by Truelayer [here](https://auth.truelayer.com/api/providers).
+                    redirect_url:
+                      type: string
+                      description: URL to handle the Oauth verification flow.
+                type:
+                  type: string
+                  description: Specify a verification type for your external bank account.
+                  enum:
+                  - PLAID
+                  - TRUELAYER
+                  - EGIRO
+                  - BASIQ
+        description: request
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinkedAccountAuth'
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/linked_accounts/auth
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          egiro:
+            entity_type: BUSINESS
+            redirect_url: https://www.airwallex.com
+            reference: https://www.airwallex.com
+            swift_code: DBSSSGSG
+          plaid:
+            client_name: Airwallex
+            country_code: US
+            language: en
+            link_customization_name: customized
+            redirect_url: https://www.airwallex.com
+          truelayer:
+            country_code: GB
+            provider_id: ob-monzo
+            redirect_url: https://www.airwallex.com
+          type: PLAID
+        response_body:
+          egiro:
+            auth_url: https://edda.dbs.com/api/v1/edda/authorize/creation?parameterKey=valule
+          plaid:
+            expires_at: 2022-06-29T11:25:39+0000
+            link_token: link-sandbox-463f3464-287c-4a75-adf2-85bc07c2dd89
+          truelayer:
+            auth_url: https://auth.truelayer-sandbox.com?client_id=sandbox-airwallex-5c4af6&redirect_uri=https://www.airwallex.com&provider_id=ob-monzo&state=6781472155828238&response_type=code&scope=info%20accounts%20balance%20offline_access
+          type: PLAID
+      x-scope:
+      - scope: linked_account:write
+        group: Core Resources
+        resource_name: Linked Accounts
+      x-domain: Core Resources
+      x-resource: Linked Accounts
+      x-urlPath: auth
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/linked_accounts/{id}/auth:
+    post:
+      tags:
+      - Core Resources > Linked Accounts
+      summary: 5|Refresh a Linked Account Authentication
+      description: Refreshes a Linked Account authentication after it has expired. You can call `/complete_auth` in onSuccess callback from the Open Banking provider to inform Airwallex it has been completed. Otherwise, the Linked Account status will remain as `REQUIRES_ACTION`.
+      operationId: linkedAccounts_refresh
+      parameters:
+      - name: id
+        in: path
+        description: The unique identifier of the Linked Account to refresh authentication.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - type
+              properties:
+                egiro:
+                  type: object
+                  required:
+                  - entity_type
+                  - redirect_url
+                  - reference
+                  - swift_code
+                  description: Required information to generate a EGIRO authentication.
+                  properties:
+                    entity_type:
+                      type: string
+                      description: Type of entity which owns this external bank account.
+                      enum:
+                      - BUSINESS
+                      - INDIVIDUAL
+                    redirect_url:
+                      type: string
+                      description: URL to receive authentication result and display the status.
+                    reference:
+                      type: string
+                      description: Customer reference displayed in bank authorization item, with up to 25 characters.
+                    swift_code:
+                      type: string
+                      description: SWIFT code.
+                plaid:
+                  type: object
+                  required:
+                  - client_name
+                  - country_code
+                  description: Required information to generate a Plaid authentication.
+                  properties:
+                    client_name:
+                      type: string
+                      description: The name of your business to be displayed in Plaid Modal. The maximum length of 30 characters. If a value longer than 30 characters is provided, Plaid Modal will display `This Application` instead.
+                    country_code:
+                      type: string
+                      description: Two-letter [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) country code.
+                    language:
+                      type: string
+                      description: The language that Plaid Modal should be displayed in. Two-letter [ISO 639-1](https://en.wikipedia.org/wiki/ISO_639-1) language code. Default is `en`.
+                    link_customization_name:
+                      type: string
+                      description: The name of the Link customization configured on the Plaid Dashboard. If not specified, the `default` customization will be applied.
+                    redirect_url:
+                      type: string
+                      description: URL to handle the Oauth verification flow.
+                truelayer:
+                  type: object
+                  required:
+                  - country_code
+                  - provider_id
+                  - redirect_url
+                  description: Required information to generate a Truelayer authentication.
+                  properties:
+                    country_code:
+                      type: string
+                      description: Two-letter [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) country code.
+                    provider_id:
+                      type: string
+                      description: Unique identifier of the financial institution as provided by Truelayer [here](https://auth.truelayer.com/api/providers).
+                    redirect_url:
+                      type: string
+                      description: URL to handle the Oauth verification flow.
+                type:
+                  type: string
+                  description: Specify a verification type for your external bank account.
+                  enum:
+                  - PLAID
+                  - TRUELAYER
+                  - EGIRO
+                  - BASIQ
+        description: request
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinkedAccountAuth'
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/linked_accounts/linked_account_id/auth
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          egiro:
+            entity_type: BUSINESS
+            redirect_url: https://www.airwallex.com
+            reference: https://www.airwallex.com
+            swift_code: DBSSSGSG
+          plaid:
+            client_name: Airwallex
+            country_code: US
+            language: en
+            link_customization_name: customized
+            redirect_url: https://www.airwallex.com
+          truelayer:
+            country_code: GB
+            provider_id: ob-monzo
+            redirect_url: https://www.airwallex.com
+          type: PLAID
+        response_body:
+          egiro:
+            auth_url: https://edda.dbs.com/api/v1/edda/authorize/creation?parameterKey=valule
+          plaid:
+            expires_at: 2022-06-29T11:25:39+0000
+            link_token: link-sandbox-463f3464-287c-4a75-adf2-85bc07c2dd89
+          truelayer:
+            auth_url: https://auth.truelayer-sandbox.com?client_id=sandbox-airwallex-5c4af6&redirect_uri=https://www.airwallex.com&provider_id=ob-monzo&state=6781472155828238&response_type=code&scope=info%20accounts%20balance%20offline_access
+          type: PLAID
+      x-scope:
+      - scope: linked_account:write
+        group: Core Resources
+        resource_name: Linked Accounts
+      x-domain: Core Resources
+      x-resource: Linked Accounts
+      x-urlPath: refresh
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/linked_accounts/{id}/verify_microdeposits:
+    post:
+      tags:
+      - Core Resources > Linked Accounts
+      summary: 6|Verify Linked Account with Micro-deposits
+      description: Verifies your Linked Account using the micro-deposit amounts received in the Linked Account.
+      operationId: verifyMicrodeposits
+      parameters:
+      - name: id
+        in: path
+        description: The unique identifier of the Linked Account to examine microdeposit.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - amounts
+              properties:
+                amounts:
+                  type: array
+                  description: Amounts of the two microdeposits received in the Linked Account (order agnostic).
+                  items:
+                    type: number
+        description: The amounts of microdeposit.
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinkedAccount'
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/linked_accounts/linked_account_id/verify_microdeposits
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          amounts:
+          - 0.08
+          - 0.09
+        response_body:
+          au_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            bsb: '063001'
+            currency: AUD
+            entity_type: BUSINESS
+          au_payid:
+            account_identifier_type: EMAIL_ADDRESS
+            currency: AUD
+            entity_type: BUSINESS
+            payid: tester_smith@airwallex.com
+          ca_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            currency: AUD
+            entity_type: BUSINESS
+            institution_number: '010'
+            transit_number: '12345'
+          capabilities:
+            balance_check: true
+            direct_debit_deposit: true
+          eu_bank:
+            account_name: Tester Smith
+            currency: AUD
+            entity_type: BUSINESS
+            iban: DE372022080000903344401
+            swift_code: DBSSSGSG
+          failure_details:
+            code: other
+            iso_code: NARR
+            provider_failure_details:
+              code: NARR
+              local_clearing_system: GB_FPS
+              message: Other reason
+          gb_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            currency: AUD
+            entity_type: BUSINESS
+            sort_code: '608382'
+          hk_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            bank_code: '003'
+            currency: AUD
+            entity_type: BUSINESS
+          id: 114907b3-a708-483e-b97a-be3742905f6f
+          next_action:
+            candidate_accounts:
+            - account_identity: 56c7b029e0f8ec5a2334fb0ffc2fface
+              bank_country_code: GB
+              currency: GBP
+              entity_type: BUSINESS
+              financial_institution_name: Bank of Scotland
+              iban: GB08CLRB04066800003435
+              name: Transaction account
+              number: '82319424'
+              sort_code: '608382'
+              type: TRUELAYER
+            micro_deposit_count: 2
+            remaining_attempts: 3
+            type: verify_micro_deposits
+            verification_type: PLAID
+          nz_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            bank_code: '03'
+            branch_code: '1234'
+            currency: AUD
+            entity_type: BUSINESS
+          reason: VERIFICATION_FAILED
+          sg_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            currency: AUD
+            entity_type: BUSINESS
+            swift_code: DBSSSGSG
+          status: SUCCEEDED
+          supported_currencies:
+          - AUD
+          type: AU_BANK
+          us_bank:
+            account_name: Tester Smith
+            account_number: '89098199202'
+            account_type: CHECKING
+            ach: 084106768
+            currency: AUD
+            entity_type: BUSINESS
+            fedwire: 084106768
+      x-scope:
+      - scope: linked_account:write
+        group: Core Resources
+        resource_name: Linked Accounts
+      x-domain: Core Resources
+      x-resource: Linked Accounts
+      x-urlPath: verify_microdeposits
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/linked_accounts/{id}/balances:
+    get:
+      tags:
+      - Core Resources > Linked Accounts
+      summary: 7|Check Available Balances
+      description: Retrieves the balance of a Linked Account using the given Linked Account unique identifier. This API is only available to Linked Accounts where `capabilities.balance_check` is true. The request will be routed to the respective financial institutions, so you may experience a slight delay in the response.
+      operationId: listBalances
+      parameters:
+      - name: id
+        in: path
+        description: The unique identifier of the Linked Account to retrieve available balances.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: Paged results.
+                    items:
+                      $ref: '#/components/schemas/LinkedAccountBalance'
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/linked_accounts/linked_account_id/balances
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - available_amount: 100.1
+            currency: USD
+      x-scope:
+      - scope: linked_account:read
+        group: Core Resources
+        resource_name: Linked Accounts
+      x-domain: Core Resources
+      x-resource: Linked Accounts
+      x-urlPath: balances
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/linked_accounts/{id}/suspend:
+    post:
+      tags:
+      - Core Resources > Linked Accounts
+      summary: 8|Suspend a Linked Account
+      description: Suspend the link between your external bank account and your Airwallex account. This will also revoke any mandate objects attached to your Linked Account. To reverse this action, you will have to create a new Linked Account and go through verification.
+      operationId: linkedAccounts_suspend
+      parameters:
+      - name: id
+        in: path
+        description: The unique identifier of the Linked Account to suspend.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/linked_accounts/linked_account_id/suspend
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body: false
+      x-scope:
+      - scope: linked_account:write
+        group: Core Resources
+        resource_name: Linked Accounts
+      x-domain: Core Resources
+      x-resource: Linked Accounts
+      x-urlPath: suspend
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/linked_accounts/{id}/confirm:
+    post:
+      tags:
+      - Core Resources > Linked Accounts
+      summary: 9|Confirm a Linked Account Among Candidate Accounts
+      description: Confirm your Linked Account among a list of candidate accounts that have already been verified.
+      operationId: linkedAccounts_confirm
+      parameters:
+      - name: id
+        in: path
+        description: The unique identifier of the Linked Account to confirm the account.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - account_identity
+              properties:
+                account_identity:
+                  type: string
+                  description: Account identity come from candidate_accounts.
+        description: request
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unit'
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/linked_accounts/linked_account_id/confirm
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          account_identity: 56c7b029e0f8ec5a2334fb0ffc2fface
+      x-scope:
+      - scope: linked_account:write
+        group: Core Resources
+        resource_name: Linked Accounts
+      x-domain: Core Resources
+      x-resource: Linked Accounts
+      x-urlPath: confirm
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/linked_accounts/{id}/complete_auth:
+    post:
+      tags:
+      - Core Resources > Linked Accounts
+      summary: 10|Complete the Authentication Refresh
+      description: Completes the authentication refresh. After the refresh authentication process is confirmed, the corresponding Linked Account status will become `SUCCEEDED`.
+      operationId: completeAuth
+      parameters:
+      - name: id
+        in: path
+        description: The unique identifier of the Linked Account to complete the auth refresh.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - type
+              properties:
+                auth_id:
+                  type: string
+                  description: The path parameter `auth_id` retrieved from EGIRO's callback url (redirect_url_host?**auth_id=value1**&auth_reference=value2).
+                auth_reference:
+                  type: string
+                  description: The path parameter `auth_reference` retrieved from EGIRO's callback url (redirect_url_host?auth_id=value1&**auth_reference=value2**).
+                code:
+                  type: string
+                  description: The path parameter `code` retrieved from TrueLayer's callback url (redirect_url_host?**code=code_value**&state=state_value).
+                state:
+                  type: integer
+                  format: int64
+                  description: The path parameter `state` retrieved from TrueLayer's callback url (redirect_url_host?code=code_value&**state=state_value**).
+                type:
+                  type: string
+                  description: The verification type that was used for your Linked Account.
+                  enum:
+                  - PLAID
+                  - TRUELAYER
+                  - EGIRO
+                  - BASIQ
+        description: request
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/linked_accounts/linked_account_id/complete_auth
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          auth_id: '7829116420292722'
+          auth_reference: BOAIR6561Z01AIR20240603071713069163
+          code: B2D8A5F9896AAA08E34DF3099649A1C249D562996D1416BCE76F66C372E56797
+          state: 6781472155828238
+          type: PLAID
+        response_body: false
+      x-scope:
+      - scope: linked_account:write
+        group: Core Resources
+        resource_name: Linked Accounts
+      x-domain: Core Resources
+      x-resource: Linked Accounts
+      x-urlPath: complete_auth
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/linked_accounts/{id}/mandate:
+    get:
+      tags:
+      - Core Resources > Linked Accounts
+      summary: 11|Retrieve a Direct Debit Deposit Mandate
+      description: Retrieves the mandate of a Linked Account using the given Linked Account unique identifier.
+      operationId: linkedAccounts_retrieveMandate
+      parameters:
+      - name: id
+        in: path
+        description: The unique identifier of the Linked Account to get mandate.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Core_Resources_Mandate'
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/linked_accounts/linked_account_id/mandate
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          accepted_at: '1648387704'
+          address:
+            address_line1: 200 Collins Street
+            address_line2: 200 Collins Street
+            country_code: AU
+            postcode: '3000'
+            state: VIC
+            suburb: Melbourne
+          controls:
+            amount_type: VARIABLE
+            end_date: '2025-12-31'
+            fixed_amount_per_transaction: 1000
+            max_amount_per_transaction: 1000
+            schedule:
+              period: 3
+              period_unit: MONTH
+          email: tester@test.com
+          reference: AWX-001
+          signatory: Tester Smith
+          status: ACTIVE
+          type: AU_BECS_DEBIT
+          version: '1.1'
+      x-scope:
+      - scope: linked_account:read
+        group: Core Resources
+        resource_name: Linked Accounts
+      - scope: linked_account:write
+        group: Core Resources
+        resource_name: Linked Accounts
+      x-domain: Core Resources
+      x-resource: Linked Accounts
+      x-urlPath: retrieve_mandate
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+    post:
+      tags:
+      - Core Resources > Linked Accounts
+      summary: 12|Update a Direct Debit Deposit Mandate
+      description: Adds a mandate to the Linked Account, if it was not provided at the time of creation, or renews an existing mandate. The external bank account owner must sign and agree to the mandate to enable Direct Debits.
+      operationId: updateMandate
+      parameters:
+      - name: id
+        in: path
+        description: The unique identifier of the Linked Account to sign the mandate.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - type
+              properties:
+                controls:
+                  type: object
+                  description: Set of characteristics defining the mandate. Controls how Direct Debit can be initiated. Only applicable if mandate type is AU_PAYTO_DEBIT.
+                  properties:
+                    amount_type:
+                      type: string
+                      enum:
+                      - VARIABLE
+                      - FIXED
+                      x-enumDescriptions:
+                        VARIABLE: Amount to be paid from the Linked Account is variable. A max_amount_per_transaction is recommended.
+                        FIXED: Amount to be paid from the Linked Account is fixed. A specific fixed_amount_per_transaction is required.
+                    end_date:
+                      type: string
+                      description: End date to expect to be paid from the Linked Account.
+                    fixed_amount_per_transaction:
+                      type: number
+                      description: The fixed amount that may be paid from the Linked Account, per transaction.
+                    max_amount_per_transaction:
+                      type: number
+                      description: Maximum amount that may be paid from the Linked Account, per transaction.
+                    schedule:
+                      type: object
+                      required:
+                      - period
+                      - period_unit
+                      description: The schedule for recurring transaction cycles. If no schedule is provided, the number of transactions allowed will be unlimited.
+                      properties:
+                        period:
+                          type: integer
+                          format: int32
+                          description: The number of period units between recurring transaction cycles. For example, the transaction cycle is every quarter if period = 3 and period_unit = MONTH.
+                        period_unit:
+                          type: string
+                          description: Specifies transaction frequency.
+                          enum:
+                          - DAY
+                          - WEEK
+                          - MONTH
+                          - YEAR
+                email:
+                  type: string
+                  description: Email of the signatory. A pdf copy of the mandate will be shared to this address. Required if you are not reusing mandate.
+                identification_document:
+                  type: object
+                  required:
+                  - type
+                  - value
+                  description: Identification document. Required if mandate type is HK_FPS_DEBIT.
+                  properties:
+                    type:
+                      type: string
+                      description: Id Type.
+                      enum:
+                      - HK_ID
+                      - PASSPORT
+                      - BUSINESS_REGISTRATION_NUMBER
+                      - CERTIFICATE_OF_INCORPORATION_NUMBER
+                      - OTHERS
+                      - NRIC
+                      - FIN
+                      - UEN
+                    value:
+                      type: string
+                      description: Id Value.
+                preferred_reference:
+                  type: string
+                  description: Preferred reference for mandate. We use this value to generate a unique reference (that may be different from the initial value), then register in payment system.
+                reuse_mandate_reference:
+                  type: string
+                  description: Reference to the existing mandate in reuse mandate scenario. This value should be null unless explicitly agreed upon with your Account Manager.
+                signatory:
+                  type: string
+                  description: Name of the signatory of this mandate. This should be the external account owner. Required if you are not reusing mandate.
+                type:
+                  type: string
+                  description: Type of the source of your funds.
+                  enum:
+                  - AU_BECS_DEBIT
+                  - US_ACH_DEBIT
+                  - US_FEDWIRE_DEBIT
+                  - GB_BACS_DEBIT
+                  - EU_SEPA_DEBIT
+                  - CA_EFT_DEBIT
+                  - HK_FPS_DEBIT
+                  - SG_EGIRO_DEBIT
+                  - AU_PAYTO_DEBIT
+                  - NZ_BECS_DEBIT
+                version:
+                  type: string
+                  description: Version of the mandate signed. Required if you are not reusing mandate.
+              description: Details about the mandate for authorizing direct debits. Enter null if no mandate is signed.
+        description: The mandate to authorize Airwallex direct debit from the Linked Account.
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Core_Resources_Mandate'
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/linked_accounts/linked_account_id/mandate
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          controls:
+            amount_type: VARIABLE
+            end_date: '2025-12-31'
+            fixed_amount_per_transaction: 1000
+            max_amount_per_transaction: 1000
+            schedule:
+              period: 3
+              period_unit: MONTH
+          email: tester@test.com
+          identification_document:
+            type: HK_ID
+            value: A123456
+          preferred_reference: AWX
+          reuse_mandate_reference: AWX013
+          signatory: Tester Smith
+          type: AU_BECS_DEBIT
+          version: '1.1'
+        response_body:
+          accepted_at: '1648387704'
+          address:
+            address_line1: 200 Collins Street
+            address_line2: 200 Collins Street
+            country_code: AU
+            postcode: '3000'
+            state: VIC
+            suburb: Melbourne
+          controls:
+            amount_type: VARIABLE
+            end_date: '2025-12-31'
+            fixed_amount_per_transaction: 1000
+            max_amount_per_transaction: 1000
+            schedule:
+              period: 3
+              period_unit: MONTH
+          email: tester@test.com
+          reference: AWX-001
+          signatory: Tester Smith
+          status: ACTIVE
+          type: AU_BECS_DEBIT
+          version: '1.1'
+      x-scope:
+      - scope: linked_account:read
+        group: Core Resources
+        resource_name: Linked Accounts
+      - scope: linked_account:write
+        group: Core Resources
+        resource_name: Linked Accounts
+      x-domain: Core Resources
+      x-resource: Linked Accounts
+      x-urlPath: mandate
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    PlaidAuth:
+      type: object
+      properties:
+        expires_at:
+          type: string
+          description: The expiration time of the Link Token in ISO8601 format.
+        link_token:
+          type: string
+          description: The Plaid Link Token to open a Plaid Modal.
+      description: Required information to proceed with Plaid authentication.
+    LAFailureDetails:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code.
+        iso_code:
+          type: string
+          description: Error code [ISO 20022](https://www.iso20022.org/about-iso-20022).
+        provider_failure_details:
+          $ref: '#/components/schemas/LAProviderFailureDetails'
+          description: A set of original information received from the local clearing system.
+      description: Empty unless the Linked Account is in a failure status (`REQUIRES_ACTION`, `FAILED`).
+    HKBank:
+      type: object
+      required:
+      - account_name
+      - account_number
+      - bank_code
+      - currency
+      - entity_type
+      properties:
+        account_name:
+          type: string
+          description: Name of the external bank account owner.
+        account_number:
+          type: string
+          description: External bank account number.
+        bank_code:
+          type: string
+          description: Bank code.
+        currency:
+          type: string
+          description: Currency of your bank account.
+          enum:
+          - UNDEFINED
+          - AED
+          - AFN
+          - ALL
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BOV
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BYR
+          - BZD
+          - CAD
+          - CDF
+          - CHE
+          - CHF
+          - CHW
+          - CLF
+          - CLP
+          - CNY
+          - COP
+          - COU
+          - CRC
+          - CUC
+          - CUP
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - EUR
+          - FJD
+          - FKP
+          - GBP
+          - GEL
+          - GHS
+          - GIP
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IQD
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LBP
+          - LKR
+          - LRD
+          - LSL
+          - LTL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRO
+          - MRU
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MXV
+          - MYR
+          - MZN
+          - NAD
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - NZD
+          - OMR
+          - PAB
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RUR
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SHP
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STD
+          - STN
+          - SVC
+          - SYP
+          - SZL
+          - THB
+          - TJS
+          - TMT
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UGX
+          - USD
+          - USN
+          - USS
+          - UYI
+          - UYU
+          - UZS
+          - VEF
+          - VES
+          - VND
+          - VUV
+          - WST
+          - XAF
+          - XAG
+          - XAU
+          - XBA
+          - XBB
+          - XBC
+          - XBD
+          - XCD
+          - XDR
+          - XOF
+          - XPD
+          - XPF
+          - XPT
+          - XSU
+          - XTS
+          - XUA
+          - XXX
+          - YER
+          - ZAR
+          - ZMW
+          - ZWL
+        entity_type:
+          type: string
+          description: Type of entity which owns this external bank account.
+          enum:
+          - BUSINESS
+          - INDIVIDUAL
+      description: Hong Kong bank information.
+    CABank:
+      type: object
+      required:
+      - currency
+      - entity_type
+      properties:
+        account_name:
+          type: string
+          description: Name of the external bank account owner.
+        account_number:
+          type: string
+          description: External bank account number.
+        currency:
+          type: string
+          description: Currency of your bank account.
+          enum:
+          - UNDEFINED
+          - AED
+          - AFN
+          - ALL
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BOV
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BYR
+          - BZD
+          - CAD
+          - CDF
+          - CHE
+          - CHF
+          - CHW
+          - CLF
+          - CLP
+          - CNY
+          - COP
+          - COU
+          - CRC
+          - CUC
+          - CUP
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - EUR
+          - FJD
+          - FKP
+          - GBP
+          - GEL
+          - GHS
+          - GIP
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IQD
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LBP
+          - LKR
+          - LRD
+          - LSL
+          - LTL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRO
+          - MRU
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MXV
+          - MYR
+          - MZN
+          - NAD
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - NZD
+          - OMR
+          - PAB
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RUR
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SHP
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STD
+          - STN
+          - SVC
+          - SYP
+          - SZL
+          - THB
+          - TJS
+          - TMT
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UGX
+          - USD
+          - USN
+          - USS
+          - UYI
+          - UYU
+          - UZS
+          - VEF
+          - VES
+          - VND
+          - VUV
+          - WST
+          - XAF
+          - XAG
+          - XAU
+          - XBA
+          - XBB
+          - XBC
+          - XBD
+          - XCD
+          - XDR
+          - XOF
+          - XPD
+          - XPF
+          - XPT
+          - XSU
+          - XTS
+          - XUA
+          - XXX
+          - YER
+          - ZAR
+          - ZMW
+          - ZWL
+        entity_type:
+          type: string
+          description: Type of entity which owns this external bank account.
+          enum:
+          - BUSINESS
+          - INDIVIDUAL
+        institution_number:
+          type: string
+          description: Institution number.
+        transit_number:
+          type: string
+          description: Branch transit number.
+      description: Canada bank information.
+    MandateTransactionControl:
+      type: object
+      properties:
+        amount_type:
+          type: string
+          enum:
+          - VARIABLE
+          - FIXED
+          x-enumDescriptions:
+            VARIABLE: Amount to be paid from the Linked Account is variable. A max_amount_per_transaction is recommended.
+            FIXED: Amount to be paid from the Linked Account is fixed. A specific fixed_amount_per_transaction is required.
+        end_date:
+          type: string
+          description: End date to expect to be paid from the Linked Account.
+        fixed_amount_per_transaction:
+          type: number
+          description: The fixed amount that may be paid from the Linked Account, per transaction.
+        max_amount_per_transaction:
+          type: number
+          description: Maximum amount that may be paid from the Linked Account, per transaction.
+        schedule:
+          $ref: '#/components/schemas/MandateSchedule'
+          description: The schedule for recurring transaction cycles. If no schedule is provided, the number of transactions allowed will be unlimited.
+      description: Set of characteristics defining the mandate. Controls how Direct Debit can be initiated. Only applicable if mandate type is AU_PAYTO_DEBIT.
+    LAProviderFailureDetails:
+      type: object
+      properties:
+        code:
+          type: string
+          description: The original error code received from the local clearing system.
+        local_clearing_system:
+          type: string
+          description: The local clearing system that reported the failure.
+        message:
+          type: string
+          description: The original error message received from the local clearing system.
+      description: A set of original information received from the local clearing system.
+    GBBank:
+      type: object
+      required:
+      - account_name
+      - account_number
+      - currency
+      - entity_type
+      - sort_code
+      properties:
+        account_name:
+          type: string
+          description: Name of the external bank account owner.
+        account_number:
+          type: string
+          description: External bank account number.
+        currency:
+          type: string
+          description: Currency of your bank account.
+          enum:
+          - UNDEFINED
+          - AED
+          - AFN
+          - ALL
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BOV
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BYR
+          - BZD
+          - CAD
+          - CDF
+          - CHE
+          - CHF
+          - CHW
+          - CLF
+          - CLP
+          - CNY
+          - COP
+          - COU
+          - CRC
+          - CUC
+          - CUP
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - EUR
+          - FJD
+          - FKP
+          - GBP
+          - GEL
+          - GHS
+          - GIP
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IQD
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LBP
+          - LKR
+          - LRD
+          - LSL
+          - LTL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRO
+          - MRU
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MXV
+          - MYR
+          - MZN
+          - NAD
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - NZD
+          - OMR
+          - PAB
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RUR
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SHP
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STD
+          - STN
+          - SVC
+          - SYP
+          - SZL
+          - THB
+          - TJS
+          - TMT
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UGX
+          - USD
+          - USN
+          - USS
+          - UYI
+          - UYU
+          - UZS
+          - VEF
+          - VES
+          - VND
+          - VUV
+          - WST
+          - XAF
+          - XAG
+          - XAU
+          - XBA
+          - XBB
+          - XBC
+          - XBD
+          - XCD
+          - XDR
+          - XOF
+          - XPD
+          - XPF
+          - XPT
+          - XSU
+          - XTS
+          - XUA
+          - XXX
+          - YER
+          - ZAR
+          - ZMW
+          - ZWL
+        entity_type:
+          type: string
+          description: Type of entity which owns this external bank account.
+          enum:
+          - BUSINESS
+          - INDIVIDUAL
+        sort_code:
+          type: string
+          description: Sort code.
+      description: Great Britain bank information.
+    LinkedAccountBalance:
+      type: object
+      properties:
+        available_amount:
+          type: number
+          description: Amount of your available balance.
+        currency:
+          type: string
+          description: Currency of your available balance (3-letter ISO-4217 code).
+    Core_Resources_Mandate:
+      type: object
+      required:
+      - accepted_at
+      - email
+      - signatory
+      - status
+      - type
+      - version
+      properties:
+        accepted_at:
+          type: string
+          format: date-time
+          description: Timestamp of the mandate signing.
+        address:
+          $ref: '#/components/schemas/Core_Resources_Address'
+          description: Address of the signatory.
+        controls:
+          $ref: '#/components/schemas/MandateTransactionControl'
+          description: Set of characteristics defining the mandate. Controls how Direct Debit can be initiated. Only applicable if mandate type is AU_PAYTO_DEBIT.
+        email:
+          type: string
+          description: Email of the signatory. A pdf copy of the mandate will be shared to this address. Required if you are not reusing mandate.
+        reference:
+          type: string
+          description: It is useful for GB linked accounts only. The reference that was used during creation.
+        signatory:
+          type: string
+          description: Name of the signatory of this mandate. This should be the external account owner. Required if you are not reusing mandate.
+        status:
+          type: string
+          description: Status of the mandate.
+          enum:
+          - PROCESSING
+          - ACTIVE
+          - INACTIVE
+        type:
+          type: string
+          description: Type of the source of your funds.
+          enum:
+          - AU_BECS_DEBIT
+          - US_ACH_DEBIT
+          - US_FEDWIRE_DEBIT
+          - GB_BACS_DEBIT
+          - EU_SEPA_DEBIT
+          - CA_EFT_DEBIT
+          - HK_FPS_DEBIT
+          - SG_EGIRO_DEBIT
+          - AU_PAYTO_DEBIT
+          - NZ_BECS_DEBIT
+        version:
+          type: string
+          description: Version of the mandate signed. Required if you are not reusing mandate.
+    CandidateAccount:
+      type: object
+      properties:
+        account_identity:
+          type: string
+          description: The unique identifier of the candidate account.
+        bank_country_code:
+          type: string
+          description: Two-letter [ISO 3166-2](http://en.wikipedia.org/wiki/ISO_3166-2) country code.
+          enum:
+          - UNDEFINED
+          - AC
+          - AD
+          - AE
+          - AF
+          - AG
+          - AI
+          - AL
+          - AM
+          - AN
+          - AO
+          - AQ
+          - AR
+          - AS
+          - AT
+          - AU
+          - AW
+          - AX
+          - AZ
+          - BA
+          - BB
+          - BD
+          - BE
+          - BF
+          - BG
+          - BH
+          - BI
+          - BJ
+          - BL
+          - BM
+          - BN
+          - BO
+          - BQ
+          - BR
+          - BS
+          - BT
+          - BU
+          - BV
+          - BW
+          - BY
+          - BZ
+          - CA
+          - CC
+          - CD
+          - CF
+          - CG
+          - CH
+          - CI
+          - CK
+          - CL
+          - CM
+          - CN
+          - CO
+          - CP
+          - CR
+          - CS
+          - CU
+          - CV
+          - CW
+          - CX
+          - CY
+          - CZ
+          - DE
+          - DG
+          - DJ
+          - DK
+          - DM
+          - DO
+          - DZ
+          - EA
+          - EC
+          - EE
+          - EG
+          - EH
+          - ER
+          - ES
+          - ET
+          - EU
+          - EZ
+          - FI
+          - FJ
+          - FK
+          - FM
+          - FO
+          - FR
+          - FX
+          - GA
+          - GB
+          - GD
+          - GE
+          - GF
+          - GG
+          - GH
+          - GI
+          - GL
+          - GM
+          - GN
+          - GP
+          - GQ
+          - GR
+          - GS
+          - GT
+          - GU
+          - GW
+          - GY
+          - HK
+          - HM
+          - HN
+          - HR
+          - HT
+          - HU
+          - IC
+          - ID
+          - IE
+          - IL
+          - IM
+          - IN
+          - IO
+          - IQ
+          - IR
+          - IS
+          - IT
+          - JE
+          - JM
+          - JO
+          - JP
+          - KE
+          - KG
+          - KH
+          - KI
+          - KM
+          - KN
+          - KP
+          - KR
+          - KW
+          - KY
+          - KZ
+          - LA
+          - LB
+          - LC
+          - LI
+          - LK
+          - LR
+          - LS
+          - LT
+          - LU
+          - LV
+          - LY
+          - MA
+          - MC
+          - MD
+          - ME
+          - MF
+          - MG
+          - MH
+          - MK
+          - ML
+          - MM
+          - MN
+          - MO
+          - MP
+          - MQ
+          - MR
+          - MS
+          - MT
+          - MU
+          - MV
+          - MW
+          - MX
+          - MY
+          - MZ
+          - NA
+          - NC
+          - NE
+          - NF
+          - NG
+          - NI
+          - NL
+          - 'NO'
+          - NP
+          - NR
+          - NT
+          - NU
+          - NZ
+          - OM
+          - PA
+          - PE
+          - PF
+          - PG
+          - PH
+          - PK
+          - PL
+          - PM
+          - PN
+          - PR
+          - PS
+          - PT
+          - PW
+          - PY
+          - QA
+          - RE
+          - RO
+          - RS
+          - RU
+          - RW
+          - SA
+          - SB
+          - SC
+          - SD
+          - SE
+          - SF
+          - SG
+          - SH
+          - SI
+          - SJ
+          - SK
+          - SL
+          - SM
+          - SN
+          - SO
+          - SR
+          - SS
+          - ST
+          - SU
+          - SV
+          - SX
+          - SY
+          - SZ
+          - TA
+          - TC
+          - TD
+          - TF
+          - TG
+          - TH
+          - TJ
+          - TK
+          - TL
+          - TM
+          - TN
+          - TO
+          - TP
+          - TR
+          - TT
+          - TV
+          - TW
+          - TZ
+          - UA
+          - UG
+          - UK
+          - UM
+          - US
+          - UY
+          - UZ
+          - VA
+          - VC
+          - VE
+          - VG
+          - VI
+          - VN
+          - VU
+          - WF
+          - WS
+          - XI
+          - XU
+          - XK
+          - YE
+          - YT
+          - YU
+          - ZA
+          - ZM
+          - ZR
+          - ZW
+        currency:
+          type: string
+          description: Three-letter [ISO 4217](http://en.wikipedia.org/wiki/ISO_4217) currency code.
+          enum:
+          - UNDEFINED
+          - AED
+          - AFN
+          - ALL
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BOV
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BYR
+          - BZD
+          - CAD
+          - CDF
+          - CHE
+          - CHF
+          - CHW
+          - CLF
+          - CLP
+          - CNY
+          - COP
+          - COU
+          - CRC
+          - CUC
+          - CUP
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - EUR
+          - FJD
+          - FKP
+          - GBP
+          - GEL
+          - GHS
+          - GIP
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IQD
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LBP
+          - LKR
+          - LRD
+          - LSL
+          - LTL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRO
+          - MRU
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MXV
+          - MYR
+          - MZN
+          - NAD
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - NZD
+          - OMR
+          - PAB
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RUR
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SHP
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STD
+          - STN
+          - SVC
+          - SYP
+          - SZL
+          - THB
+          - TJS
+          - TMT
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UGX
+          - USD
+          - USN
+          - USS
+          - UYI
+          - UYU
+          - UZS
+          - VEF
+          - VES
+          - VND
+          - VUV
+          - WST
+          - XAF
+          - XAG
+          - XAU
+          - XBA
+          - XBB
+          - XBC
+          - XBD
+          - XCD
+          - XDR
+          - XOF
+          - XPD
+          - XPF
+          - XPT
+          - XSU
+          - XTS
+          - XUA
+          - XXX
+          - YER
+          - ZAR
+          - ZMW
+          - ZWL
+        entity_type:
+          type: string
+          description: Type of entity which owns this external bank account.
+          enum:
+          - BUSINESS
+          - INDIVIDUAL
+        financial_institution_name:
+          type: string
+          description: The financial institution name of the candidate account.
+        iban:
+          type: string
+          description: International Bank Account Number.
+        name:
+          type: string
+          description: The name of the candidate account.
+        number:
+          type: string
+          description: The number of the candidate account.
+        sort_code:
+          type: string
+          description: Sort code.
+        type:
+          type: string
+          description: The verification type for your external account.
+          enum:
+          - PLAID
+          - TRUELAYER
+          - EGIRO
+          - BASIQ
+    LinkedAccountAuth:
+      type: object
+      properties:
+        egiro:
+          $ref: '#/components/schemas/EgiroAuth'
+          description: Required information to proceed with EGIRO authentication.
+        plaid:
+          $ref: '#/components/schemas/PlaidAuth'
+          description: Required information to proceed with Plaid authentication.
+        truelayer:
+          $ref: '#/components/schemas/TruelayerAuth'
+          description: Required information to proceed with Truelayer authentication.
+        type:
+          type: string
+          description: The type of verification that has been generated.
+          enum:
+          - PLAID
+          - TRUELAYER
+          - EGIRO
+          - BASIQ
+    LinkedAccount:
+      type: object
+      required:
+      - id
+      - status
+      - supported_currencies
+      - type
+      properties:
+        au_bank:
+          $ref: '#/components/schemas/AUBank'
+          description: Australia bank information.
+        au_payid:
+          $ref: '#/components/schemas/AUPayid'
+          description: Australia NPP PayID information.
+        ca_bank:
+          $ref: '#/components/schemas/CABank'
+          description: Canada bank information.
+        capabilities:
+          $ref: '#/components/schemas/LinkedAccountCapability'
+          description: Capabilities of the Linked Account.
+        eu_bank:
+          $ref: '#/components/schemas/EUBank'
+          description: Europe bank information.
+        failure_details:
+          $ref: '#/components/schemas/LAFailureDetails'
+          description: Empty unless the Linked Account is in a failure status (`REQUIRES_ACTION`, `FAILED`).
+        gb_bank:
+          $ref: '#/components/schemas/GBBank'
+          description: Great Britain bank information.
+        hk_bank:
+          $ref: '#/components/schemas/HKBank'
+          description: Hong Kong bank information.
+        id:
+          type: string
+          format: uuid
+          description: A unique identifier of this Linked Account.
+        next_action:
+          $ref: '#/components/schemas/Core_Resources_NextAction'
+          description: Details of the next action to be taken to activate the Linked Account. For all statuses other than REQUIRES_ACTION, will return as null.
+        nz_bank:
+          $ref: '#/components/schemas/NZBank'
+          description: New Zealand bank information.
+        reason:
+          type: string
+          description: Explanation for the status of the Linked Account. If there are no additional details, we will return null.
+        sg_bank:
+          $ref: '#/components/schemas/SGBank'
+          description: Singapore bank information.
+        status:
+          type: string
+          description: The status of the Linked Account.
+          enum:
+          - REQUIRES_ACTION
+          - PROCESSING
+          - SUCCEEDED
+          - FAILED
+          - SUSPENDED
+        supported_currencies:
+          type: array
+          description: A list of currencies supported by this Linked Account.
+          items:
+            type: string
+            enum:
+            - UNDEFINED
+            - AED
+            - AFN
+            - ALL
+            - AMD
+            - ANG
+            - AOA
+            - ARS
+            - AUD
+            - AWG
+            - AZN
+            - BAM
+            - BBD
+            - BDT
+            - BGN
+            - BHD
+            - BIF
+            - BMD
+            - BND
+            - BOB
+            - BOV
+            - BRL
+            - BSD
+            - BTN
+            - BWP
+            - BYN
+            - BYR
+            - BZD
+            - CAD
+            - CDF
+            - CHE
+            - CHF
+            - CHW
+            - CLF
+            - CLP
+            - CNY
+            - COP
+            - COU
+            - CRC
+            - CUC
+            - CUP
+            - CVE
+            - CZK
+            - DJF
+            - DKK
+            - DOP
+            - DZD
+            - EGP
+            - ERN
+            - ETB
+            - EUR
+            - FJD
+            - FKP
+            - GBP
+            - GEL
+            - GHS
+            - GIP
+            - GMD
+            - GNF
+            - GTQ
+            - GYD
+            - HKD
+            - HNL
+            - HRK
+            - HTG
+            - HUF
+            - IDR
+            - ILS
+            - INR
+            - IQD
+            - IRR
+            - ISK
+            - JMD
+            - JOD
+            - JPY
+            - KES
+            - KGS
+            - KHR
+            - KMF
+            - KPW
+            - KRW
+            - KWD
+            - KYD
+            - KZT
+            - LAK
+            - LBP
+            - LKR
+            - LRD
+            - LSL
+            - LTL
+            - LYD
+            - MAD
+            - MDL
+            - MGA
+            - MKD
+            - MMK
+            - MNT
+            - MOP
+            - MRO
+            - MRU
+            - MUR
+            - MVR
+            - MWK
+            - MXN
+            - MXV
+            - MYR
+            - MZN
+            - NAD
+            - NGN
+            - NIO
+            - NOK
+            - NPR
+            - NZD
+            - OMR
+            - PAB
+            - PEN
+            - PGK
+            - PHP
+            - PKR
+            - PLN
+            - PYG
+            - QAR
+            - RON
+            - RSD
+            - RUB
+            - RUR
+            - RWF
+            - SAR
+            - SBD
+            - SCR
+            - SDG
+            - SEK
+            - SGD
+            - SHP
+            - SLL
+            - SOS
+            - SRD
+            - SSP
+            - STD
+            - STN
+            - SVC
+            - SYP
+            - SZL
+            - THB
+            - TJS
+            - TMT
+            - TND
+            - TOP
+            - TRY
+            - TTD
+            - TWD
+            - TZS
+            - UAH
+            - UGX
+            - USD
+            - USN
+            - USS
+            - UYI
+            - UYU
+            - UZS
+            - VEF
+            - VES
+            - VND
+            - VUV
+            - WST
+            - XAF
+            - XAG
+            - XAU
+            - XBA
+            - XBB
+            - XBC
+            - XBD
+            - XCD
+            - XDR
+            - XOF
+            - XPD
+            - XPF
+            - XPT
+            - XSU
+            - XTS
+            - XUA
+            - XXX
+            - YER
+            - ZAR
+            - ZMW
+            - ZWL
+        type:
+          type: string
+          description: Type of Linked Account.
+          enum:
+          - AU_BANK
+          - NZ_BANK
+          - US_BANK
+          - GB_BANK
+          - EU_BANK
+          - HK_BANK
+          - SG_BANK
+          - CA_BANK
+          - AU_PAYID
+        us_bank:
+          $ref: '#/components/schemas/USBank'
+          description: United States bank information.
+    EUBank:
+      type: object
+      required:
+      - account_name
+      - currency
+      - entity_type
+      - iban
+      - swift_code
+      properties:
+        account_name:
+          type: string
+          description: Name of the external bank account owner.
+        currency:
+          type: string
+          description: Currency of your bank account.
+          enum:
+          - UNDEFINED
+          - AED
+          - AFN
+          - ALL
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BOV
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BYR
+          - BZD
+          - CAD
+          - CDF
+          - CHE
+          - CHF
+          - CHW
+          - CLF
+          - CLP
+          - CNY
+          - COP
+          - COU
+          - CRC
+          - CUC
+          - CUP
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - EUR
+          - FJD
+          - FKP
+          - GBP
+          - GEL
+          - GHS
+          - GIP
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IQD
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LBP
+          - LKR
+          - LRD
+          - LSL
+          - LTL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRO
+          - MRU
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MXV
+          - MYR
+          - MZN
+          - NAD
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - NZD
+          - OMR
+          - PAB
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RUR
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SHP
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STD
+          - STN
+          - SVC
+          - SYP
+          - SZL
+          - THB
+          - TJS
+          - TMT
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UGX
+          - USD
+          - USN
+          - USS
+          - UYI
+          - UYU
+          - UZS
+          - VEF
+          - VES
+          - VND
+          - VUV
+          - WST
+          - XAF
+          - XAG
+          - XAU
+          - XBA
+          - XBB
+          - XBC
+          - XBD
+          - XCD
+          - XDR
+          - XOF
+          - XPD
+          - XPF
+          - XPT
+          - XSU
+          - XTS
+          - XUA
+          - XXX
+          - YER
+          - ZAR
+          - ZMW
+          - ZWL
+        entity_type:
+          type: string
+          description: Type of entity which owns this external bank account.
+          enum:
+          - BUSINESS
+          - INDIVIDUAL
+        iban:
+          type: string
+          description: International Bank Account Number.
+        swift_code:
+          type: string
+          description: SWIFT code.
+      description: Europe bank information.
+    Core_Resources_NextAction:
+      type: object
+      required:
+      - micro_deposit_count
+      - remaining_attempts
+      - type
+      - verification_type
+      properties:
+        candidate_accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/CandidateAccount'
+        micro_deposit_count:
+          type: integer
+          format: int32
+          description: Number of microdeposits sent to the linked bank account.
+        remaining_attempts:
+          type: integer
+          format: int32
+          description: Remaining attempts you have to enter the correct microdeposit amount. When this becomes 0, account status will update to FAILED.
+        type:
+          type: string
+          description: Type of action to be taken.
+          enum:
+          - verify_micro_deposits
+          - confirm_account
+          - auth
+          - update_mandate
+          - external_authorize
+          - external_unsuspend_mandate
+        verification_type:
+          type: string
+          description: The verification type that should be taken to refresh the Linked Account authentication.
+          enum:
+          - PLAID
+          - TRUELAYER
+          - EGIRO
+          - BASIQ
+      description: Details of the next action to be taken to activate the Linked Account. For all statuses other than REQUIRES_ACTION, will return as null.
+    Unit:
+      type: object
+    AUBank:
+      type: object
+      required:
+      - account_name
+      - account_number
+      - bsb
+      - currency
+      - entity_type
+      properties:
+        account_name:
+          type: string
+          description: Name of the external bank account owner.
+        account_number:
+          type: string
+          description: External bank account number.
+        bsb:
+          type: string
+          description: BSB code.
+        currency:
+          type: string
+          description: Currency of your bank account.
+          enum:
+          - UNDEFINED
+          - AED
+          - AFN
+          - ALL
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BOV
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BYR
+          - BZD
+          - CAD
+          - CDF
+          - CHE
+          - CHF
+          - CHW
+          - CLF
+          - CLP
+          - CNY
+          - COP
+          - COU
+          - CRC
+          - CUC
+          - CUP
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - EUR
+          - FJD
+          - FKP
+          - GBP
+          - GEL
+          - GHS
+          - GIP
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IQD
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LBP
+          - LKR
+          - LRD
+          - LSL
+          - LTL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRO
+          - MRU
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MXV
+          - MYR
+          - MZN
+          - NAD
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - NZD
+          - OMR
+          - PAB
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RUR
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SHP
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STD
+          - STN
+          - SVC
+          - SYP
+          - SZL
+          - THB
+          - TJS
+          - TMT
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UGX
+          - USD
+          - USN
+          - USS
+          - UYI
+          - UYU
+          - UZS
+          - VEF
+          - VES
+          - VND
+          - VUV
+          - WST
+          - XAF
+          - XAG
+          - XAU
+          - XBA
+          - XBB
+          - XBC
+          - XBD
+          - XCD
+          - XDR
+          - XOF
+          - XPD
+          - XPF
+          - XPT
+          - XSU
+          - XTS
+          - XUA
+          - XXX
+          - YER
+          - ZAR
+          - ZMW
+          - ZWL
+        entity_type:
+          type: string
+          description: Type of entity which owns this external bank account.
+          enum:
+          - BUSINESS
+          - INDIVIDUAL
+      description: Australia bank information.
+    USBank:
+      type: object
+      required:
+      - currency
+      - entity_type
+      properties:
+        account_name:
+          type: string
+          description: Name of the external bank account owner.
+        account_number:
+          type: string
+          description: External bank account number.
+        account_type:
+          type: string
+          description: External bank account type.
+          enum:
+          - CHECKING
+          - SAVINGS
+        ach:
+          type: string
+          description: ACH routing number.
+        currency:
+          type: string
+          description: Currency of your bank account.
+          enum:
+          - UNDEFINED
+          - AED
+          - AFN
+          - ALL
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BOV
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BYR
+          - BZD
+          - CAD
+          - CDF
+          - CHE
+          - CHF
+          - CHW
+          - CLF
+          - CLP
+          - CNY
+          - COP
+          - COU
+          - CRC
+          - CUC
+          - CUP
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - EUR
+          - FJD
+          - FKP
+          - GBP
+          - GEL
+          - GHS
+          - GIP
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IQD
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LBP
+          - LKR
+          - LRD
+          - LSL
+          - LTL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRO
+          - MRU
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MXV
+          - MYR
+          - MZN
+          - NAD
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - NZD
+          - OMR
+          - PAB
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RUR
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SHP
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STD
+          - STN
+          - SVC
+          - SYP
+          - SZL
+          - THB
+          - TJS
+          - TMT
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UGX
+          - USD
+          - USN
+          - USS
+          - UYI
+          - UYU
+          - UZS
+          - VEF
+          - VES
+          - VND
+          - VUV
+          - WST
+          - XAF
+          - XAG
+          - XAU
+          - XBA
+          - XBB
+          - XBC
+          - XBD
+          - XCD
+          - XDR
+          - XOF
+          - XPD
+          - XPF
+          - XPT
+          - XSU
+          - XTS
+          - XUA
+          - XXX
+          - YER
+          - ZAR
+          - ZMW
+          - ZWL
+        entity_type:
+          type: string
+          description: Type of entity which owns this external bank account.
+          enum:
+          - BUSINESS
+          - INDIVIDUAL
+        fedwire:
+          type: string
+          description: FEDWIRE routing number.
+      description: United States bank information.
+    TruelayerAuth:
+      type: object
+      properties:
+        auth_url:
+          type: string
+          description: The Truelayer Auth Link to authorize.
+      description: Required information to proceed with Truelayer authentication.
+    AUPayid:
+      type: object
+      required:
+      - account_identifier_type
+      - currency
+      - entity_type
+      - payid
+      properties:
+        account_identifier_type:
+          type: string
+          description: Identifier of PayID.
+          enum:
+          - EMAIL_ADDRESS
+          - PHONE_NUMBER
+          - ABN
+          - ACN
+          - ARBN
+          - ARSN
+          - ORGANISATION_IDENTIFIER
+        currency:
+          type: string
+          description: Currency of your bank account.
+          enum:
+          - UNDEFINED
+          - AED
+          - AFN
+          - ALL
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BOV
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BYR
+          - BZD
+          - CAD
+          - CDF
+          - CHE
+          - CHF
+          - CHW
+          - CLF
+          - CLP
+          - CNY
+          - COP
+          - COU
+          - CRC
+          - CUC
+          - CUP
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - EUR
+          - FJD
+          - FKP
+          - GBP
+          - GEL
+          - GHS
+          - GIP
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IQD
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LBP
+          - LKR
+          - LRD
+          - LSL
+          - LTL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRO
+          - MRU
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MXV
+          - MYR
+          - MZN
+          - NAD
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - NZD
+          - OMR
+          - PAB
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RUR
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SHP
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STD
+          - STN
+          - SVC
+          - SYP
+          - SZL
+          - THB
+          - TJS
+          - TMT
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UGX
+          - USD
+          - USN
+          - USS
+          - UYI
+          - UYU
+          - UZS
+          - VEF
+          - VES
+          - VND
+          - VUV
+          - WST
+          - XAF
+          - XAG
+          - XAU
+          - XBA
+          - XBB
+          - XBC
+          - XBD
+          - XCD
+          - XDR
+          - XOF
+          - XPD
+          - XPF
+          - XPT
+          - XSU
+          - XTS
+          - XUA
+          - XXX
+          - YER
+          - ZAR
+          - ZMW
+          - ZWL
+        entity_type:
+          type: string
+          description: Type of entity which owns this external bank account.
+          enum:
+          - BUSINESS
+          - INDIVIDUAL
+        payid:
+          type: string
+          description: Australia NPP PayID.
+      description: Australia NPP PayID information.
+    LinkedAccountCapability:
+      type: object
+      properties:
+        balance_check:
+          type: boolean
+          description: Whether the Linked Account supports balance checking.
+        direct_debit_deposit:
+          type: boolean
+          description: Whether the Linked Account supports direct debit deposit.
+      description: Capabilities of the Linked Account.
+    EgiroAuth:
+      type: object
+      properties:
+        auth_url:
+          type: string
+          description: The EGIRO Auth Link to authorize.
+      description: Required information to proceed with EGIRO authentication.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    Core_Resources_Address:
+      type: object
+      properties:
+        address_line1:
+          type: string
+          description: The first line of a physical address, typically including the street number and name of the building or residence. A P.O. box is not acceptable.
+        address_line2:
+          type: string
+          description: An optional field that can be used to capture additional information about the address, such as the apartment/ suite number, or floor number.
+        country_code:
+          type: string
+          description: Country code. (2-letter ISO 3166-2 country code).
+        postcode:
+          type: string
+          description: Postcode or zip code. Only applicable if relevant to selected country.
+        state:
+          type: string
+          description: Name of state. Only applicable if relevant to selected country.
+        suburb:
+          type: string
+          description: Name of city/suburb.
+      description: Address where the business operates and conducts its activities.
+    NZBank:
+      type: object
+      required:
+      - account_name
+      - account_number
+      - currency
+      - entity_type
+      properties:
+        account_name:
+          type: string
+          description: Name of the external bank account owner.
+        account_number:
+          type: string
+          description: External bank account number.
+        bank_code:
+          type: string
+          description: Bank code.
+        branch_code:
+          type: string
+          description: Branch code.
+        currency:
+          type: string
+          description: Currency of your bank account.
+          enum:
+          - UNDEFINED
+          - AED
+          - AFN
+          - ALL
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BOV
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BYR
+          - BZD
+          - CAD
+          - CDF
+          - CHE
+          - CHF
+          - CHW
+          - CLF
+          - CLP
+          - CNY
+          - COP
+          - COU
+          - CRC
+          - CUC
+          - CUP
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - EUR
+          - FJD
+          - FKP
+          - GBP
+          - GEL
+          - GHS
+          - GIP
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IQD
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LBP
+          - LKR
+          - LRD
+          - LSL
+          - LTL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRO
+          - MRU
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MXV
+          - MYR
+          - MZN
+          - NAD
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - NZD
+          - OMR
+          - PAB
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RUR
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SHP
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STD
+          - STN
+          - SVC
+          - SYP
+          - SZL
+          - THB
+          - TJS
+          - TMT
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UGX
+          - USD
+          - USN
+          - USS
+          - UYI
+          - UYU
+          - UZS
+          - VEF
+          - VES
+          - VND
+          - VUV
+          - WST
+          - XAF
+          - XAG
+          - XAU
+          - XBA
+          - XBB
+          - XBC
+          - XBD
+          - XCD
+          - XDR
+          - XOF
+          - XPD
+          - XPF
+          - XPT
+          - XSU
+          - XTS
+          - XUA
+          - XXX
+          - YER
+          - ZAR
+          - ZMW
+          - ZWL
+        entity_type:
+          type: string
+          description: Type of entity which owns this external bank account.
+          enum:
+          - BUSINESS
+          - INDIVIDUAL
+      description: New Zealand bank information.
+    MandateSchedule:
+      type: object
+      required:
+      - period
+      - period_unit
+      properties:
+        period:
+          type: integer
+          format: int32
+          description: The number of period units between recurring transaction cycles. For example, the transaction cycle is every quarter if period = 3 and period_unit = MONTH.
+        period_unit:
+          type: string
+          description: Specifies transaction frequency.
+          enum:
+          - DAY
+          - WEEK
+          - MONTH
+          - YEAR
+      description: The schedule for recurring transaction cycles. If no schedule is provided, the number of transactions allowed will be unlimited.
+    SGBank:
+      type: object
+      required:
+      - account_name
+      - account_number
+      - currency
+      - entity_type
+      - swift_code
+      properties:
+        account_name:
+          type: string
+          description: Name of the external bank account owner.
+        account_number:
+          type: string
+          description: External bank account number.
+        currency:
+          type: string
+          description: Currency of your bank account.
+          enum:
+          - UNDEFINED
+          - AED
+          - AFN
+          - ALL
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BOV
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BYR
+          - BZD
+          - CAD
+          - CDF
+          - CHE
+          - CHF
+          - CHW
+          - CLF
+          - CLP
+          - CNY
+          - COP
+          - COU
+          - CRC
+          - CUC
+          - CUP
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - EUR
+          - FJD
+          - FKP
+          - GBP
+          - GEL
+          - GHS
+          - GIP
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IQD
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LBP
+          - LKR
+          - LRD
+          - LSL
+          - LTL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRO
+          - MRU
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MXV
+          - MYR
+          - MZN
+          - NAD
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - NZD
+          - OMR
+          - PAB
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RUR
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SHP
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STD
+          - STN
+          - SVC
+          - SYP
+          - SZL
+          - THB
+          - TJS
+          - TMT
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UGX
+          - USD
+          - USN
+          - USS
+          - UYI
+          - UYU
+          - UZS
+          - VEF
+          - VES
+          - VND
+          - VUV
+          - WST
+          - XAF
+          - XAG
+          - XAU
+          - XBA
+          - XBB
+          - XBC
+          - XBD
+          - XCD
+          - XDR
+          - XOF
+          - XPD
+          - XPF
+          - XPT
+          - XSU
+          - XTS
+          - XUA
+          - XXX
+          - YER
+          - ZAR
+          - ZMW
+          - ZWL
+        entity_type:
+          type: string
+          description: Type of entity which owns this external bank account.
+          enum:
+          - BUSINESS
+          - INDIVIDUAL
+        swift_code:
+          type: string
+          description: SWIFT code.
+      description: Singapore bank information.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

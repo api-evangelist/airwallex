@@ -1,0 +1,228 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Issuing > Merchant Brands API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Issuing > Merchant Brands
+  description: Searches Merchant Brands, primarily for configuring the set of Merchant Brand unique identifiers permitted on a card.
+  x-domain: Issuing
+  x-resource: Merchant Brands
+  x-urlPath: issuing/merchant_brands
+paths:
+  /api/v1/issuing/merchant_brands/{id}:
+    get:
+      tags:
+      - Issuing > Merchant Brands
+      summary: 1|Retrieve a Merchant Brand
+      description: Retrieve a single merchant brand by its unique identifier.
+      operationId: retrieveMerchantBrand
+      parameters:
+      - name: id
+        in: path
+        description: Unique Identifier for the Merchant Brand.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonPciMerchantBrand'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/issuing/merchant_brands/merchant_brand_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+          logo_url: https://example.com/logo.png
+          name: Awesome Company
+      x-scope:
+      - scope: issuing.merchant_brand:read
+        group: Issuing
+        resource_name: Merchant Brands
+      x-domain: Issuing
+      x-resource: Merchant Brands
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/issuing/merchant_brands:
+    get:
+      tags:
+      - Issuing > Merchant Brands
+      summary: 2|List all Merchant Brands
+      description: Retrieve all Merchant Brands matching (by prefix) the name provided. If no name is provided, all Merchant Brands will be returned in alphabetical order.
+      operationId: listMerchantBrands
+      parameters:
+      - name: name
+        in: query
+        description: Merchant brand name to filter results.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: Page marker used to retrieve the previous or next page of results. Set this field to the value returned by `page_before` or `page_after` to retrieve the previous or next page, respectively.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: '0'
+      - name: page_size
+        in: query
+        description: The number of items to return per page. Defaults to 100.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonPciBookmarkedResultOfIssuingNonPciMerchantBrand'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/issuing/merchant_brands
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+            logo_url: https://example.com/logo.png
+            name: Awesome Company
+          page_after: YWZ0ZXI9MmFjNmEzMjQtM2IwNC00M2JkLThmNTUtOWQ5YzdmZjEzZGZm
+          page_before: YmVmb3JlPWVmZDQxZTk3LTU2MzctNDQ5MC04NjNkLTU2MDE5MjIwNDQ2YQ==
+      x-scope:
+      - scope: issuing.merchant_brand:read
+        group: Issuing
+        resource_name: Merchant Brands
+      x-domain: Issuing
+      x-resource: Merchant Brands
+      x-urlPath: list
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    NonPciBookmarkedResultOfIssuingNonPciMerchantBrand:
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/NonPciMerchantBrand'
+        page_after:
+          type: string
+          description: A marker for retrieving the next page of results. Include this value in the `page` request parameter to retrieve subsequent pages.
+        page_before:
+          type: string
+          description: A marker for retrieving the previous page of results. Include this value in the `page` request parameter to retrieve previous pages.
+    NonPciMerchantBrand:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the merchant brand.
+        logo_url:
+          type: string
+          description: URL of the merchant brand logo image.
+        name:
+          type: string
+          description: Current name of the merchant brand. Please note, this is subject to change at any time, please do not rely on it for business logic.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

@@ -1,0 +1,1395 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Spend > Expenses API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Spend > Expenses
+  description: Manages expenses associated with corporate card transactions. Supports approval workflows, receipt attachments, accounting field categorization, line item breakdowns, and sync with external accounting systems.
+  x-domain: Spend
+  x-resource: Expenses
+  x-urlPath: spend/expenses
+paths:
+  /api/v1/spend/expenses/{id}/add_line_items:
+    post:
+      tags:
+      - Spend > Expenses
+      summary: Add Expense Line Items
+      x-stage: preview
+      description: Adds between 1 and 100 line items to an existing expense. Archived expenses cannot be edited.
+      operationId: addExpenseLineItems
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the expense.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - line_items
+              - request_id
+              properties:
+                request_id:
+                  type: string
+                  maxLength: 64
+                  description: Unique identifier for this request to ensure idempotency.
+                line_items:
+                  type: array
+                  minItems: 1
+                  maxItems: 100
+                  description: Expense line items to create.
+                  items:
+                    type: object
+                    required:
+                    - transaction_amount
+                    properties:
+                      transaction_amount:
+                        type: string
+                        pattern: ^(0|[1-9][0-9]*)(\.[0-9]+)?$
+                        description: Non-negative line item amount in the expense transaction currency.
+                      description:
+                        type: string
+                        description: Optional description of the expense line item.
+                      accounting_field_selections:
+                        type: array
+                        description: Accounting field selections to assign to the expense line item.
+                        items:
+                          type: object
+                          required:
+                          - type
+                          - source_id
+                          properties:
+                            type:
+                              type: string
+                              description: Type of selected accounting value.
+                              enum:
+                              - GENERAL_LEDGER_ACCOUNT
+                              - TAX_CODE
+                              - OTHER
+                              x-enumDescriptions:
+                                GENERAL_LEDGER_ACCOUNT: General ledger account that the line item is booked to.
+                                TAX_CODE: Tax code applied to the line item.
+                                OTHER: Custom accounting field defined in your ERP.
+                            source_id:
+                              type: string
+                              format: uuid
+                              description: 'Unique identifier of the accounting value to assign to this line item. The required value depends on `type`: use the `id` returned by [List GL accounts](/docs/api/accounting/general_ledger_accounts/gl_accounts) for `GENERAL_LEDGER_ACCOUNT`, [List tax codes](/docs/api/accounting/tax_codes/list) for `TAX_CODE`, or [List accounting field values](/docs/api/accounting/accounting_field_values/list) for `OTHER`.'
+                          description: Accounting field selection to assign to the expense line item.
+                    description: Expense line item to create.
+              description: Expense line items to create and add to the expense.
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Expense not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/spend/expenses/ba46f0ff-8081-4db6-8333-4e011fe9561d/add_line_items
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          request_id: ee939540-3203-4a2c-9172-89a566485dd9
+          line_items:
+          - transaction_amount: '60.50'
+            description: Client dinner
+            accounting_field_selections:
+            - type: GENERAL_LEDGER_ACCOUNT
+              source_id: c9fcfdee-f943-45c9-abaa-45df1601ae04
+          - transaction_amount: '45.00'
+            description: Taxi
+        response_body:
+          id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+          account_id: acct_a2y0pxz3m4k5hoZldn97hjzp
+          legal_entity_id: le_U3jlHqQRNHWn2zAKeeT8sg
+          card_id: 93eed14b-104d-4f40-ae1d-3633c6538276
+          card_type: EMPLOYEE
+          status: DRAFT
+          card_transaction:
+            status: CLEARED
+            amount: '105.50'
+            currency: USD
+          sync_status: NOT_SYNCED
+          billing_currency: USD
+          billing_amount: '105.50'
+          approvers: []
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-02-02T00:00:00Z'
+          accounting_field_selections: []
+          attachments: []
+          line_items:
+          - id: a12fca5e-4aeb-4adb-85b0-428b4f078aba
+            transaction_amount: '60.50'
+            description: Client dinner
+            accounting_field_selections:
+            - source_id: c9fcfdee-f943-45c9-abaa-45df1601ae04
+              type: GENERAL_LEDGER_ACCOUNT
+              external_id: '6000'
+              value: Travel & Entertainment
+              value_label: Travel & Entertainment
+          - id: 9f10c7dc-3083-48c7-8c1a-bf8f76dcf600
+            transaction_amount: '45.00'
+            description: Taxi
+            accounting_field_selections: []
+          comments: []
+      x-api-key-scope: org
+      x-obo-supported: false
+      x-domain: Spend
+      x-resource: Expenses
+      x-urlPath: add_line_items
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/spend/expenses/{id}/delete_line_items:
+    post:
+      tags:
+      - Spend > Expenses
+      summary: Delete Expense Line Items
+      x-stage: preview
+      description: Deletes between 1 and 100 expense line items. The operation is atomic. Line item totals may temporarily differ from the expense transaction amount, but must reconcile before the expense is submitted. Archived expenses cannot be edited.
+      operationId: deleteExpenseLineItems
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the expense.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - line_item_ids
+              properties:
+                line_item_ids:
+                  type: array
+                  minItems: 1
+                  maxItems: 100
+                  description: Unique identifiers of the expense line items to delete.
+                  items:
+                    type: string
+                    format: uuid
+                    description: Unique identifier of an expense line item.
+              description: Expense line items to delete.
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Expense or line item not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/spend/expenses/ba46f0ff-8081-4db6-8333-4e011fe9561d/delete_line_items
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          line_item_ids:
+          - 9f10c7dc-3083-48c7-8c1a-bf8f76dcf600
+        response_body:
+          id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+          account_id: acct_a2y0pxz3m4k5hoZldn97hjzp
+          legal_entity_id: le_U3jlHqQRNHWn2zAKeeT8sg
+          card_id: 93eed14b-104d-4f40-ae1d-3633c6538276
+          card_type: EMPLOYEE
+          status: DRAFT
+          card_transaction:
+            status: CLEARED
+            amount: '105.50'
+            currency: USD
+          sync_status: NOT_SYNCED
+          billing_currency: USD
+          billing_amount: '105.50'
+          approvers: []
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-02-02T00:00:00Z'
+          accounting_field_selections: []
+          attachments: []
+          line_items:
+          - id: a12fca5e-4aeb-4adb-85b0-428b4f078aba
+            transaction_amount: '105.50'
+            description: Client dinner and transport
+            accounting_field_selections: []
+          comments: []
+      x-api-key-scope: org
+      x-obo-supported: false
+      x-domain: Spend
+      x-resource: Expenses
+      x-urlPath: delete_line_items
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/spend/expenses/{id}/update:
+    post:
+      tags:
+      - Spend > Expenses
+      x-stage: beta
+      summary: Update an Expense
+      description: Updates the coding and details of an existing expense, such as its description, merchant, invoice number, and attendees. Archived expenses cannot be edited.
+      operationId: updateExpense
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the expense.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                  description: Description or memo for the expense.
+                merchant:
+                  type: string
+                  description: Name of the payee for this expense. Not linked to your accounting system.
+                invoice_number:
+                  type: string
+                  description: Invoice number associated with the expense.
+                attendees:
+                  type: array
+                  description: List of attendees for the expense.
+                  items:
+                    type: object
+                    required:
+                    - external
+                    properties:
+                      external:
+                        type: boolean
+                        description: Whether the attendee is external to the organization.
+                      name:
+                        type: string
+                        description: Name of the attendee. Required for external attendee.
+                      email:
+                        type: string
+                        description: Email address of the attendee. Present only when external is false.
+                    description: Attendee of the expense.
+              description: Fields to update on the expense.
+        required: true
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/spend/expenses/ba46f0ff-8081-4db6-8333-4e011fe9561d/update
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          description: Client dinner - Q4 planning
+          merchant: The French Laundry
+          invoice_number: INV-2026-001
+          attendees:
+          - external: false
+            name: Jane Doe
+            email: jane@company.com
+        response_body:
+          id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+          account_id: acct_a2y0pxz3m4k5hoZldn97hjzp
+          legal_entity_id: le_U3jlHqQRNHWn2zAKeeT8sg
+          card_id: 93eed14b-104d-4f40-ae1d-3633c6538276
+          card_type: EMPLOYEE
+          status: AWAITING_APPROVAL
+          card_transaction:
+            status: CLEARED
+            amount: '105.50'
+            currency: USD
+          sync_status: SYNCED
+          billing_currency: USD
+          billing_amount: '105.5'
+          description: Client dinner - Q4 planning
+          merchant: The French Laundry
+          invoice_number: INV-2026-001
+          approvers:
+          - manager@company.com
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-02-02T00:00:00Z'
+          accounting_field_selections:
+          - type: MERCHANT
+            source_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+            name: null
+            external_id: null
+            value: 'Starbucks Coffee #1234'
+            value_label: 'Starbucks Coffee #1234'
+          attachments:
+          - id: 0fd62109-cfc0-4c94-86a5-d01c42506b76
+            content_type: image/jpeg
+            file_name: receipt.jpg
+            file_url: https://files.airwallex.com/receipt.jpg
+            created_at: '2024-12-16T09:22:00Z'
+          line_items:
+          - id: a12fca5e-4aeb-4adb-85b0-428b4f078aba
+            transaction_amount: '105.50'
+            description: Client dinner
+            accounting_field_selections:
+            - source_id: c9fcfdee-f943-45c9-abaa-45df1601ae04
+              type: GENERAL_LEDGER_ACCOUNT
+              external_id: '6000'
+              value: Travel & Entertainment
+              value_label: Travel & Entertainment
+          comments:
+          - content: Expense approved - valid business purpose confirmed
+            created_by: manager@company.com
+            created_at: '2025-01-01T00:00:00Z'
+          attendees:
+          - external: false
+            name: Jane Doe
+            email: jane@company.com
+      x-api-key-scope: org
+      x-obo-supported: false
+      x-domain: Spend
+      x-resource: Expenses
+      x-urlPath: update
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/spend/expenses/{id}/update_line_items:
+    post:
+      tags:
+      - Spend > Expenses
+      summary: Update Expense Line Items
+      x-stage: preview
+      description: Updates between 1 and 100 expense line items. The operation is atomic. Line item totals may temporarily differ from the expense transaction amount, but must reconcile before the expense is submitted. Archived expenses cannot be edited.
+      operationId: updateExpenseLineItems
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the expense.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - line_items
+              properties:
+                line_items:
+                  type: array
+                  minItems: 1
+                  maxItems: 100
+                  description: Expense line items to update.
+                  items:
+                    type: object
+                    minProperties: 2
+                    required:
+                    - id
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        description: Unique identifier of the expense line item.
+                      transaction_amount:
+                        type: string
+                        pattern: ^(0|[1-9][0-9]*)(\.[0-9]+)?$
+                        description: Non-negative line item amount in the expense transaction currency.
+                      description:
+                        type: string
+                        description: Description of the expense line item.
+                      accounting_field_selections:
+                        type: array
+                        description: Accounting field selections to replace on the expense line item.
+                        items:
+                          type: object
+                          required:
+                          - type
+                          - source_id
+                          properties:
+                            type:
+                              type: string
+                              description: Type of selected accounting value.
+                              enum:
+                              - GENERAL_LEDGER_ACCOUNT
+                              - TAX_CODE
+                              - OTHER
+                              x-enumDescriptions:
+                                GENERAL_LEDGER_ACCOUNT: General ledger account that the line item is booked to.
+                                TAX_CODE: Tax code applied to the line item.
+                                OTHER: Custom accounting field defined in your ERP.
+                            source_id:
+                              type: string
+                              format: uuid
+                              description: 'Unique identifier of the accounting value to assign to this line item. The required value depends on `type`: use the `id` returned by [List GL accounts](/docs/api/accounting/general_ledger_accounts/gl_accounts) for `GENERAL_LEDGER_ACCOUNT`, [List tax codes](/docs/api/accounting/tax_codes/list) for `TAX_CODE`, or [List accounting field values](/docs/api/accounting/accounting_field_values/list) for `OTHER`.'
+                          description: Accounting field selection to assign to the expense line item.
+                    description: Expense line item identifier and fields to update. At least one update field is required in addition to the ID.
+              description: Expense line items to update.
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Expense or line item not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/spend/expenses/ba46f0ff-8081-4db6-8333-4e011fe9561d/update_line_items
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          line_items:
+          - id: a12fca5e-4aeb-4adb-85b0-428b4f078aba
+            transaction_amount: '65.50'
+            description: Client dinner and tip
+            accounting_field_selections:
+            - type: GENERAL_LEDGER_ACCOUNT
+              source_id: c9fcfdee-f943-45c9-abaa-45df1601ae04
+          - id: 9f10c7dc-3083-48c7-8c1a-bf8f76dcf600
+            transaction_amount: '40.00'
+        response_body:
+          id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+          account_id: acct_a2y0pxz3m4k5hoZldn97hjzp
+          legal_entity_id: le_U3jlHqQRNHWn2zAKeeT8sg
+          card_id: 93eed14b-104d-4f40-ae1d-3633c6538276
+          card_type: EMPLOYEE
+          status: DRAFT
+          card_transaction:
+            status: CLEARED
+            amount: '105.50'
+            currency: USD
+          sync_status: NOT_SYNCED
+          billing_currency: USD
+          billing_amount: '105.50'
+          approvers: []
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-02-02T00:00:00Z'
+          accounting_field_selections: []
+          attachments: []
+          line_items:
+          - id: a12fca5e-4aeb-4adb-85b0-428b4f078aba
+            transaction_amount: '65.50'
+            description: Client dinner and tip
+            accounting_field_selections:
+            - source_id: c9fcfdee-f943-45c9-abaa-45df1601ae04
+              type: GENERAL_LEDGER_ACCOUNT
+              external_id: '6000'
+              value: Travel & Entertainment
+              value_label: Travel & Entertainment
+          - id: 9f10c7dc-3083-48c7-8c1a-bf8f76dcf600
+            transaction_amount: '40.00'
+            description: Taxi
+            accounting_field_selections: []
+          comments: []
+      x-api-key-scope: org
+      x-obo-supported: false
+      x-domain: Spend
+      x-resource: Expenses
+      x-urlPath: update_line_items
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/spend/expenses/{id}:
+    get:
+      tags:
+      - Spend > Expenses
+      x-stage: beta
+      summary: 1|Retrieve an Expense
+      description: Retrieves the details of an existing expense.
+      operationId: retrieveExpense
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the expense.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/spend/expenses/expense_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+          account_id: acct_a2y0pxz3m4k5hoZldn97hjzp
+          legal_entity_id: le_U3jlHqQRNHWn2zAKeeT8sg
+          card_id: 93eed14b-104d-4f40-ae1d-3633c6538276
+          card_type: EMPLOYEE
+          status: AWAITING_APPROVAL
+          card_transaction:
+            card_transaction_id: 43aec951-3204-4b1a-9e77-8f2c1d0a1b2c
+            status: CLEARED
+            amount: '105.50'
+            currency: USD
+          sync_status: SYNCED
+          billing_currency: USD
+          billing_amount: '105.5'
+          description: Client dinner at restaurant for Q4 planning meeting.
+          merchant: 'Starbucks Coffee #1234'
+          invoice_number: INV-2026-001
+          approvers:
+          - manager@company.com
+          - finance@company.com
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-02-02T00:00:00Z'
+          settled_at: '2025-03-03T10:15:30Z'
+          accounting_field_selections:
+          - type: MERCHANT
+            source_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+            name: null
+            external_id: null
+            value: 'Starbucks Coffee #1234'
+            value_label: 'Starbucks Coffee #1234'
+          attachments:
+          - id: 0fd62109-cfc0-4c94-86a5-d01c42506b76
+            content_type: image/jpeg
+            file_name: receipt.jpg
+            file_url: https://files.airwallex.com/receipt.jpg
+            created_at: '2024-12-16T09:22:00Z'
+          line_items:
+          - id: a12fca5e-4aeb-4adb-85b0-428b4f078aba
+            transaction_amount: '105.50'
+            description: Client dinner
+            accounting_field_selections:
+            - source_id: c9fcfdee-f943-45c9-abaa-45df1601ae04
+              type: GENERAL_LEDGER_ACCOUNT
+              external_id: '6000'
+              value: Travel & Entertainment
+              value_label: Travel & Entertainment
+          comments:
+          - content: Expense approved - valid business purpose confirmed
+            created_by: manager@company.com
+            created_at: '2025-01-01T00:00:00Z'
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: spend.expense:read
+        group: Spend
+        resource_name: Expenses
+      x-domain: Spend
+      x-resource: Expenses
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/spend/expenses:
+    get:
+      tags:
+      - Spend > Expenses
+      x-stage: beta
+      summary: 2|List all Expenses
+      description: List expenses based on the query parameters.
+      operationId: listExpenses
+      parameters:
+      - name: page
+        in: query
+        description: A bookmark for use in pagination to retrieve either the next page or the previous page of results. You can fetch the value for this identifier from the response of the previous API call.
+        required: false
+        schema:
+          type: string
+      - name: page_size
+        in: query
+        description: The number of items returned per page, between 1 and 100. The default is 100.
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 100
+      - name: from_created_at
+        in: query
+        description: 'Filter by expenses created after this timestamp (inclusive) in ISO8601 format.
+
+
+          If not specified, defaults to last 30 days from `to_created_at`.'
+        required: false
+        schema:
+          type: string
+      - name: to_created_at
+        in: query
+        description: 'Filter by expenses created before this timestamp (exclusive) in ISO8601 format.
+
+
+          If not specified, defaults to now.'
+        required: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: Filter by expense statuses. Additional values may appear; implementations should handle unknown values gracefully.
+        required: false
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - DRAFT
+            - AWAITING_APPROVAL
+            - REJECTED
+            - APPROVED
+            - ARCHIVED
+            - DELETED
+      - name: card_transaction
+        in: query
+        description: Filter by card transaction properties.
+        required: false
+        style: deepObject
+        explode: true
+        schema:
+          type: object
+          properties:
+            status:
+              description: Filter by card transaction statuses. Possible values are `AUTHORIZED`, `CLEARED`, `REVERSED`.
+              type: array
+              items:
+                type: string
+                enum:
+                - AUTHORIZED
+                - CLEARED
+                - REVERSED
+                x-enumDescriptions:
+                  AUTHORIZED: Transaction has been authorized by the card network but not yet settled.
+                  CLEARED: Transaction has been settled and cleared.
+                  REVERSED: Transaction has been reversed or refunded.
+      - name: card_type
+        in: query
+        description: Filter by card types. `COMPANY` identifies company cards and `EMPLOYEE` identifies employee cards.
+        required: false
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - COMPANY
+            - EMPLOYEE
+            x-enumDescriptions:
+              COMPANY: Filter to expenses made with company cards.
+              EMPLOYEE: Filter to expenses made with employee cards.
+      - name: sync_status
+        in: query
+        description: Filter by sync statuses.
+        required: false
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            description: Expense sync status.
+            enum:
+            - NOT_SYNCED
+            - READY_TO_SYNC
+            - SYNCED
+            - SYNC_FAILED
+      - name: legal_entity_id
+        in: query
+        description: Filter by legal entity identifier.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensePagination'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/spend/expenses
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+            account_id: acct_a2y0pxz3m4k5hoZldn97hjzp
+            legal_entity_id: le_U3jlHqQRNHWn2zAKeeT8sg
+            card_id: 93eed14b-104d-4f40-ae1d-3633c6538276
+            card_type: EMPLOYEE
+            status: AWAITING_APPROVAL
+            card_transaction:
+              card_transaction_id: 43aec951-3204-4b1a-9e77-8f2c1d0a1b2c
+              status: CLEARED
+              amount: '105.50'
+              currency: USD
+            sync_status: SYNCED
+            billing_currency: USD
+            billing_amount: '105.5'
+            description: Client dinner at restaurant for Q4 planning meeting.
+            merchant: 'Starbucks Coffee #1234'
+            invoice_number: INV-2026-001
+            approvers:
+            - manager@company.com
+            - finance@company.com
+            created_at: '2025-01-01T00:00:00Z'
+            updated_at: '2025-02-02T00:00:00Z'
+            settled_at: '2025-03-03T10:15:30Z'
+            accounting_field_selections:
+            - type: MERCHANT
+              source_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+              name: null
+              external_id: null
+              value: 'Starbucks Coffee #1234'
+              value_label: 'Starbucks Coffee #1234'
+            attachments:
+            - id: 0fd62109-cfc0-4c94-86a5-d01c42506b76
+              content_type: image/jpeg
+              file_name: receipt.jpg
+              file_url: https://files.airwallex.com/receipt.jpg
+              created_at: '2024-12-16T09:22:00Z'
+            line_items:
+            - id: a12fca5e-4aeb-4adb-85b0-428b4f078aba
+              transaction_amount: '105.50'
+              description: Client dinner
+              accounting_field_selections:
+              - source_id: c9fcfdee-f943-45c9-abaa-45df1601ae04
+                type: GENERAL_LEDGER_ACCOUNT
+                external_id: '6000'
+                value: Travel & Entertainment
+                value_label: Travel & Entertainment
+            comments:
+            - content: Expense approved - valid business purpose confirmed
+              created_by: manager@company.com
+              created_at: '2025-01-01T00:00:00Z'
+          page_after: eyJwYWdlX2JlZm9yZSI6IjIwMjUtMDctMDFUMDA6MDA6MDBaIn0=
+          page_before: eyJwYWdlX2JlZm9yZSI6IjIwMjUtMDctMDFUMDA6MDA6MDBaIn0=
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: spend.expense:read
+        group: Spend
+        resource_name: Expenses
+      x-domain: Spend
+      x-resource: Expenses
+      x-urlPath: list
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/spend/expenses/{id}/sync:
+    post:
+      tags:
+      - Spend > Expenses
+      x-stage: beta
+      summary: 3|Update Expense Sync Status
+      description: 'Updates the sync status of an existing expense.
+
+
+        A sync status can only move in the following directions:
+
+        * `NOT_SYNCED` can move to `READY_TO_SYNC`, `SYNC_FAILED`, or `SYNCED`.
+
+        * `READY_TO_SYNC` can move to `SYNCED` or `SYNC_FAILED`.
+
+        * `SYNC_FAILED` can move to `SYNCED` or `READY_TO_SYNC`.
+
+        * `SYNCED` is a final state and cannot move to any other status.
+
+
+        `NOT_SYNCED` is the initial status of an expense and cannot be set through this endpoint.'
+      operationId: syncExpenses
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the expense.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - sync_status
+              properties:
+                sync_status:
+                  type: string
+                  description: Expense sync status.
+                  enum:
+                  - READY_TO_SYNC
+                  - SYNCED
+                  - SYNC_FAILED
+              description: Expense Update Payload.
+        description: Update expense payload.
+        required: true
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/spend/expenses/expense_id/sync
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          sync_status: SYNCED
+        response_body:
+          id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+          account_id: acct_a2y0pxz3m4k5hoZldn97hjzp
+          legal_entity_id: le_U3jlHqQRNHWn2zAKeeT8sg
+          card_id: 93eed14b-104d-4f40-ae1d-3633c6538276
+          card_type: EMPLOYEE
+          status: AWAITING_APPROVAL
+          card_transaction:
+            card_transaction_id: 43aec951-3204-4b1a-9e77-8f2c1d0a1b2c
+            status: CLEARED
+            amount: '105.50'
+            currency: USD
+          sync_status: SYNCED
+          billing_currency: USD
+          billing_amount: '105.5'
+          description: Client dinner at restaurant for Q4 planning meeting.
+          merchant: 'Starbucks Coffee #1234'
+          approvers:
+          - manager@company.com
+          - finance@company.com
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-02-02T00:00:00Z'
+          settled_at: '2025-03-03T10:15:30Z'
+          accounting_field_selections:
+          - type: MERCHANT
+            source_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+            name: null
+            external_id: null
+            value: 'Starbucks Coffee #1234'
+            value_label: 'Starbucks Coffee #1234'
+          attachments:
+          - id: 0fd62109-cfc0-4c94-86a5-d01c42506b76
+            content_type: image/jpeg
+            file_name: receipt.jpg
+            file_url: https://files.airwallex.com/receipt.jpg
+            created_at: '2024-12-16T09:22:00Z'
+          line_items:
+          - id: a12fca5e-4aeb-4adb-85b0-428b4f078aba
+            transaction_amount: '105.50'
+            description: Client dinner
+            accounting_field_selections:
+            - source_id: c9fcfdee-f943-45c9-abaa-45df1601ae04
+              type: GENERAL_LEDGER_ACCOUNT
+              external_id: '6000'
+              value: Travel & Entertainment
+              value_label: Travel & Entertainment
+          comments:
+          - content: Expense approved - valid business purpose confirmed
+            created_by: manager@company.com
+            created_at: '2025-01-01T00:00:00Z'
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: spend.expense:write
+        group: Spend
+        resource_name: Expenses
+      x-domain: Spend
+      x-resource: Expenses
+      x-urlPath: sync
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    AccountingFieldSelection:
+      type: object
+      required:
+      - source_id
+      - type
+      - value
+      properties:
+        source_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the selected general ledger (GL) account, tax code, or accounting field value.
+        type:
+          type: string
+          description: Type of accounting field.
+          enum:
+          - GENERAL_LEDGER_ACCOUNT
+          - TAX_CODE
+          - OTHER
+          x-enumDescriptions:
+            GENERAL_LEDGER_ACCOUNT: General ledger (GL) account assigned to the line item.
+            TAX_CODE: Tax code applied to the line item.
+            OTHER: Custom accounting field defined in your ERP. The field name is provided in `name`.
+        name:
+          type: string
+          description: Name of the accounting field in the ERP software. This field is populated only when `type` is set to `OTHER`.
+        external_id:
+          type: string
+          description: External unique identifier of the accounting field value in the ERP.
+        value:
+          type: string
+          description: Name of the accounting field value in the ERP.
+        value_label:
+          type: string
+          description: Name of the accounting field value displayed in Airwallex.
+    Comment:
+      type: object
+      required:
+      - content
+      - created_at
+      properties:
+        content:
+          type: string
+          description: Text body of the comment.
+        created_by:
+          type: string
+          description: Email address of the user who created this comment. Used for attribution, notifications, and audit trail tracking.
+        created_at:
+          type: string
+          description: Timestamp for when the resource was created in ISO8601 format.
+      description: User comment or note providing additional context, clarification, or communication related to expenses, reimbursements, or approval workflows. Used for audit trails and collaboration.
+    ExpenseLineItem:
+      type: object
+      required:
+      - accounting_field_selections
+      - id
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the expense line item.
+        transaction_amount:
+          type: string
+          description: Amount of this line item in the transaction currency, including all taxes. Represents the actual expense amount for this specific component of the overall expense.
+        description:
+          type: string
+          description: Optional description providing details about this specific line item. Helps explain what this component of the expense represents for accounting and approval purposes.
+        accounting_field_selections:
+          type: array
+          description: Accounting and categorization fields assigned to this specific line item. Allows for different accounting treatment of individual components within a single expense.
+          items:
+            $ref: '#/components/schemas/AccountingFieldSelection'
+      description: Individual line item within an expense representing a specific component or breakdown. Allows for detailed categorization and accounting treatment of different parts of a single expense.
+    Expense:
+      type: object
+      required:
+      - account_id
+      - accounting_field_selections
+      - approvers
+      - attachments
+      - billing_amount
+      - billing_currency
+      - card_id
+      - card_type
+      - card_transaction
+      - comments
+      - created_at
+      - id
+      - legal_entity_id
+      - line_items
+      - status
+      - sync_status
+      - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the expense.
+        account_id:
+          type: string
+          description: Unique identifier of the Airwallex account that owns this expense. This determines which account the expense amount is debited from.
+        legal_entity_id:
+          type: string
+          description: Unique identifier of the legal entity associated with this expense. Used for accounting segregation and compliance reporting across different legal entities.
+        card_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the Airwallex card used to make this purchase. Links the expense to the specific card and cardholder for tracking and reporting.
+        card_type:
+          type: string
+          description: Identifies whether the expense was made using a company card or an employee card. Possible values are `COMPANY` and `EMPLOYEE`.
+          enum:
+          - COMPANY
+          - EMPLOYEE
+          x-enumDescriptions:
+            COMPANY: Expense made using a company card.
+            EMPLOYEE: Expense made using an employee card.
+        status:
+          type: string
+          description: Current approval status of the expense. Additional values may appear; implementations should handle unknown values gracefully.
+          enum:
+          - DRAFT
+          - AWAITING_APPROVAL
+          - REJECTED
+          - APPROVED
+          - ARCHIVED
+          - DELETED
+        card_transaction:
+          $ref: '#/components/schemas/CardTransaction'
+        sync_status:
+          type: string
+          description: Expense sync status.
+          enum:
+          - NOT_SYNCED
+          - READY_TO_SYNC
+          - SYNCED
+          - SYNC_FAILED
+        billing_currency:
+          type: string
+          description: Currency in which the billing amount is charged to your account. This is your account's primary currency, regardless of the original transaction currency.
+        billing_amount:
+          type: string
+          description: Total amount charged to your account in billing currency, including any fees or currency conversion. This may differ from the original transaction amount.
+        description:
+          type: string
+          description: Optional description or memo providing additional context about the expense. Often includes the business purpose or additional details about the purchase.
+        merchant:
+          type: string
+          description: Name of the payee for this expense. Not linked to your accounting system.
+        invoice_number:
+          type: string
+          description: Invoice number associated with the expense.
+        approvers:
+          type: array
+          description: Email addresses of users authorized to approve this expense. An empty array indicates no approval is required or the expense has already been approved.
+          items:
+            type: string
+            description: Email addresses of users authorized to approve this expense. An empty array indicates no approval is required or the expense has already been approved.
+        created_at:
+          type: string
+          description: Timestamp for when the resource was created in ISO8601 format.
+        updated_at:
+          type: string
+          description: Timestamp for when the resource was updated in ISO8601 format.
+        settled_at:
+          type: string
+          description: Timestamp when the transaction was settled, in ISO8601 format. Null if transaction is still pending settlement.
+        accounting_field_selections:
+          type: array
+          description: Merchant accounting field selection assigned to this expense for reporting and categorization in your accounting system.
+          items:
+            type: object
+            required:
+            - source_id
+            - type
+            - value
+            properties:
+              source_id:
+                type: string
+                format: uuid
+                description: Unique identifier of the merchant associated with this expense.
+              type:
+                type: string
+                description: Type of accounting field.
+                enum:
+                - MERCHANT
+                x-enumDescriptions:
+                  MERCHANT: Merchant accounting field selection.
+              name:
+                type: string
+                description: Name of the accounting field in the ERP software. This field is not populated for merchant accounting field selections.
+              external_id:
+                type: string
+                description: External unique identifier of the accounting field value in the ERP.
+              value:
+                type: string
+                description: Name of the accounting field value in the ERP.
+              value_label:
+                type: string
+                description: Name of the accounting field value displayed in Airwallex.
+        attachments:
+          type: array
+          description: Receipt images and supporting documents uploaded for this expense. Commonly used for compliance and approval workflows.
+          items:
+            $ref: '#/components/schemas/Attachment'
+        line_items:
+          type: array
+          description: Breakdown of the expense into detailed line items with individual accounting categories. The sum of all line item amounts should equal the total expense amount.
+          items:
+            $ref: '#/components/schemas/ExpenseLineItem'
+        comments:
+          type: array
+          description: Conversation thread and notes about this expense, typically used for approval workflows and clarifications between cardholders and approvers.
+          items:
+            $ref: '#/components/schemas/Comment'
+        attendees:
+          type: array
+          description: Attendees associated with this expense, including internal employees and external guests.
+          items:
+            $ref: '#/components/schemas/Attendee'
+    CardTransaction:
+      type: object
+      required:
+      - amount
+      - currency
+      - status
+      properties:
+        card_transaction_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the card transaction associated with the expense.
+        status:
+          type: string
+          description: Transaction status.
+          enum:
+          - AUTHORIZED
+          - CLEARED
+          - REVERSED
+          x-enumDescriptions:
+            AUTHORIZED: Transaction has been authorized by the card network but not yet settled.
+            CLEARED: Transaction has been settled and cleared.
+            REVERSED: Transaction has been reversed or refunded.
+        amount:
+          type: string
+          description: Amount of the original card transaction in the transaction currency.
+        currency:
+          type: string
+          description: Currency of the original card transaction, as an ISO 4217 currency code.
+      description: Details of the original card transaction associated with an expense, including the authorization status, amount, and currency.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    Attachment:
+      type: object
+      required:
+      - content_type
+      - created_at
+      - file_name
+      - file_url
+      - id
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the attachment.
+        content_type:
+          type: string
+          description: MIME type of the attached file. Common types include `image/jpeg`, `image/png`, and `application/pdf`.
+        file_name:
+          type: string
+          description: Original filename of the uploaded attachment, including the file extension.
+        file_url:
+          type: string
+          description: URL to access and download the attachment file.
+        created_at:
+          type: string
+          description: Timestamp for when the resource was created in ISO8601 format.
+      description: File attachment containing supporting documentation such as receipts, invoices, or other proof of expense. Used for compliance, audit trails, and approval workflows.
+    ExpensePagination:
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          description: List of items returned.
+          items:
+            $ref: '#/components/schemas/Expense'
+        page_after:
+          type: string
+          description: A pointer to the end of the page list used in pagination to retrieve the next page of results.
+        page_before:
+          type: string
+          description: A pointer to the start of the page list use in pagination to retrieve the previous page of results.
+      description: Paginated list of expenses.
+    Attendee:
+      type: object
+      required:
+      - external
+      - name
+      properties:
+        external:
+          type: boolean
+          description: Indicates whether the attendee is external to the organization.
+        name:
+          type: string
+          description: Name of the attendee.
+        email:
+          type: string
+          description: Email address of the attendee. Present only when `external` is `false`.
+      description: Attendee associated with an expense or reimbursement. Can be an internal employee or an external guest.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

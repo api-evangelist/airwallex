@@ -1,0 +1,328 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Core Resources > Direct Debits API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Core Resources > Direct Debits
+  description: Direct Debits are transactions that third party made to pull funds out of your Airwallex account.
+  x-domain: Core Resources
+  x-resource: Direct Debits
+  x-urlPath: core_resources/direct_debits
+paths:
+  /api/v1/direct_debits/{transaction_id}:
+    get:
+      tags:
+      - Core Resources > Direct Debits
+      summary: 1|Retrieve a Direct Debit
+      description: Get direct debit by transaction id.
+      operationId: retrieveDirectDebit
+      parameters:
+      - name: transaction_id
+        in: path
+        description: Unique Identifier for direct debit transaction.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: da46a141-85d3-4ed7-8155-5ab8f7cc34f2
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DirectDebit'
+        '307':
+          description: Temporary Redirect
+        '400':
+          description: '["field_required", "bad_request", "invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid", "credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/direct_debits/transaction_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          amount: 12794.27
+          created_at: <date-time>
+          currency: USD
+          transaction_id: da46a141-85d3-4ed7-8155-5ab8f7cc34f2
+          global_account_id: e412ea03-b6fa-4198-90ef-aaee64c4139c
+          status: SETTLED
+          debtor_name: ABC
+          statement_ref: '5487287788'
+          mandate_id: 11987bad-bb6d-4e30-ba49-d19826c3e803
+      x-scope:
+      - scope: direct_debit:read
+        group: Core Resources
+        resource_name: Direct Debits
+      - scope: direct_debit:write
+        group: Core Resources
+        resource_name: Direct Debits
+      x-domain: Core Resources
+      x-resource: Direct Debits
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/direct_debits:
+    get:
+      tags:
+      - Core Resources > Direct Debits
+      summary: 2|List all Direct Debits
+      description: Get list of direct debits by specifying the start and end date/time of creation. If neither from_created_date nor to_created_date are provided, direct debits within 30 days of today will be returned. If only to_created_date is provided, direct debits within 30 days of to_created_date will be returned.
+      operationId: listDirectDebits
+      parameters:
+      - name: from_created_date
+        in: query
+        description: The start date of `created_at` in ISO8601 format (inclusive).
+        required: false
+        schema:
+          type: string
+          default: '2021-05-01'
+      - name: to_created_date
+        in: query
+        description: The end date of `created_at` in ISO8601 format (inclusive).
+        required: false
+        schema:
+          type: string
+          default: '2021-05-31'
+      - name: page_num
+        in: query
+        description: Page number, starts from 0.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of results per page, defaultValue 100.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                - has_more
+                - items
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: Paged results.
+                    items:
+                      $ref: '#/components/schemas/DirectDebit'
+        '307':
+          description: Temporary Redirect
+        '400':
+          description: '["field_required", "bad_request", "invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid", "credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/direct_debits
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - amount: 12794.27
+            currency: USD
+            transaction_id: da46a141-85d3-4ed7-8155-5ab8f7cc34f2
+            global_account_id: e412ea03-b6fa-4198-90ef-aaee64c4139c
+            status: SETTLED
+            debtor_name: ABC
+            statement_ref: '5487287788'
+            mandate_id: 11987bad-bb6d-4e30-ba49-d19826c3e803
+      x-scope:
+      - scope: direct_debit:read
+        group: Core Resources
+        resource_name: Direct Debits
+      - scope: direct_debit:write
+        group: Core Resources
+        resource_name: Direct Debits
+      x-domain: Core Resources
+      x-resource: Direct Debits
+      x-urlPath: list
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/direct_debits/{transaction_id}/cancel:
+    post:
+      tags:
+      - Core Resources > Direct Debits
+      summary: 3|Cancel a Direct Debit
+      description: Cancel a direct debit by transaction id.
+      operationId: directDebits_cancel
+      parameters:
+      - name: transaction_id
+        in: path
+        description: The unique identifier for direct debit transaction.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: da46a141-85d3-4ed7-8155-5ab8f7cc34f2
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
+        '307':
+          description: Temporary Redirect
+        '400':
+          description: '["resource_not_found", "invalid_operation", "invalid_state_for_operation"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid", "credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/direct_debits/transaction_id/cancel
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body: false
+      x-scope:
+      - scope: direct_debit:write
+        group: Core Resources
+        resource_name: Direct Debits
+      x-domain: Core Resources
+      x-resource: Direct Debits
+      x-urlPath: cancel
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    DirectDebit:
+      required:
+      - amount
+      - created_at
+      - currency
+      - global_account_id
+      - transaction_id
+      type: object
+      properties:
+        amount:
+          type: number
+          description: The amount of this direct debit.
+        created_at:
+          type: string
+          description: The timestamp this direct debit was created.
+          format: date-time
+        currency:
+          type: string
+          description: The currency (3-letter ISO-4217 code) of this direct debit.
+        transaction_id:
+          type: string
+          description: A unique id of this direct debit.
+        global_account_id:
+          type: string
+          description: The global account id of this direct debit.
+        status:
+          type: string
+          description: The status of direct debit transaction.
+          enum:
+          - NEW
+          - IN_REVIEW
+          - PENDING
+          - SETTLED
+          - REJECTED
+          - RETURNED
+        debtor_name:
+          type: string
+          description: The debtor's name of this direct debit.
+        statement_ref:
+          type: string
+          description: The statement reference of this direct debit.
+        mandate_id:
+          type: string
+          description: The unique identifier of the related mandate.
+      description: Paged results.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

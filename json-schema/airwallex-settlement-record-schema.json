@@ -1,0 +1,268 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/airwallex/main/json-schema/airwallex-settlement-record-schema.json",
+  "title": "SettlementRecord",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/airwallex-openapi.yml#/components/schemas/SettlementRecord",
+  "type": "object",
+  "properties": {
+    "account_id": {
+      "type": "string",
+      "description": "Unique identifier of your account in Airwallex."
+    },
+    "acquirer_reference_number": {
+      "type": "string",
+      "description": "A unique number assigned to a card transaction as it moves through the payment flow. It can be used by banks to help trace a transaction if it appears to be missing. An ARN will be available for Visa and Mastercard charges."
+    },
+    "card_category": {
+      "type": "string",
+      "description": "Card category, such as consumer, commercial, if applicable."
+    },
+    "card_funding": {
+      "type": "string",
+      "description": "Card funding type, such as credit, debit, prepaid, if applicable."
+    },
+    "card_issuing_or_shopper_country": {
+      "type": "string",
+      "description": "Country the shopper's payment method was issued in, if applicable."
+    },
+    "card_transaction_region": {
+      "type": "string",
+      "description": "Identifies what region the card transaction has been classified as, such as domestic, regional or international."
+    },
+    "connected_account_id": {
+      "type": "string",
+      "description": "Unique identifier of the connected account related to this transaction under the Payments for Platforms model, if applicable."
+    },
+    "created_at": {
+      "type": "string",
+      "description": "Timestamp of when the financial transaction was created."
+    },
+    "customer_email": {
+      "type": "string",
+      "description": "Email of the customer, if applicable."
+    },
+    "customer_id": {
+      "type": "string",
+      "description": "Unique identifier of the customer in Airwallex, if applicable."
+    },
+    "customer_name": {
+      "type": "string",
+      "description": "Name of the customer, if applicable."
+    },
+    "customer_phone": {
+      "type": "string",
+      "description": "Phone number of the customer, if applicable."
+    },
+    "descriptor": {
+      "type": "string",
+      "description": "Transaction descriptor that is displayed to the shopper."
+    },
+    "dispute_reason": {
+      "type": "string",
+      "description": "Dispute reason from the payment method provider. For more information, refer to https://www.airwallex.com/docs/payments/disputes/dispute-reason-codes."
+    },
+    "dispute_reason_code": {
+      "type": "string",
+      "description": "Dispute reason code from the payment method provider. For more information, refer to https://www.airwallex.com/docs/payments/disputes/dispute-reason-codes."
+    },
+    "dispute_status": {
+      "type": "string",
+      "description": "The latest status of the dispute. For more information on dispute statuses, refer to https://www.airwallex.com/docs/payments/manage-payments/disputes/handle-disputes-on-the-airwallex-web-app."
+    },
+    "exchange_rate": {
+      "type": "number",
+      "description": "Exchange rate used for converting the transaction amount into the settlement amount."
+    },
+    "fee_details_list": {
+      "type": "array",
+      "description": "List of related fee records.",
+      "items": {
+        "$ref": "#/$defs/FeeRecord"
+      }
+    },
+    "fees": {
+      "type": "number",
+      "description": "Amount of the total fees paid for the transaction in the settlement currency, exclusive of taxes."
+    },
+    "gross_amount": {
+      "type": "number",
+      "description": "Amount of the transaction, converted into the settlement currency."
+    },
+    "issuing_or_originating_bank": {
+      "type": "string",
+      "description": "Name of financial institution that the shopper's payment method was issued from, if applicable."
+    },
+    "merchant_customer_id": {
+      "type": "string",
+      "description": "Unique identifier of the customer provided by you, if applicable. Maximum length is 64."
+    },
+    "metadata": {
+      "type": "object",
+      "description": "A set of key-value pairs that you can attach to the Settlement Record. You can specify up to 50 keys with key names up to 50 characters long and values up to 500 characters long.",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "net_amount": {
+      "type": "number",
+      "description": "Net amount of the transaction in the settlement currency, after subtracting the fees."
+    },
+    "order_id": {
+      "type": "string",
+      "description": "Unique identifier from your order system associated with a payment intent."
+    },
+    "payment_attempt_ids": {
+      "type": "array",
+      "description": "Unique identifiers for payment attempt associated with this payment.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "payment_created_time": {
+      "type": "string",
+      "description": "Time at which the payment intent was created."
+    },
+    "payment_intent_id": {
+      "type": "string",
+      "description": "Unique identifier for the payment intent."
+    },
+    "payment_link_reference": {
+      "type": "string",
+      "description": "Reference for the payment link input by your customer, if applicable."
+    },
+    "payment_method": {
+      "type": "string",
+      "description": "The payment method used by the shopper for this transaction."
+    },
+    "payment_method_type": {
+      "type": "string",
+      "description": "Helps you identify the payment method, if applicable, for example: Card brand when Apple Pay or Google Pay are used: Visa, Mastercard, etc. Klarna: Pay Now, Pay Later, etc."
+    },
+    "request_id": {
+      "type": "string",
+      "description": "Unique identifier from your system associated to your request to Airwallex."
+    },
+    "settled_at": {
+      "type": "string",
+      "description": "Timestamp of when the financial transaction was settled into your wallet."
+    },
+    "settlement_batch_id": {
+      "type": "string",
+      "description": "Unique identifier associated with the batch settlement."
+    },
+    "settlement_currency": {
+      "type": "string",
+      "description": "Three-letter ISO code for the settlement currency of the transaction."
+    },
+    "shipping_address": {
+      "type": "string",
+      "description": "First line of the shipping address associated with this transaction, if applicable."
+    },
+    "shipping_city": {
+      "type": "string",
+      "description": "City of the shipping address associated with this transaction, if applicable."
+    },
+    "shipping_country": {
+      "type": "string",
+      "description": "Country of the shipping address associated with this transaction, if applicable."
+    },
+    "shipping_name": {
+      "type": "string",
+      "description": "Name on the shipping address associated with this transaction, if applicable."
+    },
+    "shipping_postal_code": {
+      "type": "string",
+      "description": "Postal code of the shipping address associated with this transaction, if applicable."
+    },
+    "shipping_state": {
+      "type": "string",
+      "description": "State of the shipping address associated with this transaction, if applicable."
+    },
+    "source_entity": {
+      "type": "string",
+      "description": "Source object associated with the transaction."
+    },
+    "source_id": {
+      "type": "string",
+      "description": "Unique identifier for the payment attempt, payment consent, refund, or dispute."
+    },
+    "subscription_id": {
+      "type": "string",
+      "description": "Unique identifier of the subscription related to this transaction, if applicable."
+    },
+    "taxes_on_fees": {
+      "type": "number",
+      "description": "Amount of the total taxes on fees paid for the transaction in the settlement currency."
+    },
+    "transaction_amount": {
+      "type": "number",
+      "description": "Amount of the transaction."
+    },
+    "transaction_currency": {
+      "type": "string",
+      "description": "Three-letter ISO code for the original currency sent to Airwallex for the transaction."
+    },
+    "transaction_id": {
+      "type": "string",
+      "description": "Unique identifier associated with the financial transaction."
+    },
+    "transaction_type": {
+      "type": "string",
+      "description": "Categorisation of financial transactions. Possible values: `Payment`, `Payment Reserve Hold`, `Payment Reserve Release`, `Split`, `Split Reversal`, `Dispute`, `Dispute Reversal`, `Dispute Lost`, `Dispute Won`, `Pre Chargeback Accepted`, `Pre Chargeback Withdrawn`, `Refund Pre Chargeback Accepted`, `Refund Chargeback Received`, `Refund Chargeback Withdrawn`, `Refund`, `Refund Reversal`, `Refund Failure`, `Account Verification`, `Verification`."
+    }
+  },
+  "$defs": {
+    "FeeRecord": {
+      "type": "object",
+      "properties": {
+        "exchange_rate": {
+          "type": "number",
+          "description": "Exchange rate used for converting the fee currency into the settlement currency, if applicable."
+        },
+        "fee_currency": {
+          "type": "string",
+          "description": "Three-letter ISO code for the fee."
+        },
+        "fee_subtotal_amount": {
+          "type": "number",
+          "description": "Fee amount in the fee currency."
+        },
+        "fee_type": {
+          "type": "string",
+          "description": "Categorisation of fee types."
+        },
+        "incurred_at": {
+          "type": "string",
+          "description": "Timestamp of when the fee was incurred at."
+        },
+        "payment_method_number_or_id": {
+          "type": "string",
+          "description": "Unique identifier for the payment method used, such as card BIN and last 4 digits or Alipay and WeChat Pay unique identifiers."
+        },
+        "settlement_currency": {
+          "type": "string",
+          "description": "Three-letter ISO code for the settlement currency of the fee."
+        },
+        "settlement_subtotal_amount": {
+          "type": "number",
+          "description": "Fee amount in the settlement currency."
+        },
+        "settlement_tax_amount": {
+          "type": "number",
+          "description": "Taxes associated with the fee in the settlement currency."
+        },
+        "settlement_total_amount": {
+          "type": "number",
+          "description": "Total amount of the fee after taxes are included, in the settlement currency."
+        },
+        "source_status": {
+          "type": "string",
+          "description": "Status of the source, for example: failed, success."
+        }
+      }
+    }
+  }
+}

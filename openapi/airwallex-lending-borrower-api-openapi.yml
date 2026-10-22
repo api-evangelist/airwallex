@@ -1,0 +1,606 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Lending > Borrower API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Lending > Borrower
+  x-domain: Lending
+  x-resource: Borrower
+  x-urlPath: lending/borrower
+paths:
+  /api/v1/lending/lenders/{lender_id}/borrowers/create:
+    post:
+      tags:
+      - Lending > Borrower
+      x-stage: beta
+      summary: 1|Create a Borrower
+      description: Create a borrower profile on the specified account and set up a lender-borrower relationship with given lender, using the given borrowing settings.
+      operationId: createBorrower
+      x-oboSupported: false
+      parameters:
+      - name: lender_id
+        in: path
+        description: Lender unique identifier.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - account_id
+              - borrower_type
+              - request_id
+              properties:
+                account_id:
+                  type: string
+                  description: Airwallex account unique identifier of the intended borrower.
+                borrower_type:
+                  type: string
+                  description: The type of borrower to set up ("CREDIT").
+                  enum:
+                  - CREDIT
+                credit:
+                  type: object
+                  required:
+                  - borrower_settings
+                  description: Request structure specific to creating credit borrowers (required when borrower_type is credit).
+                  properties:
+                    borrower_settings:
+                      type: object
+                      description: Credit settings.
+                      properties:
+                        activation_status:
+                          type: string
+                          description: Enable/Disable credit.
+                          enum:
+                          - ACTIVE
+                          - INACTIVE
+                        credit_limits:
+                          type: array
+                          description: Credit limits by currency.
+                          items:
+                            type: object
+                            properties:
+                              currency:
+                                type: string
+                                description: Credit limit currency.
+                              limit:
+                                type: number
+                                description: Credit limit.
+                request_id:
+                  type: string
+                  description: A unique request identifier specified by the client. Requests with the same request_id will be treated as duplicate requests.
+        description: Request body.
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoreBankingBorrowerRes'
+        '400':
+          description: '["invalid_argument", "already_exists"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '`credentials_invalid`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: '`not_found`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: '`service_unavailable`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/lending/lenders/lender_id/borrowers/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          account_id: acct_a2y0pxz3m4k5hoZldn97hjzp
+          borrower_type: CREDIT
+          credit:
+            borrower_settings:
+              activation_status: ACTIVE
+              credit_limits:
+              - currency: USD
+                limit: 1000
+          request_id: 3daea046-eb32-4891-a485-22eeb4e88319
+        response_body:
+          account_id: acct_a2y0pxz3m4k5hoZldn97hjzp
+          balances:
+          - available_amount: 0
+            available_credit: 500
+            currency: USD
+            reserved_amount: 500
+            utilized_credit: 500
+          borrower_type: CREDIT
+          credit:
+            borrower_settings:
+              activation_status: ACTIVE
+              credit_limits:
+              - currency: USD
+                limit: 1000
+          id: 0389fb3e-b377-4bae-9715-6859961812d4
+      x-oauthSupported: false
+      x-domain: Lending
+      x-resource: Borrower
+      x-urlPath: create
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/lending/lenders/{lender_id}/borrowers:
+    get:
+      x-urlPath: list
+      tags:
+      - Lending > Borrower
+      x-stage: beta
+      summary: 2|List all Borrowers for This Lender
+      description: Get a list of borrowers that hold a borrower relationship with the specified lender. Balances and settings fields not relevant to a borrower type will be omitted in the response.
+      operationId: listBorrower
+      x-oboSupported: false
+      parameters:
+      - name: activation_statuses
+        in: query
+        description: List of Borrower activation statuses to filter by.
+        required: false
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: borrower_account_ids
+        in: query
+        description: List of Borrower Airwallex account unique identifiers to filter by.
+        required: false
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: lender_id
+        in: path
+        description: Lender unique identifier.
+        required: true
+        schema:
+          type: string
+      - name: page_num
+        in: query
+        description: Page number, starts from 0.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of results per page, default is 100, max is 1000.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoreBankingGetBorrowersListResponseRes'
+        '400':
+          description: '`invalid_argument`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '`credentials_invalid`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: '`not_found`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: '`service_unavailable`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/lending/lenders/lender_id/borrowers
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          hasMore: true
+          items:
+          - account_id: acct_a2y0pxz3m4k5hoZldn97hjzp
+            balances:
+            - available_amount: 0
+              available_credit: 500
+              currency: USD
+              reserved_amount: 500
+              utilized_credit: 500
+            borrower_type: CREDIT
+            credit:
+              borrower_settings:
+                activation_status: ACTIVE
+                credit_limits:
+                - currency: USD
+                  limit: 1000
+            id: 0389fb3e-b377-4bae-9715-6859961812d4
+      x-oauthSupported: false
+      x-domain: Lending
+      x-resource: Borrower
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/lending/lenders/{lender_id}/borrowers/{borrower_id}:
+    get:
+      x-urlPath: retrieve
+      tags:
+      - Lending > Borrower
+      x-stage: beta
+      summary: 3|List all Borrower Details
+      description: Get details of specified borrower that holds a borrower relationship with the specified lender. Balances and settings fields not relevant to the borrower type will be omitted in the response.
+      operationId: retrieveBorrower
+      x-oboSupported: false
+      parameters:
+      - name: borrower_id
+        in: path
+        description: Borrower unique identifier.
+        required: true
+        schema:
+          type: string
+      - name: lender_id
+        in: path
+        description: Lender unique identifier.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoreBankingBorrowerRes'
+        '400':
+          description: '`invalid_argument`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '`credentials_invalid`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: '`not_found`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: '`service_unavailable`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/lending/lenders/lender_id/borrowers/borrower_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          account_id: acct_a2y0pxz3m4k5hoZldn97hjzp
+          balances:
+          - available_amount: 0
+            available_credit: 500
+            currency: USD
+            reserved_amount: 500
+            utilized_credit: 500
+          borrower_type: CREDIT
+          credit:
+            borrower_settings:
+              activation_status: ACTIVE
+              credit_limits:
+              - currency: USD
+                limit: 1000
+          id: 0389fb3e-b377-4bae-9715-6859961812d4
+      x-oauthSupported: false
+      x-domain: Lending
+      x-resource: Borrower
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/lending/lenders/{lender_id}/borrowers/{borrower_id}/update:
+    post:
+      tags:
+      - Lending > Borrower
+      x-stage: beta
+      summary: 4|Update Borrower Settings
+      description: Updated the settings for the specified borrower that is connected to the specified lender by a lender-borrower relationship. Settings that do not need to be updated can be omitted.
+      operationId: updateBorrower
+      x-oboSupported: false
+      parameters:
+      - name: borrower_id
+        in: path
+        description: Borrower unique identifier.
+        required: true
+        schema:
+          type: string
+      - name: lender_id
+        in: path
+        description: Lender unique identifier.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              properties:
+                credit:
+                  type: object
+                  required:
+                  - borrower_settings
+                  description: Request structure specific to updating credit borrowers (required when updating credit borrower).
+                  properties:
+                    borrower_settings:
+                      type: object
+                      description: Credit settings.
+                      properties:
+                        activation_status:
+                          type: string
+                          description: Enable/Disable credit.
+                          enum:
+                          - ACTIVE
+                          - INACTIVE
+                        credit_limits:
+                          type: array
+                          description: Credit limits by currency.
+                          items:
+                            type: object
+                            properties:
+                              currency:
+                                type: string
+                                description: Credit limit currency.
+                              limit:
+                                type: number
+                                description: Credit limit.
+                request_id:
+                  type: string
+                  description: 'A unique request identifier specified by the client. Requests with the: same request_id will be treated as duplicate requests.'
+        description: Request body.
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoreBankingBorrowerRes'
+        '400':
+          description: '`invalid_argument`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '`credentials_invalid`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: '`not_found`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: '`service_unavailable`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/lending/lenders/lender_id/borrowers/borrower_id/update
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          credit:
+            borrower_settings:
+              activation_status: ACTIVE
+              credit_limits:
+              - currency: USD
+                limit: 1000
+          request_id: ec3b0f7c-5851-45f8-917c-3dde968b1d2e
+        response_body:
+          account_id: acct_a2y0pxz3m4k5hoZldn97hjzp
+          balances:
+          - available_amount: 0
+            available_credit: 500
+            currency: USD
+            reserved_amount: 500
+            utilized_credit: 500
+          borrower_type: CREDIT
+          credit:
+            borrower_settings:
+              activation_status: ACTIVE
+              credit_limits:
+              - currency: USD
+                limit: 1000
+          id: 0389fb3e-b377-4bae-9715-6859961812d4
+      x-oauthSupported: false
+      x-domain: Lending
+      x-resource: Borrower
+      x-urlPath: update
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    CoreBankingGetBorrowersListResponseRes:
+      type: object
+      properties:
+        hasMore:
+          type: boolean
+          description: A flag which identifies whether there are more results.
+        items:
+          type: array
+          description: List items.
+          items:
+            $ref: '#/components/schemas/CoreBankingBorrowerRes'
+    CoreBankingBorrowerCreditSettings:
+      type: object
+      properties:
+        activation_status:
+          type: string
+          description: Enable/Disable credit.
+          enum:
+          - ACTIVE
+          - INACTIVE
+        credit_limits:
+          type: array
+          description: Credit limits by currency.
+          items:
+            $ref: '#/components/schemas/CoreBankingCreditLimit'
+      description: Credit settings for borrower.
+    CoreBankingBorrowerRes:
+      type: object
+      properties:
+        account_id:
+          type: string
+          description: Airwallex account unique identifier of the borrower.
+        balances:
+          type: array
+          description: Balances of borrower's account.
+          items:
+            $ref: '#/components/schemas/CoreBankingBorrowerBalances'
+        borrower_type:
+          type: string
+          description: Borrower type.
+          enum:
+          - CREDIT
+        credit:
+          $ref: '#/components/schemas/CoreBankingBorrowerCreditDetails'
+          description: Detail structure specific to credit borrowers (omitted when borrower_type is not credit).
+        id:
+          type: string
+          description: Borrower unique identifier.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    CoreBankingBorrowerBalances:
+      type: object
+      properties:
+        available_amount:
+          type: number
+          description: Available balance for standard deposit transactions.
+        available_credit:
+          type: number
+          description: Amount of credit still available before limit is exceeded, null for borrowers that are not credit borrowers.
+        currency:
+          type: string
+          description: Balance currency.
+        reserved_amount:
+          type: number
+          description: Amount reserved for use in future transactions.
+        utilized_credit:
+          type: number
+          description: Amount currently used in credit, null for borrowers that are not credit borrowers.
+    CoreBankingCreditLimit:
+      type: object
+      properties:
+        currency:
+          type: string
+          description: Credit limit currency.
+        limit:
+          type: number
+          description: Credit limit.
+    CoreBankingBorrowerCreditDetails:
+      type: object
+      properties:
+        borrower_settings:
+          $ref: '#/components/schemas/CoreBankingBorrowerCreditSettings'
+          description: Credit settings for borrower.
+      description: Detail structure specific to credit borrowers (omitted when borrower_type is not credit).
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

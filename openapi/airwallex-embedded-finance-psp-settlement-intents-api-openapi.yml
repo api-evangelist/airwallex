@@ -1,0 +1,754 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Embedded Finance > PSP Settlement Intents API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Embedded Finance > PSP Settlement Intents
+  description: 'A PSP settlement intent represents a settlement with a PSP in a particular currency. Each PSP settlement intent is associated with one or more PSP settlement deposits by `settlement_reference`.
+
+    After creating your PSP settlement intent, you can start splitting it, creating one PSP settlement split for each target account. Once you complete splitting your PSP settlement intent, you can submit it and wait for it to be matched with the associated PSP settlement deposit. The sum of the amounts of the PSP settlement splits of a PSP settlement intent should match the sum of the amounts of associated deposits.
+
+    PSP settlement intents form part of the PSP-agnostic payout solution.'
+  x-domain: Embedded Finance
+  x-resource: PSP Settlement Intents
+  x-urlPath: scale/psp_settlement_intents
+paths:
+  /api/v1/psp_settlement_intents/create:
+    post:
+      tags:
+      - Embedded Finance > PSP Settlement Intents
+      summary: 1|Create a PSP Settlement Intent
+      description: 'Use this endpoint to share data with Airwallex on the *settlement* to be deposited by the PSP.
+
+
+        Data on a PSP Settlement should be shared with Airwallex before the pay-in PSP deposits funds into the holding account.
+
+
+        PSP settlement intent is created with initial status `NEW`.'
+      operationId: createPspSettlementIntent
+      x-oboSupported: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - currency
+              - expected_settlement_date
+              - global_account_id
+              - request_id
+              - settlement_reference
+              properties:
+                associate_by_deposit_ids:
+                  type: array
+                  description: Unique identifiers of the deposits associated with this PSP settlement intent. If present, these will be used instead of the `settlement_reference` field to associate deposits with this intent.
+                  items:
+                    type: string
+                currency:
+                  type: string
+                  description: Currency (3-letter ISO-4217 code) of this PSP settlement intent.
+                expected_settlement_date:
+                  type: string
+                  description: Expected date on which these funds will be deposited by the PSP into the global account, in `YYYY-MM-DD` format in the UTC timezone.
+                global_account_id:
+                  type: string
+                  description: Global account unique identifier that will accept the deposit for this PSP settlement intent.
+                metadata:
+                  type: object
+                  description: A set of key-value pairs that you can attach to this PSP settlement intent. This can be useful for storing additional information about it in a structured format.
+                  additionalProperties:
+                    type: string
+                request_id:
+                  type: string
+                  description: Unique request identifier. Max length 50 characters.
+                settlement_reference:
+                  type: string
+                  description: The PSP settlement reference field refers to the reference attached by the pay-in PSP when sending the deposit to Airwallex. The pay-in PSP typically also includes this reference in settlement reports. Airwallex uses this field to match the PSP settlement splits you have created with funds received from the PSP. Min length 5 characters. Max length 255 characters.
+        description: request.
+        required: true
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettlementIntent'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid","credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/psp_settlement_intents/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          associate_by_deposit_ids: []
+          currency: USD
+          expected_settlement_date: '2022-08-26'
+          global_account_id: 3f457fe5-daf4-9962-92ec-10332301d9p3
+          metadata: {}
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          settlement_reference: PMT1936398
+        response_body:
+          associate_by_deposit_ids: []
+          associated_deposit_ids: []
+          created_at: 2022-09-22T16:08:02+1100
+          currency: AUD
+          expected_settlement_date: '2022-08-26'
+          global_account_id: 3f457fe5-daf4-9962-92ec-10332301d9p3
+          id: psi_0iBwL9IuOZaKCz8Kn-01ew
+          metadata: {}
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          requirements:
+            matching_psp_settlement_required:
+              message: <string>
+            reference_disambiguation_required:
+              message: <string>
+          settlement_reference: PMT1936398
+          status: NEW
+      x-oauthSupported: false
+      x-scope:
+      - scope: psp_settlement_intent:write
+        group: Embedded Finance
+        resource_name: PSP Settlement Intents
+      x-domain: Embedded Finance
+      x-resource: PSP Settlement Intents
+      x-urlPath: create
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/psp_settlement_intents/{id}:
+    get:
+      tags:
+      - Embedded Finance > PSP Settlement Intents
+      summary: 2|Retrieve a PSP Settlement Intent
+      description: Get details for a PSP settlement intent by specifying the intent unique identifier.
+      operationId: retrievePspSettlementIntent
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the PSP settlement intent to retrieve.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettlementIntent'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid","credentials_expired"]'
+        '404':
+          description: NOT FOUND
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/psp_settlement_intents/psp_settlement_intent_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          associate_by_deposit_ids: []
+          associated_deposit_ids: []
+          created_at: 2022-09-22T16:08:02+1100
+          currency: AUD
+          expected_settlement_date: '2022-08-26'
+          global_account_id: 3f457fe5-daf4-9962-92ec-10332301d9p3
+          id: psi_0iBwL9IuOZaKCz8Kn-01ew
+          metadata: {}
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          requirements:
+            matching_psp_settlement_required:
+              message: <string>
+            reference_disambiguation_required:
+              message: <string>
+          settlement_reference: PMT1936398
+          status: NEW
+      x-oauthSupported: false
+      x-scope:
+      - scope: psp_settlement_intent:read
+        group: Embedded Finance
+        resource_name: PSP Settlement Intents
+      - scope: psp_settlement_intent:write
+        group: Embedded Finance
+        resource_name: PSP Settlement Intents
+      x-domain: Embedded Finance
+      x-resource: PSP Settlement Intents
+      x-urlPath: retrieve
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/psp_settlement_intents:
+    get:
+      tags:
+      - Embedded Finance > PSP Settlement Intents
+      summary: 3|List all PSP Settlement Intents
+      description: Get a list of PSP settlement intents created by your account. The intents returned are sorted by creation time in descending order.
+      operationId: listPspSettlementIntents
+      x-oboSupported: false
+      parameters:
+      - name: from_created_at
+        in: query
+        description: The start date of `created_at` in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: global_account_id
+        in: query
+        description: Global account unique identifier of the PSP settlement intents.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: page_num
+        in: query
+        description: Page number, starts from 0.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of results per page. Default value is 100, minimum 10, maximum 100.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: settlement_reference
+        in: query
+        description: Settlement reference that has been specified while creating PSP settlement intents.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: PSP Settlement Intent status. One of `NEW`, `SUBMITTED`, `MATCHED`, `ACTION_REQUIRED`, `SETTLED`, `CANCELLED`.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: to_created_at
+        in: query
+        description: The end date of `created_at` in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: Paged results.
+                    items:
+                      $ref: '#/components/schemas/SettlementIntent'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid","credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/psp_settlement_intents
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - associate_by_deposit_ids: []
+            associated_deposit_ids: []
+            created_at: 2022-09-22T16:08:02+1100
+            currency: AUD
+            expected_settlement_date: '2022-08-26'
+            global_account_id: 3f457fe5-daf4-9962-92ec-10332301d9p3
+            id: psi_0iBwL9IuOZaKCz8Kn-01ew
+            request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+            settlement_reference: PMT1936398
+            status: NEW
+      x-oauthSupported: false
+      x-scope:
+      - scope: psp_settlement_intent:read
+        group: Embedded Finance
+        resource_name: PSP Settlement Intents
+      - scope: psp_settlement_intent:write
+        group: Embedded Finance
+        resource_name: PSP Settlement Intents
+      x-domain: Embedded Finance
+      x-resource: PSP Settlement Intents
+      x-urlPath: list
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/psp_settlement_intents/{id}/update:
+    post:
+      tags:
+      - Embedded Finance > PSP Settlement Intents
+      summary: 4|Update a PSP Settlement Intent
+      description: 'Use this endpoint to update a PSP settlement intent data.
+
+
+        PSP settlement intent values can only be updated if the current status is `NEW`, `ACTION_REQUIRED` or `SUBMITTED`.
+
+
+        Updating any of the fields `associate_by_deposit_ids`, `currency`, `global_account_id` or `settlement_reference` on a PSP settlement intent in status `ACTION_REQUIRED` changes the status to `SUBMITTED`.'
+      operationId: updatePspSettlementIntent
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the PSP settlement intent to update.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              properties:
+                associate_by_deposit_ids:
+                  type: array
+                  description: Unique identifiers of the deposits associated with this PSP settlement intent. If present, these will be used instead of the `settlement_reference` field to associate deposits with this intent.
+                  items:
+                    type: string
+                currency:
+                  type: string
+                  description: Currency (3-letter ISO-4217 code) of this PSP settlement intent.
+                expected_settlement_date:
+                  type: string
+                  description: Expected date on which these funds will be deposited by the PSP into the global account, in `YYYY-MM-DD` format in the UTC timezone.
+                global_account_id:
+                  type: string
+                  description: Global account unique identifier that will accept the funds for this PSP settlement intent.
+                metadata:
+                  type: object
+                  description: A set of key-value pairs that you can attach to this PSP settlement intent. This can be useful for storing additional information about it in a structured format.
+                  additionalProperties:
+                    type: string
+                request_id:
+                  type: string
+                  description: Unique request identifier. Max length 50 characters.
+                settlement_reference:
+                  type: string
+                  description: The PSP settlement reference field refers to the reference attached by the pay-in PSP when sending the deposit to Airwallex. The pay-in PSP typically also includes this reference in settlement reports. Airwallex uses this field to match the PSP settlement splits you have created with funds received from the PSP. Min length 5 characters. Max length 255 characters.
+        description: The updated values for the PSP settlement intent.
+        required: true
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettlementIntent'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid","credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/psp_settlement_intents/psp_settlement_intent_id/update
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          associate_by_deposit_ids: []
+          currency: USD
+          expected_settlement_date: '2022-08-26'
+          global_account_id: 3f457fe5-daf4-9962-92ec-10332301d9p3
+          metadata: {}
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          settlement_reference: PMT1936398
+        response_body:
+          associate_by_deposit_ids: []
+          associated_deposit_ids: []
+          created_at: 2022-09-22T16:08:02+1100
+          currency: AUD
+          expected_settlement_date: '2022-08-26'
+          global_account_id: 3f457fe5-daf4-9962-92ec-10332301d9p3
+          id: psi_0iBwL9IuOZaKCz8Kn-01ew
+          metadata: {}
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          requirements:
+            matching_psp_settlement_required:
+              message: <string>
+            reference_disambiguation_required:
+              message: <string>
+          settlement_reference: PMT1936398
+          status: NEW
+      x-oauthSupported: false
+      x-scope:
+      - scope: psp_settlement_intent:write
+        group: Embedded Finance
+        resource_name: PSP Settlement Intents
+      x-domain: Embedded Finance
+      x-resource: PSP Settlement Intents
+      x-urlPath: update
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/psp_settlement_intents/{id}/submit:
+    post:
+      tags:
+      - Embedded Finance > PSP Settlement Intents
+      summary: 5|Submit a PSP Settlement Intent
+      description: 'Submit a PSP settlement intent.
+
+
+        This means all PSP settlement split information for a PSP settlement intent has been provided, and it is ready to be matched with a PSP settlement deposit.'
+      operationId: pspSettlementIntents_submit
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the PSP settlement intent to submit.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettlementIntent'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid","credentials_expired"]'
+        '404':
+          description: NOT FOUND
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/psp_settlement_intents/psp_settlement_intent_id/submit
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          associate_by_deposit_ids: []
+          associated_deposit_ids: []
+          created_at: 2022-09-22T16:08:02+1100
+          currency: AUD
+          expected_settlement_date: '2022-08-26'
+          global_account_id: 3f457fe5-daf4-9962-92ec-10332301d9p3
+          id: psi_0iBwL9IuOZaKCz8Kn-01ew
+          metadata: {}
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          requirements:
+            matching_psp_settlement_required:
+              message: <string>
+            reference_disambiguation_required:
+              message: <string>
+          settlement_reference: PMT1936398
+          status: NEW
+      x-oauthSupported: false
+      x-scope:
+      - scope: psp_settlement_intent:write
+        group: Embedded Finance
+        resource_name: PSP Settlement Intents
+      x-domain: Embedded Finance
+      x-resource: PSP Settlement Intents
+      x-urlPath: submit
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/psp_settlement_intents/{id}/cancel:
+    post:
+      tags:
+      - Embedded Finance > PSP Settlement Intents
+      summary: 6|Cancel a PSP Settlement Intent
+      description: 'Use this endpoint to cancel a PSP Settlement intent.
+
+
+        If the PSP settlement intent has been cancelled already or matched or settled with the corresponding PSP settlement deposit, then it cannot be cancelled.'
+      operationId: pspSettlementIntents_cancel
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the PSP settlement intent to cancel.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettlementIntent'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid","credentials_expired"]'
+        '404':
+          description: NOT FOUND
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/psp_settlement_intents/psp_settlement_intent_id/cancel
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          associate_by_deposit_ids: []
+          associated_deposit_ids: []
+          created_at: 2022-09-22T16:08:02+1100
+          currency: AUD
+          expected_settlement_date: '2022-08-26'
+          global_account_id: 3f457fe5-daf4-9962-92ec-10332301d9p3
+          id: psi_0iBwL9IuOZaKCz8Kn-01ew
+          metadata: {}
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          requirements:
+            matching_psp_settlement_required:
+              message: <string>
+            reference_disambiguation_required:
+              message: <string>
+          settlement_reference: PMT1936398
+          status: NEW
+      x-oauthSupported: false
+      x-scope:
+      - scope: psp_settlement_intent:write
+        group: Embedded Finance
+        resource_name: PSP Settlement Intents
+      x-domain: Embedded Finance
+      x-resource: PSP Settlement Intents
+      x-urlPath: cancel
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    SettlementIntentRequirements:
+      type: object
+      properties:
+        matching_psp_settlement_required:
+          $ref: '#/components/schemas/MatchingPspSettlementRequired'
+          description: Funds have been received that correspond to this PSP settlement intent, but the total amounts do not match.
+        reference_disambiguation_required:
+          $ref: '#/components/schemas/ReferenceDisambiguationRequired'
+          description: PSP settlement deposit reference corresponds to multiple PSP settlement intents.
+      description: Further actions required in order to proceed with this settlement intent.
+    SettlementIntent:
+      type: object
+      properties:
+        associate_by_deposit_ids:
+          type: array
+          description: Unique identifiers of the deposits that should be associated with this PSP settlement intent. If present, these will be used instead of the `settlement_reference` field to associate deposits with this intent.
+          items:
+            type: string
+        associated_deposit_ids:
+          type: array
+          description: Unique identifiers of the deposits currently associated with this PSP settlement intent. If `associate_by_deposit_ids` is not empty, then these have been associated based on that list. Otherwise, they are associated by reference.
+          items:
+            type: string
+        created_at:
+          type: string
+          description: The time this PSP settlement intent was created.
+        currency:
+          type: string
+          description: Currency (3-letter ISO-4217 code) specified in the request.
+        expected_settlement_date:
+          type: string
+          description: Expected date on which these funds will be deposited by the PSP into the global account, in `YYYY-MM-DD` format in the UTC timezone.
+        global_account_id:
+          type: string
+          description: The unique identifier of the global account in which this settlement will be deposited.
+        id:
+          type: string
+          description: Unique identifier for the PSP settlement intent.
+        metadata:
+          type: object
+          description: A set of key-value pairs that you can attach to the PSP settlement intent.
+          additionalProperties:
+            type: string
+        request_id:
+          type: string
+          description: Unique request identifier specified in the request.
+        requirements:
+          $ref: '#/components/schemas/SettlementIntentRequirements'
+          description: Further actions required in order to proceed with this settlement intent.
+        settlement_reference:
+          type: string
+          description: The reference value expected to be included by the PSP in its PSP settlement deposit.
+        status:
+          type: string
+          description: 'Status of the PSP settlement intent. One of: `NEW`, `SUBMITTED`, `ACTION_REQUIRED`, `MATCHED`, `SETTLED`.'
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    MatchingPspSettlementRequired:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Information about this requirement.
+      description: The amount of associated PSP settlement deposits does not match the amount of the PSP settlement intent.
+    ReferenceDisambiguationRequired:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+      description: PSP settlement deposit reference corresponds to multiple PSP settlement intents. Please specify in the PSP settlement intents which PSP settlement deposits correspond to them.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

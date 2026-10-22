@@ -1,0 +1,340 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Billing > E-Invoicing Documents API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Billing > E-Invoicing Documents
+  description: An E-Invoicing Document represents the regulatory (e-invoicing or e-reporting) processing record for an Invoice or Credit Note. It tracks the processing status, regulatory artifacts, the recipient's response, and processing errors.
+  x-domain: Billing
+  x-resource: E-Invoicing Documents
+  x-urlPath: billing/e-invoicing_documents
+paths:
+  /api/v1/billing/e_invoicing_documents/{id}:
+    get:
+      description: Retrieves the details of an E-Invoicing Document by ID.
+      operationId: retrieveEInvoicingDocument
+      x-oboSupported: false
+      parameters:
+      - description: The ID of the E-Invoicing Document.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/EInvoicingDocument'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 1|Retrieve an E-Invoicing Document
+      tags:
+      - Billing > E-Invoicing Documents
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/billing/e_invoicing_documents/einv_hkpd49cskgblns6iimw
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: einv_hkpd49cskgblns6iimw
+          type: INVOICE
+          status: SUCCEEDED
+          attachments:
+          - file_name: invoice_2026_001.xml
+            file_url: https://invoice.airwallex.com/billing/e_invoicing_documents/attachment?s=jwt_token
+            created_at: 2026-08-19T08:30:15+0000
+          - file_name: invoice_2026_001.pdf
+            file_url: https://invoice.airwallex.com/billing/e_invoicing_documents/attachment?s=jwt_token
+            created_at: 2026-08-19T08:30:15+0000
+          original_customer_response: APPROVAL
+          errors: []
+          invoice_id: inv_hkpd49cskgblns6iimw
+          credit_note_id: null
+          created_at: 2026-08-19T08:30:00+0000
+          updated_at: 2026-08-19T08:31:10+0000
+      x-stage: early_access
+      x-api-key-scope: org
+      x-obo-supported: false
+      x-scope:
+      - scope: billing.e_invoicing_document:read
+        group: Billing
+        resource_name: E-Invoicing Documents
+      x-domain: Billing
+      x-resource: E-Invoicing Documents
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/e_invoicing_documents:
+    get:
+      description: Retrieves a list of E-Invoicing Documents based on the query parameters.
+      operationId: listEInvoicingDocuments
+      x-oboSupported: false
+      parameters:
+      - description: Type of the underlying billing document, one of `INVOICE` or `CREDIT_NOTE`.
+        in: query
+        name: type
+        required: true
+        schema:
+          type: string
+          enum:
+          - INVOICE
+          - CREDIT_NOTE
+      - description: Regulatory processing status, one of `PROCESSING`, `SUCCEEDED` or `FAILED`.
+        in: query
+        name: status
+        required: false
+        schema:
+          type: string
+          enum:
+          - PROCESSING
+          - SUCCEEDED
+          - FAILED
+      - description: The start date of `created_at` in ISO8601 format (inclusive).
+        in: query
+        name: from_created_at
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - description: The end date of `created_at` in ISO8601 format (exclusive).
+        in: query
+        name: to_created_at
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - description: The start date of `updated_at` in ISO8601 format (inclusive).
+        in: query
+        name: from_updated_at
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - description: The end date of `updated_at` in ISO8601 format (exclusive).
+        in: query
+        name: to_updated_at
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - description: A bookmark for use in pagination to retrieve either the next page or the previous page of results. You can fetch the value for this identifier from the response of the previous API call. To retrieve the next page of results, pass the value of `page_after` (if not `null`) from the response to a subsequent call. To retrieve the previous page of results, pass the value of `page_before` (if not `null`) from the response to a subsequent call.
+        in: query
+        name: page
+        required: false
+        schema:
+          type: string
+      - description: Number of E-Invoicing Documents per page. Defaults to `20`.
+        in: query
+        name: page_size
+        required: false
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          format: int32
+          default: 20
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CursorPaginationClientApiResponseEInvoicingDocument'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 2|Get list of E-Invoicing Documents
+      tags:
+      - Billing > E-Invoicing Documents
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/billing/e_invoicing_documents?type=INVOICE&status=SUCCEEDED
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - id: einv_hkpd49cskgblns6iimw
+            type: INVOICE
+            status: SUCCEEDED
+            attachments:
+            - file_name: invoice_2026_001.xml
+              file_url: https://invoice.airwallex.com/billing/e_invoicing_documents/attachment?s=jwt_token
+              created_at: 2026-08-19T08:30:15+0000
+            - file_name: invoice_2026_001.pdf
+              file_url: https://invoice.airwallex.com/billing/e_invoicing_documents/attachment?s=jwt_token
+              created_at: 2026-08-19T08:30:15+0000
+            original_customer_response: APPROVAL
+            errors: []
+            invoice_id: inv_hkpd49cskgblns6iimw
+            credit_note_id: null
+            created_at: 2026-08-19T08:30:00+0000
+            updated_at: 2026-08-19T08:31:10+0000
+          page_after: <string>
+          page_before: <string>
+      x-stage: early_access
+      x-api-key-scope: org
+      x-obo-supported: false
+      x-scope:
+      - scope: billing.e_invoicing_document:read
+        group: Billing
+        resource_name: E-Invoicing Documents
+      x-domain: Billing
+      x-resource: E-Invoicing Documents
+      x-urlPath: list
+      x-oauthSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    EInvoicingDocument:
+      required:
+      - id
+      - type
+      - status
+      - attachments
+      - errors
+      - created_at
+      - updated_at
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the E-Invoicing Document.
+        type:
+          type: string
+          description: Type of the underlying billing document.
+          enum:
+          - INVOICE
+          - CREDIT_NOTE
+          x-enumDescriptions:
+            INVOICE: The underlying billing document is an [Invoice](/docs/api/billing/invoices).
+            CREDIT_NOTE: The underlying billing document is a [Credit Note](/docs/api/billing/credit_notes).
+        status:
+          type: string
+          description: Current regulatory processing status. When `FAILED`, see `errors` for details.
+          enum:
+          - PROCESSING
+          - SUCCEEDED
+          - FAILED
+          x-enumDescriptions:
+            PROCESSING: Regulatory processing is in progress.
+            SUCCEEDED: Regulatory processing completed successfully.
+            FAILED: Regulatory processing failed. See `errors` for details.
+        attachments:
+          type: array
+          description: Downloadable regulatory artifacts. Empty when no artifact has been produced.
+          items:
+            required:
+            - file_name
+            - file_url
+            - created_at
+            type: object
+            properties:
+              file_name:
+                type: string
+                description: Original file name, including the file extension.
+              file_url:
+                type: string
+                description: URL to access and download the attachment file.
+              created_at:
+                type: string
+                description: Time when the attached file record was created, in ISO8601 format.
+                format: date-time
+        original_customer_response:
+          type: string
+          description: The customer's original response to the E-Invoice. `null` when no response has been received.
+        errors:
+          type: array
+          description: Errors from the latest failed processing attempt. Empty unless `status` is `FAILED`.
+          items:
+            required:
+            - code
+            - message
+            type: object
+            properties:
+              code:
+                type: string
+                description: Stable, machine-readable error code.
+              source:
+                type: string
+                description: Name of the request parameter or resource field that caused the error, when available.
+              message:
+                type: string
+                description: Human-readable description of the error. Do not use this field for programmatic decisions.
+              details:
+                type: object
+                additionalProperties:
+                  type: string
+                description: Conditional key-value object containing additional details about the error.
+        invoice_id:
+          type: string
+          description: ID of the source [Invoice](/docs/api/billing/invoices). Set only when `type` is `INVOICE`, otherwise `null`.
+        credit_note_id:
+          type: string
+          description: ID of the source [Credit Note](/docs/api/billing/credit_notes). Set only when `type` is `CREDIT_NOTE`, otherwise `null`.
+        created_at:
+          type: string
+          description: Time when the E-Invoicing Document was created, in ISO8601 format.
+          format: date-time
+        updated_at:
+          type: string
+          description: Time when the E-Invoicing Document was last updated, in ISO8601 format.
+          format: date-time
+    CursorPaginationClientApiResponseEInvoicingDocument:
+      required:
+      - items
+      type: object
+      properties:
+        items:
+          type: array
+          description: Paged results.
+          items:
+            $ref: '#/components/schemas/EInvoicingDocument'
+        page_after:
+          type: string
+          description: The page cursor used for searching after page.
+        page_before:
+          type: string
+          description: The page cursor used for search before page.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

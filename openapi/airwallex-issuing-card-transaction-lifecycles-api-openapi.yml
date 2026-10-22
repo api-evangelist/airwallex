@@ -1,0 +1,328 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Issuing > Card Transaction Lifecycles API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Issuing > Card Transaction Lifecycles
+  description: 'A **lifecycle** is the top level of the three-level transaction model
+
+    (**Lifecycle → Card Transaction → Transaction Event**).
+
+
+    It is a container that groups all related card transactions and transaction events belonging to
+
+    the same payment flow, based on network information. Lifecycles provide a network-level view
+
+    of a payment along with aggregated billing amounts across all related card transactions and events.
+
+
+    **Key characteristics:**
+
+    * Lifecycles do not have a status. Use card transactions if you need guaranteed terminal statuses.
+
+    * Grouping is **best-effort**: it depends on payment networks and acquirers providing consistent
+
+    identifiers. For example, matched refunds link to the original lifecycle; unmatched refunds
+
+    create a new one.
+
+    * Use the lifecycle ID to retrieve all associated card transactions and transaction events.
+
+
+    **Data retention:** Resources can be queried for a maximum of 2 years from creation.
+
+
+    Learn more about the transaction lifecycle.'
+  x-domain: Issuing
+  x-resource: Card Transaction Lifecycles
+  x-urlPath: issuing/card_transaction_lifecycles
+paths:
+  /api/v1/issuing/lifecycles/{id}:
+    get:
+      x-urlPath: retrieve
+      tags:
+      - Issuing > Card Transaction Lifecycles
+      summary: 1|Retrieve a Card Transaction Lifecycle
+      description: Retrieve a single lifecycle by its unique identifier. The response includes aggregated billing amounts across all card transactions and transaction events in this lifecycle.
+      operationId: retrieveLifecycles
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the lifecycle.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonPciLifecycle'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/issuing/lifecycles/card_transaction_lifecycle_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          billing_amounts:
+          - currency: USD
+            total_authorized: 100
+            total_credited: 0
+            total_debited: 100
+            total_declined: 0
+            total_expired: 0
+            total_pending: 0
+            total_reversed: 0
+          card_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+          created_at: '2018-03-22T16:08:02+00:00'
+          id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          updated_at: '2018-03-22T16:08:02+00:00'
+      x-scope:
+      - scope: issuing.transaction:read
+        group: Issuing
+        resource_name: Authorizations and Transactions
+      x-domain: Issuing
+      x-resource: Card Transaction Lifecycles
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/issuing/lifecycles:
+    get:
+      x-urlPath: list
+      tags:
+      - Issuing > Card Transaction Lifecycles
+      summary: 2|List all Card Transaction Lifecycles
+      description: Retrieve a paginated list of lifecycles. Each lifecycle provides a network-level view of a payment with aggregated billing amounts. Use the `card_id` filter to narrow results to a specific card.
+      operationId: listLifecycles
+      parameters:
+      - name: card_id
+        in: query
+        description: Filter by card. Only returns lifecycles associated with this card.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          format: uuid
+      - name: from_created_at
+        in: query
+        description: Filter for items created after this date in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          format: date-time
+      - name: page
+        in: query
+        description: A bookmark for use in pagination to retrieve either the next page or the previous page of results. You can fetch the value for this identifier from the response of the previous API call. To retrieve the next page of results, pass the value of `page_after` (if not null) from the response to a subsequent call. To retrieve the previous page of results, pass the value of `page_before` (if not null) from the response to a subsequent call.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: page_size
+        in: query
+        description: Number of related objects to be listed per page. The maximum is 100.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: to_created_at
+        in: query
+        description: Filter for items created before this date in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          format: date-time
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonPciBookmarkedResultOfIssuingNonPciLifecycle'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/issuing/lifecycles
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - billing_amounts:
+            - currency: USD
+              total_authorized: 100
+              total_credited: 0
+              total_debited: 100
+              total_declined: 0
+              total_expired: 0
+              total_pending: 0
+              total_reversed: 0
+            card_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+            created_at: '2018-03-22T16:08:02+00:00'
+            id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+            updated_at: '2018-03-22T16:08:02+00:00'
+          page_after: YWZ0ZXI9MmFjNmEzMjQtM2IwNC00M2JkLThmNTUtOWQ5YzdmZjEzZGZm
+          page_before: YmVmb3JlPWVmZDQxZTk3LTU2MzctNDQ5MC04NjNkLTU2MDE5MjIwNDQ2YQ==
+      x-scope:
+      - scope: issuing.transaction:read
+        group: Issuing
+        resource_name: Authorizations and Transactions
+      x-domain: Issuing
+      x-resource: Card Transaction Lifecycles
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    NonPciLifecycle:
+      type: object
+      properties:
+        billing_amounts:
+          type: array
+          description: Aggregated billing totals grouped by currency. Each entry contains cumulative amounts across all card transactions and transaction events within this lifecycle, including totals for authorized, debited, credited, declined, expired, pending, and reversed amounts.
+          items:
+            $ref: '#/components/schemas/NonPciAggregatedAmounts'
+        card_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the card associated with this lifecycle.
+        created_at:
+          type: string
+          description: Date and time when the lifecycle was created, in ISO 8601 format.
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the lifecycle.
+        updated_at:
+          type: string
+          description: Date and time when the lifecycle was last updated (e.g., when a new card transaction or transaction event was added), in ISO 8601 format.
+    NonPciBookmarkedResultOfIssuingNonPciLifecycle:
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/NonPciLifecycle'
+        page_after:
+          type: string
+          description: A marker for retrieving the next page of results. Include this value in the `page` request parameter to retrieve subsequent pages.
+        page_before:
+          type: string
+          description: A marker for retrieving the previous page of results. Include this value in the `page` request parameter to retrieve previous pages.
+    NonPciAggregatedAmounts:
+      type: object
+      properties:
+        currency:
+          type: string
+          description: Three-letter ISO 4217 currency code for all amounts in this object.
+        total_authorized:
+          type: number
+          description: Total amount authorized (funds reserved in the wallet).
+        total_credited:
+          type: number
+          description: Total amount credited (funds returned to the wallet, e.g., refunds).
+        total_debited:
+          type: number
+          description: Total amount debited (funds moved out of the wallet after clearing).
+        total_declined:
+          type: number
+          description: Total amount declined (transaction amounts that were rejected).
+        total_expired:
+          type: number
+          description: Total amount expired (authorized amounts that were never captured and have been released).
+        total_pending:
+          type: number
+          description: Total amount still pending (outstanding authorized amount not yet cleared, reversed, or expired).
+        total_reversed:
+          type: number
+          description: Total amount reversed (authorized amounts that were cancelled and released).
+      description: Aggregated amounts in the card's billing currency (the currency of the cardholder's wallet). Includes totals for authorized, debited, credited, pending, and other states.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

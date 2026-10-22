@@ -1,0 +1,1077 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Core Resources > Deposits API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Core Resources > Deposits
+  description: Deposits are transfers made into your Airwallex account via Global Accounts, Airwallex Pay, or Aggregate Funds for adding funds or collecting funds from third parties.
+  x-domain: Core Resources
+  x-resource: Deposits
+  x-urlPath: core_resources/deposits
+paths:
+  /api/v1/deposits/create:
+    post:
+      tags:
+      - Core Resources > Deposits
+      summary: 1|Create a Deposit Via Direct Debit
+      description: Deposits funds into your Airwallex account via Direct Debit from a Linked Account.
+      operationId: createDeposit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - amount
+              - currency
+              - funding_source_id
+              - request_id
+              properties:
+                amount:
+                  type: number
+                  description: The amount of this deposit.
+                currency:
+                  type: string
+                  description: The `currency` (3-letter ISO-4217 code) of this deposit.
+                deposit_type:
+                  type: string
+                  description: The type of deposit you would like to create. If not specified, it will default to DIRECT_DEBIT.
+                  enum:
+                  - DIRECT_DEBIT
+                  - FASTER_DIRECT_DEBIT
+                funding_source_id:
+                  type: string
+                  description: The unique identifier of your Linked Account or Funding Source.
+                reference:
+                  type: string
+                  description: A user specified reference that will be displayed to the bank account owner on the bank statement. 1-10 characters long for USD, 1-18 characters long for AUD.
+                request_id:
+                  type: string
+                  description: Unique request identifier specified in the request. Should be valid UUID.
+        description: Required information to initiate a deposit.
+        required: true
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DepositDtoV2'
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/deposits/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          amount: 12794.27
+          currency: USD
+          deposit_type: DIRECT_DEBIT
+          funding_source_id: 67f687fe-dcf4-4462-92fa-20335321d9d8
+          reference: test ref
+          request_id: c559d7fe-d911-4f3d-a937-7c24ba4b732a
+        response_body:
+          amount: 12794.27
+          created_at: 2017-03-20T14:00:01+1100
+          currency: USD
+          estimated_settled_at: 2017-03-22T14:00:00+0000
+          failure_details:
+            code: insufficient_funds
+            iso_code: AM04
+            provider_failure_details:
+              code: R01
+              local_clearing_system: US_ACH
+              message: INSUFFICIENT FUNDS
+          fee:
+            amount: 1.28
+            currency: USD
+          funding_source_id: 67f687fe-dcf4-4462-92fa-20335321d9d8
+          global_account_id: fcfc369c-ce9d-4ab7-b9af-80df61848f8f
+          id: 67f687fe-dcf4-4462-92fa-20335301d9d8
+          payer:
+            bank_account:
+              au_bsb:
+                account_number: '89098199202'
+                bsb: '063001'
+              au_payid:
+                account_identifier_type: EMAIL_ADDRESS
+                account_number: '89098199202'
+                bsb: '063001'
+                payid: tester@airwallex.com
+              br_bank_code:
+                account_number: '89098199202'
+                bank_code: '712'
+                branch_code: '0001'
+                ispb: '78632767'
+              ca_institution_number:
+                account_number: '89098199202'
+                institution_number: '010'
+                transit_number: '12345'
+              cn_cnaps_code:
+                account_number: '89098199202'
+                cnaps_code: '1234'
+              dk_bank_code:
+                account_number: '89098199202'
+                bank_code: '003'
+              gb_sort_code:
+                account_number: '89098199202'
+                sort_code: '608382'
+              hk_bank_code:
+                account_number: '89098199202'
+                bank_code: '003'
+                branch_code: '1234'
+              iban:
+                iban: GB81LHVB04032900176471
+              institution:
+                country_code: US
+                name: tester bank
+                swift_code: DBSSSGSG
+              jp_bank_code:
+                account_number: '89098199202'
+                bank_code: '003'
+                branch_code: '1234'
+              kr_bank_code:
+                account_number: '89098199202'
+                bank_code: '003'
+                branch_code: '003123'
+              mx_bank_code:
+                account_number: '89098199202'
+                bank_code: '03'
+                branch_office_code: '1234'
+                control_digit: '1'
+              name: tester
+              nz_bank_code:
+                account_number: '89098199202'
+                bank_code: '03'
+                branch_code: '1234'
+                suffix: '12'
+              partial:
+                account_number: '89098199202'
+                account_routing_type1: sort_code
+                account_routing_type2: sort_code
+                account_routing_value1: 040329
+                account_routing_value2: 040329
+              ph_bank_code:
+                account_number: '7052902318500429'
+                bank_code: '011070016'
+              swift_code:
+                account_number: '89098199202'
+                swift_code: DBSSSGSG
+              type: AU_BSB
+              us_ach:
+                account_number: '89098199202'
+                ach: 084106768
+              us_wire:
+                account_number: '89098199202'
+                wire: 084106768
+            country_code: US
+            digital_wallet:
+              account_name: John Walker Corporation
+              id_type: account_number
+              id_value: '1033106816639334'
+              provider: AIRWALLEX
+            name: tester
+          provider_transaction_id: '5487287788'
+          reference: '5487287788'
+          settled_at: 2017-03-22T14:00:00+0000
+          status: SETTLED
+          type: BANK_TRANSFER
+      x-scope:
+      - scope: deposit:write
+        group: Core Resources
+        resource_name: Deposits
+      x-domain: Core Resources
+      x-resource: Deposits
+      x-urlPath: create
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/deposits/{id}:
+    get:
+      tags:
+      - Core Resources > Deposits
+      summary: 2|Retrieve a Deposit
+      description: Retrieves details of a deposit using the given deposit unique identifier.
+      operationId: retrieveDeposit
+      parameters:
+      - name: id
+        in: path
+        description: The unique identifier of the Deposit to retrieve.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DepositDtoV2'
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/deposits/deposit_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          amount: 12794.27
+          created_at: 2017-03-20T14:00:01+1100
+          currency: USD
+          estimated_settled_at: 2017-03-22T14:00:00+0000
+          failure_details:
+            code: insufficient_funds
+            iso_code: AM04
+            provider_failure_details:
+              code: R01
+              local_clearing_system: US_ACH
+              message: INSUFFICIENT FUNDS
+          fee:
+            amount: 1.28
+            currency: USD
+          funding_source_id: 67f687fe-dcf4-4462-92fa-20335321d9d8
+          global_account_id: fcfc369c-ce9d-4ab7-b9af-80df61848f8f
+          id: 67f687fe-dcf4-4462-92fa-20335301d9d8
+          payer:
+            bank_account:
+              au_bsb:
+                account_number: '89098199202'
+                bsb: '063001'
+              au_payid:
+                account_identifier_type: EMAIL_ADDRESS
+                account_number: '89098199202'
+                bsb: '063001'
+                payid: tester@airwallex.com
+              br_bank_code:
+                account_number: '89098199202'
+                bank_code: '712'
+                branch_code: '0001'
+                ispb: '78632767'
+              ca_institution_number:
+                account_number: '89098199202'
+                institution_number: '010'
+                transit_number: '12345'
+              cn_cnaps_code:
+                account_number: '89098199202'
+                cnaps_code: '1234'
+              dk_bank_code:
+                account_number: '89098199202'
+                bank_code: '003'
+              gb_sort_code:
+                account_number: '89098199202'
+                sort_code: '608382'
+              hk_bank_code:
+                account_number: '89098199202'
+                bank_code: '003'
+                branch_code: '1234'
+              iban:
+                iban: GB81LHVB04032900176471
+              institution:
+                country_code: US
+                name: tester bank
+                swift_code: DBSSSGSG
+              jp_bank_code:
+                account_number: '89098199202'
+                bank_code: '003'
+                branch_code: '1234'
+              kr_bank_code:
+                account_number: '89098199202'
+                bank_code: '003'
+                branch_code: '003123'
+              mx_bank_code:
+                account_number: '89098199202'
+                bank_code: '03'
+                branch_office_code: '1234'
+                control_digit: '1'
+              name: tester
+              nz_bank_code:
+                account_number: '89098199202'
+                bank_code: '03'
+                branch_code: '1234'
+                suffix: '12'
+              partial:
+                account_number: '89098199202'
+                account_routing_type1: sort_code
+                account_routing_type2: sort_code
+                account_routing_value1: 040329
+                account_routing_value2: 040329
+              ph_bank_code:
+                account_number: '7052902318500429'
+                bank_code: '011070016'
+              swift_code:
+                account_number: '89098199202'
+                swift_code: DBSSSGSG
+              type: AU_BSB
+              us_ach:
+                account_number: '89098199202'
+                ach: 084106768
+              us_wire:
+                account_number: '89098199202'
+                wire: 084106768
+            country_code: US
+            digital_wallet:
+              account_name: John Walker Corporation
+              id_type: account_number
+              id_value: '1033106816639334'
+              provider: AIRWALLEX
+            name: tester
+          provider_transaction_id: '5487287788'
+          reference: '5487287788'
+          settled_at: 2017-03-22T14:00:00+0000
+          status: SETTLED
+          type: BANK_TRANSFER
+      x-scope:
+      - scope: deposit:read
+        group: Core Resources
+        resource_name: Deposits
+      x-domain: Core Resources
+      x-resource: Deposits
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/deposits:
+    get:
+      tags:
+      - Core Resources > Deposits
+      summary: 3|List all Deposits
+      description: Returns a list of deposits made into your Airwallex wallet. You can filter the list by specifying a time period. If left unspecified or only the end date is specified, then deposits 30 days in arrears of today or the end date will be returned.
+      operationId: listDeposits
+      parameters:
+      - name: from_created_at
+        in: query
+        description: The start date of `created_at` in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: '2017-04-01'
+      - name: page_num
+        in: query
+        description: Page number, starts from 0.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of results per page. Default value is 100.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: to_created_at
+        in: query
+        description: The end date of `created_at` in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: 2017-04-01T03:52:34+0000
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: Paged results.
+                    items:
+                      $ref: '#/components/schemas/DepositDtoV2'
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/deposits
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - amount: 12794.27
+            created_at: 2017-03-20T14:00:01+1100
+            currency: USD
+            estimated_settled_at: 2017-03-22T14:00:00+0000
+            failure_details:
+              code: insufficient_funds
+              iso_code: AM04
+              provider_failure_details:
+                code: R01
+                local_clearing_system: US_ACH
+                message: INSUFFICIENT FUNDS
+            fee:
+              amount: 1.28
+              currency: USD
+            funding_source_id: 67f687fe-dcf4-4462-92fa-20335321d9d8
+            global_account_id: fcfc369c-ce9d-4ab7-b9af-80df61848f8f
+            id: 67f687fe-dcf4-4462-92fa-20335301d9d8
+            payer:
+              bank_account:
+                au_bsb:
+                  account_number: '89098199202'
+                  bsb: '063001'
+                au_payid:
+                  account_identifier_type: EMAIL_ADDRESS
+                  account_number: '89098199202'
+                  bsb: '063001'
+                  payid: tester@airwallex.com
+                br_bank_code:
+                  account_number: '89098199202'
+                  bank_code: '712'
+                  branch_code: '0001'
+                  ispb: '78632767'
+                ca_institution_number:
+                  account_number: '89098199202'
+                  institution_number: '010'
+                  transit_number: '12345'
+                cn_cnaps_code:
+                  account_number: '89098199202'
+                  cnaps_code: '1234'
+                dk_bank_code:
+                  account_number: '89098199202'
+                  bank_code: '003'
+                gb_sort_code:
+                  account_number: '89098199202'
+                  sort_code: '608382'
+                hk_bank_code:
+                  account_number: '89098199202'
+                  bank_code: '003'
+                  branch_code: '1234'
+                iban:
+                  iban: GB81LHVB04032900176471
+                institution:
+                  country_code: US
+                  name: tester bank
+                  swift_code: DBSSSGSG
+                jp_bank_code:
+                  account_number: '89098199202'
+                  bank_code: '003'
+                  branch_code: '1234'
+                kr_bank_code:
+                  account_number: '89098199202'
+                  bank_code: '003'
+                  branch_code: '003123'
+                mx_bank_code:
+                  account_number: '89098199202'
+                  bank_code: '03'
+                  branch_office_code: '1234'
+                  control_digit: '1'
+                name: tester
+                nz_bank_code:
+                  account_number: '89098199202'
+                  bank_code: '03'
+                  branch_code: '1234'
+                  suffix: '12'
+                partial:
+                  account_number: '89098199202'
+                  account_routing_type1: sort_code
+                  account_routing_type2: sort_code
+                  account_routing_value1: 040329
+                  account_routing_value2: 040329
+                ph_bank_code:
+                  account_number: '7052902318500429'
+                  bank_code: '011070016'
+                swift_code:
+                  account_number: '89098199202'
+                  swift_code: DBSSSGSG
+                type: AU_BSB
+                us_ach:
+                  account_number: '89098199202'
+                  ach: 084106768
+                us_wire:
+                  account_number: '89098199202'
+                  wire: 084106768
+              country_code: US
+              digital_wallet:
+                account_name: John Walker Corporation
+                id_type: account_number
+                id_value: '1033106816639334'
+                provider: AIRWALLEX
+              name: tester
+            provider_transaction_id: '5487287788'
+            reference: '5487287788'
+            settled_at: 2017-03-22T14:00:00+0000
+            status: SETTLED
+            type: BANK_TRANSFER
+      x-scope:
+      - scope: deposit:read
+        group: Core Resources
+        resource_name: Deposits
+      x-domain: Core Resources
+      x-resource: Deposits
+      x-urlPath: list
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    DepositPayerDigitalWallet:
+      type: object
+      required:
+      - account_name
+      - provider
+      properties:
+        account_name:
+          type: string
+          description: Account holder name of the payer's digital wallet.
+        id_type:
+          type: string
+          description: Account identifier type of the payer's digital wallet.
+        id_value:
+          type: string
+          description: Account identifier value of the payer's digital wallet.
+        provider:
+          type: string
+          description: Service provider of the payer's digital wallet.
+      description: The digital wallet of the payer.
+    BankAccountCNCnapsCode:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: Financial account number.
+        cnaps_code:
+          type: string
+          description: Cnaps code.
+      description: China cnaps code information.
+    BankAccountPartial:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: Financial account number.
+        account_routing_type1:
+          type: string
+          description: Routing code type.
+        account_routing_type2:
+          type: string
+          description: Routing code sub type.
+        account_routing_value1:
+          type: string
+          description: Routing code type value.
+        account_routing_value2:
+          type: string
+          description: Routing code sub type value.
+      description: Partial bank information.
+    DepositFee:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: Fee amount of this deposit.
+        currency:
+          type: string
+          description: Fee `currency` (3-letter ISO-4217 code) of this deposit.
+      description: Deposit fee.
+    BankAccountAUBsb:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: Financial account number.
+        bsb:
+          type: string
+          description: BSB code.
+      description: Australia BSB information.
+    ProviderFailureDetails:
+      type: object
+      properties:
+        code:
+          type: string
+          description: The original error code received from the local clearing system.
+        local_clearing_system:
+          type: string
+          description: The local clearing system used for the direct debit deposit. Possible values are `AU_BECS`, `US_ACH`, `GB_BACS`, `EU_SEPA`.
+        message:
+          type: string
+          description: The original error message received from the local clearing system.
+      description: A set of original information received from the local clearing system.
+    BankAccountDKBankCode:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: Financial account number.
+        bank_code:
+          type: string
+          description: Bank code.
+      description: Denmark bank code information.
+    DepositDtoV2:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: The amount of this deposit.
+        created_at:
+          type: string
+          description: The date time in ISO8601 format when this deposit was created.
+        currency:
+          type: string
+          description: The `currency` (3-letter ISO-4217 code) of this deposit.
+        estimated_settled_at:
+          type: string
+          description: Estimated settlement time of this deposit. With ISO8601 format.
+        failure_details:
+          $ref: '#/components/schemas/Core_Resources_FailureDetails'
+          description: Empty unless the deposit is in a failure status (`REJECTED`, `REVERSED`).
+        fee:
+          $ref: '#/components/schemas/DepositFee'
+          description: Deposit fee.
+        funding_source_id:
+          type: string
+          description: Funding Source unique identifier of this deposit. Applies to `DIRECT_DEBIT` deposit type. This is the same as your Linked Account unique identifier.
+        global_account_id:
+          type: string
+          description: Global Account unique identifier of this deposit. Applies to `BANK_TRANSFER` deposit type. Nullable for deposits via DBS_HK GA.
+        id:
+          type: string
+          format: uuid
+          description: A unique identifier of this deposit.
+        payer:
+          $ref: '#/components/schemas/DepositPayer'
+          description: The payer of this transfer deposit.
+        provider_transaction_id:
+          type: string
+          description: The unique identifier on this deposit provided by the banking provider. Duplicates may occur in edge cases.
+        reference:
+          type: string
+          description: A user specific reference that will be displayed to the bank account owner on the bank statement.
+        settled_at:
+          type: string
+          description: Actual settlement time of this deposit. With ISO8601 format.
+        status:
+          type: string
+          description: Status of this deposit.
+          enum:
+          - PENDING
+          - SETTLED
+          - REJECTED
+          - REVERSED
+        type:
+          type: string
+          description: Type of this deposit.
+          enum:
+          - BANK_TRANSFER
+          - DIRECT_DEBIT
+          - DIGITAL_WALLET_TRANSFER
+          - AGGREGATE_FUNDS
+          - STABLECOIN_TRANSFER
+    DepositPayer:
+      type: object
+      properties:
+        bank_account:
+          $ref: '#/components/schemas/DepositPayerBankAccount'
+          description: The bank account of the payer.
+        country_code:
+          type: string
+          description: Country of the payer (2-letter ISO 3166-2 country code).
+        digital_wallet:
+          $ref: '#/components/schemas/DepositPayerDigitalWallet'
+          description: The digital wallet of the payer.
+        name:
+          type: string
+          description: The name of the payer.
+        stablecoin_wallet:
+          $ref: '#/components/schemas/DepositStablecoinWallet'
+          description: The stablecoin wallet of the payer.
+      description: The payer of this transfer deposit.
+    BankAccountGBSortCode:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: Financial account number.
+        sort_code:
+          type: string
+          description: Sort code.
+      description: Greate Britain sort code information.
+    BankAccountJPBankCode:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: Financial account number.
+        bank_code:
+          type: string
+          description: Bank code.
+        branch_code:
+          type: string
+          description: Branch code.
+      description: Japan bank code information.
+    BankAccountUSAch:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: Financial account number.
+        ach:
+          type: string
+          description: ACH routing number.
+      description: United States ACH information.
+    BankAccountBRBankCode:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: Financial account number.
+        bank_code:
+          type: string
+          description: bankCode
+        branch_code:
+          type: string
+          description: branchCode
+        ispb:
+          type: string
+          description: ispb code.
+      description: Brazil bank code information.
+    BankAccountPHBankCode:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: Financial account number.
+        bank_code:
+          type: string
+          description: Bank code.
+      description: Philippines bank code information.
+    Core_Resources_FailureDetails:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code (details can be found [here](/docs/global-treasury/receive-funds/add-funds-via-direct-debits-from-linked-accounts/direct-debit-deposit-error-codes)).
+        iso_code:
+          type: string
+          description: Error code [ISO 20022](https://www.iso20022.org/about-iso-20022) (details can be found [here](/docs/global-treasury/receive-funds/add-funds-via-direct-debits-from-linked-accounts/direct-debit-deposit-error-codes)).
+        provider_failure_details:
+          $ref: '#/components/schemas/ProviderFailureDetails'
+          description: A set of original information received from the local clearing system.
+      description: Empty unless the deposit is in a failure status (`REJECTED`, `REVERSED`).
+    BankAccountNZBankCode:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: Financial account number.
+        bank_code:
+          type: string
+          description: Bank code.
+        branch_code:
+          type: string
+          description: Branch code.
+        suffix:
+          type: string
+          description: Financial account number suffix.
+      description: New Zealand bank code information.
+    BankAccountIban:
+      type: object
+      properties:
+        iban:
+          type: string
+          description: International Bank Account Number.
+      description: IBAN information.
+    BankAccountKRBankCode:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: Financial account number.
+        bank_code:
+          type: string
+          description: Bank code.
+        branch_code:
+          type: string
+          description: Branch code.
+      description: Korea bank code information.
+    DepositStablecoinWallet:
+      type: object
+      properties:
+        address:
+          type: string
+          description: The blockchain address of the sender.
+        asset:
+          type: string
+          description: The stablecoin asset.
+        network:
+          type: string
+          description: The blockchain network.
+      description: Stablecoin wallet details for the payer.
+    BankAccountAUPayid:
+      type: object
+      properties:
+        account_identifier_type:
+          type: string
+          description: Identifier of PayID.
+        account_number:
+          type: string
+          description: Financial account number.
+        bsb:
+          type: string
+          description: BSB code.
+        payid:
+          type: string
+          description: Australian NPP PayID.
+      description: Australian NPP PayID information.
+    BankAccountCAInstitutionNumber:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: Financial account number.
+        institution_number:
+          type: string
+          description: Institution number.
+        transit_number:
+          type: string
+          description: Branch transit number.
+      description: Canada institution number information.
+    BankAccountHKBankCode:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: Financial account number.
+        bank_code:
+          type: string
+          description: Bank code.
+        branch_code:
+          type: string
+          description: Branch code.
+      description: Hong Kong bank code information.
+    BankAccountUSWire:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: Financial account number.
+        wire:
+          type: string
+          description: Wire routing number.
+      description: United States wire information.
+    BankAccountSwiftCode:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: Financial account number.
+        swift_code:
+          type: string
+          description: SWIFT code.
+      description: SWIFT information.
+    BankAccountMXBankCode:
+      type: object
+      properties:
+        account_number:
+          type: string
+          description: Financial account number.
+        bank_code:
+          type: string
+          description: Bank code.
+        branch_office_code:
+          type: string
+          description: Branch office code.
+        control_digit:
+          type: string
+          description: Control digit.
+      description: Mexico bank code information.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    DepositPayerBankAccount:
+      type: object
+      properties:
+        au_bsb:
+          $ref: '#/components/schemas/BankAccountAUBsb'
+          description: Australia BSB information.
+        au_payid:
+          $ref: '#/components/schemas/BankAccountAUPayid'
+          description: Australian NPP PayID information.
+        br_bank_code:
+          $ref: '#/components/schemas/BankAccountBRBankCode'
+          description: Brazil bank code information.
+        ca_institution_number:
+          $ref: '#/components/schemas/BankAccountCAInstitutionNumber'
+          description: Canada institution number information.
+        cn_cnaps_code:
+          $ref: '#/components/schemas/BankAccountCNCnapsCode'
+          description: China cnaps code information.
+        dk_bank_code:
+          $ref: '#/components/schemas/BankAccountDKBankCode'
+          description: Denmark bank code information.
+        gb_sort_code:
+          $ref: '#/components/schemas/BankAccountGBSortCode'
+          description: Greate Britain sort code information.
+        hk_bank_code:
+          $ref: '#/components/schemas/BankAccountHKBankCode'
+          description: Hong Kong bank code information.
+        iban:
+          $ref: '#/components/schemas/BankAccountIban'
+          description: IBAN information.
+        institution:
+          $ref: '#/components/schemas/BankAccountInstitution'
+          description: The institution of the financial account.
+        jp_bank_code:
+          $ref: '#/components/schemas/BankAccountJPBankCode'
+          description: Japan bank code information.
+        kr_bank_code:
+          $ref: '#/components/schemas/BankAccountKRBankCode'
+          description: Korea bank code information.
+        mx_bank_code:
+          $ref: '#/components/schemas/BankAccountMXBankCode'
+          description: Mexico bank code information.
+        name:
+          type: string
+          description: Financial account name.
+        nz_bank_code:
+          $ref: '#/components/schemas/BankAccountNZBankCode'
+          description: New Zealand bank code information.
+        partial:
+          $ref: '#/components/schemas/BankAccountPartial'
+          description: Partial bank information.
+        ph_bank_code:
+          $ref: '#/components/schemas/BankAccountPHBankCode'
+          description: Philippines bank code information.
+        swift_code:
+          $ref: '#/components/schemas/BankAccountSwiftCode'
+          description: SWIFT information.
+        type:
+          type: string
+          description: The type of the bank account identifier.
+          enum:
+          - AU_BSB
+          - AU_PAYID
+          - BR_BANK_CODE
+          - CA_INSTITUTION_NUMBER
+          - GB_SORT_CODE
+          - HK_BANK_CODE
+          - JP_BANK_CODE
+          - NZ_BANK_CODE
+          - US_ACH
+          - US_WIRE
+          - CN_CNAPS_CODE
+          - PARTIAL
+          - IBAN
+          - MX_BANK_CODE
+          - SWIFT_CODE
+          - KR_BANK_CODE
+          - DK_BANK_CODE
+          - PH_BANK_CODE
+        us_ach:
+          $ref: '#/components/schemas/BankAccountUSAch'
+          description: United States ACH information.
+        us_wire:
+          $ref: '#/components/schemas/BankAccountUSWire'
+          description: United States wire information.
+      description: The bank account of the payer.
+    BankAccountInstitution:
+      type: object
+      properties:
+        country_code:
+          type: string
+          description: Country of the institution (2-letter ISO 3166-2 country code).
+        name:
+          type: string
+          description: Institution name.
+        swift_code:
+          type: string
+          description: Bank SWIFT code.
+      description: The institution of the financial account.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

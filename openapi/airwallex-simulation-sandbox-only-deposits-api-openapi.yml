@@ -1,0 +1,1116 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Simulation (Sandbox Only) > Deposits API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Simulation (Sandbox Only) > Deposits
+  description: 'You can receive funds into your Airwallex Wallet via bank transfers to Global Accounts or direct debits from Linked Accounts.
+
+
+    The Global Accounts deposit simulation API allows you to simulate a deposit from an external bank account in the sandbox environment.
+
+
+    The Direct Debit deposit simulation APIs allow you to transition Direct Debit deposit statuses in the sandbox environment.'
+  x-domain: Simulation (Sandbox Only)
+  x-resource: Deposits
+  x-urlPath: simulation/deposits
+paths:
+  /api/v1/simulation/deposit/create:
+    post:
+      servers:
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+      tags:
+      - Simulation (Sandbox Only) > Deposits
+      summary: 1|Create a Global Account Deposit
+      description: You can use this endpoint to simulate deposits into your global account. This is only available in the sandbox environment.
+      operationId: simulation_createDeposit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - amount
+              - global_account_id
+              properties:
+                amount:
+                  type: number
+                  description: Amount to deposit into global account.
+                  minimum: 0
+                  maximum: 100000000
+                global_account_id:
+                  type: string
+                  format: uuid
+                  description: Global account unique identifier.
+                payer_bankname:
+                  type: string
+                  description: Name of the bank that the deposit is made from.
+                  minLength: 0
+                  maxLength: 255
+                payer_country:
+                  type: string
+                  description: Payer country code of the transaction (2-letter ISO 3166-2 country code).
+                  enum:
+                  - AC
+                  - AD
+                  - AE
+                  - AF
+                  - AG
+                  - AI
+                  - AL
+                  - AM
+                  - AN
+                  - AO
+                  - AQ
+                  - AR
+                  - AS
+                  - AT
+                  - AU
+                  - AW
+                  - AX
+                  - AZ
+                  - BA
+                  - BB
+                  - BD
+                  - BE
+                  - BF
+                  - BG
+                  - BH
+                  - BI
+                  - BJ
+                  - BL
+                  - BM
+                  - BN
+                  - BO
+                  - BQ
+                  - BR
+                  - BS
+                  - BT
+                  - BU
+                  - BV
+                  - BW
+                  - BY
+                  - BZ
+                  - CA
+                  - CC
+                  - CD
+                  - CF
+                  - CG
+                  - CH
+                  - CI
+                  - CK
+                  - CL
+                  - CM
+                  - CN
+                  - CO
+                  - CP
+                  - CR
+                  - CS
+                  - CU
+                  - CV
+                  - CW
+                  - CX
+                  - CY
+                  - CZ
+                  - DE
+                  - DG
+                  - DJ
+                  - DK
+                  - DM
+                  - DO
+                  - DZ
+                  - EA
+                  - EC
+                  - EE
+                  - EG
+                  - EH
+                  - ER
+                  - ES
+                  - ET
+                  - EU
+                  - EZ
+                  - FI
+                  - FJ
+                  - FK
+                  - FM
+                  - FO
+                  - FR
+                  - FX
+                  - GA
+                  - GB
+                  - GD
+                  - GE
+                  - GF
+                  - GG
+                  - GH
+                  - GI
+                  - GL
+                  - GM
+                  - GN
+                  - GP
+                  - GQ
+                  - GR
+                  - GS
+                  - GT
+                  - GU
+                  - GW
+                  - GY
+                  - HK
+                  - HM
+                  - HN
+                  - HR
+                  - HT
+                  - HU
+                  - IC
+                  - ID
+                  - IE
+                  - IL
+                  - IM
+                  - IN
+                  - IO
+                  - IQ
+                  - IR
+                  - IS
+                  - IT
+                  - JE
+                  - JM
+                  - JO
+                  - JP
+                  - KE
+                  - KG
+                  - KH
+                  - KI
+                  - KM
+                  - KN
+                  - KP
+                  - KR
+                  - KW
+                  - KY
+                  - KZ
+                  - LA
+                  - LB
+                  - LC
+                  - LI
+                  - LK
+                  - LR
+                  - LS
+                  - LT
+                  - LU
+                  - LV
+                  - LY
+                  - MA
+                  - MC
+                  - MD
+                  - ME
+                  - MF
+                  - MG
+                  - MH
+                  - MK
+                  - ML
+                  - MM
+                  - MN
+                  - MO
+                  - MP
+                  - MQ
+                  - MR
+                  - MS
+                  - MT
+                  - MU
+                  - MV
+                  - MW
+                  - MX
+                  - MY
+                  - MZ
+                  - NA
+                  - NC
+                  - NE
+                  - NF
+                  - NG
+                  - NI
+                  - NL
+                  - 'NO'
+                  - NP
+                  - NR
+                  - NT
+                  - NU
+                  - NZ
+                  - OM
+                  - PA
+                  - PE
+                  - PF
+                  - PG
+                  - PH
+                  - PK
+                  - PL
+                  - PM
+                  - PN
+                  - PR
+                  - PS
+                  - PT
+                  - PW
+                  - PY
+                  - QA
+                  - RE
+                  - RO
+                  - RS
+                  - RU
+                  - RW
+                  - SA
+                  - SB
+                  - SC
+                  - SD
+                  - SE
+                  - SF
+                  - SG
+                  - SH
+                  - SI
+                  - SJ
+                  - SK
+                  - SL
+                  - SM
+                  - SN
+                  - SO
+                  - SR
+                  - SS
+                  - ST
+                  - SU
+                  - SV
+                  - SX
+                  - SY
+                  - SZ
+                  - TA
+                  - TC
+                  - TD
+                  - TF
+                  - TG
+                  - TH
+                  - TJ
+                  - TK
+                  - TL
+                  - TM
+                  - TN
+                  - TO
+                  - TP
+                  - TR
+                  - TT
+                  - TV
+                  - TW
+                  - TZ
+                  - UA
+                  - UG
+                  - UK
+                  - UM
+                  - UNDEFINED
+                  - US
+                  - UY
+                  - UZ
+                  - VA
+                  - VC
+                  - VE
+                  - VG
+                  - VI
+                  - VN
+                  - VU
+                  - WF
+                  - WS
+                  - XI
+                  - XK
+                  - XU
+                  - YE
+                  - YT
+                  - YU
+                  - ZA
+                  - ZM
+                  - ZR
+                  - ZW
+                payer_name:
+                  type: string
+                  description: Name of the payer making the deposit.
+                  minLength: 0
+                  maxLength: 255
+                reference:
+                  type: string
+                  description: Description of the deposit.
+                  minLength: 0
+                  maxLength: 255
+                statement_ref:
+                  type: string
+                  description: Custom statement reference for this deposit. If a statement reference is provided, please note that it needs to be unique.
+                  minLength: 0
+                  maxLength: 255
+                status:
+                  type: string
+                  description: Target next_status of this deposit. Default value is SETTLED.
+                  enum:
+                  - PENDING
+                  - REJECTED
+                  - SETTLED
+        description: payload
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulationGaDeposit'
+        '400':
+          description: invalid_argument
+        '401':
+          description: credentials_invalid
+        '500':
+          description: service_unavailable
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/simulation/deposit/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          amount: 1000
+          global_account_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          payer_bankname: <string>
+          payer_country: AC
+          payer_name: '1000'
+          reference: <string>
+          statement_ref: '5487287788'
+          status: SETTLED
+        response_body:
+          amount: 10000
+          create_time: 2017-03-22T16:08:02+1100
+          currency: AUD
+          deposit_type: CREDIT
+          fee_amount: 10
+          fee_currency:
+            currency_code: AED
+            precision: 0
+            value: <string>
+          id: 90b98dc6-63a0-403f-816b-ac5305b42a11
+          payer_country: US
+          payer_name: AMZNnt70paD1
+          reference: <string>
+          statement_ref: '5487287788'
+          status: PENDING
+      x-scope:
+      - scope: simulation:write
+        group: Simulations
+        resource_name: Simulations
+      x-domain: Simulation (Sandbox Only)
+      x-resource: Deposits
+      x-urlPath: create
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+  /api/v1/simulation/deposits/{deposit_id}/reverse:
+    post:
+      servers:
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+      tags:
+      - Simulation (Sandbox Only) > Deposits
+      summary: 2|Reverse a Direct Debit Deposit
+      description: Creates a new direct debit deposit in the `SETTLED` state with an amount that offsets the original amount, i.e. negative value, and also deactivates the Linked Account. The original direct debit deposit will remain in the `SETTLED` state.
+      operationId: simulation_reverse
+      parameters:
+      - name: deposit_id
+        in: path
+        description: Unique identifier of the direct debit deposit.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: dd745da6-d48a-4347-87c2-3c33b920f5b1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
+        '400':
+          description: invalid_argument
+        '401':
+          description: credentials_invalid
+        '404':
+          description: not_found
+        '500':
+          description: service_unavailable
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/simulation/deposits/deposit_id/reverse
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body: false
+      x-scope:
+      - scope: simulation:write
+        group: Simulations
+        resource_name: Simulations
+      x-domain: Simulation (Sandbox Only)
+      x-resource: Deposits
+      x-urlPath: reverse
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+  /api/v1/simulation/deposits/{deposit_id}/settle:
+    post:
+      servers:
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+      tags:
+      - Simulation (Sandbox Only) > Deposits
+      summary: 3|Settle a Direct Debit Deposit
+      description: Settles a pending deposit by transitioning the direct debit deposit status from `PENDING` to `SETTLED`.
+      operationId: simulation_settle
+      parameters:
+      - name: deposit_id
+        in: path
+        description: Unique identifier of the direct debit deposit.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: dd745da6-d48a-4347-87c2-3c33b920f5b1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
+        '400':
+          description: invalid_argument
+        '401':
+          description: credentials_invalid
+        '404':
+          description: not_found
+        '500':
+          description: service_unavailable
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/simulation/deposits/deposit_id/settle
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body: false
+      x-scope:
+      - scope: simulation:write
+        group: Simulations
+        resource_name: Simulations
+      x-domain: Simulation (Sandbox Only)
+      x-resource: Deposits
+      x-urlPath: settle
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+  /api/v1/simulation/deposits/{deposit_id}/reject:
+    post:
+      servers:
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+      tags:
+      - Simulation (Sandbox Only) > Deposits
+      summary: 4|Reject a Direct Debit Deposit
+      description: Rejects a pending deposit by transitioning the direct debit deposit status from `PENDING` to `REJECTED`.
+      operationId: simulation_reject
+      parameters:
+      - name: deposit_id
+        in: path
+        description: Unique identifier of the direct debit deposit.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: dd745da6-d48a-4347-87c2-3c33b920f5b1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
+        '400':
+          description: invalid_argument
+        '401':
+          description: credentials_invalid
+        '404':
+          description: not_found
+        '500':
+          description: service_unavailable
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/simulation/deposits/deposit_id/reject
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body: false
+      x-scope:
+      - scope: simulation:write
+        group: Simulations
+        resource_name: Simulations
+      x-domain: Simulation (Sandbox Only)
+      x-resource: Deposits
+      x-urlPath: reject
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+components:
+  schemas:
+    SimulationCurrency:
+      type: object
+      required:
+      - precision
+      - value
+      properties:
+        currency_code:
+          type: string
+          enum:
+          - AED
+          - AFN
+          - ALL
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BOV
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BYR
+          - BZD
+          - CAD
+          - CDF
+          - CHE
+          - CHF
+          - CHW
+          - CLF
+          - CLP
+          - CNY
+          - COP
+          - COU
+          - CRC
+          - CUC
+          - CUP
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - EUR
+          - FJD
+          - FKP
+          - GBP
+          - GEL
+          - GHS
+          - GIP
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IQD
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LBP
+          - LKR
+          - LRD
+          - LSL
+          - LTL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRO
+          - MRU
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MXV
+          - MYR
+          - MZN
+          - NAD
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - NZD
+          - OMR
+          - PAB
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RUR
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SHP
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STD
+          - STN
+          - SVC
+          - SYP
+          - SZL
+          - THB
+          - TJS
+          - TMT
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UGX
+          - UNDEFINED
+          - USD
+          - USN
+          - USS
+          - UYI
+          - UYU
+          - UZS
+          - VEF
+          - VES
+          - VND
+          - VUV
+          - WST
+          - XAF
+          - XAG
+          - XAU
+          - XBA
+          - XBB
+          - XBC
+          - XBD
+          - XCD
+          - XDR
+          - XOF
+          - XPD
+          - XPF
+          - XPT
+          - XSU
+          - XTS
+          - XUA
+          - XXX
+          - YER
+          - ZAR
+          - ZMW
+          - ZWL
+        precision:
+          type: integer
+          format: int32
+        value:
+          type: string
+      description: Fee currency of the transaction (3-letter ISO-4217 code).
+    SimulationGaDeposit:
+      type: object
+      required:
+      - amount
+      - currency
+      properties:
+        amount:
+          type: number
+          description: Amount of the transaction in `transaction currency`.
+          maximum: 100000000
+          minimum: 0
+        create_time:
+          type: string
+          format: date-time
+          description: The time of the transaction created.
+        currency:
+          type: string
+          description: Currency of the transaction (3-letter ISO-4217 code).
+        deposit_type:
+          type: string
+          description: 'Type of the transaction, can be one of: `DEBIT`, `CREDIT`.'
+        fee_amount:
+          type: number
+          description: Fee amount of the transaction in transaction currency.
+        fee_currency:
+          $ref: '#/components/schemas/SimulationCurrency'
+          description: Fee currency of the transaction (3-letter ISO-4217 code).
+        id:
+          type: string
+          format: uuid
+          description: Unique id of the transaction.
+        payer_country:
+          type: string
+          description: Payer country code of the transaction (2-letter ISO 3166-2 country code).
+          enum:
+          - AC
+          - AD
+          - AE
+          - AF
+          - AG
+          - AI
+          - AL
+          - AM
+          - AN
+          - AO
+          - AQ
+          - AR
+          - AS
+          - AT
+          - AU
+          - AW
+          - AX
+          - AZ
+          - BA
+          - BB
+          - BD
+          - BE
+          - BF
+          - BG
+          - BH
+          - BI
+          - BJ
+          - BL
+          - BM
+          - BN
+          - BO
+          - BQ
+          - BR
+          - BS
+          - BT
+          - BU
+          - BV
+          - BW
+          - BY
+          - BZ
+          - CA
+          - CC
+          - CD
+          - CF
+          - CG
+          - CH
+          - CI
+          - CK
+          - CL
+          - CM
+          - CN
+          - CO
+          - CP
+          - CR
+          - CS
+          - CU
+          - CV
+          - CW
+          - CX
+          - CY
+          - CZ
+          - DE
+          - DG
+          - DJ
+          - DK
+          - DM
+          - DO
+          - DZ
+          - EA
+          - EC
+          - EE
+          - EG
+          - EH
+          - ER
+          - ES
+          - ET
+          - EU
+          - EZ
+          - FI
+          - FJ
+          - FK
+          - FM
+          - FO
+          - FR
+          - FX
+          - GA
+          - GB
+          - GD
+          - GE
+          - GF
+          - GG
+          - GH
+          - GI
+          - GL
+          - GM
+          - GN
+          - GP
+          - GQ
+          - GR
+          - GS
+          - GT
+          - GU
+          - GW
+          - GY
+          - HK
+          - HM
+          - HN
+          - HR
+          - HT
+          - HU
+          - IC
+          - ID
+          - IE
+          - IL
+          - IM
+          - IN
+          - IO
+          - IQ
+          - IR
+          - IS
+          - IT
+          - JE
+          - JM
+          - JO
+          - JP
+          - KE
+          - KG
+          - KH
+          - KI
+          - KM
+          - KN
+          - KP
+          - KR
+          - KW
+          - KY
+          - KZ
+          - LA
+          - LB
+          - LC
+          - LI
+          - LK
+          - LR
+          - LS
+          - LT
+          - LU
+          - LV
+          - LY
+          - MA
+          - MC
+          - MD
+          - ME
+          - MF
+          - MG
+          - MH
+          - MK
+          - ML
+          - MM
+          - MN
+          - MO
+          - MP
+          - MQ
+          - MR
+          - MS
+          - MT
+          - MU
+          - MV
+          - MW
+          - MX
+          - MY
+          - MZ
+          - NA
+          - NC
+          - NE
+          - NF
+          - NG
+          - NI
+          - NL
+          - 'NO'
+          - NP
+          - NR
+          - NT
+          - NU
+          - NZ
+          - OM
+          - PA
+          - PE
+          - PF
+          - PG
+          - PH
+          - PK
+          - PL
+          - PM
+          - PN
+          - PR
+          - PS
+          - PT
+          - PW
+          - PY
+          - QA
+          - RE
+          - RO
+          - RS
+          - RU
+          - RW
+          - SA
+          - SB
+          - SC
+          - SD
+          - SE
+          - SF
+          - SG
+          - SH
+          - SI
+          - SJ
+          - SK
+          - SL
+          - SM
+          - SN
+          - SO
+          - SR
+          - SS
+          - ST
+          - SU
+          - SV
+          - SX
+          - SY
+          - SZ
+          - TA
+          - TC
+          - TD
+          - TF
+          - TG
+          - TH
+          - TJ
+          - TK
+          - TL
+          - TM
+          - TN
+          - TO
+          - TP
+          - TR
+          - TT
+          - TV
+          - TW
+          - TZ
+          - UA
+          - UG
+          - UK
+          - UM
+          - UNDEFINED
+          - US
+          - UY
+          - UZ
+          - VA
+          - VC
+          - VE
+          - VG
+          - VI
+          - VN
+          - VU
+          - WF
+          - WS
+          - XI
+          - XK
+          - XU
+          - YE
+          - YT
+          - YU
+          - ZA
+          - ZM
+          - ZR
+          - ZW
+        payer_name:
+          type: string
+          description: Payer name of the transaction.
+          maxLength: 255
+          minLength: 0
+        reference:
+          type: string
+          description: Description of the transaction.
+          maxLength: 255
+          minLength: 0
+        statement_ref:
+          type: string
+          description: The statement reference of this deposit.
+          maxLength: 255
+          minLength: 0
+        status:
+          type: string
+          description: Status of the transaction.
+          enum:
+          - PENDING
+          - REJECTED
+          - SETTLED
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

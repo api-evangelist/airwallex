@@ -1,0 +1,312 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Payment Acceptance > Customer Balance…
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Payment Acceptance > Customer Balance Transactions
+  description: 'A **Customer Balance Transaction** records a change in the balance of funds that Airwallex holds and returns on behalf of your customer. It is used to notify you when bank transfer funds are received or reversed, including in exceptional scenarios such as overpayment, underpayment, or unmatched funding.
+
+
+    For bank transfer payments, the payment instructions are displayed to the shopper, who then manually transfers the funds through their own bank. Because the transfer is completed outside of the Airwallex checkout flow, the received funds may not always match the original PaymentIntent or PaymentAttempt. Customer Balance Transactions give you clear visibility into every received fund, its status, and any reversal.
+
+
+    A Customer Balance Transaction has one of the following types:
+
+
+    1. `bank_transfer` - Adds bank transfer funds to the customer balance.
+
+    2. `bank_transfer_reversal` - Reverses a previous bank transfer transaction and deducts the corresponding amount from the customer balance.
+
+    3. `applied_to_payment` - Applies bank transfer funds from the customer balance to a payment, reducing the available customer balance.
+
+
+    Airwallex emits `customer_balance_transaction` webhook events as funds progress. Refer to the product documentation for the full list of events and their payloads.
+
+
+    This resource applies to bank transfer payments only.'
+  x-domain: Payment Acceptance
+  x-resource: Customer Balance Transactions
+  x-urlPath: payments/customer_balance_transactions
+paths:
+  /api/v1/pa/customer_balance_transactions/{id}:
+    get:
+      tags:
+      - Payment Acceptance > Customer Balance Transactions
+      summary: 1|Retrieve a Customer Balance Transaction
+      description: Retrieve a Customer Balance Transaction by unique ID.
+      operationId: retrieveCustomerBalanceTransaction
+      parameters:
+      - name: id
+        in: path
+        description: Customer Balance Transaction unique ID.
+        required: true
+        schema:
+          type: string
+          default: cbt_sgst8pzlnhkkf18vp0a
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerBalanceTransactionResponse'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url), `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/customer_balance_transactions/cbt_sgst8pzlnhkkf18vp0a
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: cbt_sgst8pzlnhkkf18vp0a
+          type: bank_transfer
+          created_at: '2024-06-01T10:30:05+00:00'
+          updated_at: '2024-06-01T10:30:05+00:00'
+          bank_transfer:
+            amount: 100
+            currency: USD
+            received_at: '2024-06-01T10:30:00+00:00'
+            status: RECEIVED
+            payer:
+              customer_id: cus_sgstcq8tphkfma1574m
+              payer_name: John Smith
+              payer_email: john.smith@example.com
+              bank_name: Bank of America
+              account_name: John Smith Checking Account
+              account_number: '1234567890'
+            bank_transfer_instructions:
+              bank_name: Bank of America
+              account_name: Merchant Settlement Account
+              account_number: '9876543210'
+      x-domain: Payment Acceptance
+      x-resource: Customer Balance Transactions
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    CustomerBalanceTransactionResponse:
+      description: A transaction that records a change in the balance of funds held on behalf of a customer. For more about customer balances and how they apply to bank transfers, see the [Customer balance transactions](/docs/payments/payment-methods/global/bank-transfer/customer-balance-transactions) guide.
+      type: object
+      required:
+      - id
+      - type
+      - created_at
+      properties:
+        applied_to_payment:
+          type: object
+          description: Details of the funds applied to a payment. Present when `type` is `applied_to_payment`. If the funds are applied to several payments, a separate Customer Balance Transaction is created for each payment.
+          properties:
+            amount:
+              type: number
+              description: Matched payment amount.
+            currency:
+              type: string
+              description: Matched payment currency.
+            customer_balance_transaction_id:
+              type: string
+              description: ID of the Customer Balance Transaction the funds were applied from.
+            payment_attempt_id:
+              type: string
+              description: PaymentAttempt ID that the funds were applied to.
+            payment_intent_amount:
+              type: number
+              description: Original amount of the PaymentIntent.
+            payment_intent_id:
+              type: string
+              description: PaymentIntent ID that the funds were applied to.
+        bank_transfer:
+          type: object
+          description: Details of the bank transfer received. Present when `type` is `bank_transfer`.
+          properties:
+            amount:
+              type: number
+              description: The bank transfer amount received from the customer. This may be more or less than the expected payment amount, for example in overpayment or underpayment scenarios.
+            bank_transfer_instructions:
+              type: object
+              description: Bank transfer instructions provided by Airwallex for the customer to transfer the funds to.
+              properties:
+                account_name:
+                  type: string
+                  description: Account holder name of the Airwallex bank account the customer transfers the funds to.
+                account_number:
+                  type: string
+                  description: Account number of the Airwallex bank account the customer transfers the funds to.
+                bank_name:
+                  type: string
+                  description: Bank name of the Airwallex bank account the customer transfers the funds to.
+            currency:
+              type: string
+              description: Payment currency in 3-letter ISO 4217 currency code. Please refer to [supported currencies](/docs/payments/supported-currencies).
+            payer:
+              type: object
+              description: Details of the bank transfer payer.
+              properties:
+                account_name:
+                  type: string
+                  description: Payer bank account name.
+                account_number:
+                  type: string
+                  description: Payer bank account number.
+                bank_name:
+                  type: string
+                  description: Payer bank name.
+                customer_id:
+                  type: string
+                  description: Associated Customer ID if the payer is a registered customer.
+                payer_email:
+                  type: string
+                  description: Payer email address.
+                payer_name:
+                  type: string
+                  description: Payer name.
+            received_at:
+              type: string
+              format: date-time
+              description: Time when the bank transfer funds were received.
+            status:
+              type: string
+              description: 'Status of the bank transfer. One of:
+
+                - `RECEIVED` - The funds have been received.
+
+                - `PENDING_REVIEW` - The bank transfer requires review before it can be accepted. Airwallex will send you a Request for Information (RFI) — you must respond to the RFI for the fund to be applied to the payment. Review may take several days.
+
+                - `FAILED` - The bank transfer was rejected during review or by the bank.
+
+                - `SUCCEEDED` - The bank transfer has been accepted.'
+              enum:
+              - RECEIVED
+              - PENDING_REVIEW
+              - FAILED
+              - SUCCEEDED
+        bank_transfer_reversal:
+          type: object
+          description: Details of the bank transfer reversal. Present when `type` is `bank_transfer_reversal`.
+          properties:
+            amount:
+              type: number
+              description: Reversal amount.
+            beneficiary:
+              type: object
+              description: The beneficiary of the bank transfer reversal, that is, the payer who receives the reversed funds.
+              properties:
+                account_name:
+                  type: string
+                  description: Beneficiary bank account holder name.
+                account_number:
+                  type: string
+                  description: Beneficiary bank account number. Either the account number or the IBAN is provided.
+                bank_name:
+                  type: string
+                  description: Bank name of the beneficiary's bank account.
+            currency:
+              type: string
+              description: Payment currency in 3-letter ISO 4217 currency code. Please refer to [supported currencies](/docs/payments/supported-currencies).
+            customer_balance_transaction_id:
+              type: string
+              description: ID of the Customer Balance Transaction (the original bank transfer fund record) being reversed.
+            failure_code:
+              type: string
+              description: The failure code for the bank transfer reversal. Returned only when the reversal failed.
+            failure_reason:
+              type: string
+              description: The reason the bank transfer reversal failed. Returned only when the reversal failed.
+            payment_attempt_id:
+              type: string
+              description: Associated PaymentAttempt ID.
+            payment_intent_id:
+              type: string
+              description: Associated PaymentIntent ID.
+            refund_id:
+              type: string
+              description: Associated Refund ID.
+            remitter:
+              type: object
+              description: The remitting bank account that Airwallex sends the reversal from.
+              properties:
+                account_name:
+                  type: string
+                  description: Name on the remitting bank account that Airwallex sends the reversal from.
+                account_number:
+                  type: string
+                  description: Number of the remitting bank account that Airwallex sends the reversal from.
+                bank_reference:
+                  type: string
+                  description: Reference that the merchant and payer can use to track bank transfer reversal progress with the payer's bank.
+            reversal_fee:
+              type: number
+              description: Fee charged for this bank transfer reversal.
+            reversal_reason:
+              type: string
+              description: The reason the bank transfer reversal occurred.
+            status:
+              type: string
+              description: 'Status of the bank transfer reversal. One of:
+
+                - `CREATED` - The reversal has been created.
+
+                - `PENDING_REVIEW` - The reversal requires review before it can proceed. Airwallex will send you a Request for Information (RFI) — you must respond to the RFI for the funds to be returned to the payer. Review may take several days.
+
+                - `FAILED` - The reversal failed and the funds were not returned to the payer. It was rejected during Airwallex review or by the bank. See `failure_reason` and `failure_code` for details.
+
+                - `SUCCEEDED` - The reversal has succeeded.'
+              enum:
+              - CREATED
+              - PENDING_REVIEW
+              - FAILED
+              - SUCCEEDED
+        created_at:
+          type: string
+          format: date-time
+          description: Time at which the Customer Balance Transaction was created.
+        id:
+          type: string
+          description: Unique ID for the Customer Balance Transaction.
+        type:
+          type: string
+          description: 'The transaction type. One of:
+
+            - `bank_transfer` - Adds bank transfer funds to the customer balance.
+
+            - `bank_transfer_reversal` - Reverses a previous bank transfer transaction and deducts the corresponding amount from the customer balance.
+
+            - `applied_to_payment` - Applies bank transfer funds from the customer balance to a payment, reducing the available customer balance. If the funds are applied to several payments, a separate Customer Balance Transaction is created for each payment.'
+          enum:
+          - bank_transfer
+          - bank_transfer_reversal
+          - applied_to_payment
+        updated_at:
+          type: string
+          format: date-time
+          description: Time at which the Customer Balance Transaction was last updated or operated on.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

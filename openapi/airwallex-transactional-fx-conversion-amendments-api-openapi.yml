@@ -1,0 +1,508 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Transactional FX > Conversion Amendments API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Transactional FX > Conversion Amendments
+  description: The Amendments resource provides the capability to make changes to existing conversions. Right now, the only supported amendment type is a full cancellation.
+  x-domain: Transactional FX
+  x-resource: Conversion Amendments
+  x-urlPath: transactional_fx/conversion_amendments
+paths:
+  /api/v1/fx/conversion_amendments/create:
+    post:
+      tags:
+      - Transactional FX > Conversion Amendments
+      summary: 1|Create an Amendment
+      description: Create an amendment on a booked but unsettled conversion.
+      operationId: createConversionAmendment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - conversion_id
+              - request_id
+              - type
+              properties:
+                charge_currency:
+                  type: string
+                  description: Currency charged on the delta that arises with the amendment. Only the currencies from the original conversion are allowed. Default will be set to the non-fixed side of the original conversion.
+                conversion_id:
+                  type: string
+                  description: Unique identifier of the conversion to be amended.
+                metadata:
+                  type: object
+                  description: Persisted client-supplied metadata. A metadata JSON object with a maximum of 10 key-value pairs (each key and value must be less than 255 characters).
+                request_id:
+                  type: string
+                  description: Client-generated idempotency key.
+                type:
+                  type: string
+                  description: Defines the type of amendment to be created. Only `CANCEL` is supported.
+                  enum:
+                  - CANCEL
+                  x-enumDescriptions:
+                    CANCEL: Full cancellation of the original conversion.
+        description: request
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConversionAmendment'
+        '400':
+          description: '["account_not_authorized"
+
+            ,"does_not_exist"
+
+            ,"field_required"
+
+            ,"invalid_status_for_operation"
+
+            ,"invalid_charge_currency"]'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/fx/conversion_amendments/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          charge_currency: USD
+          conversion_id: a74317c0-ed25-4e6e-82b2-82baa5cd9c20
+          metadata:
+            reason: rejected_trade_attempt_968059869
+          request_id: a08c0f2f-3f26-4443-b5df-fad15582eb94
+          type: CANCEL
+        response_body:
+          amendment_id: 9593ca22-8933-4585-9a15-078c8ce654ad
+          charges:
+          - amount: 1.36
+            awx_rate: 1.383429
+            client_rate: 1.390346
+            currency: USD
+            currency_pair: GBPUSD
+            type: FEE
+          conversion_id: a74317c0-ed25-4e6e-82b2-82baa5cd9c20
+          created_at: 2021-07-14T06:09:39+0000
+          metadata:
+            reason: rejected_trade_attempt_968059869
+          request_id: a08c0f2f-3f26-4443-b5df-fad15582eb94
+          short_reference_id: C220407-AF3GJ9F
+          type: CANCEL
+          updated_at: 2021-07-14T06:09:39+0000
+      x-scope:
+      - scope: fx.conversion:write
+        group: Transactional FX
+        resource_name: Conversion
+      x-domain: Transactional FX
+      x-resource: Conversion Amendments
+      x-urlPath: create
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/fx/conversion_amendments/{conversion_amendment_id}:
+    get:
+      tags:
+      - Transactional FX > Conversion Amendments
+      summary: 2|Retrieve an Amendment
+      description: Retrieve the details of a specific amendment using the amendment unique identifier.
+      operationId: retrieveConversionAmendment
+      parameters:
+      - name: conversion_amendment_id
+        in: path
+        description: Unique identifier of the amendment.
+        required: true
+        schema:
+          type: string
+          default: 9593ca22-8933-4585-9a15-078c8ce654ad
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConversionAmendment'
+        '400':
+          description: '["account_not_authorized"
+
+            ,"does_not_exist"
+
+            ,"field_required"
+
+            ,"invalid_status_for_operation"]'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/fx/conversion_amendments/conversion_amendment_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          amendment_id: 9593ca22-8933-4585-9a15-078c8ce654ad
+          charges:
+          - amount: 1.36
+            awx_rate: 1.383429
+            client_rate: 1.390346
+            currency: USD
+            currency_pair: GBPUSD
+            type: FEE
+          conversion_id: a74317c0-ed25-4e6e-82b2-82baa5cd9c20
+          created_at: 2021-07-14T06:09:39+0000
+          metadata:
+            reason: rejected_trade_attempt_968059869
+          request_id: a08c0f2f-3f26-4443-b5df-fad15582eb94
+          short_reference_id: C220407-AF3GJ9F
+          type: CANCEL
+          updated_at: 2021-07-14T06:09:39+0000
+      x-scope:
+      - scope: fx.conversion:read
+        group: Transactional FX
+        resource_name: Conversion
+      x-domain: Transactional FX
+      x-resource: Conversion Amendments
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/fx/conversion_amendments:
+    get:
+      tags:
+      - Transactional FX > Conversion Amendments
+      summary: 3|List all Amendments
+      description: Retrieve all amendments associated with a conversion unique identifier. (Right now, since only full cancellations are supported, a conversion will only have up to 1 associated amendment.).
+      operationId: listConversionAmendments
+      parameters:
+      - name: conversion_id
+        in: query
+        description: Unique identifier of the conversion.
+        required: true
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: a74317c0-ed25-4e6e-82b2-82baa5cd9c20
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: Paged results.
+                    items:
+                      $ref: '#/components/schemas/ConversionAmendment'
+        '400':
+          description: '["account_not_authorized"
+
+            ,"does_not_exist"
+
+            ,"field_required"
+
+            ,"invalid_status_for_operation"]'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/fx/conversion_amendments
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - amendment_id: 9593ca22-8933-4585-9a15-078c8ce654ad
+            charges:
+            - amount: 1.36
+              awx_rate: 1.383429
+              client_rate: 1.390346
+              currency: USD
+              currency_pair: GBPUSD
+              type: FEE
+            conversion_id: a74317c0-ed25-4e6e-82b2-82baa5cd9c20
+            created_at: 2021-07-14T06:09:39+0000
+            metadata:
+              reason: rejected_trade_attempt_968059869
+            request_id: a08c0f2f-3f26-4443-b5df-fad15582eb94
+            short_reference_id: C220407-AF3GJ9F
+            type: CANCEL
+            updated_at: 2021-07-14T06:09:39+0000
+      x-scope:
+      - scope: fx.conversion:read
+        group: Transactional FX
+        resource_name: Conversion
+      x-domain: Transactional FX
+      x-resource: Conversion Amendments
+      x-urlPath: list
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/fx/conversion_amendments/quote:
+    post:
+      tags:
+      - Transactional FX > Conversion Amendments
+      summary: 4|Create an Amendment Quote
+      description: Create an amendment quote on a booked but unsettled conversion. Get an indicative quote for the charge fee.
+      operationId: conversionAmendments_quote
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - conversion_id
+              - request_id
+              - type
+              properties:
+                charge_currency:
+                  type: string
+                  description: Currency charged on the delta that arises with the amendment. Only the currencies from the original conversion are allowed. Default will be set to the non-fixed side of the original conversion.
+                conversion_id:
+                  type: string
+                  description: Unique identifier of the conversion to be amended.
+                metadata:
+                  type: object
+                  description: Persisted client-supplied metadata. A metadata JSON object with a maximum of 10 key-value pairs (each key and value must be less than 255 characters).
+                request_id:
+                  type: string
+                  description: Client-generated idempotency key.
+                type:
+                  type: string
+                  description: Defines the type of amendment to be created. Only `CANCEL` is supported.
+                  enum:
+                  - CANCEL
+                  x-enumDescriptions:
+                    CANCEL: Full cancellation of the original conversion.
+        description: request
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConversionAmendmentQuote'
+        '400':
+          description: '["account_not_authorized"
+
+            ,"does_not_exist"
+
+            ,"field_required"
+
+            ,"invalid_status_for_operation"
+
+            ,"invalid_charge_currency"]'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/fx/conversion_amendments/quote
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          charge_currency: USD
+          conversion_id: a74317c0-ed25-4e6e-82b2-82baa5cd9c20
+          metadata:
+            reason: rejected_trade_attempt_968059869
+          request_id: a08c0f2f-3f26-4443-b5df-fad15582eb94
+          type: CANCEL
+        response_body:
+          charges:
+          - amount: 1.36
+            awx_rate: 1.383429
+            client_rate: 1.390346
+            currency: USD
+            currency_pair: GBPUSD
+            type: FEE
+          conversion_id: a74317c0-ed25-4e6e-82b2-82baa5cd9c20
+          metadata:
+            reason: rejected_trade_attempt_968059869
+          request_id: a08c0f2f-3f26-4443-b5df-fad15582eb94
+          short_reference_id: C220407-AF3GJ9F
+          type: CANCEL
+      x-scope:
+      - scope: fx.conversion:write
+        group: Transactional FX
+        resource_name: Conversion
+      x-domain: Transactional FX
+      x-resource: Conversion Amendments
+      x-urlPath: quote
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    AmendmentCharge:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: "The amount of the financial adjustment (cancellation delta).\n Contact your account manager for settlement timing and configuration options."
+        awx_rate:
+          type: number
+          description: The rate at which Airwallex executed the amendment (with Airwallex's liquidity provider partners).
+        client_rate:
+          type: number
+          description: 'The rate at which the client is being billed for the amendment (inherited from the client’s existing conversion rate configuration). '
+        currency:
+          type: string
+          description: The currency of the financial adjustment. This is always the non-fixed side of the original conversion.
+        currency_pair:
+          type: string
+          description: The currency pair associated with `awx_rate` and `client_rate`.
+        type:
+          type: string
+          description: Type of charge applied.
+          enum:
+          - FEE
+          - CREDIT
+    ConversionAmendment:
+      type: object
+      properties:
+        amendment_id:
+          type: string
+          description: Airwallex-generated unique identifier of the amendment.
+        charges:
+          type: array
+          description: Represents the indicative financial adjustment resulting from the amendment.
+          items:
+            $ref: '#/components/schemas/AmendmentCharge'
+        conversion_id:
+          type: string
+          description: Airwallex echoes the unique identifier of the conversion being amended.
+        created_at:
+          type: string
+          description: The time at which the amendment was created (follows the [same format](/docs/api/data_types) as the rest of Airwallex’s APIs).
+        metadata:
+          type: object
+          description: Airwallex echoes any client-supplied metadata.
+        request_id:
+          type: string
+          description: Airwallex echoes the request’s idempotency key.
+        short_reference_id:
+          type: string
+          description: Shortened transaction unique identifier for ease of use within Web GUI and with Airwallex support.
+        type:
+          type: string
+          description: Defines the type of amendment to be created. Only `CANCEL` is supported.
+          enum:
+          - CANCEL
+          x-enumDescriptions:
+            CANCEL: Full cancellation of the original conversion.
+        updated_at:
+          type: string
+          description: The time at which the amendment was last updated (follows the [same format](/docs/api/data_types) as the rest of Airwallex’s APIs).
+    ConversionAmendmentQuote:
+      type: object
+      properties:
+        charges:
+          type: array
+          description: Represents the indicative financial adjustment resulting from the amendment.
+          items:
+            $ref: '#/components/schemas/AmendmentCharge'
+        conversion_id:
+          type: string
+          description: Airwallex echoes the unique identifier of the conversion being amended.
+        metadata:
+          type: object
+          description: Airwallex echoes any client-supplied metadata.
+        request_id:
+          type: string
+          description: Airwallex echoes the request’s idempotency key.
+        short_reference_id:
+          type: string
+          description: Shortened transaction unique identifier for ease of use within Web GUI and with Airwallex support.
+        type:
+          type: string
+          description: Defines the type of amendment to be created. Only `CANCEL` is supported.
+          enum:
+          - CANCEL
+          x-enumDescriptions:
+            CANCEL: Full cancellation of the original conversion.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

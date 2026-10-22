@@ -1,0 +1,402 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Transactional FX > Quotes API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Transactional FX > Quotes
+  description: Create a quote that can be used in a subsequent conversion request during the requested validity period.
+  x-domain: Transactional FX
+  x-resource: Quotes
+  x-urlPath: transactional_fx/quotes
+paths:
+  /api/v1/fx/quotes/create:
+    post:
+      tags:
+      - Transactional FX > Quotes
+      summary: 1|Create a Quote
+      description: The Quote endpoint gives the user a guaranteed rate for an agreed period of time.
+      operationId: createQuote
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - buy_currency
+              - sell_currency
+              - validity
+              properties:
+                application_fee_options:
+                  type: array
+                  description: The application fee options applied to the transaction.
+                  items:
+                    type: object
+                    properties:
+                      amount:
+                        type: string
+                        description: A positive integer specifying the amount of the fee expressed in the smallest unit of the currency. e.g. cents for USD. This field is required only when type is FIXED.
+                      currency:
+                        type: string
+                        description: "Specify the currency of the application fee in ISO 4217 currency code format, e.g., USD, AUD. This field is required when the type is FIXED.  \nWhen the type is PERCENTAGE and source_type is CONVERSION, the currency for the conversion if specified must be from the currency pair. If the currency is unspecified, the contra currency of the quote will be used."
+                      metadata:
+                        type: object
+                        description: The metadata of the application fee. The value should be set in key:value format. (e.g., id:1).
+                        additionalProperties:
+                          type: string
+                      percentage:
+                        type: string
+                        description: "Required if the type is PERCENTAGE, and the value to be provided depends on the transaction context.  \nFX Conversions: The value acts as a markup on the FX rate, increasing the conversion cost by the specified percentage.  \nOthers: The value represents a direct fee calculated as a percentage of the transaction amount."
+                      source_type:
+                        type: string
+                        description: Specify type of the source transaction.
+                        enum:
+                        - CONVERSION
+                        - TRANSFER
+                      type:
+                        type: string
+                        description: Define the type of fee calculation. If the `source_type` is `CONVERSION`, then the type must be `PERCENTAGE`.
+                        enum:
+                        - FIXED
+                        - PERCENTAGE
+                buy_amount:
+                  type: number
+                  description: Amount the client buys in `buy_currency` (must be blank if `sell_amount` is specified).
+                buy_currency:
+                  type: string
+                  description: Currency (3-letter ISO-4217 code) the client buys.
+                conversion_date:
+                  type: string
+                  format: date
+                  description: Date on which the conversion will be settled. `conversion_date` defaults to current date, if funding is available, unless specified.
+                sell_amount:
+                  type: number
+                  description: Amount the client sells in `sell_currency` (must be blank if `buy_amount` is specified).
+                sell_currency:
+                  type: string
+                  description: Currency (3-letter ISO-4217 code) the client sells.  This is the currency you will need to send us by the settlement cutoff time.
+                validity:
+                  type: string
+                  description: Quote validity period.
+                  enum:
+                  - MIN_1
+                  - MIN_15
+                  - MIN_30
+                  - HR_1
+                  - HR_4
+                  - HR_8
+                  - HR_24
+        description: req
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FxQuote'
+        '400':
+          description: '["amount_below_limit"
+
+            ,"amount_above_limit"
+
+            ,"operation_failed"
+
+            ,"field_required"
+
+            ,"invalid_settlement_date"
+
+            ,"invalid_endpoint"
+
+            ,"invalid_argument"
+
+            ,"unsupported_currency"]'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/fx/quotes/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          application_fee_options:
+          - amount: '5'
+            currency: AUD
+            percentage: '0.1'
+            source_type: TRANSFER
+            type: FIXED
+          buy_amount: 10000
+          buy_currency: AUD
+          conversion_date: '2017-04-01'
+          sell_amount: 100
+          sell_currency: USD
+          validity: HR_24
+        response_body:
+          application_fees:
+          - amount: '5'
+            currency: AUD
+            source_type: TRANSFER
+          awx_rate: 0.7622
+          buy_amount: 10000
+          buy_currency: AUD
+          client_rate: 0.7632
+          conversion_date: '2017-04-01'
+          currency_pair: AUDUSD
+          dealt_currency: AUD
+          mid_rate: 0.7612
+          quote_id: a08c0f2f-3f26-4443-b5df-fad15582eb94
+          rate_details:
+          - buy_amount: 10000
+            level: CLIENT
+            rate: 0.781523
+            sell_amount: 12794.27
+          sell_amount: 7632
+          sell_currency: USD
+          usage: SINGLE_USE
+          valid_from_at: 2019-05-03T02:49:05+0000
+          valid_to_at: 2019-05-04T02:49:05+0000
+          validity: HR_24
+      x-scope:
+      - scope: fx.conversion:write
+        group: Transactional FX
+        resource_name: Conversion
+      x-domain: Transactional FX
+      x-resource: Quotes
+      x-urlPath: create
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/fx/quotes/{quote_id}:
+    get:
+      tags:
+      - Transactional FX > Quotes
+      summary: 2|Retrieve a Quote
+      description: Get a specific quote by specifying the `quote_id`.
+      operationId: retrieveQuote
+      parameters:
+      - name: quote_id
+        in: path
+        description: Unique identifier of the quote to retrieve.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FxQuote'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '404':
+          description: '["not_found"
+
+            ]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/fx/quotes/quote_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          application_fees:
+          - amount: '5'
+            currency: AUD
+            source_type: TRANSFER
+          awx_rate: 0.7622
+          buy_amount: 10000
+          buy_currency: AUD
+          client_rate: 0.7632
+          conversion_date: '2017-04-01'
+          currency_pair: AUDUSD
+          dealt_currency: AUD
+          mid_rate: 0.7612
+          quote_id: a08c0f2f-3f26-4443-b5df-fad15582eb94
+          rate_details:
+          - buy_amount: 10000
+            level: CLIENT
+            rate: 0.781523
+            sell_amount: 12794.27
+          sell_amount: 7632
+          sell_currency: USD
+          usage: SINGLE_USE
+          valid_from_at: 2019-05-03T02:49:05+0000
+          valid_to_at: 2019-05-04T02:49:05+0000
+          validity: HR_24
+      x-scope:
+      - scope: fx.conversion:read
+        group: Transactional FX
+        resource_name: Conversion
+      x-domain: Transactional FX
+      x-resource: Quotes
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    RateDetail:
+      type: object
+      properties:
+        buy_amount:
+          type: number
+          description: The total amount being bought at the respective level.
+        level:
+          type: string
+          enum:
+          - CLIENT
+          - AWX
+          - PLATFORM_CLIENT
+        rate:
+          type: number
+          description: The exchange rate from the respective level's perspective.
+        sell_amount:
+          type: number
+          description: The total amount being sold at the respective level.
+    FxQuote:
+      type: object
+      required:
+      - awx_rate
+      - buy_amount
+      - buy_currency
+      - client_rate
+      - conversion_date
+      - currency_pair
+      - dealt_currency
+      - mid_rate
+      - quote_id
+      - rate_details
+      - sell_amount
+      - sell_currency
+      - usage
+      - valid_from_at
+      - valid_to_at
+      - validity
+      properties:
+        application_fees:
+          type: array
+          description: Application fees in this transaction.
+          items:
+            $ref: '#/components/schemas/ApplicationFee'
+        awx_rate:
+          type: number
+          description: For reference purposes only. This is a reference rate Airwallex compiles by analyzing prices across multiple banking providers and independent rate publishers.
+        buy_amount:
+          type: number
+          description: '`buy_amount` copied from the Quote request (if specified).  Otherwise, this is calculated by multiplying/dividing the `sell_amount` by the FX quote depending on the direction of the currency pair.'
+        buy_currency:
+          type: string
+          description: Buy currency of the quote (3-letter ISO-4217 code).
+        client_rate:
+          type: number
+          description: The returned quote.
+        conversion_date:
+          type: string
+          description: Date on which the conversion will be settled. `conversion_date` defaults to current date, if funding is available, unless specified.
+        currency_pair:
+          type: string
+          description: The currency pair that the quote is for.  The direction of the currency pair is per market convention where possible.
+        dealt_currency:
+          type: string
+          description: The currency where the client provided the exact amount for in the request.
+        mid_rate:
+          type: number
+          description: For reference purposes only. This rate represents the midpoint of the current bid and ask price.
+        quote_id:
+          type: string
+          format: uuid
+          description: The quote unique identifier.
+        rate_details:
+          type: array
+          description: Breakdown of rates at different user levels.
+          items:
+            $ref: '#/components/schemas/RateDetail'
+        sell_amount:
+          type: number
+          description: '`sell_amount` copied from the Quote request (if specified).  Otherwise, this is calculated by multiplying/dividing the `buy_amount` by the FX quote depending on the direction of the currency pair.'
+        sell_currency:
+          type: string
+          description: Sell currency of the quote (3-letter ISO-4217 code).
+        usage:
+          type: string
+          description: Quote usage.
+          enum:
+          - SINGLE_USE
+          - MULTI_USE
+        valid_from_at:
+          type: string
+          description: Quote valid from in ISO8601 format (inclusive).
+        valid_to_at:
+          type: string
+          description: Quote valid to in ISO8601 format (inclusive).
+        validity:
+          type: string
+          description: Quote validity period in the create request.
+          enum:
+          - MIN_1
+          - MIN_15
+          - MIN_30
+          - HR_1
+          - HR_4
+          - HR_8
+          - HR_24
+    ApplicationFee:
+      type: object
+      properties:
+        amount:
+          type: string
+          description: The application fee amount.
+        currency:
+          type: string
+          description: The currency of the application fee.
+        source_type:
+          type: string
+          description: Specify the type of source transaction for this application fee.
+          enum:
+          - CONVERSION
+          - TRANSFER
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

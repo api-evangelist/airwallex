@@ -1,0 +1,976 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Issuing > Transaction Disputes API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Issuing > Transaction Disputes
+  description: You can create a dispute for a card transaction. You can also update/submit/cancel it.
+  x-domain: Issuing
+  x-resource: Transaction Disputes
+  x-urlPath: issuing/transaction_disputes
+paths:
+  /api/v1/issuing/transaction_disputes/create:
+    post:
+      tags:
+      - Issuing > Transaction Disputes
+      summary: 1|Create a Transaction Dispute
+      description: Creates a dispute for a card transaction in a draft status. The dispute can be updated multiple times before submission to Airwallex for assessment. The transaction dispute object is the resource of a card transaction dispute raised to Airwallex.It contains all the information related to a dispute such as amount, status and update history.
+      operationId: createTransactionDispute
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - card_transaction_event_id
+              properties:
+                additional_info:
+                  type: object
+                  description: Additional information for the dispute.
+                  properties:
+                    actual_delivery_date:
+                      type: string
+                      description: The date on which the cardholder actually received the goods or service. Strongly recommended to set this field when dispute reason is GOODS_SERVICE_NOT_AS_DESCRIBED or GOODS_DAMAGED.
+                    attempted_return_date:
+                      type: string
+                      description: The date on which the cardholder attempted to return the goods or service. Strongly recommended to set this field when dispute reason is GOODS_SERVICE_NOT_AS_DESCRIBED or GOODS_DAMAGED.
+                    card_charge_permission_withdrawn_date:
+                      type: string
+                      description: The date on which the cardholder withdrew permission for the card charge (e.g. cancelled a subscription or recurring payment). Strongly recommended to set this field when dispute reason is RECURRING_CANCELED.
+                    expected_delivery_date:
+                      type: string
+                      description: The date by which the cardholder expected to receive the goods or service. Strongly recommended to set this field when dispute reason is GOODS_SERVICE_NOT_RECEIVED or GOODS_SERVICE_CANCELED.
+                    order_cancellation_date:
+                      type: string
+                      description: The date on which the goods, service, or reservation was cancelled. Strongly recommended to set this field when dispute reason is GOODS_SERVICE_CANCELED.
+                    returned_date:
+                      type: string
+                      description: The date on which the cardholder returned the goods or service. Strongly recommended to set this field when dispute reason is GOODS_SERVICE_NOT_AS_DESCRIBED or GOODS_DAMAGED.
+                amount:
+                  type: number
+                  description: 'The amount to be disputed. If not specified, the dispute will take the billing amount as the dispute amount. If specified, the specified amount is used as the dispute amount for partial dispute. The specified amount cannot be larger than the billing amount. Note: The dispute currency is always in the billing currency of the transaction.'
+                card_transaction_event_id:
+                  type: string
+                  format: uuid
+                  description: The unique identifier for the card transaction event to be disputed.
+                evidence_files:
+                  type: array
+                  description: A list of file id that contains the evidence for the dispute. The file id can be retrieved after uploading the supporting document via [POST Upload a file](/docs/api/supporting_services/file_service/upload_files).
+                  items:
+                    type: string
+                notes:
+                  type: string
+                  description: The explanation on why the cardholder is disputing the transaction can be provided here.
+                reason:
+                  type: string
+                  description: 'The reason for raising the dispute. It can be one of: `SUSPECTED_FRAUD`, `UNAUTHORIZED_TRANSACTION`, `DUPLICATED_TRANSACTION`, `PAID_BY_OTHER_MEANS`, `GOODS_SERVICE_NOT_AS_DESCRIBED`, `GOODS_DAMAGED`, `GOODS_SERVICE_NOT_RECEVIED`, `REFUND_UNPROCESSED`, `GOODS_SERVICE_CANCELED`, `RECURRING_CANCELED`, `OTHER`. Learn more about the [dispute reasons](/docs/issuing/transactions/handle-transaction-disputes#dispute-reasons).'
+                  enum:
+                  - SUSPECTED_FRAUD
+                  - UNAUTHORIZED_TRANSACTION
+                  - DUPLICATED_TRANSACTION
+                  - PAID_BY_OTHER_MEANS
+                  - GOODS_SERVICE_NOT_AS_DESCRIBED
+                  - GOODS_DAMAGED
+                  - GOODS_SERVICE_NOT_RECEIVED
+                  - REFUND_UNPROCESSED
+                  - GOODS_SERVICE_CANCELED
+                  - RECURRING_CANCELED
+                  - OTHER
+                reference:
+                  type: string
+                  description: A value can be added for your internal reference. Maximum 20 characters.
+        description: request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonPciTransactionDispute'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/issuing/transaction_disputes/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          additional_info:
+            expected_delivery_date: 2023-04-23T16:08:02+0000
+          amount: 100
+          card_transaction_event_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6e2
+          evidence_files:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          notes: Fraud case
+          reason: SUSPECTED_FRAUD
+          reference: A@*Ddkss0@_2
+        response_body:
+          additional_info:
+            expected_delivery_date: 2023-04-23T16:08:02+0000
+          amount: 100
+          card_transaction_event_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6e2
+          created_at: 2023-04-23T16:08:02+0000
+          detailed_status: PRE_ARB_RECEIVED
+          id: 6c2dc266-09ad-4235-b61a-767c7cd6d6e0
+          notes: Fraud case
+          reason: SUSPECTED_FRAUD
+          reference: A@*Ddkss0@_2
+          status: DRAFT
+          update_history:
+          - evidence_files:
+            - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+            note: Fraud case
+            updated_at: 2023-04-23T16:08:02+0000
+            updated_by: CUSTOMER
+          updated_at: 2023-04-23T16:08:02+0000
+          updated_by: CUSTOMER
+      x-oauthSupported: false
+      x-scope:
+      - scope: issuing.transaction_dispute:write
+        group: Issuing
+        resource_name: Transaction Disputes
+      x-domain: Issuing
+      x-resource: Transaction Disputes
+      x-urlPath: create
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/issuing/transaction_disputes/{id}:
+    get:
+      tags:
+      - Issuing > Transaction Disputes
+      summary: 2|Retrieve a Transaction Dispute
+      description: Retrieve single transaction dispute.
+      operationId: retrieveTransactionDispute
+      parameters:
+      - name: id
+        in: path
+        description: The unique identifier for this dispute.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: 6c2dc266-09ad-4235-b61a-767c7cd6d6e0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonPciTransactionDispute'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/issuing/transaction_disputes/transaction_dispute_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          additional_info:
+            expected_delivery_date: 2023-04-23T16:08:02+0000
+          amount: 100
+          card_transaction_event_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6e2
+          created_at: 2023-04-23T16:08:02+0000
+          detailed_status: PRE_ARB_RECEIVED
+          id: 6c2dc266-09ad-4235-b61a-767c7cd6d6e0
+          notes: Fraud case
+          reason: SUSPECTED_FRAUD
+          reference: A@*Ddkss0@_2
+          status: DRAFT
+          update_history:
+          - evidence_files:
+            - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+            note: Fraud case
+            updated_at: 2023-04-23T16:08:02+0000
+            updated_by: CUSTOMER
+          updated_at: 2023-04-23T16:08:02+0000
+          updated_by: CUSTOMER
+      x-oauthSupported: false
+      x-scope:
+      - scope: issuing.transaction_dispute:read
+        group: Issuing
+        resource_name: Transaction Disputes
+      x-domain: Issuing
+      x-resource: Transaction Disputes
+      x-urlPath: retrieve
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/issuing/transaction_disputes:
+    get:
+      tags:
+      - Issuing > Transaction Disputes
+      summary: 3|List all Transaction Disputes
+      description: Retrieve all transaction disputes. Filter for results using the parameters available.
+      operationId: listTransactionDisputes
+      parameters:
+      - name: card_transaction_event_id
+        in: query
+        description: The unique identifier for the disputed card transaction event.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          format: uuid
+      - name: card_transaction_id
+        in: query
+        description: The unique identifier for the disputed card transaction.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          format: uuid
+      - name: detailed_status
+        in: query
+        description: The detailed status of the dispute life cycle between Airwallex and the card scheme.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          enum:
+          - DISPUTE_FILED
+          - PRE_ARB_RECEIVED
+          - PRE_ARB_DECLINED_BY_ISSUER
+          - ARBITRATION_RECEIVED
+          - DISPUTE_DECLINED
+          - PRE_ARB_DELIVERED
+          - PRE_ARB_DECLINED_BY_ACQUIRER
+          - ARB_DELIVERED
+          - WON
+          - LOST
+      - name: from_created_at
+        in: query
+        description: The minimum created_at, in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          format: date-time
+      - name: from_updated_at
+        in: query
+        description: The minimum updated_at, in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          format: date-time
+      - name: page
+        in: query
+        description: Page bookmark to specify the position of page start.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: '0'
+      - name: page_size
+        in: query
+        description: Number of dispute per page.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: reason
+        in: query
+        description: The reason for raising the dispute. Learn more about the [dispute reasons](/docs/issuing/transactions/handle-transaction-disputes#dispute-reasons).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          enum:
+          - SUSPECTED_FRAUD
+          - UNAUTHORIZED_TRANSACTION
+          - DUPLICATED_TRANSACTION
+          - PAID_BY_OTHER_MEANS
+          - GOODS_SERVICE_NOT_AS_DESCRIBED
+          - GOODS_DAMAGED
+          - GOODS_SERVICE_NOT_RECEIVED
+          - REFUND_UNPROCESSED
+          - GOODS_SERVICE_CANCELED
+          - RECURRING_CANCELED
+          - OTHER
+      - name: reference
+        in: query
+        description: A value added for your internal reference.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: The latest status of the dispute. Learn more about the [dispute statuses](/docs/issuing/transactions/handle-transaction-disputes/dispute-statuses).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          enum:
+          - DRAFT
+          - EXPIRED
+          - SUBMITTED
+          - REJECTED
+          - CANCELED
+          - IN_PROGRESS
+          - WON
+          - LOST
+      - name: to_created_at
+        in: query
+        description: The maximum created_at, in ISO8601 format (exclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          format: date-time
+      - name: to_updated_at
+        in: query
+        description: The maximum updated_at, in ISO8601 format (exclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          format: date-time
+      - name: updated_by
+        in: query
+        description: The party who updated the dispute.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          enum:
+          - CUSTOMER
+          - AIRWALLEX
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonPciQueryDispute'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/issuing/transaction_disputes
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - additional_info:
+              expected_delivery_date: 2023-04-23T16:08:02+0000
+            amount: 100
+            card_transaction_event_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6e2
+            created_at: 2023-04-23T16:08:02+0000
+            detailed_status: PRE_ARB_RECEIVED
+            id: 6c2dc266-09ad-4235-b61a-767c7cd6d6e0
+            notes: Fraud case
+            reason: SUSPECTED_FRAUD
+            reference: A@*Ddkss0@_2
+            status: DRAFT
+            update_history:
+            - evidence_files:
+              - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+              note: Fraud case
+              updated_at: 2023-04-23T16:08:02+0000
+              updated_by: CUSTOMER
+            updated_at: 2023-04-23T16:08:02+0000
+            updated_by: CUSTOMER
+          page_after: YWFhYWFhYWEtOGM3ZC00OTcyLThlNTktNjFkMTFjYjYxNGMx
+          page_before: YmJiYmJiYmItNDg5Mi00NGI3LTk3NGYtNjI5OGM5YWY2ZTEx
+      x-oauthSupported: false
+      x-scope:
+      - scope: issuing.transaction_dispute:read
+        group: Issuing
+        resource_name: Transaction Disputes
+      x-domain: Issuing
+      x-resource: Transaction Disputes
+      x-urlPath: list
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/issuing/transaction_disputes/{id}/update:
+    post:
+      tags:
+      - Issuing > Transaction Disputes
+      summary: 4|Update a Transaction Dispute
+      description: A dispute that has been created can be updated via this API. In the DRAFT status, all the fields in the dispute can be updated. Once a dispute is submitted, only new evidence or explanation can be added to the dispute.
+      operationId: updateTransactionDispute
+      parameters:
+      - name: id
+        in: path
+        description: The unique identifier for this dispute.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: 6c2dc266-09ad-4235-b61a-767c7cd6d6e0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              properties:
+                additional_info:
+                  type: object
+                  description: Additional information related to the dispute, such as relevant dates.
+                  properties:
+                    actual_delivery_date:
+                      type: string
+                      description: The date on which the cardholder actually received the goods or service. Strongly recommended to set this field when dispute reason is GOODS_SERVICE_NOT_AS_DESCRIBED or GOODS_DAMAGED.
+                    attempted_return_date:
+                      type: string
+                      description: The date on which the cardholder attempted to return the goods or service. Strongly recommended to set this field when dispute reason is GOODS_SERVICE_NOT_AS_DESCRIBED or GOODS_DAMAGED.
+                    card_charge_permission_withdrawn_date:
+                      type: string
+                      description: The date on which the cardholder withdrew permission for the card charge (e.g. cancelled a subscription or recurring payment). Strongly recommended to set this field when dispute reason is RECURRING_CANCELED.
+                    expected_delivery_date:
+                      type: string
+                      description: The date by which the cardholder expected to receive the goods or service. Strongly recommended to set this field when dispute reason is GOODS_SERVICE_NOT_RECEIVED or GOODS_SERVICE_CANCELED.
+                    order_cancellation_date:
+                      type: string
+                      description: The date on which the goods, service, or reservation was cancelled. Strongly recommended to set this field when dispute reason is GOODS_SERVICE_CANCELED.
+                    returned_date:
+                      type: string
+                      description: The date on which the cardholder returned the goods or service. Strongly recommended to set this field when dispute reason is GOODS_SERVICE_NOT_AS_DESCRIBED or GOODS_DAMAGED.
+                amount:
+                  type: number
+                  description: The disputed amount. This value can be updated only when dispute status = DRAFT. Once a dispute is submitted, this cannot be updated.
+                evidence_files:
+                  type: array
+                  description: A list of file id that contains the evidence for the dispute. The file id can be retrieved after uploading the supporting document via [POST Upload a file](/docs/api/supporting_services/file_service/upload_files).
+                  items:
+                    type: string
+                notes:
+                  type: string
+                  description: The explanation on why the cardholder is disputing the transaction can be provided here.
+                reason:
+                  type: string
+                  description: The reason for raising the dispute. This value can be updated only when dispute status = DRAFT. Once a dispute is submitted, this cannot be updated.
+                  enum:
+                  - SUSPECTED_FRAUD
+                  - UNAUTHORIZED_TRANSACTION
+                  - DUPLICATED_TRANSACTION
+                  - PAID_BY_OTHER_MEANS
+                  - GOODS_SERVICE_NOT_AS_DESCRIBED
+                  - GOODS_DAMAGED
+                  - GOODS_SERVICE_NOT_RECEIVED
+                  - REFUND_UNPROCESSED
+                  - GOODS_SERVICE_CANCELED
+                  - RECURRING_CANCELED
+                  - OTHER
+                request_id:
+                  type: string
+                  format: uuid
+                  description: A unique request identifier specified by the client. Requests with the same request_id will be ignored. This allows requests to be replayed if the client is unsure of the outcome, e.g. due to network issues, system failures, etc.
+        description: request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonPciTransactionDispute'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/issuing/transaction_disputes/transaction_dispute_id/update
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          additional_info:
+            expected_delivery_date: 2023-04-23T16:08:02+0000
+          amount: 100
+          evidence_files:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          notes: Fraud case
+          reason: SUSPECTED_FRAUD
+          request_id: ac2dc266-09ad-4235-b61a-767c7cd6d6e0
+        response_body:
+          additional_info:
+            expected_delivery_date: 2023-04-23T16:08:02+0000
+          amount: 100
+          card_transaction_event_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6e2
+          created_at: 2023-04-23T16:08:02+0000
+          detailed_status: PRE_ARB_RECEIVED
+          id: 6c2dc266-09ad-4235-b61a-767c7cd6d6e0
+          notes: Fraud case
+          reason: SUSPECTED_FRAUD
+          reference: A@*Ddkss0@_2
+          status: DRAFT
+          update_history:
+          - evidence_files:
+            - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+            note: Fraud case
+            updated_at: 2023-04-23T16:08:02+0000
+            updated_by: CUSTOMER
+          updated_at: 2023-04-23T16:08:02+0000
+          updated_by: CUSTOMER
+      x-oauthSupported: false
+      x-scope:
+      - scope: issuing.transaction_dispute:write
+        group: Issuing
+        resource_name: Transaction Disputes
+      x-domain: Issuing
+      x-resource: Transaction Disputes
+      x-urlPath: update
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/issuing/transaction_disputes/{id}/submit:
+    post:
+      tags:
+      - Issuing > Transaction Disputes
+      summary: 5|Submit a Transaction Dispute
+      description: Submit a dispute to Airwallex for review and processing. After a dispute has been submitted, its status will change to SUBMITTED.
+      operationId: transactionDisputes_submit
+      parameters:
+      - name: id
+        in: path
+        description: The unique identifier for this dispute.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: 6c2dc266-09ad-4235-b61a-767c7cd6d6e0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonPciTransactionDispute'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/issuing/transaction_disputes/transaction_dispute_id/submit
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          additional_info:
+            expected_delivery_date: 2023-04-23T16:08:02+0000
+          amount: 100
+          card_transaction_event_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6e2
+          created_at: 2023-04-23T16:08:02+0000
+          detailed_status: PRE_ARB_RECEIVED
+          id: 6c2dc266-09ad-4235-b61a-767c7cd6d6e0
+          notes: Fraud case
+          reason: SUSPECTED_FRAUD
+          reference: A@*Ddkss0@_2
+          status: DRAFT
+          update_history:
+          - evidence_files:
+            - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+            note: Fraud case
+            updated_at: 2023-04-23T16:08:02+0000
+            updated_by: CUSTOMER
+          updated_at: 2023-04-23T16:08:02+0000
+          updated_by: CUSTOMER
+      x-oauthSupported: false
+      x-scope:
+      - scope: issuing.transaction_dispute:write
+        group: Issuing
+        resource_name: Transaction Disputes
+      x-domain: Issuing
+      x-resource: Transaction Disputes
+      x-urlPath: submit
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/issuing/transaction_disputes/{id}/cancel:
+    post:
+      tags:
+      - Issuing > Transaction Disputes
+      summary: 6|Cancel a Transaction Dispute
+      description: When a dispute status = SUBMITTED, the dispute can still be canceled via this API. Once the dispute status changes to IN_PROGRESS, the dispute is submitted to the card scheme by Airwallex and cannot be canceled. Relevant dispute fees may apply once the dispute status = IN_PROGRESS.
+      operationId: transactionDisputes_cancel
+      parameters:
+      - name: id
+        in: path
+        description: The unique identifier for this dispute.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: 6c2dc266-09ad-4235-b61a-767c7cd6d6e0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonPciTransactionDispute'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/issuing/transaction_disputes/transaction_dispute_id/cancel
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          additional_info:
+            expected_delivery_date: 2023-04-23T16:08:02+0000
+          amount: 100
+          card_transaction_event_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6e2
+          created_at: 2023-04-23T16:08:02+0000
+          detailed_status: PRE_ARB_RECEIVED
+          id: 6c2dc266-09ad-4235-b61a-767c7cd6d6e0
+          notes: Fraud case
+          reason: SUSPECTED_FRAUD
+          reference: A@*Ddkss0@_2
+          status: DRAFT
+          update_history:
+          - evidence_files:
+            - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+            note: Fraud case
+            updated_at: 2023-04-23T16:08:02+0000
+            updated_by: CUSTOMER
+          updated_at: 2023-04-23T16:08:02+0000
+          updated_by: CUSTOMER
+      x-oauthSupported: false
+      x-scope:
+      - scope: issuing.transaction_dispute:write
+        group: Issuing
+        resource_name: Transaction Disputes
+      x-domain: Issuing
+      x-resource: Transaction Disputes
+      x-urlPath: cancel
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    NonPciAdditionalInfo:
+      type: object
+      properties:
+        actual_delivery_date:
+          type: string
+          description: The date on which the cardholder actually received the goods or service. Strongly recommended to set this field when dispute reason is GOODS_SERVICE_NOT_AS_DESCRIBED or GOODS_DAMAGED.
+        attempted_return_date:
+          type: string
+          description: The date on which the cardholder attempted to return the goods or service. Strongly recommended to set this field when dispute reason is GOODS_SERVICE_NOT_AS_DESCRIBED or GOODS_DAMAGED.
+        card_charge_permission_withdrawn_date:
+          type: string
+          description: The date on which the cardholder withdrew permission for the card charge (e.g. cancelled a subscription or recurring payment). Strongly recommended to set this field when dispute reason is RECURRING_CANCELED.
+        expected_delivery_date:
+          type: string
+          description: The date by which the cardholder expected to receive the goods or service. Strongly recommended to set this field when dispute reason is GOODS_SERVICE_NOT_RECEIVED or GOODS_SERVICE_CANCELED.
+        order_cancellation_date:
+          type: string
+          description: The date on which the goods, service, or reservation was cancelled. Strongly recommended to set this field when dispute reason is GOODS_SERVICE_CANCELED.
+        returned_date:
+          type: string
+          description: The date on which the cardholder returned the goods or service. Strongly recommended to set this field when dispute reason is GOODS_SERVICE_NOT_AS_DESCRIBED or GOODS_DAMAGED.
+      description: Additional information for the dispute.
+    NonPciQueryDispute:
+      type: object
+      properties:
+        items:
+          type: array
+          description: array of the TransactionDispute resource.
+          items:
+            $ref: '#/components/schemas/NonPciTransactionDispute'
+        page_after:
+          type: string
+          description: A pointer to the start of the page list used in pagination to retrieve the next page of results.
+        page_before:
+          type: string
+          description: A pointer to the end of the page list used in pagination to retrieve the previous page of results.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    NonPciTransactionDispute:
+      type: object
+      discriminator:
+        propertyName: type
+      properties:
+        additional_info:
+          $ref: '#/components/schemas/NonPciAdditionalInfo'
+          description: Additional information for the dispute.
+        amount:
+          type: number
+          description: Dispute amount.
+        card_transaction_event_id:
+          type: string
+          format: uuid
+          description: The unique identifier for the disputed card transaction event.
+        created_at:
+          type: string
+          description: Time when the dispute was created.
+        detailed_status:
+          type: string
+          description: The detailed status of the dispute life cycle between Airwallex and the card scheme.
+          enum:
+          - DISPUTE_FILED
+          - PRE_ARB_RECEIVED
+          - PRE_ARB_DECLINED_BY_ISSUER
+          - ARBITRATION_RECEIVED
+          - DISPUTE_DECLINED
+          - PRE_ARB_DELIVERED
+          - PRE_ARB_DECLINED_BY_ACQUIRER
+          - ARB_DELIVERED
+          - WON
+          - LOST
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier for this dispute.
+        notes:
+          type: string
+          description: The latest notes that was added to the dispute.
+        reason:
+          type: string
+          description: The reason for raising the dispute. Learn more about the [dispute reasons](/docs/issuing/transactions/handle-transaction-disputes#dispute-reasons).
+          enum:
+          - SUSPECTED_FRAUD
+          - UNAUTHORIZED_TRANSACTION
+          - DUPLICATED_TRANSACTION
+          - PAID_BY_OTHER_MEANS
+          - GOODS_SERVICE_NOT_AS_DESCRIBED
+          - GOODS_DAMAGED
+          - GOODS_SERVICE_NOT_RECEIVED
+          - REFUND_UNPROCESSED
+          - GOODS_SERVICE_CANCELED
+          - RECURRING_CANCELED
+          - OTHER
+        reference:
+          type: string
+          description: A value added for your internal reference.
+        status:
+          type: string
+          description: The latest status of the dispute. Learn more about the [dispute statuses](/docs/issuing/transactions/handle-transaction-disputes/dispute-statuses).
+          enum:
+          - DRAFT
+          - EXPIRED
+          - SUBMITTED
+          - REJECTED
+          - CANCELED
+          - IN_PROGRESS
+          - WON
+          - LOST
+        update_history:
+          type: array
+          items:
+            $ref: '#/components/schemas/NonPciDisputeMessage'
+        updated_at:
+          type: string
+          description: Time when the dispute was last updated.
+        updated_by:
+          type: string
+          description: The party who updated the dispute.
+          enum:
+          - CUSTOMER
+          - AIRWALLEX
+    NonPciDisputeMessage:
+      type: object
+      discriminator:
+        propertyName: type
+      properties:
+        evidence_files:
+          type: array
+          description: The list of file id containing the evidence added to the dispute during the dispute process.
+          items:
+            type: string
+        note:
+          type: string
+          description: The note added to the dispute.
+        updated_at:
+          type: string
+          description: Time when the dispute was updated.
+        updated_by:
+          type: string
+          description: The party who updated the dispute.
+          enum:
+          - CUSTOMER
+          - AIRWALLEX
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

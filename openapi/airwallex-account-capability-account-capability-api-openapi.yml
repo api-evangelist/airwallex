@@ -1,0 +1,649 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Account Capability > Account Capability API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Account Capability > Account Capability
+  description: The Account Capability resource represents capabilities you can enable or query on your Airwallex account like accepting card payments or making fund transfers.
+  x-domain: Account Capability
+  x-resource: Account Capability
+  x-urlPath: account_capability/account_capability
+paths:
+  /api/v1/account_capabilities/{id}:
+    get:
+      tags:
+      - Account Capability > Account Capability
+      summary: 1|Retrieve an Account Capability
+      description: Get the status of a capability by providing the capability unique identifier.
+      operationId: retrieveAccountCapability
+      parameters:
+      - name: id
+        in: path
+        description: The unique identifier.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '400':
+          description: '[`"capability_not_supported"`
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: Payment Method
+        method: GET
+        uri: /api/v1/account_capabilities/payments_visa
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          comment: <string>
+          details:
+            reason_codes: []
+            mcc: '5812'
+            mcc_candidates:
+            - '5812'
+            - '5814'
+          entity_type: BUSINESS
+          id: payments_visa
+          status: ENABLED
+          updated_at: 2023-04-01T11:25:39+0000
+      - key: transfer_cny_local
+        name: Transfer CNY Local
+        method: GET
+        uri: /api/v1/account_capabilities/transfer_cny_local
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          comment: <string>
+          details:
+            reason_codes: []
+          entity_type: INDIVIDUAL
+          id: transfer_cny_local
+          status: ENABLED
+          updated_at: 2023-04-01T11:25:39+0000
+      x-oauthSupported: false
+      x-scope:
+      - scope: account_capability:read
+        group: Account Capabilities
+        resource_name: Account Capabilities
+      x-domain: Account Capability
+      x-resource: Account Capability
+      x-urlPath: retrieve
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/account_capabilities/apply:
+    post:
+      tags:
+      - Account Capability > Account Capability
+      summary: 2|Apply for Account Capabilities
+      description: Apply for enhanced capabilities for Direct Debit from a Linked Account or as a Funding Source, such as a higher funding limit or Faster Direct Debit.
+      operationId: apply
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - funding_limits
+              - request_id
+              properties:
+                funding_limits:
+                  type: array
+                  description: Request to adjust your funding limit for different deposit types.
+                  items:
+                    type: object
+                    required:
+                    - currency
+                    - limit
+                    - type
+                    properties:
+                      currency:
+                        type: string
+                        description: Currency of the limit you would like to apply for.
+                      limit:
+                        type: number
+                        description: The limit you would like to apply in the selected currency.
+                      type:
+                        type: string
+                        description: Type of the limit you would like to apply for.
+                        enum:
+                        - DIRECT_DEBIT_DEPOSIT
+                        - FASTER_DIRECT_DEBIT_DEPOSIT
+                request_id:
+                  type: string
+                  description: A random string to differentiate each request.
+        description: request
+        required: true
+      responses:
+        '200':
+          description: Requested
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestedResponse'
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/account_capabilities/apply
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          funding_limits:
+          - currency: USD
+            limit: 30000
+            type: DIRECT_DEBIT_DEPOSIT
+          request_id: 71fae186-7b1c-4018-b709-3a7b7802054d
+        response_body:
+          result: <string>
+      x-oauthSupported: false
+      x-scope:
+      - scope: account_capability:write
+        group: Account Capabilities
+        resource_name: Account Capabilities
+      x-domain: Account Capability
+      x-resource: Account Capability
+      x-urlPath: apply
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/account_capabilities/{id}/enable:
+    post:
+      tags:
+      - Account Capability > Account Capability
+      summary: 3|Enable an Account Capability
+      description: Submit a request to enable a specific capability for your Airwallex account.
+      operationId: enable
+      parameters:
+      - name: id
+        in: path
+        description: A unique identifier of the requested capability, `transfer_cny_local` for transfer CNY local, or one of `payments_mastercard`, `payments_klarna`, `payments_jcb`, `payments_amex`, `payments_giropay`, `payments_googlepay`, `payments_applepay`, `payments_wechat`, `payments_unionpay`, `payments_visa`, `payments_ideal`, `payments_bancontact`, `payments_sofort`, `payments_bacs_direct_debit`, `payments_airwallex_pay`, `payments_alipaycn`, `payments_alipayhk`, `payments_blik`, `payments_boost`, `payments_dana`, `payments_diners`, `payments_discover`, `payments_doku_ewallet`, `payments_dragonpay`, `payments_duit_now`, `payments_eps`, `payments_fps`, `payments_gcash`, `payments_grabpay_my`, `payments_grabpay_sg`, `payments_kakaopay`, `payments_konbini`, `payments_korean_local_card`, `payments_mybank`, `payments_naver_pay`, `payments_online_banking_kr`, `payments_online_banking_ph`, `payments_online_banking_th`, `payments_p24`, `payments_pay_now`, `payments_payco`, `payments_payeasy`, `payments_paysafecard`, `payments_paysafecash`, `payments_prompt_pay`, `payments_rabbit_line_pay`, `payments_sam_kiosk`, `payments_samsung_pay`, `payments_seven_eleven_my`, `payments_seven_eleven_tw`, `payments_shopee_pay`, `payments_skrill`, `payments_tesco_lotus`, `payments_tng`, `payments_truemoney`, `payments_trustly`, `payments_ach_direct_debit`, `payments_alfamart`, `payments_atome`, `payments_axs_kiosk`, `payments_bank_transfer_id`, `payments_bank_transfer_kr`, `payments_bitpay`, `payments_eft_direct_debit`, `payments_enets`, `payments_esun`, `payments_family_mart`, `payments_fpx`, `payments_go_pay`, `payments_hi_life`, `payments_indomaret`, `payments_jenius_pay`, `payments_linkaja`, `payments_maxima`, `payments_multibanco`, `payments_narvesen`, `payments_online_banking_ee`, `payments_online_banking_lt`, `payments_online_banking_lv`, `payments_ovo`, `payments_paybybankapp`, `payments_paypal`, `payments_paypost`, `payments_paysera`, `payments_payu`, `payments_perlas_terminals`, `payments_permata_atm`, `payments_satispay`, `payments_sepa_direct_debit`, `payments_upi`, `payments_zip`, `payments_line_pay`, `payments_paypay`, `payments_payeasy_atm`, `payments_toss_pay`, `payments_spei`, `payments_venmo`, `payments_afterpay`, `payments_payto`, `payments_birdpay`, `payments_twint`, `payments_bank_transfer`, `payments_cash_app_pay`, `payments_lumi`, `payments_pix`, `payments_seven_eleven_jp`, `payments_payme`, `payments_jkopay`, `payments_shopee_pay_id`, `payments_shopee_pay_sg`, `payments_shopee_pay_th`, `payments_shopee_pay_ph`, `payments_shopee_pay_vn`, `payments_shopee_pay_my`, `payments_spaylater_id`, `payments_spaylater_my`, `payments_spaylater_sg`, `payments_spaylater_th`, `payments_spaylater_ph`, `payments_spaylater_vn`, `payments_bc`, `payments_hana`, `payments_hyundai`, `payments_kb`, `payments_lotte`, `payments_nh`, `payments_samsung`, `payments_shinhan`, `payments_woori`, `payments_laybuy`, `payments_tabby`, `payments_octopus`, `payments_wero`, `payments_airi`, `payments_affirm`, `payments_bizum`, `payments_swish`, `payments_cartes_bancaires`, `payments_mbway`, `payments_becs_direct_debit` for payment methods.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: Capabilities
+              oneOf:
+              - title: Payment Method
+                type: object
+                required:
+                - id
+                properties:
+                  enroll_sme_program:
+                    type: boolean
+                    description: Whether enroll SME program.
+                  id:
+                    type: string
+                    description: A unique identifier of the requested capability.
+              - title: Transfer CNY Local
+                type: object
+                required:
+                - entity_type
+                - id
+                properties:
+                  business_declarant_info:
+                    type: object
+                    required:
+                    - bank_details
+                    - contact_email
+                    description: Declarant info as business.
+                    properties:
+                      bank_details:
+                        type: object
+                        required:
+                        - account_number
+                        - bank_name
+                        - cnaps_code
+                        description: Declarant's bank account details for verifying the Declarant's identity.
+                        properties:
+                          account_number:
+                            type: string
+                            description: Bank account number.
+                          bank_name:
+                            type: string
+                            description: Bank name of the Declarant's bank account.
+                          cnaps_code:
+                            type: string
+                            description: CNAPS routing code.
+                          mobile_number:
+                            type: string
+                            description: Mobile number associated with the Declarant's bank account.
+                      contact_email:
+                        type: string
+                        description: Declarant business email.
+                      economic_category_code:
+                        type: string
+                        description: Economic category code for the Declarant business, one of `100`,`110`,`120`,`130`,`140`,`141`,`142`,`143`,`149`,`150`,`151`,`159`,`160`,`170`,`171`,`172`,`173`,`174`,`175`,`179`,`190`,`200`,`210`,`220`,`230`,`240`,`290`,`300`,`310`,`320`,`330`,`340`,`390`,`400`,`900`.
+                      is_special_economic_zone:
+                        type: boolean
+                        description: Whether the business is registered in a special economic zone.
+                      special_economic_zone_business_type:
+                        type: string
+                        description: Code to identify the specific special economic zone, one of `00`,`01`,`02`,`03`,`04`,`05`,`06`,`07`,`08`,`09`,`10`,`11`,`12`,`60`,`99`.
+                  entity_type:
+                    type: string
+                    description: The type of entity of your declarant, one of `INDIVIDUAL`, `BUSINESS`.
+                  id:
+                    type: string
+                    description: A unique identifier of the requested capability.
+                  individual_declarant_info:
+                    type: object
+                    required:
+                    - bank_details
+                    - contact_email
+                    - person_id
+                    description: Declarant info as an individual.
+                    properties:
+                      bank_details:
+                        type: object
+                        required:
+                        - account_number
+                        - bank_name
+                        - mobile_number
+                        description: Details of Bank belong to the person assigned by `person_id`.
+                        properties:
+                          account_number:
+                            type: string
+                            description: Bank account number.
+                          bank_name:
+                            type: string
+                            description: Bank name of the Declarant's bank account.
+                          cnaps_code:
+                            type: string
+                            description: CNAPS routing code.
+                          mobile_number:
+                            type: string
+                            description: Mobile number associated with the Declarant's bank account.
+                      contact_email:
+                        type: string
+                        description: Declarant's personal email.
+                      person_id:
+                        type: string
+                        format: uuid
+                        description: Unique identifier of the legal representative or beneficial owner.
+        description: Dynamic with specific capability id.
+      responses:
+        '200':
+          description: acknowledged
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '400':
+          description: '[`"bad_request"`
+
+            ,`"field_required"`
+
+            `"invalid_person"`
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: payment_method
+        name: Payment Method
+        method: POST
+        uri: /api/v1/account_capabilities/account_capability_id/enable
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          enroll_sme_program: true
+          id: payments_mastercard
+        response_body:
+          comment: string
+          details:
+            reason_codes: []
+          entity_type: BUSINESS
+          id: payments_mastercard
+          status: PENDING
+          updated_at: 2023-04-01T11:25:39+0000
+      - key: transfer_cny_local
+        name: Transfer CNY Local
+        method: POST
+        uri: /api/v1/account_capabilities/account_capability_id/enable
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          business_declarant_info:
+            bank_details:
+              account_number: '4682037906128888'
+              bank_name: 中国银行
+              cnaps_code: '104100000004'
+              mobile_number: '13531632875'
+            contact_email: contact@airwallex.com
+            economic_category_code: '171'
+            is_special_economic_zone: false
+            special_economic_zone_business_type: '12'
+          entity_type: INDIVIDUAL
+          id: transfer_cny_local
+          individual_declarant_info:
+            bank_details:
+              account_number: '4682037906128888'
+              bank_name: 中国银行
+              cnaps_code: '104100000004'
+              mobile_number: '13531632875'
+            contact_email: contact@airwallex.com
+            person_id: 300d62e0-32e0-4cd4-8e08-ccfb8bc5a944
+        response_body:
+          comment: string
+          details:
+            reason_codes:
+            - string
+          entity_type: INDIVIDUAL
+          id: transfer_cny_local
+          status: ENABLED
+          updated_at: 2023-04-01T11:25:39+0000
+      x-oauthSupported: false
+      x-scope:
+      - scope: account_capability:write
+        group: Account Capabilities
+        resource_name: Account Capabilities
+      x-domain: Account Capability
+      x-resource: Account Capability
+      x-urlPath: enable
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/account_capabilities/funding_limits:
+    get:
+      tags:
+      - Account Capability > Account Capability
+      summary: 4|List all Funding Limits
+      description: Before initiating a Direct Debit from a Linked Account or as a Funding Source, you may wish to query the available funding limit or Faster Direct Debit limit.
+      operationId: listFundingLimits
+      parameters:
+      - name: ccy
+        in: query
+        description: Specify the currency the limit will be displayed in. A single limit is applied for the entire customer, regardless of the display currency.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: effective_at
+        in: query
+        description: The timestamp at which the customer's funding limit becomes effective.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          format: date-time
+      - name: mandate_type
+        in: query
+        description: The settlement method or clearing system.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: page_num
+        in: query
+        description: Page number.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+      - name: page_size
+        in: query
+        description: Page size.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: Paged results.
+                    items:
+                      $ref: '#/components/schemas/FundingLimitResult'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/account_capabilities/funding_limits
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - availables:
+              SAME_DAY_ACH: '25000'
+              NEXT_DAY_ACH: '12000'
+            currency: USD
+            effective_at: 2022-08-22T01:23:00+0000
+            limit: 30000
+            mandate_type: US_ACH_DEBIT
+            requested_limit: 100000
+            status: ACTIVE
+            type: DIRECT_DEBIT_DEPOSIT
+            updated_at: 2022-08-22T01:23:00+0000
+      x-oauthSupported: false
+      x-scope:
+      - scope: account_capability:read
+        group: Account Capabilities
+        resource_name: Account Capabilities
+      x-domain: Account Capability
+      x-resource: Account Capability
+      x-urlPath: funding_limits
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    Details:
+      type: object
+      properties:
+        reason_codes:
+          type: array
+          description: "Specific codes that indicate the reason a capability is disabled. \nFor more information on the codes related to payment method capabilities, refer to this [page](/docs/payments-for-platforms/connected-accounts/onboard-connected-accounts/kyb-and-onboarding/native-api)."
+          items:
+            type: string
+        mcc:
+          type: string
+          description: The MCC applied by default for this payment method; the first of `mcc_candidates`. Only present for `payments_*` capabilities once an MCC has been assigned.
+        mcc_candidates:
+          type: array
+          description: The approved MCCs for this payment method. The first equals `mcc`; the rest are alternates with no priority order. Only present for `payments_*` capabilities once an MCC has been assigned.
+          items:
+            type: string
+      description: Details of this capability.
+    FundingLimitResult:
+      type: object
+      required:
+      - currency
+      - limit
+      - status
+      - type
+      properties:
+        availables:
+          type: object
+          description: The remaining limit of direct debit schemas, possible keys are SAME_DAY_ACH, NEXT_DAY_ACH, FEDWIRE, BECS, NPP, BACS, SEPA, FPS, FAST, GIRO, BECS, EFT.
+          additionalProperties:
+            type: number
+        currency:
+          type: string
+          description: Currency of the limit, it's the applied one, or default as per your owning entity.
+        effective_at:
+          type: string
+          description: the timestamp at which the customer's funding limit becomes effective.
+        limit:
+          type: number
+          description: The upper limit.
+        mandate_type:
+          type: string
+          description: the settlement method or clearing system.
+        requested_limit:
+          type: number
+          description: The under evaluating limit.
+        status:
+          type: string
+          description: Current setting status.
+          enum:
+          - ACTIVE
+          - REQUESTED
+        type:
+          type: string
+          description: Deposit type, possible values are DIRECT_DEBIT, FASTER_DIRECT_DEBIT.
+          enum:
+          - DIRECT_DEBIT_DEPOSIT
+          - FASTER_DIRECT_DEBIT_DEPOSIT
+        updated_at:
+          type: string
+          description: Last update time.
+    RequestedResponse:
+      type: object
+      required:
+      - result
+      properties:
+        result:
+          type: string
+    Response:
+      type: object
+      required:
+      - comment
+      - id
+      - status
+      - updated_at
+      properties:
+        comment:
+          type: string
+          description: Additional details about the status of this capability.
+        details:
+          $ref: '#/components/schemas/Details'
+          description: Details of this capability.
+        entity_type:
+          type: string
+          description: The type of entity of your declarant, one of `INDIVIDUAL`, `BUSINESS`.
+        id:
+          type: string
+          description: A unique identifier of the requested capability.
+        status:
+          type: string
+          description: The status of this capability, one of `ENABLED`, `DISABLED`, `PENDING`.
+        updated_at:
+          type: string
+          description: Last time this capability has been updated.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

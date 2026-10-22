@@ -1,5 +1,262 @@
 aid: airwallex
+
 url: https://raw.githubusercontent.com/api-evangelist/airwallex/refs/heads/main/apis.yml
+
+name: Airwallex
+
+tags:
+- Cross-Border Payments
+- Fintech
+- Foreign Exchange
+- Payments
+- Global
+- Embedded Finance
+- Multi-Currency
+
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
+
+accessModel:
+  pricing: freemium
+  onboarding: self-serve
+  trial: false
+  try_now: true
+  public: false
+  label: Freemium · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/airwallex.png
+
+access: 3rd-Party
+
+created: '2025-02-17'
+
+modified: '2026-10-20'
+
+position: Consuming
+
+description: Airwallex is a financial technology company that specializes in providing global payment solutions for businesses. Their platform
+  enables companies to accept payments, manage multi-currency accounts, convert currencies at competitive rates, send cross-border payments, issue
+  corporate cards, and embed financial services into their own products. Airwallex serves businesses in over 150 countries with APIs for payment
+  acceptance, FX, accounts, transfers, and embedded finance.
+
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
+
+specificationVersion: '0.23'
+
+common:
+- type: Spectral
+  url: rules/airwallex-spectral-rules.yml
+- type: Spectral
+  url: rules/airwallex-rules.yml
+- type: Spectral
+  url: rules/airwallex-jsonschema-spectral-rules.yml
+- type: JSONLD
+  url: json-ld/airwallex-context.jsonld
+- type: Vocabulary
+  url: vocabulary/airwallex-vocabulary.yml
+- type: CLI
+  url: cli/airwallex-cli.yml
+- type: Overlay
+  url: overlays/airwallex-openapi-overlay.yaml
+- type: Hosts
+  url: hosts/airwallex-hosts.yml
+- type: IntegrationEdges
+  url: integrations/airwallex-integration-edges.yml
+- type: Vendors
+  url: vendors/airwallex-vendors.yml
+- type: FinOps
+  url: finops/airwallex-finops.yml
+- type: Website
+  url: https://www.airwallex.com/
+- type: PostmanWorkspace
+  url: https://www.postman.com/airwallex/
+- type: AgenticAccess
+  url: agentic-access/airwallex-agentic-access.yml
+- type: TrustCenter
+  url: security/airwallex-trust-center.yml
+- type: VulnerabilityDisclosure
+  url: security/airwallex-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/airwallex-domain-security.yml
+- type: Authentication
+  url: authentication/airwallex-authentication.yml
+- type: LinkedIn
+  url: https://www.linkedin.com/company/airwallex
+- url: https://www.airwallex.com
+  type: Portal
+- url: https://www.airwallex.com/docs/payments/get-started/quickstart
+  type: GettingStarted
+- url: https://www.airwallex.com/docs
+  type: Documentation
+- url: https://www.airwallex.com/docs/api#/Payment_Acceptance/Authentication
+  type: Authentication
+- url: https://www.airwallex.com/pricing
+  type: Pricing
+- url: https://www.airwallex.com/en-us/terms
+  type: TermsOfService
+- url: https://www.airwallex.com/terms/privacy-policy
+  type: PrivacyPolicy
+- url: https://www.airwallex.com/blog
+  type: Blog
+- url: https://www.airwallex.com/global/newsroom
+  type: Newsroom
+- url: https://github.com/airwallex
+  type: GitHubOrganization
+- url: https://github.com/airwallex/airwallex-cli
+  type: CLI
+  title: Airwallex CLI
+- url: https://github.com/airwallex/paymentacceptance-plugin-magento
+  type: SDKs
+  title: Magento Plugin
+- url: https://github.com/airwallex/airwallex-salesforce-commerce-cloud-cartridge
+  type: SDKs
+  title: Salesforce Commerce Cloud
+- type: Features
+  data:
+  - name: Global Payment Acceptance
+    description: Accept payments in 180+ currencies via cards and local payment methods.
+  - name: Multi-Currency Accounts
+    description: Hold, manage, and convert funds in 60+ currencies.
+  - name: Cross-Border Payouts
+    description: Send payments to 150+ countries with competitive FX rates.
+  - name: FX Conversion
+    description: Real-time currency conversion at competitive exchange rates.
+  - name: Corporate Card Issuing
+    description: Issue virtual and physical Visa cards for employee spending.
+  - name: Embedded Finance
+    description: Embed Airwallex financial services into your own platform.
+  - name: Mobile SDKs
+    description: iOS, Android, React Native, and Flutter SDKs for in-app payments.
+  - name: Webhooks
+    description: Real-time event notifications for payment status changes.
+  - name: Risk Management
+    description: Built-in fraud detection and risk scoring via the Airwallex Risk SDK.
+- type: UseCases
+  data:
+  - name: E-Commerce Checkout
+    description: Accept global payments on e-commerce stores and marketplaces.
+  - name: Cross-Border B2B Payments
+    description: Pay international suppliers and contractors efficiently.
+  - name: Employee Expense Management
+    description: Issue cards and track employee spending globally.
+  - name: Multi-Currency Treasury
+    description: Manage treasury operations across multiple currencies.
+  - name: Marketplace Split Payments
+    description: Collect and distribute payments to marketplace sellers.
+  - name: SaaS Platform Monetization
+    description: Embed payment processing into SaaS platforms.
+  - name: Freelancer Payouts
+    description: Pay remote workers and freelancers in their local currencies.
+- type: Integrations
+  data:
+  - name: Magento
+    description: Airwallex payment plugin for Magento/Adobe Commerce stores.
+  - name: Salesforce Commerce Cloud
+    description: Airwallex payment cartridge for Salesforce Commerce Cloud.
+  - name: WooCommerce
+    description: Payment gateway plugin for WooCommerce stores.
+  - name: Xero
+    description: Sync Airwallex transactions with Xero accounting software.
+  - name: QuickBooks
+    description: Accounting integration for Airwallex transactions.
+  - name: NetSuite
+    description: ERP integration for Airwallex payment data.
+- url: https://raw.githubusercontent.com/api-evangelist/airwallex/refs/heads/main/rules/airwallex-spectral-rules.yml
+  type: SpectralRules
+- url: https://raw.githubusercontent.com/api-evangelist/airwallex/refs/heads/main/vocabulary/airwallex-vocabulary.yaml
+  type: Vocabulary
+- type: Integrations
+  url: https://www.airwallex.com/integrations
+- type: Packages
+  url: packages/airwallex-packages.yml
+- type: SDKs
+  url: packages/airwallex-packages.yml
+  title: Airwallex first-party SDKs
+- type: WellKnown
+  url: well-known/airwallex-well-known.yml
+- type: SecurityTxt
+  url: well-known/airwallex-security.txt
+- type: Security
+  url: https://help.airwallex.com/hc/en-gb/articles/900004502526-Bug-Bounty-Program-Rules
+  title: Bug Bounty Program Rules
+- type: Compliance
+  url: https://security.airwallex.com/
+  title: Airwallex Trust Center
+- type: MCPServer
+  url: mcp/airwallex-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/airwallex-tool-crosswalk.yml
+- type: LLMsTxt
+  url: llms/airwallex-llms.txt
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Conformance
+  url: conformance/airwallex-conformance.yml
+- type: ErrorCatalog
+  url: errors/airwallex-problem-types.yml
+- type: DeclineCodes
+  url: errors/airwallex-decline-codes.yml
+- type: Lifecycle
+  url: lifecycle/airwallex-lifecycle.yml
+- type: StatusPage
+  url: https://status.airwallex.com
+- type: Deprecation
+  url: https://www.airwallex.com/docs/api/versioning
+  title: Airwallex API versioning and migration policy
+- type: ChangeLog
+  url: changelog/airwallex-changelog.yml
+- type: OAuthScopes
+  url: scopes/airwallex-scopes.yml
+- type: Conventions
+  url: conventions/airwallex-conventions.yml
+- type: Idempotency
+  url: conventions/airwallex-conventions.yml
+  title: request_id idempotency contract
+- type: Sandbox
+  url: sandbox/airwallex-sandbox.yml
+- type: Components
+  url: components/airwallex-components.yml
+- type: DataModel
+  url: data-model/airwallex-data-model.yml
+- type: Webhooks
+  url: asyncapi/airwallex-webhooks.yml
+- type: RateLimits
+  url: rate-limits/airwallex-rate-limits.yml
+- type: Plans
+  url: plans/airwallex-plans-pricing.yml
+- type: Examples
+  url: examples/
+- type: APIReference
+  url: https://www.airwallex.com/docs/api/introduction
+- type: Quickstart
+  url: https://www.airwallex.com/docs/developer-tools/api/quickstart-with-postman
+- type: Support
+  url: https://help.airwallex.com/hc/en-gb
+- type: SignUp
+  url: https://www.airwallex.com/signup
+- type: Login
+  url: https://www.airwallex.com/app/login
+- type: Postman
+  url: https://www.postman.com/airwallex/
+
 apis:
 - aid: airwallex:payment-acceptance
   name: Airwallex Payment Acceptance API
@@ -134,337 +391,3197 @@ apis:
   - url: https://github.com/airwallex/platform-onboarding-sdk
     type: SDKs
     title: Platform Onboarding SDK
-- aid: airwallex:airwallex-authentication-api
-  name: Airwallex Authentication API
-  description: The Authentication API from Airwallex — 1 operation(s) for authentication.
+- aid: airwallex:airwallex-account-capability-account-capability-api
+  name: Airwallex Account Capability > Account Capability API
+  description: >-
+    The Account Capability resource represents capabilities you can enable or query on your Airwallex
+    account like accepting card payments or making fund transfers.
   humanURL: https://www.airwallex.com/docs/api#/Introduction
   baseURL: https://api.airwallex.com/api/v1
   tags:
-  - Authentication
+  - Account Capability > Account Capability
   properties:
   - type: OpenAPI
-    url: openapi/airwallex-authentication-api-openapi.yml
-  - type: Overlay
-    url: overlays/airwallex-authentication-api-overlay.yaml
-- aid: airwallex:airwallex-balances-api
-  name: Airwallex Balances API
-  description: The Balances API from Airwallex — 1 operation(s) for balances.
-  humanURL: https://www.airwallex.com/docs/api#/Introduction
-  baseURL: https://api.airwallex.com/api/v1
-  tags:
-  - Balances
-  properties:
-  - type: OpenAPI
-    url: openapi/airwallex-balances-api-openapi.yml
-  - type: Overlay
-    url: overlays/airwallex-balances-api-overlay.yaml
-- aid: airwallex:airwallex-beneficiaries-api
-  name: Airwallex Beneficiaries API
-  description: The Beneficiaries API from Airwallex — 3 operation(s) for beneficiaries.
-  humanURL: https://www.airwallex.com/docs/api#/Introduction
-  baseURL: https://api.airwallex.com/api/v1
-  tags:
-  - Beneficiaries
-  properties:
-  - type: OpenAPI
-    url: openapi/airwallex-beneficiaries-api-openapi.yml
-  - type: Overlay
-    url: overlays/airwallex-beneficiaries-api-overlay.yaml
-- aid: airwallex:airwallex-customers-api
-  name: Airwallex Customers API
-  description: The Customers API from Airwallex — 2 operation(s) for customers.
-  humanURL: https://www.airwallex.com/docs/api#/Introduction
-  baseURL: https://api.airwallex.com/api/v1
-  tags:
-  - Customers
-  properties:
-  - type: OpenAPI
-    url: openapi/airwallex-customers-api-openapi.yml
-  - type: Overlay
-    url: overlays/airwallex-customers-api-overlay.yaml
-- aid: airwallex:airwallex-payment-intents-api
-  name: Airwallex Payment Intents API
-  description: The Payment Intents API from Airwallex — 5 operation(s) for payment intents.
-  humanURL: https://www.airwallex.com/docs/api#/Introduction
-  baseURL: https://api.airwallex.com/api/v1
-  tags:
-  - Payment Intents
-  properties:
-  - type: OpenAPI
-    url: openapi/airwallex-payment-intents-api-openapi.yml
-  - type: Overlay
-    url: overlays/airwallex-payment-intents-api-overlay.yaml
-- aid: airwallex:airwallex-payouts-api
-  name: Airwallex Payouts API
-  description: The Payouts API from Airwallex — 2 operation(s) for payouts.
-  humanURL: https://www.airwallex.com/docs/api#/Introduction
-  baseURL: https://api.airwallex.com/api/v1
-  tags:
-  - Payouts
-  properties:
-  - type: OpenAPI
-    url: openapi/airwallex-payouts-api-openapi.yml
-  - type: Overlay
-    url: overlays/airwallex-payouts-api-overlay.yaml
-- aid: airwallex:airwallex-refunds-api
-  name: Airwallex Refunds API
-  description: The Refunds API from Airwallex — 2 operation(s) for refunds.
-  humanURL: https://www.airwallex.com/docs/api#/Introduction
-  baseURL: https://api.airwallex.com/api/v1
-  tags:
-  - Refunds
-  properties:
-  - type: OpenAPI
-    url: openapi/airwallex-refunds-api-openapi.yml
-  - type: Overlay
-    url: overlays/airwallex-refunds-api-overlay.yaml
-- aid: airwallex:airwallex-transfers-api
-  name: Airwallex Transfers API
-  description: The Transfers API from Airwallex — 2 operation(s) for transfers.
-  humanURL: https://www.airwallex.com/docs/api#/Introduction
-  baseURL: https://api.airwallex.com/api/v1
-  tags:
-  - Transfers
-  properties:
-  - type: OpenAPI
-    url: openapi/airwallex-transfers-api-openapi.yml
-  - type: Overlay
-    url: overlays/airwallex-transfers-api-overlay.yaml
-name: Airwallex
-tags:
-  - Cross-Border Payments
-  - Fintech
-  - Foreign Exchange
-  - Payments
-  - Global
-  - Embedded Finance
-  - Multi-Currency
-tags_raw:
-  - Cross-Border Payments
-  - FinTech
-  - Foreign Exchange
-  - Payments
-  - Global
-  - Embedded Finance
-  - Multi-Currency
-type: Index
-deliveryModel:
-  model: saas
-  open_source: false
-  commercial: true
-  callable_host: true
-  label: Hosted service · you call their endpoint
-  confidence: high
-  source:
-  - openapi
-  - pricing
-  generated: '2026-08-28'
-  method: derived
-accessModel:
-  pricing: freemium
-  onboarding: self-serve
-  trial: false
-  try_now: true
-  public: false
-  label: Freemium · Self-serve signup
-  confidence: high
-  source:
-  - plans
-  - authentication
-  generated: '2026-07-22'
-  method: derived
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/airwallex.png
-access: 3rd-Party
-created: '2025-02-17'
-modified: '2026-04-19'
-position: Consuming
-description: >-
-  Airwallex is a financial technology company that specializes in providing global payment solutions for businesses.
-  Their platform enables companies to accept payments, manage multi-currency accounts, convert currencies at competitive
-  rates, send cross-border payments, issue corporate cards, and embed financial services into their own products.
-  Airwallex serves businesses in over 150 countries with APIs for payment acceptance, FX, accounts, transfers, and
-  embedded finance.
-integrations:
-  - name: Log in
-maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
-specificationVersion: '0.23'
-common:
-  - type: FinOps
-    url: finops/airwallex-finops.yml
-  - type: Website
-    url: https://www.airwallex.com/
-  - type: PostmanWorkspace
-    url: https://www.postman.com/kinlaneapi/airwallex/overview
-  - type: AgenticAccess
-    url: agentic-access/airwallex-agentic-access.yml
-  - type: TrustCenter
-    url: security/airwallex-trust-center.yml
-  - type: VulnerabilityDisclosure
-    url: security/airwallex-vulnerability-disclosure.yml
-  - type: DomainSecurity
-    url: security/airwallex-domain-security.yml
-  - type: Authentication
-    url: authentication/airwallex-authentication.yml
-  - type: LinkedIn
-    url: https://www.linkedin.com/company/airwallex
-  - url: https://www.airwallex.com
-    type: Portal
-  - url: https://www.airwallex.com/docs/api
-    type: GettingStarted
-  - url: https://www.airwallex.com/docs/api#/Introduction
-    type: Documentation
-  - url: https://www.airwallex.com/docs/api#/Payment_Acceptance/Authentication
-    type: Authentication
-  - url: https://www.airwallex.com/pricing
-    type: Pricing
-  - url: https://www.airwallex.com/terms
-    type: TermsOfService
-  - url: https://www.airwallex.com/terms/privacy-policy
-    type: PrivacyPolicy
-  - url: https://www.airwallex.com/blog
-    type: Blog
-  - url: https://github.com/airwallex
-    type: GitHubOrganization
-  - url: https://github.com/airwallex/airwallex-cli
-    type: CLI
-    title: Airwallex CLI
-  - url: https://github.com/airwallex/paymentacceptance-plugin-magento
-    type: SDKs
-    title: Magento Plugin
-  - url: https://github.com/airwallex/airwallex-salesforce-commerce-cloud-cartridge
-    type: SDKs
-    title: Salesforce Commerce Cloud
-  - type: Features
-    data:
-      - name: Global Payment Acceptance
-        description: Accept payments in 180+ currencies via cards and local payment methods.
-      - name: Multi-Currency Accounts
-        description: Hold, manage, and convert funds in 60+ currencies.
-      - name: Cross-Border Payouts
-        description: Send payments to 150+ countries with competitive FX rates.
-      - name: FX Conversion
-        description: Real-time currency conversion at competitive exchange rates.
-      - name: Corporate Card Issuing
-        description: Issue virtual and physical Visa cards for employee spending.
-      - name: Embedded Finance
-        description: Embed Airwallex financial services into your own platform.
-      - name: Mobile SDKs
-        description: iOS, Android, React Native, and Flutter SDKs for in-app payments.
-      - name: Webhooks
-        description: Real-time event notifications for payment status changes.
-      - name: Risk Management
-        description: Built-in fraud detection and risk scoring via the Airwallex Risk SDK.
-  - type: UseCases
-    data:
-      - name: E-Commerce Checkout
-        description: Accept global payments on e-commerce stores and marketplaces.
-      - name: Cross-Border B2B Payments
-        description: Pay international suppliers and contractors efficiently.
-      - name: Employee Expense Management
-        description: Issue cards and track employee spending globally.
-      - name: Multi-Currency Treasury
-        description: Manage treasury operations across multiple currencies.
-      - name: Marketplace Split Payments
-        description: Collect and distribute payments to marketplace sellers.
-      - name: SaaS Platform Monetization
-        description: Embed payment processing into SaaS platforms.
-      - name: Freelancer Payouts
-        description: Pay remote workers and freelancers in their local currencies.
-  - type: Integrations
-    data:
-      - name: Magento
-        description: Airwallex payment plugin for Magento/Adobe Commerce stores.
-      - name: Salesforce Commerce Cloud
-        description: Airwallex payment cartridge for Salesforce Commerce Cloud.
-      - name: WooCommerce
-        description: Payment gateway plugin for WooCommerce stores.
-      - name: Xero
-        description: Sync Airwallex transactions with Xero accounting software.
-      - name: QuickBooks
-        description: Accounting integration for Airwallex transactions.
-      - name: NetSuite
-        description: ERP integration for Airwallex payment data.
-  - url: https://raw.githubusercontent.com/api-evangelist/airwallex/refs/heads/main/rules/airwallex-spectral-rules.yml
-    type: SpectralRules
-  - url: https://raw.githubusercontent.com/api-evangelist/airwallex/refs/heads/main/vocabulary/airwallex-vocabulary.yaml
-    type: Vocabulary
-  - type: Integrations
-    url: https://www.airwallex.com/integrations
-  - type: Packages
-    url: packages/airwallex-packages.yml
-  - type: SDKs
-    url: packages/airwallex-packages.yml
-    title: Airwallex first-party SDKs
-  - type: WellKnown
-    url: well-known/airwallex-well-known.yml
-  - type: SecurityTxt
-    url: well-known/airwallex-security.txt
-  - type: Security
-    url: https://help.airwallex.com/hc/en-gb/articles/900004502526-Bug-Bounty-Program-Rules
-    title: Bug Bounty Program Rules
-  - type: Compliance
-    url: https://security.airwallex.com/
-    title: Airwallex Trust Center
-  - type: MCPServer
-    url: mcp/airwallex-mcp.yml
-  - type: ToolCrosswalk
-    url: mcp/airwallex-tool-crosswalk.yml
-  - type: LLMsTxt
-    url: llms/airwallex-llms.txt
-  - type: AgentSkill
-    url: skills/_index.yml
-  - type: Conformance
-    url: conformance/airwallex-conformance.yml
-  - type: ErrorCatalog
-    url: errors/airwallex-problem-types.yml
-  - type: DeclineCodes
-    url: errors/airwallex-decline-codes.yml
-  - type: Lifecycle
-    url: lifecycle/airwallex-lifecycle.yml
-  - type: StatusPage
-    url: https://status.airwallex.com
-  - type: Deprecation
-    url: https://www.airwallex.com/docs/api/versioning
-    title: Airwallex API versioning and migration policy
-  - type: ChangeLog
-    url: changelog/airwallex-changelog.yml
-  - type: OAuthScopes
-    url: scopes/airwallex-scopes.yml
-  - type: Conventions
-    url: conventions/airwallex-conventions.yml
-  - type: Idempotency
-    url: conventions/airwallex-conventions.yml
-    title: request_id idempotency contract
-  - type: Sandbox
-    url: sandbox/airwallex-sandbox.yml
-  - type: Components
-    url: components/airwallex-components.yml
-  - type: DataModel
-    url: data-model/airwallex-data-model.yml
-  - type: Webhooks
-    url: asyncapi/airwallex-webhooks.yml
-  - type: RateLimits
-    url: rate-limits/airwallex-rate-limits.yml
-  - type: Plans
-    url: plans/airwallex-plans-pricing.yml
-  - type: Examples
-    url: examples/
+    url: openapi/airwallex-account-capability-account-capability-api-openapi.yml
   - type: APIReference
     url: https://www.airwallex.com/docs/api/introduction
-  - type: Quickstart
-    url: https://www.airwallex.com/docs/api/getting_started
-  - type: Support
-    url: https://help.airwallex.com/hc/en-gb
-  - type: SignUp
-    url: https://www.airwallex.com/signup
-  - type: Login
-    url: https://www.airwallex.com/app/login
-  - type: Postman
-    url: https://www.postman.com/kinlaneapi/airwallex/overview
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-accounting-accounting-field-values-api
+  name: Airwallex Accounting > Accounting Field Values API
+  description: >-
+    Manages selectable values for custom accounting fields used when coding Airwallex Spend transactions.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Accounting > Accounting Field Values
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-accounting-accounting-field-values-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-accounting-accounting-fields-api
+  name: Airwallex Accounting > Accounting Fields API
+  description: >-
+    Manages custom accounting fields that define additional accounting dimensions for Airwallex Spend,
+    such as projects or cost centers.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Accounting > Accounting Fields
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-accounting-accounting-fields-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-accounting-general-ledger-accounts-api
+  name: Airwallex Accounting > General Ledger Accounts API
+  description: >-
+    Manages General Ledger (GL) account entries used when coding Airwallex Spend transactions, such as
+    expenses and bills.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Accounting > General Ledger Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-accounting-general-ledger-accounts-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-accounting-tax-codes-api
+  name: Airwallex Accounting > Tax Codes API
+  description: >-
+    Manages tax codes used when coding Airwallex Spend transactions, such as expenses and bills.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Accounting > Tax Codes
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-accounting-tax-codes-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-authentication-authentication-api
+  name: Airwallex Authentication > Authentication API
+  description: >-
+    Airwallex uses an API key and Client ID to authenticate requests. You authenticate by exchanging your
+    API key and Client ID for a short-lived access token, then sending that token as `Authorization: Bearer
+    <token>` on every subsequent call. The access token is valid for 30 minutes and can be reused until
+    it expires. Do not call the authentication endpoint before each request. Track expiration using the
+    `expires_at` field from the login response. To get an access token, call [Obtain an access token](/docs/api/authentication/api_access_token/login).
+
+
+    You can view and manage API keys in the [Airwallex web app](https://www.airwallex.com/app). Do not
+    share your API key in publicly accessible places such as GitHub repositories, client-side code, and
+    so forth. For guidance on scoping, storing, and rotating your keys, see [API key best practices](/docs/developer-tools/api/api-key-best-practices).
+
+
+    Airwallex authorizes each request against the scopes attached to your API key. For the full catalog
+    of key permissions, see [API key scopes](/docs/developer-tools/api/api-key-scopes).
+
+
+    All requests must be made over HTTPS. Only [PCI-DSS recommended TLS versions and cipher suites](/docs/developer-tools/security/securing-connections-to-airwallex)
+    are supported.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Authentication > Authentication
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-authentication-authentication-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-authentication-embedded-components-api
+  name: Airwallex Authentication > Embedded Components API
+  description: Authorize to use embedded components.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Authentication > Embedded Components
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-authentication-embedded-components-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-auto-payments-auto-payments-api
+  name: Airwallex Auto Payments > Auto Payments API
+  description: >-
+    The Auto Payments > Auto Payments API from Airwallex — 7 operation(s) for auto payments > auto payments.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Auto Payments > Auto Payments
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-auto-payments-auto-payments-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-billing-billing-checkouts-api
+  name: Airwallex Billing > Billing Checkouts API
+  description: "A Billing Checkout manages the setup and lifecycle of an Airwallex-hosted customer checkout\
+    \ experience, enabling customers to confirm and pay for line items or set up payment details for future\
+    \ transactions.  \nWe recommend creating a new Billing Checkout each time a customer initiates a purchase.\
+    \ After the customer successfully completes the checkout, resources such as Customer, Payment Source,\
+    \ and Subscription will be automatically created in the Billing Checkout object."
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Billing > Billing Checkouts
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-billing-billing-checkouts-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-billing-billing-customers-api
+  name: Airwallex Billing > Billing Customers API
+  description: >-
+    A Billing Customer is an individual or business who purchases or subscribes to your products or services.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Billing > Billing Customers
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-billing-billing-customers-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-billing-billing-transactions-api
+  name: Airwallex Billing > Billing Transactions API
+  description: >-
+    A Billing Transaction describes a transaction on your invoice such as a payment or refund.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Billing > Billing Transactions
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-billing-billing-transactions-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-billing-coupons-api
+  name: Airwallex Billing > Coupons API
+  description: Coupon management APIs for creating and managing coupon templates.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Billing > Coupons
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-billing-coupons-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-billing-credit-notes-api
+  name: Airwallex Billing > Credit Notes API
+  description: Issue a Credit Note to adjust the amount of a finalized invoice.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Billing > Credit Notes
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-billing-credit-notes-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-billing-e-invoicing-documents-api
+  name: Airwallex Billing > E-Invoicing Documents API
+  description: >-
+    An E-Invoicing Document represents the regulatory (e-invoicing or e-reporting) processing record for
+    an [Invoice](/docs/api/billing/invoices) or [Credit Note](/docs/api/billing/credit_notes). It tracks
+    the processing status, regulatory artifacts, the recipient's response, and processing errors.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Billing > E-Invoicing Documents
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-billing-e-invoicing-documents-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-billing-invoices-api
+  name: Airwallex Billing > Invoices API
+  description: >-
+    An Invoice represents an official request for payment that details products or services purchased,
+    pricing and payment instructions. It can be issued directly (one-time invoices) or via a [Subscription](/docs/api/billing/subscriptions)
+    (recurring invoices).
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Billing > Invoices
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-billing-invoices-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-billing-meters-api
+  name: Airwallex Billing > Meters API
+  description: >-
+    A Meter defines how to aggregate usage events over a billing period to determine how much a customer
+    should be billed.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Billing > Meters
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-billing-meters-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-billing-payment-sources-api
+  name: Airwallex Billing > Payment Sources API
+  description: >-
+    A Payment Source represents a [Billing Customer](/docs/api/billing/billing_customers)'s funding instrument
+    that can be used to pay for invoices.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Billing > Payment Sources
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-billing-payment-sources-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-billing-prices-api
+  name: Airwallex Billing > Prices API
+  description: >-
+    A Price defines the pricing information for a [Product](/docs/api/billing/products) such as amount,
+    currency, and billing frequency. A Product can have multiple Prices. For example, you can offer the
+    following pricing options for a software license Product:
+
+    - 1. Standard Price: $10 / month
+
+    - 2. Student Price: $5 / month
+
+    - 3. Lifetime Access: $200 one-off purchase
+
+
+    Prices are primarily used in [Invoice](/docs/api/billing/invoices) and [Subscription](/docs/api/billing/subscriptions)
+    APIs.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Billing > Prices
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-billing-prices-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-billing-products-api
+  name: Airwallex Billing > Products API
+  description: >-
+    Products represent the goods or services you offer to customers (e.g. books, memberships). When associated
+    with [Prices](/docs/api/billing/prices), they can be used with the [Invoice](/docs/api/billing/invoices)
+    and [Subscription](/docs/api/billing/subscriptions) APIs.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Billing > Products
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-billing-products-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-billing-rate-cards-api
+  name: Airwallex Billing > Rate Cards API
+  description: >-
+    A Rate Card is a versioned container for multi-dimensional pricing. It groups multiple Rate Card Items,
+    each representing the price for one combination of dimensions (e.g. `model` × `token_type`), under
+    shared billing fields (`product_id`, `meter_id`, `currency`, `recurring`). This lets you define pricing
+    for an entire matrix for a single [Product](/docs/api/billing/products) and add it to a [Subscription](/docs/api/billing/subscriptions)
+    as a single item, instead of creating one Price for each combination.
+
+
+    Pricing is organized in three layers:
+
+    - Rate Card — the container and its shared billing fields.
+
+    - Rate Card Version — an immutable snapshot of the pricing. Change pricing by publishing a new version;
+    existing subscriptions stay pinned to the version they were created with.
+
+    - Rate Card Item — one entry in the matrix: the price for a specific set of `dimension_values`.
+
+
+    When usage is billed, each usage record is matched against the version's items in order and billed
+    at the first item whose `dimension_values` match (an omitted key matches any value; an empty object
+    matches all usage). So one Rate Card subscription item expands into one invoice line item per priced
+    dimension combination that had usage.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Billing > Rate Cards
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-billing-rate-cards-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-billing-subscriptions-api
+  name: Airwallex Billing > Subscriptions API
+  description: >-
+    A Subscription manages the billing lifecycle for the recurring products or services that a customer
+    purchases. One or more Products and Prices can be added as Subscription Items to a Subscription.
+
+
+    Customers can be charged automatically, or be issued invoices that they will pay manually every billing
+    cycle.
+
+
+    If a Subscription is set to charge a Billing Customer's Payment Source automatically, the charge will
+    either happen at the start or end of a billing cycle depending on whether a Price's billing type is
+    `IN_ADVANCE` or `IN_ARREARS`:
+
+
+    - `IN_ADVANCE`: billed at the beginning of the billing cycle.
+
+    - `IN_ARREARS`: billed at the end of the billing cycle.
+
+
+    A Subscription with a free trial moves from `IN_TRIAL` status to `ACTIVE` status when the trial period
+    ends. If a Subscription is created with a future start time, it will be in `PENDING` status until
+    the trial period or paid billing period starts. The status of a Subscription is `UNPAID` when a payment
+    initially fails. When this happens, Airwallex will retry payment up to 4 times (after 1 day, 2 days,
+    5 days and 7 days).
+
+
+    The status of a Subscription moves to `ACTIVE` if a payment retry attempt succeeds, or `CANCELLED`
+    if all retries fail. A Subscription moves to `CANCELLED` when it ends or if cancelled.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Billing > Subscriptions
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-billing-subscriptions-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-billing-usage-events-api
+  name: Airwallex Billing > Usage Events API
+  description: A Usage Event represents a customer's usage of a product at a specific timestamp.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Billing > Usage Events
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-billing-usage-events-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-checkout-checkout-sessions-api
+  name: Airwallex Checkout > Checkout Sessions API
+  description: >-
+    A Checkout Session manages the setup and lifecycle of an Airwallex-hosted customer checkout experience,
+    including billing subscriptions, one-off payments and payment setup flows.
+
+    We recommend creating a new Checkout Session each time a customer initiates a purchase. After the
+    customer successfully completes the session, downstream resources such as Billing Customer, Customer,
+    Payment Source, Payment Consent, Subscription, or Invoice may be created depending on the session
+    mode.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Checkout > Checkout Sessions
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-checkout-checkout-sessions-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-confirmation-letter-confirmation-letter-api
+  name: Airwallex Confirmation Letter > Confirmation Letter API
+  description: >-
+    The Confirmation Letter > Confirmation Letter API from Airwallex — 1 operation(s) for confirmation
+    letter > confirmation letter.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Confirmation Letter > Confirmation Letter
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-confirmation-letter-confirmation-letter-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-core-resources-balances-api
+  name: Airwallex Core Resources > Balances API
+  description: >-
+    Different types of balances such as available and pending can be retrieved to reflect the present
+    balances under your Airwallex account.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Core Resources > Balances
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-core-resources-balances-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-core-resources-deposits-api
+  name: Airwallex Core Resources > Deposits API
+  description: >-
+    Deposits are transfers made into your Airwallex account via Global Accounts, Airwallex Pay, or Aggregate
+    Funds for adding funds or collecting funds from third parties.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Core Resources > Deposits
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-core-resources-deposits-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-core-resources-direct-debits-api
+  name: Airwallex Core Resources > Direct Debits API
+  description: >-
+    Direct Debits are transactions that third party made to pull funds out of your Airwallex account.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Core Resources > Direct Debits
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-core-resources-direct-debits-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-core-resources-global-accounts-api
+  name: Airwallex Core Resources > Global Accounts API
+  description: >-
+    Global Accounts are foreign currency accounts that function as local bank accounts. They can be used
+    to collect funds from around the world. You get account details that enable you to collect funds from
+    various platforms such as Amazon, eBay and Shopify, among others. Global Accounts can also be used
+    to top up your Airwallex balance.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Core Resources > Global Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-core-resources-global-accounts-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-core-resources-linked-accounts-api
+  name: Airwallex Core Resources > Linked Accounts API
+  description: >-
+    Linked Accounts are external financial accounts associated with your Airwallex account. You can use
+    Linked Accounts to fund your Airwallex wallet via Direct Debit.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Core Resources > Linked Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-core-resources-linked-accounts-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-embedded-finance-accounts-api
+  name: Airwallex Embedded Finance > Accounts API
+  description: >-
+    The Accounts resource represents an Airwallex account, which serves as the main container for a customer’s
+    financial data—including wallet balances, financial transactions, cards, and more. This resource allows
+    customers to retrieve and update account information. For platform customers, it also supports onboarding
+    and managing [Connected Accounts](/docs/connected-accounts/how-connected-accounts-work).
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Embedded Finance > Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-embedded-finance-accounts-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-embedded-finance-charges-api
+  name: Airwallex Embedded Finance > Charges API
+  description: >-
+    A [Scale Charge](/docs/connected-accounts/move-funds/charges) can be used to charge a Connected Account
+    and credit the Platform account's wallet. This action may support processing fees and charges from
+    your clients or business partners. Source Connected Account to be charged must have passed KYC and
+    be in state `ACTIVE`.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Embedded Finance > Charges
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-embedded-finance-charges-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-embedded-finance-connected-account-transfers-api
+  name: Airwallex Embedded Finance > Connected Account Transfers API
+  description: >-
+    A [Connected Account Transfer](/docs/connected-accounts/move-funds/connected-account-(ca)-transfers)
+    can be used to send funds directly from a Platform Account or Connected Account to another Account
+    connected to the same platform. Destination Connected Account must have passed KYC and be in state
+    `ACTIVE`.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Embedded Finance > Connected Account Transfers
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-embedded-finance-connected-account-transfers-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-embedded-finance-hosted-flows-api
+  name: Airwallex Embedded Finance > Hosted Flows API
+  description: >-
+    Airwallex Hosted Flows enable a Platform to redirect end users into Airwallex-hosted web pages to
+    complete a variety of activity flows. Platforms can deliver hosted flows via a secure, short-lived
+    link unique to each connected account. After completion of a flow, the user is redirected back to
+    the platform. Hosted flows are available for [accounts created via API](/docs/api/scale/accounts/create).
+
+
+    **Currently supported flows:**
+
+     * `onboarding` – [Submit KYC information](/docs/connected-accounts/onboarding/kyc-and-onboarding/hosted-onboarding)
+    needed to activate the account.
+
+    Contact your Airwallex Account Manager to start using hosted flows.
+
+
+    Your Account Manager will create a **flow template**, which defines the series of steps the end user
+    will proceed through. Then, you can create a **flow instance** for a particular connected account
+    and direct users to the provided URL.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Embedded Finance > Hosted Flows
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-embedded-finance-hosted-flows-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-embedded-finance-invitation-links-api
+  name: Airwallex Embedded Finance > Invitation Links API
+  description: >-
+    Invitation Links are used by platforms or partners to manage Scale Connect invitation links.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Embedded Finance > Invitation Links
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-embedded-finance-invitation-links-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-embedded-finance-offboardings-api
+  name: Airwallex Embedded Finance > Offboardings API
+  description: >-
+    The Offboarding API allows platforms to programmatically submit offboarding requests
+
+    for connected accounts and query the status of submitted offboardings.
+
+
+    Create an offboarding raises an Airwallex Operations-owned offboarding case for account closure. It
+
+    differs from [Suspend account](/docs/api/scale/accounts/suspend), which temporarily
+
+    suspends an account and can be reversed with
+
+    [Reactivate account](/docs/api/scale/accounts/reactivate). You can create an offboarding for a connected
+    account that is not already
+
+    closed or pending closure. Create Offboarding is not limited to `ACTIVE` accounts.
+
+    While an offboarding is in progress (`PENDING`), the connected account `status` does
+
+    not change. After it completes successfully (`COMPLETED`), the account enters pending
+
+    closure and the connected account `status` returned by the client API is `SUSPENDED`
+
+    on all API versions. After a 30-day grace period the account is permanently closed;
+
+    from API version `2026-08-21` that surfaces as `CLOSED` (earlier versions continue to
+
+    return `SUSPENDED`). If multiple connected
+
+    accounts share the same client legal entity, you cannot create an offboarding for
+
+    another account under that legal entity until the existing offboarding request is
+
+    completed. Balance handling during offboarding is managed by Airwallex operations and
+
+    is not available through this API.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Embedded Finance > Offboardings
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-embedded-finance-offboardings-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-embedded-finance-platform-liquidity-programs-api
+  name: Airwallex Embedded Finance > Platform Liquidity Programs API
+  description: >-
+    Manage platform liquidity programs, spending accounts, transactions, and fund deposit and withdrawal.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Embedded Finance > Platform Liquidity Programs
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-embedded-finance-platform-liquidity-programs-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-embedded-finance-platform-reports-api
+  name: Airwallex Embedded Finance > Platform Reports API
+  description: >-
+    Generate reports to understand the activity of your Platform account and connected accounts.
+
+
+    Use [Create Platform report](/docs/api/scale/platform_reports/create) to obtain a report id, followed
+    by [Get Platform report](/docs/api/scale/platform_reports/retrieve) to retrieve a download URL for
+    the report once it is ready. Subscribe to the `Platform Report` webhook in the Airwallex webapp to
+    be notified when the report that you have requested is ready. Only files smaller than 100MB can be
+    generated.
+
+
+    Create scheduled reports by specifying future dates for `to_created_at`, or `to_updated_at`.
+
+
+    Reports will be generated at the end of the requested interval, once all data has been captured.
+
+
+    For example, if `2023-01-10` is the current date, [request a Platform report](/docs/api/scale/platform_reports/create)
+    with `from_created_at` = `2023-01-01` and `to_created_at` = `2023-02-01` to obtain data for January.
+    The scheduled report will be generated after the end of the interval.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Embedded Finance > Platform Reports
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-embedded-finance-platform-reports-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-embedded-finance-psp-settlement-deposits-api
+  name: Airwallex Embedded Finance > PSP Settlement Deposits API
+  description: >-
+    A PSP Settlement Deposit is a deposit made by a PSP into a holding account. It is associated with
+    a PSP Settlement Intent.
+
+
+    Airwallex provides the Platform with a **holding account**, set up by a Airwallex Solutions Engineer.
+    Platforms pass payment details to a pay-in PSP for funds acquired by PSPs to be deposited to Airwallex.
+
+
+    PSP Settlement Deposits form part of the [PSP-agnostic payout solution](/docs/payments-for-platforms/psp-agnostic/implement-your-psp-agnostic-solution).
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Embedded Finance > PSP Settlement Deposits
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-embedded-finance-psp-settlement-deposits-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-embedded-finance-psp-settlement-intents-api
+  name: Airwallex Embedded Finance > PSP Settlement Intents API
+  description: "A PSP settlement intent represents a settlement with a PSP in a particular currency. Each\
+    \ PSP settlement intent is associated with one or more PSP settlement deposits by `settlement_reference`.\
+    \ \nAfter creating your PSP settlement intent, you can start splitting it, creating one PSP settlement\
+    \ split for each target account. Once you complete splitting your PSP settlement intent, you can submit\
+    \ it and wait for it to be matched with the associated PSP settlement deposit. The sum of the amounts\
+    \ of the PSP settlement splits of a PSP settlement intent should match the sum of the amounts of associated\
+    \ deposits. \nPSP settlement intents form part of the [PSP-agnostic payout solution](/docs/payments-for-platforms/psp-agnostic/implement-your-psp-agnostic-solution)."
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Embedded Finance > PSP Settlement Intents
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-embedded-finance-psp-settlement-intents-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-embedded-finance-psp-settlement-splits-api
+  name: Airwallex Embedded Finance > PSP Settlement Splits API
+  description: >-
+    Platforms must share PSP Settlement Split information with Airwallex before funds settle to the holding
+    account, by calling the [Split a PSP Settlement Intent API](/docs/api/scale/psp_settlement_splits/split_psp_settlement_intents).
+    This data typically originates from the pay-in PSP's reporting feed.
+
+
+    Funds in the holding account are inaccessible to all parties until the funds are released to other
+    connected accounts. A Platform can choose to [release a PSP Settlement Split](/docs/api/scale/psp_settlement_splits/release)
+    anytime. On release, funds are transferred to a connected account for the recipient, such as a seller.
+
+
+    If a Platform wants to apply a transaction fee to the seller, they can create one split for the amount
+    due to the seller, and can create another split for the fee to the platform's own account.
+
+    A Platform can trigger a [payout](/docs/api/payouts/transfers) from any connected account to an **external
+    bank account** at any time (for example, at the end of a payout cycle).
+
+    PSP Settlement Splits form part of the [PSP-agnostic payout solution](/docs/payments-for-platforms/psp-agnostic/implement-your-psp-agnostic-solution).
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Embedded Finance > PSP Settlement Splits
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-embedded-finance-psp-settlement-splits-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-finance-financial-reports-api
+  name: Airwallex Finance > Financial Reports API
+  description: >-
+    The Financial Reports resources provide the capability to create and get the contents of reports on
+    your Airwallex account's historical transaction activity.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Finance > Financial Reports
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-finance-financial-reports-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-finance-financial-transactions-api
+  name: Airwallex Finance > Financial Transactions API
+  description: >-
+    The Finance > Financial Transactions API from Airwallex — 2 operation(s) for finance > financial transactions.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Finance > Financial Transactions
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-finance-financial-transactions-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-finance-settlements-api
+  name: Airwallex Finance > Settlements API
+  description: >-
+    Represents the set of endpoints you use to track and manage payment settlements that contribute to
+    your Airwallex account balance. You can list settlements with optional filters, retrieve a settlements
+    overview for a specific settlement by settlement batch unique identifier, and download batch settlement
+    reports for reconciliation or record keeping.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Finance > Settlements
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-finance-settlements-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-issuing-authorizations-api
+  name: Airwallex Issuing > Authorizations API
+  description: >-
+    You can view authorizations such as pre auth and capture processed against individual cards or for
+    all cards created within your organisation.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Issuing > Authorizations
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-issuing-authorizations-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-issuing-card-transaction-events-api
+  name: Airwallex Issuing > Card Transaction Events API
+  description: "A **transaction event** is the most granular level of the three-level transaction model\
+    \ \n(**Lifecycle → Card Transaction → Transaction Event**).\n\nEach transaction event represents an\
+    \ individual network message or fund movement, with an immutable \nfund movement per event. Use transaction\
+    \ events when you need per-event \ndetails such as failure reasons, authorization subtypes, or individual\
+    \ amounts.\n\n**Event types:** `AUTHORIZATION`, `CLEARING`, `REVERSAL_AUTH`.\n\n**Event subtypes:**\
+    \ `AUTHORIZATION`, `INCREMENTAL_AUTHORIZATION`, `VERIFICATION`, `REVERSAL`, \n`PARTIAL_REVERSAL`,\
+    \ `EXPIRED_AUTHORIZATION`, `CLEARING`, `PARTIAL_CLEARING`, `CLEARING_REVERSAL`.\n\n**Data retention:**\
+    \ Resources can be queried for a maximum of 2 years from creation.\n\nLearn more about the [transaction\
+    \ lifecycle](/docs/issuing/transactions/transaction-lifecycle)."
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Issuing > Card Transaction Events
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-issuing-card-transaction-events-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-issuing-card-transaction-lifecycles-api
+  name: Airwallex Issuing > Card Transaction Lifecycles API
+  description: "A **lifecycle** is the top level of the three-level transaction model \n(**Lifecycle →\
+    \ Card Transaction → Transaction Event**).\n\nIt is a container that groups all related card transactions\
+    \ and transaction events belonging to \nthe same payment flow, based on network information. Lifecycles\
+    \ provide a network-level view \nof a payment along with aggregated billing amounts across all related\
+    \ card transactions and events.\n\n**Key characteristics:**\n* Lifecycles do not have a status. Use\
+    \ card transactions if you need guaranteed terminal statuses.\n* Grouping is **best-effort**: it depends\
+    \ on payment networks and acquirers providing consistent \n  identifiers. For example, matched refunds\
+    \ link to the original lifecycle; unmatched refunds \n  create a new one.\n* Use the lifecycle ID\
+    \ to retrieve all associated card transactions and transaction events.\n\n**Data retention:** Resources\
+    \ can be queried for a maximum of 2 years from creation.\n\nLearn more about the [transaction lifecycle](/docs/issuing/transactions/transaction-lifecycle)."
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Issuing > Card Transaction Lifecycles
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-issuing-card-transaction-lifecycles-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-issuing-card-transactions-api
+  name: Airwallex Issuing > Card Transactions API
+  description: "A **card transaction** is the middle level of the three-level transaction model \n(**Lifecycle\
+    \ → Card Transaction → Transaction Event**).\n\nIt groups related transaction events and represents\
+    \ Airwallex's interpretation of a single card \ntransaction. Each card transaction has a guaranteed\
+    \ terminal status and a fund direction, making it \nthe recommended level for tracking payment outcomes\
+    \ without implementing custom grouping logic.\n\n**Statuses:** `AUTHORIZED` (non-terminal), `CLEARED`,\
+    \ `REVERSED`, `EXPIRED`, `DECLINED`, \n`VERIFIED` (terminal).\n\n**Fund directions:** `DEBIT`, `CREDIT`,\
+    \ or `NO_MOVEMENT`.\n\nAll card transactions within the same payment flow share a common lifecycle\
+    \ ID.\n\n**Data retention:** Resources can be queried for a maximum of 2 years from creation.\n\n\
+    Learn more about the [transaction lifecycle](/docs/issuing/transactions/transaction-lifecycle)."
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Issuing > Card Transactions
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-issuing-card-transactions-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-issuing-cardholders-api
+  name: Airwallex Issuing > Cardholders API
+  description: "You can create cardholders, which are authorized representatives of your business that\
+    \ can be issued cards.  \n  \nPlease note, this API version is incompatible with any Airwallex Business\
+    \ Account Products such as \"Borderless Cards\" or \"Expense Management\" via Airwallex web or mobile\
+    \ applications. If you're using any of these products, please use API version 2024-02-22. Contact\
+    \ your account manager for more information and to verify compatibility."
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Issuing > Cardholders
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-issuing-cardholders-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-issuing-cards-api
+  name: Airwallex Issuing > Cards API
+  description: "You can create virtual cards associated with your organisation, these cards can be single\
+    \ or multi-usage and be restricted by merchant code, currency and transaction amount.  \n  \nPlease\
+    \ note, this API version is incompatible with any Airwallex Business Account Products such as \"Borderless\
+    \ Cards\" or \"Expense Management\" via Airwallex web or mobile applications. If you're using any\
+    \ of these products, please use API version 2024-02-22. Contact your account manager for more information\
+    \ and to verify compatibility."
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Issuing > Cards
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-issuing-cards-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-issuing-config-api
+  name: Airwallex Issuing > Config API
+  description: >-
+    You can view config for cards such as default and maximum limit when creating card and remote auth
+    setting to process authorization on your side.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Issuing > Config
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-issuing-config-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-issuing-digital-wallet-tokens-api
+  name: Airwallex Issuing > Digital Wallet Tokens API
+  description: Query and manage digital wallet tokens.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Issuing > Digital Wallet Tokens
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-issuing-digital-wallet-tokens-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-issuing-merchant-brands-api
+  name: Airwallex Issuing > Merchant Brands API
+  description: >-
+    Searches Merchant Brands, primarily for configuring the set of Merchant Brand unique identifiers permitted
+    on a card.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Issuing > Merchant Brands
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-issuing-merchant-brands-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-issuing-transaction-disputes-api
+  name: Airwallex Issuing > Transaction Disputes API
+  description: You can create a dispute for a card transaction. You can also update/submit/cancel it.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Issuing > Transaction Disputes
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-issuing-transaction-disputes-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-issuing-transactions-api
+  name: Airwallex Issuing > Transactions API
+  description: >-
+    You can view transactions processed against individual cards or for all cards created within your
+    organisation.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Issuing > Transactions
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-issuing-transactions-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-lending-borrower-api
+  name: Airwallex Lending > Borrower API
+  description: The Lending > Borrower API from Airwallex — 4 operation(s) for lending > borrower.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Lending > Borrower
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-lending-borrower-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-lending-lender-api
+  name: Airwallex Lending > Lender API
+  description: The Lending > Lender API from Airwallex — 1 operation(s) for lending > lender.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Lending > Lender
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-lending-lender-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-payment-acceptance-config-api
+  name: Airwallex Payment Acceptance > Config API
+  description: The **Config** API allows you to query for active merchant configurations.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Payment Acceptance > Config
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-payment-acceptance-config-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-payment-acceptance-conversion-quotes-api
+  name: Airwallex Payment Acceptance > Conversion Quotes API
+  description: "A conversion quote locks the conversion rate between the merchant and shopper currencies\
+    \ for a certain period of time. Merchants can repeatedly use it to price payments in the shopper's\
+    \ local currency during its validity period. Please refer to our [product documentation](/docs/payments/optimize-your-integration/increase-conversion/multi-currency-pricing-api)\
+    \ for integration details.  \n  \nData Retention Policy: You can query Conversion Quote resources\
+    \ for a maximum of 31 days since creation."
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Payment Acceptance > Conversion Quotes
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-payment-acceptance-conversion-quotes-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-payment-acceptance-customer-balance-transactions-api
+  name: Airwallex Payment Acceptance > Customer Balance Transactions API
+  description: >-
+    A **Customer Balance Transaction** records a change in the balance of funds that Airwallex holds and
+    returns on behalf of your customer. It is used to notify you when bank transfer funds are received
+    or reversed, including in exceptional scenarios such as overpayment, underpayment, or unmatched funding.
+
+
+    [For bank transfer payments](https://www.airwallex.com/docs/payments/payment-methods/global/bank-transfer),
+    the payment instructions are displayed to the shopper, who then manually transfers the funds through
+    their own bank. Because the transfer is completed outside of the Airwallex checkout flow, the received
+    funds may not always match the original PaymentIntent or PaymentAttempt. Customer Balance Transactions
+    give you clear visibility into every received fund, its status, and any reversal.
+
+
+    A Customer Balance Transaction has one of the following types:
+
+
+    1. `bank_transfer` - Adds bank transfer funds to the customer balance.
+
+    2. `bank_transfer_reversal` - Reverses a previous bank transfer transaction and deducts the corresponding
+    amount from the customer balance.
+
+    3. `applied_to_payment` - Applies bank transfer funds from the customer balance to a payment, reducing
+    the available customer balance.
+
+
+    Airwallex emits `customer_balance_transaction` webhook events as funds progress. Refer to the product
+    documentation for the full list of events and their payloads.
+
+
+    This resource applies to bank transfer payments only.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Payment Acceptance > Customer Balance Transactions
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-payment-acceptance-customer-balance-transactions-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-payment-acceptance-customers-api
+  name: Airwallex Payment Acceptance > Customers API
+  description: >-
+    **Customer** is an API resource for you to save your customer's information, which is required by
+    the [Payment Method](/docs/api/payments/payment_methods) and [Payment Consent](/docs/api/payments/payment_consents)
+    APIs.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Payment Acceptance > Customers
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-payment-acceptance-customers-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-payment-acceptance-customs-declarations-api
+  name: Airwallex Payment Acceptance > Customs Declarations API
+  description: >-
+    The **Customs Declaration** API help merchants to complete customs clearance process as regulation
+    required. This API applies only to China customs requirements and workflows.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Payment Acceptance > Customs Declarations
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-payment-acceptance-customs-declarations-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-payment-acceptance-funds-split-reversals-api
+  name: Airwallex Payment Acceptance > Funds Split Reversals API
+  description: "The **Funds Split Reversal** API helps you reverse an existing **Funds Split** made to\
+    \ a connected account, either entirely or partially.  \n  \nData Retention Policy: You can query and\
+    \ operate Funds Split Reversal resources for a maximum of 2 years since creation."
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Payment Acceptance > Funds Split Reversals
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-payment-acceptance-funds-split-reversals-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-payment-acceptance-funds-splits-api
+  name: Airwallex Payment Acceptance > Funds Splits API
+  description: >-
+    A **Funds Split** will guide you through the process to divide part of the collected funds to another
+    destination before settling to the account that owns the funds.
+
+
+    You may create multiple **Funds Splits** for the same source of funds to send money to different destinations.
+    However, one **Funds Split** will only have one destination.
+
+
+    You may specify the following on a Funds Split.
+
+
+    1. What is the source of funds? Denoted by `source_type`.
+
+    2. How much do you want to split? Denoted by `amount`.
+
+    3. Who will receive the funds? Denoted by `destination`.
+
+
+    Currently, Funds Split only works when the source of funds is a payment acceptance transaction, and
+    the destinations are connected accounts to the funds owner.
+
+
+    Data Retention Policy: You can query and operate Funds Split resources for a maximum of 2 years since
+    creation.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Payment Acceptance > Funds Splits
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-payment-acceptance-funds-splits-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-payment-acceptance-payment-attempts-api
+  name: Airwallex Payment Acceptance > Payment Attempts API
+  description: "A **Payment Attempt** object is created whenever a customer makes a payment with the chosen\
+    \ Payment Method. This API allows you to find out how your customer paid for your order.  \n  \nA\
+    \ customer may attempt to pay for the same order multiple times. However, only one attempt should\
+    \ succeed. Use the [List all Payment Attempts](/docs/api/payments/payment_attempts/list) endpoint\
+    \ to list each and every Payment Attempt made by your customer.  \n  \nData Retention Policy: You\
+    \ can query Payment Attempt resources for a maximum of 2 years since creation."
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Payment Acceptance > Payment Attempts
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-payment-acceptance-payment-attempts-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-payment-acceptance-payment-consents-api
+  name: Airwallex Payment Acceptance > Payment Consents API
+  description: >-
+    **Payment Consent** is an API resource to represent the agreement between merchant and Customer of
+    making subsequent payments using the provided Payment Method. In general, we can categorize the usages
+    of Payment Consent into two groups.
+
+
+    - Merchant can initiate the payment without customer's presence (MIT). For example, membership subscription
+    and utilities.
+
+    - Customer can initiate the payment without having to input payment method information again (CIT).
+    For example, fast checkout with saved method.
+
+
+    To make payments, you can [confirm](/docs/api/payments/payment_intents/confirm) a Payment Intent with
+    the reference of Payment Consent, which must be in the status of `VERIFIED`, `REQUIRES_PAYMENT_METHOD`
+    or `REQUIRES_CUSTOMER_ACTION`. The latter two are only allowed for card and direct debit payment methods
+    as they can be verified directly by the success of the initial payment.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Payment Acceptance > Payment Consents
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-payment-acceptance-payment-consents-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-payment-acceptance-payment-disputes-api
+  name: Airwallex Payment Acceptance > Payment Disputes API
+  description: >-
+    A dispute occurs when a shopper contests legitimacy of a payment. **PaymentDispute** APIs will enable
+    you to manage your dispute events removing the need to managing dispute events manually via web-app,
+    there by reducing your manual efforts.
+
+
+    Combination of a stage & status of a PaymentDispute will indicate the current situation of dispute.
+    You can use our [product documentation](/docs/payments/manage-payments/disputes/dispute-flow) to understand
+    the possible next actions based on stage & status combination.
+
+
+    Data Retention Policy: You can query and operate PaymentDispute resources for a maximum of 2 years
+    since creation.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Payment Acceptance > Payment Disputes
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-payment-acceptance-payment-disputes-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-payment-acceptance-payment-intents-api
+  name: Airwallex Payment Acceptance > Payment Intents API
+  description: >-
+    A **Payment Intent** guides you through the process of collecting a payment from your customer. It
+    tracks a payment when your customer first checks out, through to when payment is successfully paid
+    by your customer. A Payment Intent transitions through a number of states throughout the customer's
+    payment journey.
+
+
+    You may specify the following on a Payment Intent.
+
+
+    1. How much the payment is for? Denoted by `amount` and `currency`.
+
+    2. Who is making the payment? This is described by the optional `customer_id` field.
+
+    3. Which Payment Method to use? Denoted by `payment_method`.
+
+
+    You/your customer will get back the following hints at different stages of the payment process:
+
+
+    1. The available Payment Methods.
+
+    2. The Payment Method attached to this customer (if `customer_id` is set).
+
+
+    A combination of `status` and `next_action` guide you and your customers through the payment process,
+    including triggering additional authentication flows as required.
+
+
+    Data Retention Policy: You can query and operate Payment Intent resources for a maximum of 2 years
+    since creation.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Payment Acceptance > Payment Intents
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-payment-acceptance-payment-intents-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-payment-acceptance-payment-links-api
+  name: Airwallex Payment Acceptance > Payment Links API
+  description: >-
+    The **Payment Links** API allows you to accept payments from shoppers using a payment link URL. The
+    payment link URL takes your shopper to an Airwallex hosted secure checkout page where they can make
+    the payment with their preferred payment method.
+
+
+    The Payment Link supports two pricing options:
+
+
+    1. Fixed pricing - Both the payment `amount` and `currency` are locked. The shopper must pay the exact
+    amount in the given currency.
+
+    2. Flexible pricing - The shopper chooses to pay from a list of supported currencies you specify and
+    decide on the exact amount to pay.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Payment Acceptance > Payment Links
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-payment-acceptance-payment-links-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-payment-acceptance-payment-methods-api
+  name: Airwallex Payment Acceptance > Payment Methods API
+  description: >-
+    A **Payment Method** represents the funding source that belongs to a [Customer](/docs/api/payments/customers)
+    and is used to bind to one or several [Payment Consents](/docs/api/payments/payment_consents).
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Payment Acceptance > Payment Methods
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-payment-acceptance-payment-methods-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-payment-acceptance-reference-data-api
+  name: Airwallex Payment Acceptance > Reference Data API
+  description: >-
+    All card schemes publish account range information which helps understand the product, issuer country
+    code, issuer name etc. Hence, merchants can request account range data under a particular PAN thereby
+    enabling business logic such as:
+
+
+    -   Merchants query for BIN info using the PAN to get information about card type so that they can
+    surcharge if the card used is commercial / credit or other cases.
+
+    -   Merchants would like to know the brand and product information to run discounts and offers on
+    the website. The cart amount will be dynamically updated to reflect the discounted price.
+
+    -   Merchants query on the card details like country code to run some risk level checks at their side
+    without depending on the acquirer. Merchants may not want to accept cards issued in a certain country,
+    because sending this to the acquirer may cost them additional charges (gateway fee / authorization
+    fee, etc.).
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Payment Acceptance > Reference Data
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-payment-acceptance-reference-data-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-payment-acceptance-refunds-api
+  name: Airwallex Payment Acceptance > Refunds API
+  description: "The **Refund** API allows you to refund a succeeded payment back to the payment method\
+    \ used by your customer. The refund amount must be equal to or less than the amount specified in the\
+    \ original Payment Intent/Payment Attempt.  \n  \nMultiple Refunds can be created until the full amount\
+    \ is refunded.  \n  \nData Retention Policy: You can query Refund resources for a maximum of 2 years\
+    \ since creation."
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Payment Acceptance > Refunds
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-payment-acceptance-refunds-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-payment-acceptance-settlement-records-api
+  name: Airwallex Payment Acceptance > Settlement Records API
+  description: "Use the Settlement Record API to receive the full settlement details of a particular settlement\
+    \ batch or payment intent.  \n  \nThe Settlement Record API provides the same information as the [Settlement\
+    \ Report](/docs/payments/payment-operations/reporting/settlement-report) but via JSON. The API can\
+    \ be queried using settlement batch ID or payment intent ID or both depending on your reconciliation\
+    \ use case.  \n  \n**How to use this API:**  \n  \n**Step 1:** Retrieve a settlement batch ID and/or\
+    \ payment intent ID.  \nYou can obtain a settlement batch ID by calling the [Get list of settlements\
+    \ endpoint](/docs/api/finance/settlements/list). To query by a specific payment intent, retrieve the\
+    \ corresponding payment intent ID using the [Get list of Payment Intents endpoint](/docs/api/payments/payment_intents/list).\
+    \  \n  \n**Step 2:** Query the Settlement Record API.  \nOnce you have the required identifiers, make\
+    \ a request to this API to retrieve detailed settlement records. Refer to the [API Reference](/docs/api/payments/settlement_records/list)\
+    \ for request details and parameters.  \n  \nThis API supports keyset pagination using the `page_after`\
+    \ parameter. If the response includes additional pages, the `has_more` field will be set to `true`."
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Payment Acceptance > Settlement Records
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-payment-acceptance-settlement-records-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-payment-acceptance-terminals-api
+  name: Airwallex Payment Acceptance > Terminals API
+  description: "A **Terminal** represents a physical device that can process payments. This API allows\
+    \ you to manage terminals, including creating, retrieving, updating, activating, deactivating, terminating,\
+    \ and processing payment intents in terminals.  \n  \nA Terminal can be in one of the following states:\
+    \ 1. **ACTIVE**: The Terminal is activated and ready to use. 2. **INACTIVE**: The Terminal is deactivated\
+    \ for any reason. 3. **TERMINATED**: The Terminal is terminated and can't be used anymore."
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Payment Acceptance > Terminals
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-payment-acceptance-terminals-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-payouts-batch-transfers-api
+  name: Airwallex Payouts > Batch Transfers API
+  description: >-
+    A batch transfer resource is created when you want to create multiple transfers with one fund deduction
+    from your funding source. You can create a batch transfer first, and then add items into this batch.
+    You can only input one funding source in a batch. Beneficiary information is contained in each item
+    in the batch.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Payouts > Batch Transfers
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-payouts-batch-transfers-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-payouts-beneficiaries-api
+  name: Airwallex Payouts > Beneficiaries API
+  description: >-
+    A beneficiary resource needs to be created before a payment can be made, the beneficiary notes the
+    individual or organisation being paid along with the bank details and payment method. A beneficiary
+    unique identifier is generated upon the creation can be used for creating payment using a payment
+    resource.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Payouts > Beneficiaries
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-payouts-beneficiaries-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-payouts-payers-api
+  name: Airwallex Payouts > Payers API
+  description: >-
+    By default you make payments from yourself therefore this resource is optional. However if your Airwallex
+    Account allows paying on behalf of others, you can create new payers and this resource becomes mandatory
+    to be defined which payer you are paying from.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Payouts > Payers
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-payouts-payers-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-payouts-transfers-api
+  name: Airwallex Payouts > Transfers API
+  description: >-
+    A transfer resource is created when you send funds to a beneficiary, it details the beneficiary, bank
+    details, the amount being paid, its status and other relevant information. You can also create the
+    transfer by using the beneficiary unique identifier which was previously created using Beneficiary
+    resource.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Payouts > Transfers
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-payouts-transfers-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-reconciliation-reconciliation-api
+  name: Airwallex Reconciliation > Reconciliation API
+  description: >-
+    The Reconciliation > Reconciliation API from Airwallex — 4 operation(s) for reconciliation > reconciliation.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Reconciliation > Reconciliation
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-reconciliation-reconciliation-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-reserves-reserves-api
+  name: Airwallex Reserves > Reserves API
+  description: The Reserves > Reserves API from Airwallex — 2 operation(s) for reserves > reserves.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Reserves > Reserves
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-reserves-reserves-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-risk-fraud-feedback-issuing-api
+  name: Airwallex Risk > Fraud Feedback (Issuing) API
+  description: "The **Fraud Feedback** API may be used to confirm whether an issuing transaction was authorized\
+    \ or not authorized by the cardholder. A transaction confirmed to be authorized will allow Airwallex\
+    \ to better understand the cardholder's transaction patterns and increase the success rate of similar\
+    \ transactions. A transaction confirmed not to have been authorized by the cardholder will be labelled\
+    \ as fraudulent and the card will be blocked.  \n  \nPlease note all future transactions on a blocked\
+    \ card will be blocked. If you require a card to be unblocked please contact support.  \n  \nFrozen\
+    \ cards may be unfrozen via the [update a Card](/docs/api/issuing/cards/update) API."
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Risk > Fraud Feedback (Issuing)
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-risk-fraud-feedback-issuing-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-risk-request-for-information-rfi-api
+  name: Airwallex Risk > Request for Information (RFI) API
+  description: >-
+    As part of reviewing customer profiles and activity, Airwallex may request additional information
+    about an account by raising an RFI. Airwallex will initiate a request for information which may then
+    contain one or more follow up questions if more clarification is needed.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Risk > Request for Information (RFI)
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-risk-request-for-information-rfi-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-risk-risk-reports-api
+  name: Airwallex Risk > Risk Reports API
+  description: >-
+    The Risk Reports API lets merchants self-serve their own risk datasets. The currently supported report
+    type is `PAYMENT_FRAUD_REPORT`, which contains payment fraud data reported through acquirer TC40 /
+    SAFE reports for a given date range.
+
+
+    Use [Generate a risk report](/docs/api/risk/risk_reports/generate) to submit a query and obtain a
+    report `id`, followed by [Retrieve a risk report](/docs/api/risk/risk_reports/retrieve) to track the
+    report status. When the report reaches `COMPLETED` status, obtain a short-lived signed download link.
+    Reports are generated asynchronously. Subscribe to the `risk.risk_reports.completed` and `risk.risk_reports.failed`
+    webhook events to be notified when a report is ready or generation has failed.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Risk > Risk Reports
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-risk-risk-reports-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-risk-sellers-api
+  name: Airwallex Risk > Sellers API
+  description: Manage sellers for your Merchant of Record (MoR) account.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Risk > Sellers
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-risk-sellers-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-risk-watchlist-api
+  name: Airwallex Risk > Watchlist API
+  description: >-
+    The Watchlist API is an automated tool for transaction verification and fraud prevention. With this
+    API, merchants can create and manage Watchlists of shoppers to automatically accept, verify, or block
+    transactions.
+
+    To add a Watchlist item, please use the ‘create’ endpoint. To make changes to an existing Watchlist
+    item, please use the ‘update’ endpoint. To retrieve a specific item in the Watchlist, please provide
+    the item_id with the ‘get’ endpoint.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Risk > Watchlist
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-risk-watchlist-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-scale-settlements-scale-settlements-api
+  name: Airwallex Scale Settlements > Scale Settlements API
+  description: >-
+    The Scale Settlements > Scale Settlements API from Airwallex — 2 operation(s) for scale settlements
+    > scale settlements.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Scale Settlements > Scale Settlements
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-scale-settlements-scale-settlements-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-security-activity-log-api
+  name: Airwallex Security > Activity Log API
+  description: Get activity logs of the login account.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Security > Activity Log
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-security-activity-log-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-simulation-sandbox-only-accounts-api
+  name: Airwallex Simulation (Sandbox Only) > Accounts API
+  description: >-
+    Simulate the status transition of a connected account through its lifecycle in the sandbox environment.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Simulation (Sandbox Only) > Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-simulation-sandbox-only-accounts-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-simulation-sandbox-only-billing-api
+  name: Airwallex Simulation (Sandbox Only) > Billing API
+  description: Simulate billing operations in the sandbox environment.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Simulation (Sandbox Only) > Billing
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-simulation-sandbox-only-billing-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-simulation-sandbox-only-deposits-api
+  name: Airwallex Simulation (Sandbox Only) > Deposits API
+  description: >-
+    You can receive funds into your [Airwallex Wallet](/docs/global-treasury/understanding-global-treasury/treasury-concepts#wallet)
+    via bank transfers to [Global Accounts](/docs/api/core_resources/global_accounts) or direct debits
+    from [Linked Accounts](/docs/api/core_resources/linked_accounts).
+
+
+    The Global Accounts deposit simulation API allows you to simulate a deposit from an external bank
+    account in the sandbox environment.
+
+
+    The Direct Debit deposit simulation APIs allow you to transition Direct Debit deposit statuses in
+    the sandbox environment.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Simulation (Sandbox Only) > Deposits
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-simulation-sandbox-only-deposits-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-simulation-sandbox-only-issuing-api
+  name: Airwallex Simulation (Sandbox Only) > Issuing API
+  description: >-
+    You can simulate transactions on cards issued by Airwallex and KYC processes of cardholders. Find
+    out more about [generating card issuing transactions](/docs/developer-tools/sandbox-environment/issuing/simulate-transactions-on-issued-cards)
+    and [cardholder status](/docs/issuing/get-started/create-cardholders/cardholder-statuses).
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Simulation (Sandbox Only) > Issuing
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-simulation-sandbox-only-issuing-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-simulation-sandbox-only-linked-accounts-api
+  name: Airwallex Simulation (Sandbox Only) > Linked Accounts API
+  description: Simulate the Linked Account lifecycle scenarios in the sandbox environment.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Simulation (Sandbox Only) > Linked Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-simulation-sandbox-only-linked-accounts-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-simulation-sandbox-only-offboardings-api
+  name: Airwallex Simulation (Sandbox Only) > Offboardings API
+  description: >-
+    Simulate status transitions for connected account offboarding in the sandbox environment.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Simulation (Sandbox Only) > Offboardings
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-simulation-sandbox-only-offboardings-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-simulation-sandbox-only-payment-acceptance-api
+  name: Airwallex Simulation (Sandbox Only) > Payment Acceptance API
+  description: Simulate shopper actions on dispute in the sandbox environment.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Simulation (Sandbox Only) > Payment Acceptance
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-simulation-sandbox-only-payment-acceptance-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-simulation-sandbox-only-request-for-information-rfi-api
+  name: Airwallex Simulation (Sandbox Only) > Request for Information (RFI) API
+  description: Simulate the creation and closure of RFI in the sandbox environment.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Simulation (Sandbox Only) > Request for Information (RFI)
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-simulation-sandbox-only-request-for-information-rfi-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-simulation-sandbox-only-terminal-simulation-api
+  name: Airwallex Simulation (Sandbox Only) > Terminal Simulation API
+  description: >-
+    A Terminal represents a virtual point-of-sale (POS) device registered in the sandbox environment for
+    testing in-person payment flows.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Simulation (Sandbox Only) > Terminal Simulation
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-simulation-sandbox-only-terminal-simulation-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-simulation-sandbox-only-transfers-api
+  name: Airwallex Simulation (Sandbox Only) > Transfers API
+  description: Simulate the transfer lifecycle scenarios in the sandbox environment.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Simulation (Sandbox Only) > Transfers
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-simulation-sandbox-only-transfers-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-spend-bills-api
+  name: Airwallex Spend > Bills API
+  description: >-
+    Manages bills representing accounts payable obligations. Supports retrieval, listing with filters,
+    and sync status updates for integration with external accounting systems.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Spend > Bills
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-spend-bills-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-spend-expenses-api
+  name: Airwallex Spend > Expenses API
+  description: >-
+    Manages expenses associated with corporate card transactions. Supports approval workflows, receipt
+    attachments, accounting field categorization, line item breakdowns, and sync with external accounting
+    systems.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Spend > Expenses
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-spend-expenses-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-spend-purchase-orders-api
+  name: Airwallex Spend > Purchase Orders API
+  description: >-
+    Manages purchase orders for tracking vendor commitments and spend. Supports creation, retrieval, listing
+    with filters, and sync status updates for integration with external accounting systems.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Spend > Purchase Orders
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-spend-purchase-orders-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-spend-reimbursements-api
+  name: Airwallex Spend > Reimbursements API
+  description: >-
+    Manages out-of-pocket expense reimbursements, including individual requests and grouped reports. Supports
+    approval workflows, receipt attachments, payment processing, and sync with external accounting systems.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Spend > Reimbursements
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-spend-reimbursements-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-spend-vendors-api
+  name: Airwallex Spend > Vendors API
+  description: >-
+    Manages vendor records for accounts payable and purchase order workflows. Supports vendor creation,
+    retrieval, listing with filters, and sync status updates for integration with external accounting
+    systems.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Spend > Vendors
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-spend-vendors-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-supporting-services-connected-stores-api
+  name: Airwallex Supporting Services > Connected Stores API
+  description: >-
+    A Connected Store object represents an e-commerce store that is owned by the account and was ever
+    connected to Airwallex.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Supporting Services > Connected Stores
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-supporting-services-connected-stores-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-supporting-services-file-service-api
+  name: Airwallex Supporting Services > File Service API
+  description: >-
+    Represents files uploaded to Airwallex for secure storage and retrieval via download links. Each file
+    can be referenced in other API endpoints using its unique file identifier.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Supporting Services > File Service
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-supporting-services-file-service-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-supporting-services-reference-data-api
+  name: Airwallex Supporting Services > Reference Data API
+  description: Reference data made available to support the usage of the Airwallex platform.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Supporting Services > Reference Data
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-supporting-services-reference-data-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-transactional-fx-conversion-amendments-api
+  name: Airwallex Transactional FX > Conversion Amendments API
+  description: >-
+    The Amendments resource provides the capability to make changes to existing conversions. Right now,
+    the only supported amendment type is a full cancellation.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Transactional FX > Conversion Amendments
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-transactional-fx-conversion-amendments-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-transactional-fx-conversion-api
+  name: Airwallex Transactional FX > Conversion API
+  description: >-
+    The Conversion resources provide capability to create transactions that convert from one currency
+    into another. The transaction will result in a debit and credit against your wallet balances. Both
+    Quotes and Rates transactions can be created using the Conversion resources.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Transactional FX > Conversion
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-transactional-fx-conversion-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-transactional-fx-quotes-api
+  name: Airwallex Transactional FX > Quotes API
+  description: >-
+    Create a quote that can be used in a subsequent conversion request during the requested validity period.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Transactional FX > Quotes
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-transactional-fx-quotes-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+- aid: airwallex:airwallex-transactional-fx-rates-api
+  name: Airwallex Transactional FX > Rates API
+  description: You can retrieve the current rates that a conversion request would be booked at.
+  humanURL: https://www.airwallex.com/docs/api#/Introduction
+  baseURL: https://api.airwallex.com/api/v1
+  tags:
+  - Transactional FX > Rates
+  properties:
+  - type: OpenAPI
+    url: openapi/airwallex-transactional-fx-rates-api-openapi.yml
+  - type: APIReference
+    url: https://www.airwallex.com/docs/api/introduction
+  - type: JSONSchema
+    url: json-schema/airwallex-invoice-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-customer-balance-transaction-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-settlement-record-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-checkout-session-response-schema.json
+  - type: JSONSchema
+    url: json-schema/airwallex-payment-intent-list-schema.json
+tags_raw:
+- Cross-Border Payments
+- FinTech
+- Foreign Exchange
+- Payments
+- Global
+- Embedded Finance
+- Multi-Currency
+
+type: Index
+
+integrations:
+- name: Log in
+
+x-coverage:
+  state: covered
+  reason: identity-verified
+  detail: 'Identity pass 2026-10-20: www.airwallex.com self-identifies as Airwallex. All pointers fetched with GET. The kinlaneapi Postman workspace
+    rendered a Postman error page and was replaced by Airwallex''s own Postman team (linked from its Quickstart with Postman docs). docs/api/getting_started
+    only redirects to the API introduction, so GettingStarted/Quickstart now point to real quickstart pages. security.airwallex.com answers 403
+    with a Cloudflare challenge to curl (edge policy, not dead; preflight recorded 200).'
+  evidence:
+  - url: https://www.airwallex.com/
+    status: 200
+  - url: https://www.airwallex.com/docs
+    status: 200
+  - url: https://www.airwallex.com/docs/payments/get-started/quickstart
+    status: 200
+  - url: https://www.airwallex.com/docs/developer-tools/api/quickstart-with-postman
+    status: 200
+  - url: https://www.postman.com/airwallex/
+    status: 200
+  - url: https://www.postman.com/kinlaneapi/airwallex/overview
+    status: 200
+    note: renders "This wasn't supposed to happen" error shell; removed
+  - url: https://www.airwallex.com/global/newsroom
+    status: 200
+  - url: https://www.airwallex.com/en-us/terms
+    status: 200
+  - url: https://security.airwallex.com/
+    status: 403
+    note: Cloudflare challenge to our crawler; kept
+
 x-enrichment:
-  date: '2026-08-30'
+  date: '2026-10-20'
   status: enriched
-  artifacts_added: 41
-  pass: local-v1
+  artifacts_added: 37
+  pass: modular-v1
+  engine: identity=anthropic,contract=anthropic,surfaces=anthropic,docs=anthropic,regulatory=anthropic

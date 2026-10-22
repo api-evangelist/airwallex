@@ -1,0 +1,183 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Lending > Lender API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Lending > Lender
+  x-domain: Lending
+  x-resource: Lender
+  x-urlPath: lending/lender
+paths:
+  /api/v1/lending/lenders/{lender_id}:
+    get:
+      tags:
+      - Lending > Lender
+      x-stage: beta
+      summary: 1|List all Lender Details
+      description: Get details of the specified lender.
+      operationId: retrieveLender
+      x-oboSupported: false
+      parameters:
+      - name: lender_id
+        in: path
+        description: Lender unique identifier.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoreBankingLender'
+        '400':
+          description: '`invalid_argument`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '`credentials_invalid`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: '`not_found`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: '`service_unavailable`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/lending/lenders/lender_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          account_id: acct_O1rOJEaPTi6RphseAaJPhw
+          balances:
+          - available_amount: 89500
+            currency: USD
+            reserved_amount: 500
+          id: e3d88510-3f98-438c-8749-6fd820bf43fe
+          lending_settings:
+            activation_status: ACTIVE
+            lending_limits:
+            - currency: USD
+              limit: 100000
+          lending_statistics:
+          - currency: USD
+            limit_allocated: 1000
+      x-oauthSupported: false
+      x-domain: Lending
+      x-resource: Lender
+      x-urlPath: retrieve
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    CoreBankingLendingSettings:
+      type: object
+      properties:
+        activation_status:
+          type: string
+          description: Activation status of the lender.
+          enum:
+          - ACTIVE
+          - INACTIVE
+        lending_limits:
+          type: array
+          description: Per currency limit of lending that can be extended across all associated borrowers in total.
+          items:
+            $ref: '#/components/schemas/CoreBankingLendingLimit'
+      description: Lending limit settings and total allocation details.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    CoreBankingLendingStatistics:
+      type: object
+      properties:
+        currency:
+          type: string
+          description: Currency in which lending is extended.
+        limit_allocated:
+          type: number
+          description: Lending currently extended across all existing borrowers, up to the `lending_limit` defined in `lending_settings`.
+    CoreBankingLenderBalances:
+      type: object
+      properties:
+        available_amount:
+          type: number
+          description: Available balance for covering funds extended to borrowers.
+        currency:
+          type: string
+          description: Currency in which lending is extended.
+        reserved_amount:
+          type: number
+          description: Amount reserved for use in future transactions.
+    CoreBankingLender:
+      type: object
+      properties:
+        account_id:
+          type: string
+          description: Airwallex account unique identifier of the lender.
+        balances:
+          type: array
+          description: Balances of the lender's account.
+          items:
+            $ref: '#/components/schemas/CoreBankingLenderBalances'
+        id:
+          type: string
+          description: Lender unique identifier.
+        lending_settings:
+          $ref: '#/components/schemas/CoreBankingLendingSettings'
+          description: Lending limit settings and total allocation details.
+        lending_statistics:
+          type: array
+          description: Statistics relating to the current distribution of lending.
+          items:
+            $ref: '#/components/schemas/CoreBankingLendingStatistics'
+    CoreBankingLendingLimit:
+      type: object
+      properties:
+        currency:
+          type: string
+          description: Currency in which lending is extended.
+        limit:
+          type: number
+          description: Upper limit of lending that can be extended across all associated borrowers in total.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

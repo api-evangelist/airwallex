@@ -1,0 +1,715 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Embedded Finance > Connected Account Transfers API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Embedded Finance > Connected Account Transfers
+  description: A Connected Account Transfer-transfers) can be used to send funds directly from a Platform Account or Connected Account to another Account connected to the same platform. Destination Connected Account must have passed KYC and be in state `ACTIVE`.
+  x-domain: Embedded Finance
+  x-resource: Connected Account Transfers
+  x-urlPath: scale/connected_account_transfers
+paths:
+  /api/v1/connected_account_transfers/create:
+    post:
+      tags:
+      - Embedded Finance > Connected Account Transfers
+      summary: 1|Create a Connected Account Transfer
+      description: Initiate a new connected account transfer to send funds from your Airwallex account to a connected account. Your Airwallex balance must cover the transfer amount or you will receive an “Insufficient Funds” error message.
+      operationId: createConnectedAccountTransfer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - amount
+              - currency
+              - destination
+              - reason
+              - reference
+              - request_id
+              properties:
+                additional_info:
+                  type: object
+                  description: Additional information about the transaction.
+                  properties:
+                    card_payment_data:
+                      type: object
+                      description: Additional information about the card payment funding the connected account transfer.
+                      properties:
+                        amount:
+                          type: string
+                          description: The payment amount for this transaction.
+                        brand:
+                          type: string
+                          description: 'The card brand. Possible enum values:'
+                          enum:
+                          - MASTERCARD
+                          - VISA
+                          - UNION_PAY
+                          - AMERICAN_EXPRESS
+                          - JCB
+                          - DISCOVER
+                          - DINERS_CLUB_INTERNATIONAL
+                        card_issuing_country:
+                          type: string
+                          description: Country code where the card was issued (e.g., `US`, `GB`, `CN`).
+                        card_token:
+                          type: string
+                          description: A unique token (GUID) representing the customer’s card number.
+                        card_type:
+                          type: string
+                          description: 'The card type. Possible enum values:'
+                          enum:
+                          - CREDIT
+                          - DEBIT
+                          - PREPAID
+                        cardholder_name:
+                          type: string
+                          description: The cardholder's name. Not applicable to `APPLE_PAY` and `GOOGLE_PAY`.
+                        created_at:
+                          type: string
+                          description: The timestamp when the customer created the payment transaction.
+                        deposit_id:
+                          type: string
+                          description: The unique identifier of the deposit that corresponds to the settlement into Airwallex's Global Account.
+                        ip_address:
+                          type: string
+                          description: IP address (IPv4 or IPv6) of the payer’s device at the time of payment.
+                        payment_method:
+                          type: string
+                          description: 'The payment method used for this transaction. Possible enum values:'
+                          enum:
+                          - APPLE_PAY
+                          - GOOGLE_PAY
+                          - CARD_ON_FILE
+                        three_dsecure_outcome:
+                          type: string
+                          description: 'The outcome of a 3D Secure authentication process, which verifies the identity of a cardholder during an online purchase. Possible enum values:'
+                          enum:
+                          - ATTEMPTED
+                          - AUTHENTICATED
+                          - FAILED
+                          - NOT_APPLICABLE
+                          - NOT_REQUESTED
+                    merchant_data:
+                      type: object
+                      description: Structured merchant information for nested-flow transfers.
+                      properties:
+                        business_name:
+                          type: string
+                          description: The merchant's official legal name.
+                        business_registration_date:
+                          type: string
+                          description: The date when the merchant's business was registered, in `YYYY-MM-DD` format. For example, `2025-03-15`.
+                        business_registration_number:
+                          type: string
+                          description: The merchant's Business Registration Number (BRN) or equivalent identifier.
+                        business_trading_name:
+                          type: string
+                          description: The merchant's trading or DBA (doing business as) name.
+                        industry_category_code:
+                          type: string
+                          description: The merchant's industry category code.
+                        merchant_identifier:
+                          type: string
+                          description: The merchant's unique identifier on the platform.
+                        registration_country:
+                          type: string
+                          description: The merchant's country of registration in ISO 3166-1 alpha-2 format. For example, `CN` or `HK`.
+                        store_urls:
+                          type: array
+                          description: The merchant's store URL(s).
+                          items:
+                            type: string
+                amount:
+                  type: string
+                  description: Amount of the transfer in `currency`, representing how much to transfer.
+                currency:
+                  type: string
+                  description: Currency (3-letter ISO-4217 code).
+                destination:
+                  type: string
+                  description: Airwallex account unique identifier.
+                reason:
+                  type: string
+                  description: 'Reason for the transfer instruction.  One of: `wages_salary`, `donation_charitable_contribution`, `personal_remittance`, `transfer_to_own_account`, `pension`, `family_support`, `living_expenses`, `education_training`, `travel`, `investment_proceeds`, `investment_capital`, `loan_credit_repayment`, `taxes`, `goods_purchased`, `business_expenses`, `medical_services`, `professional_business_services`, `technical_services`, `other_services`, `construction`, `freight`, `real_estate`.'
+                reference:
+                  type: string
+                  description: User specified reference that will be displayed to the beneficiary.  1-140 characters long.
+                request_id:
+                  type: string
+                  description: Unique request identifier.  1-50 characters long.
+        description: transferRequestDto.
+        required: true
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectedAccountTransfer'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ,"insufficient_fund"
+
+            ,"validation_failed"
+
+            ,"request_id_duplicate"
+
+            ,"bad_request"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid","credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/connected_account_transfers/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          additional_info:
+            card_payment_data:
+              amount: <string>
+              brand: MASTERCARD
+              card_issuing_country: <string>
+              card_token: <string>
+              card_type: CREDIT
+              cardholder_name: <string>
+              created_at: <string>
+              deposit_id: <string>
+              ip_address: <string>
+              payment_method: APPLE_PAY
+              three_dsecure_outcome: ATTEMPTED
+            merchant_data:
+              business_name: <string>
+              business_registration_date: <string>
+              business_registration_number: <string>
+              business_trading_name: <string>
+              industry_category_code: <string>
+              merchant_identifier: <string>
+              registration_country: <string>
+              store_urls: []
+          amount: '10000'
+          currency: AUD
+          destination: acct_DjU6FcdYPYy6MEJsU0JAPg
+          reason: travel
+          reference: PMT1936398
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+        response_body:
+          additional_info:
+            card_payment_data:
+              amount: <string>
+              brand: MASTERCARD
+              card_issuing_country: <string>
+              card_token: <string>
+              card_type: CREDIT
+              cardholder_name: <string>
+              created_at: <string>
+              deposit_id: <string>
+              ip_address: <string>
+              payment_method: APPLE_PAY
+              three_dsecure_outcome: ATTEMPTED
+            merchant_data:
+              business_name: <string>
+              business_registration_date: <string>
+              business_registration_number: <string>
+              business_trading_name: <string>
+              industry_category_code: <string>
+              merchant_identifier: <string>
+              registration_country: <string>
+              store_urls: []
+          amount: '10000'
+          created_at: 2018-03-22T16:08:02+1100
+          currency: AUD
+          destination: acct_DjU6FcdYPYy6MEJsU0JAPg
+          failure_reasons:
+          - EXPIRED_TRANSACTION_RFI_PAYER
+          - EXPIRED_TRANSACTION_RFI_BENEFICIARY
+          - DORMANCY_KYC_NO_RESPONSE_PAYER
+          - DORMANCY_KYC_NO_RESPONSE_BENEFICIARY
+          - WEBSITE_KYC_NO_RESPONSE_PAYER
+          - WEBSITE_KYC_NO_RESPONSE_BENEFICIARY
+          - WATCHLIST_RESTRICTION_PAYER
+          - WATCHLIST_RESTRICTION_BENEFICIARY
+          - OTHER_HIGH_RISK_PAYER
+          - OTHER_HIGH_RISK_BENEFICIARY
+          fee: 10
+          id: d9af1614-a6a1-4d45-aae7-6858fc6d9ede
+          reason: travel
+          reference: PMT1936398
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          short_reference_id: D220926-QZ7BTZE
+          status: NEW
+          updated_at: 2018-03-22T16:08:02+1100
+      x-oauthSupported: false
+      x-scope:
+      - scope: platform_transfer:write
+        group: Embedded Finance
+        resource_name: Transfers
+      x-domain: Embedded Finance
+      x-resource: Connected Account Transfers
+      x-urlPath: create
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/connected_account_transfers/{id}:
+    get:
+      tags:
+      - Embedded Finance > Connected Account Transfers
+      summary: 2|Retrieve a Connected Account Transfer
+      description: Get transaction details for a connected account transfer by specifying the transfer unique identifier.
+      operationId: retrieveConnectedAccountTransfer
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the connected account transfer to retrieve.
+        required: true
+        schema:
+          type: string
+          default: d9af1614-a6a1-4d45-aae7-6858fc6d9ede
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectedAccountTransfer'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid","credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/connected_account_transfers/connected_account_transfer_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          additional_info:
+            card_payment_data:
+              amount: <string>
+              brand: MASTERCARD
+              card_issuing_country: <string>
+              card_token: <string>
+              card_type: CREDIT
+              cardholder_name: <string>
+              created_at: <string>
+              deposit_id: <string>
+              ip_address: <string>
+              payment_method: APPLE_PAY
+              three_dsecure_outcome: ATTEMPTED
+          amount: 10000
+          created_at: 2018-03-22T16:08:02+1100
+          currency: AUD
+          destination: acct_DjU6FcdYPYy6MEJsU0JAPg
+          failure_reasons:
+          - EXPIRED_TRANSACTION_RFI_PAYER
+          - EXPIRED_TRANSACTION_RFI_BENEFICIARY
+          - DORMANCY_KYC_NO_RESPONSE_PAYER
+          - DORMANCY_KYC_NO_RESPONSE_BENEFICIARY
+          - WEBSITE_KYC_NO_RESPONSE_PAYER
+          - WEBSITE_KYC_NO_RESPONSE_BENEFICIARY
+          - WATCHLIST_RESTRICTION_PAYER
+          - WATCHLIST_RESTRICTION_BENEFICIARY
+          - OTHER_HIGH_RISK_PAYER
+          - OTHER_HIGH_RISK_BENEFICIARY
+          fee: 10
+          id: d9af1614-a6a1-4d45-aae7-6858fc6d9ede
+          reason: travel
+          reference: PMT1936398
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          short_reference_id: D220926-QZ7BTZE
+          status: NEW
+          updated_at: 2018-03-22T16:08:02+1100
+      x-oauthSupported: false
+      x-scope:
+      - scope: platform_transfer:read
+        group: Embedded Finance
+        resource_name: Transfers
+      x-domain: Embedded Finance
+      x-resource: Connected Account Transfers
+      x-urlPath: retrieve
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/connected_account_transfers:
+    get:
+      tags:
+      - Embedded Finance > Connected Account Transfers
+      summary: 3|List all Connected Account Transfers
+      description: Get a list of connected account transfers created by your Airwallex account. The transfers returned are sorted by creation time.
+      operationId: listConnectedAccountTransfers
+      parameters:
+      - name: currency
+        in: query
+        description: Currency (3-letter ISO-4217 code).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: USD
+      - name: destination
+        in: query
+        description: Airwallex account unique identifier.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: from_created_at
+        in: query
+        description: The start date of `created_at` in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: '2017-04-01'
+      - name: page_num
+        in: query
+        description: Page number, starts from 0.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of results per page. Default value is 100, minimum 10, maximum 2000.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: request_id
+        in: query
+        description: Transfer `request_id`.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: 'Status of the transfer. One of: `NEW`, `SETTLED`, `PENDING`, `SUSPENDED`, `FAILED`.'
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: to_created_at
+        in: query
+        description: The end date of `created_at` in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: 2017-04-01T03:52:34+0000
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: Paged results.
+                    items:
+                      $ref: '#/components/schemas/ConnectedAccountTransfer'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid","credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/connected_account_transfers
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - amount: 10000
+            created_at: 2018-03-22T16:08:02+1100
+            currency: AUD
+            destination: acct_DjU6FcdYPYy6MEJsU0JAPg
+            failure_reasons:
+            - EXPIRED_TRANSACTION_RFI_PAYER
+            - EXPIRED_TRANSACTION_RFI_BENEFICIARY
+            - DORMANCY_KYC_NO_RESPONSE_PAYER
+            - DORMANCY_KYC_NO_RESPONSE_BENEFICIARY
+            - WEBSITE_KYC_NO_RESPONSE_PAYER
+            - WEBSITE_KYC_NO_RESPONSE_BENEFICIARY
+            - WATCHLIST_RESTRICTION_PAYER
+            - WATCHLIST_RESTRICTION_BENEFICIARY
+            - OTHER_HIGH_RISK_PAYER
+            - OTHER_HIGH_RISK_BENEFICIARY
+            fee: 10
+            id: d9af1614-a6a1-4d45-aae7-6858fc6d9ede
+            reason: travel
+            reference: PMT1936398
+            request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+            short_reference_id: D220926-QZ7BTZE
+            status: NEW
+            updated_at: 2018-03-22T16:08:02+1100
+      x-oauthSupported: false
+      x-scope:
+      - scope: platform_transfer:read
+        group: Embedded Finance
+        resource_name: Transfers
+      x-domain: Embedded Finance
+      x-resource: Connected Account Transfers
+      x-urlPath: list
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    CardPaymentData:
+      type: object
+      properties:
+        amount:
+          type: string
+          description: The payment amount for this transaction.
+        brand:
+          type: string
+          description: 'The card brand. Possible enum values:'
+          enum:
+          - MASTERCARD
+          - VISA
+          - UNION_PAY
+          - AMERICAN_EXPRESS
+          - JCB
+          - DISCOVER
+          - DINERS_CLUB_INTERNATIONAL
+        card_issuing_country:
+          type: string
+          description: Country code where the card was issued (e.g., `US`, `GB`, `CN`).
+        card_token:
+          type: string
+          description: A unique token (GUID) representing the customer’s card number.
+        card_type:
+          type: string
+          description: 'The card type. Possible enum values:'
+          enum:
+          - CREDIT
+          - DEBIT
+          - PREPAID
+        cardholder_name:
+          type: string
+          description: The cardholder's name. Not applicable to `APPLE_PAY` and `GOOGLE_PAY`.
+        created_at:
+          type: string
+          description: The timestamp when the customer created the payment transaction.
+        deposit_id:
+          type: string
+          description: The unique identifier of the deposit that corresponds to the settlement into Airwallex's Global Account.
+        ip_address:
+          type: string
+          description: IP address (IPv4 or IPv6) of the payer’s device at the time of payment.
+        payment_method:
+          type: string
+          description: 'The payment method used for this transaction. Possible enum values:'
+          enum:
+          - APPLE_PAY
+          - GOOGLE_PAY
+          - CARD_ON_FILE
+        three_dsecure_outcome:
+          type: string
+          description: 'The outcome of a 3D Secure authentication process, which verifies the identity of a cardholder during an online purchase. Possible enum values:'
+          enum:
+          - ATTEMPTED
+          - AUTHENTICATED
+          - FAILED
+          - NOT_APPLICABLE
+          - NOT_REQUESTED
+      description: Additional information about the card payment funding the connected account transfer.
+    Embedded_Finance_AdditionalInfo:
+      type: object
+      properties:
+        card_payment_data:
+          $ref: '#/components/schemas/CardPaymentData'
+          description: Additional information about the card payment funding the connected account transfer.
+        merchant_data:
+          $ref: '#/components/schemas/MerchantData'
+          description: Structured merchant information for nested-flow transfers.
+      description: Additional information about the transaction.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    MerchantData:
+      type: object
+      properties:
+        business_name:
+          type: string
+          description: The merchant's official legal name.
+        business_registration_date:
+          type: string
+          description: The date when the merchant's business was registered, in `YYYY-MM-DD` format. For example, `2025-03-15`.
+        business_registration_number:
+          type: string
+          description: The merchant's Business Registration Number (BRN) or equivalent identifier.
+        business_trading_name:
+          type: string
+          description: The merchant's trading or DBA (doing business as) name.
+        industry_category_code:
+          type: string
+          description: The merchant's industry category code.
+        merchant_identifier:
+          type: string
+          description: The merchant's unique identifier on the platform.
+        registration_country:
+          type: string
+          description: The merchant's country of registration in ISO 3166-1 alpha-2 format. For example, `CN` or `HK`.
+        store_urls:
+          type: array
+          description: The merchant's store URL(s).
+          items:
+            type: string
+      description: Structured merchant information for nested-flow transfers.
+    ConnectedAccountTransfer:
+      type: object
+      required:
+      - amount
+      - created_at
+      - currency
+      - destination
+      - fee
+      - id
+      - reason
+      - reference
+      - request_id
+      - short_reference_id
+      - status
+      - updated_at
+      properties:
+        additional_info:
+          $ref: '#/components/schemas/Embedded_Finance_AdditionalInfo'
+          description: Additional information about the transaction.
+        amount:
+          type: number
+          description: Amount of the transfer in `currency` specified in the request.
+        created_at:
+          type: string
+          description: The time this transfer was created.
+        currency:
+          type: string
+          description: Currency (3-letter ISO-4217 code) specified in the request.
+        destination:
+          type: string
+          description: Airwallex account unique identifier specified in the request.
+        failure_reasons:
+          type: array
+          description: List of failure reason codes when status is FAILED.
+          items:
+            type: string
+        fee:
+          type: number
+          description: Fee of the transfer in `currency` specified in the request.
+        id:
+          type: string
+          description: Unique identifier for the transfer.
+        reason:
+          type: string
+          description: Reason for the transfer instruction specified in the request.
+        reference:
+          type: string
+          description: User specified reference that will be displayed to the beneficiary specified in the request.
+        request_id:
+          type: string
+          description: Unique request identifier specified in the request.
+        short_reference_id:
+          type: string
+          description: Short reference for support purposes.
+        status:
+          type: string
+          description: 'Status of the transfer. One of: `NEW`, `SETTLED`, `PENDING`, `SUSPENDED`, `FAILED`.'
+        updated_at:
+          type: string
+          description: The time this transfer was updated.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

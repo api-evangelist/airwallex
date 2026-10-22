@@ -1,0 +1,3888 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Billing > Invoices API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Billing > Invoices
+  description: An Invoice represents an official request for payment that details products or services purchased, pricing and payment instructions. It can be issued directly (one-time invoices) or via a Subscription (recurring invoices).
+  x-domain: Billing
+  x-resource: Invoices
+  x-urlPath: billing/invoices
+paths:
+  /api/v1/billing/invoices/create:
+    post:
+      description: Creates a one-off Invoice.
+      operationId: createInvoice
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - billing_customer_id
+              - currency
+              - request_id
+              type: object
+              properties:
+                billing_customer_id:
+                  type: string
+                  description: ID of the [Billing Customer](/docs/api/billing/billing_customers) who will be charged.
+                collection_method:
+                  pattern: ^(CHARGE_ON_CHECKOUT|OUT_OF_BAND|AUTO_CHARGE)$
+                  type: string
+                  description: Specify how payment is collected, one of `AUTO_CHARGE`, `CHARGE_ON_CHECKOUT` or `OUT_OF_BAND`.
+                currency:
+                  type: string
+                  description: The currency of the Invoice in 3-letter ISO-4217 format.
+                days_until_due:
+                  type: integer
+                  description: Number of days from invoice finalization until payment is due. Only one of `days_until_due` and `due_at` should be passed.
+                  format: int32
+                default_tax_percent:
+                  maximum: 100
+                  minimum: 0
+                  type: number
+                  description: The tax percent between `0` and `100` to be applied to each Line Item's price. The tax will be exclusive. Defaults to `0`.
+                discounts:
+                  maxItems: 1
+                  minItems: 0
+                  type: array
+                  description: List of discounts to be applied to the invoice. Invoice line item discounts are applied before invoice discounts. Currently, only one element is supported.
+                  items:
+                    required:
+                    - coupon
+                    - type
+                    type: object
+                    properties:
+                      coupon:
+                        required:
+                        - id
+                        type: object
+                        description: Coupon to redeem into a discount for this resource. Only required when `type` = `COUPON`.
+                        properties:
+                          id:
+                            type: string
+                            description: Id of the Coupon object.
+                      type:
+                        pattern: ^(COUPON)$
+                        type: string
+                        description: 'Specifies how to obtain the discount. One of: `COUPON`.'
+                due_at:
+                  type: string
+                  description: Due date set by the merchant for this invoice, if any. Only one of `days_until_due` and `due_at` should be passed.
+                enable_automatic_tax:
+                  type: boolean
+                  description: Whether automatic tax is enabled for this invoice. When enabled, the system attempts to calculate taxes automatically. Defaults to `false`.
+                footer:
+                  type: string
+                  description: Additional payment instructions or supplementary information that merchants can share with their customers. Displayed in the Invoice PDF.
+                legal_entity_id:
+                  type: string
+                  description: ID of the legal entity to be used as billing entity. You can find this ID in the Airwallex web app > Settings. Required if you have more than 1 entity in your organisation.
+                linked_payment_account_id:
+                  type: string
+                  description: ID of the linked payment account to collect payment. You can find this ID in the Airwallex web app > Settings > Account details, within the Account Information section. If `collection_method` is `CHARGE_ON_CHECKOUT` and your organisation has only one payment account, it will be automatically populated with that account by default.
+                memo:
+                  maxLength: 500
+                  minLength: 0
+                  type: string
+                  description: String used for merchants to share a custom message to their customers. Referenced as memo or invoice note in Webapp.
+                metadata:
+                  type: object
+                  additionalProperties:
+                    type: string
+                    description: A set of string key-value pairs that you can attach to this object for storing additional information.
+                  description: A set of string key-value pairs that you can attach to this object for storing additional information.
+                number:
+                  type: string
+                  description: Unique invoice number specified by the merchant. If omitted, Airwallex generates one automatically.
+                payment_options:
+                  type: object
+                  description: Payment settings of this Invoice. Only applicable if collection_method is `CHARGE_ON_CHECKOUT`.
+                  properties:
+                    payment_method_save:
+                      type: object
+                      description: Settings for saving this payment method for future use.
+                      properties:
+                        mode:
+                          type: string
+                          description: "Controls whether the payment method can be saved for future use. Possible values: `ENABLED`, `DISABLED`, or `COLLECT_CONSENT`.  \n`ENABLED`: The payment method will be saved for future use.  \n`DISABLED`: The payment method will not be saved.  \n`COLLECT_CONSENT`: The digital invoice UI asks the customer whether they want to save the payment method. Only applicable to cards."
+                        next_triggered_by:
+                          type: string
+                          description: "Indicates who will use the saved payment source to trigger future payments. One of `MERCHANT` or `CUSTOMER`.  \nIf `MERCHANT`, a Payment Source is created for future use. If `CUSTOMER`, the payment method is saved only with the payment provider."
+                    payment_method_types:
+                      type: array
+                      description: "Specify which payment methods to display on the digital invoice page and set their display order. Only methods supported for the specified currency and the customer's country code will appear on the digital invoice page.  \nPossible enum values: `afterpay`, `airwallex_pay`, `alfamart`, `alipaycn`, `alipayhk`, `applepay`, `atome`, `au_pay`, `axs_kiosk`, `bancontact`, `bank_transfer`, `bigc`,`bitpay`, `bkash`, `blik`, `boost`, `card`, `cash_app_pay`, `dana`, `doku_ewallet`, `dragonpay`, `duit_now`, `d_barai`, `enets`, `eps`, `esun`, `family_mart`, `fps`, `fpx`, `gcash`, `giropay`, `googlepay`, `go_pay`, `grabpay`, `hi_life`, `ideal`, `indomaret`, `jenius_pay`, `kakaopay`, `klarna`, `konbini`, `korean_local_card`, `laybuy`, `line_pay`, `linkaja`, `maxima`, `merpay`, `multibanco`, `mybank`, `narvesen`, `naver_pay`, `online_banking`, `ovo`, `p24`, `paybybankapp`, `payco`, `payeasy`, `payeasy_atm`, `payme`, `paypal`, `paypay`, `paypost`, `paysafecard`, `paysafecash`, `paysera`, `payu`, `pay_now`, `perlas_terminals`, `permatanet`, `permata_atm`, `pix`, `poli`, `prompt_pay`, `rabbit_line_pay`, `rakuten_pay`, `safetypay`, `samsung_pay`, `sam_kiosk`, `satispay`, `seven_eleven`, `shopee_pay`, `skrill`, `sofort`, `spei`, `tesco_lotus`, `tng`, `toss_pay`, `truemoney`, `trustly`, `twint`, `upi`, `venmo`, `verkkopankki`, `wechatpay`, `zip`."
+                      items:
+                        type: string
+                        description: "Specify which payment methods to display on the digital invoice page and set their display order. Only methods supported for the specified currency and the customer's country code will appear on the digital invoice page.  \nPossible enum values: `afterpay`, `airwallex_pay`, `alfamart`, `alipaycn`, `alipayhk`, `applepay`, `atome`, `au_pay`, `axs_kiosk`, `bancontact`, `bank_transfer`, `bigc`,`bitpay`, `bkash`, `blik`, `boost`, `card`, `cash_app_pay`, `dana`, `doku_ewallet`, `dragonpay`, `duit_now`, `d_barai`, `enets`, `eps`, `esun`, `family_mart`, `fps`, `fpx`, `gcash`, `giropay`, `googlepay`, `go_pay`, `grabpay`, `hi_life`, `ideal`, `indomaret`, `jenius_pay`, `kakaopay`, `klarna`, `konbini`, `korean_local_card`, `laybuy`, `line_pay`, `linkaja`, `maxima`, `merpay`, `multibanco`, `mybank`, `narvesen`, `naver_pay`, `online_banking`, `ovo`, `p24`, `paybybankapp`, `payco`, `payeasy`, `payeasy_atm`, `payme`, `paypal`, `paypay`, `paypost`, `paysafecard`, `paysafecash`, `paysera`, `payu`, `pay_now`, `perlas_terminals`, `permatanet`, `permata_atm`, `pix`, `poli`, `prompt_pay`, `rabbit_line_pay`, `rakuten_pay`, `safetypay`, `samsung_pay`, `sam_kiosk`, `satispay`, `seven_eleven`, `shopee_pay`, `skrill`, `sofort`, `spei`, `tesco_lotus`, `tng`, `toss_pay`, `truemoney`, `trustly`, `twint`, `upi`, `venmo`, `verkkopankki`, `wechatpay`, `zip`."
+                payment_source_id:
+                  type: string
+                  description: "ID of the [Payment Source](/docs/api/billing/payment_sources) to pay for the invoice. Required when `collection_method` is `AUTO_CHARGE`.  \nIf `collection_method` is `CHARGE_ON_CHECKOUT`, a Payment Source is automatically created during invoice payment when `payment_options.payment_method_save.next_triggered_by` is `MERCHANT` and `payment_options.payment_method_save.mode` is `ENABLED`, or when it is `COLLECT_CONSENT` and the customer has given consent."
+                request_id:
+                  maxLength: 64
+                  minLength: 0
+                  type: string
+                  description: Unique request ID specified by the merchant.
+                ui_options:
+                  type: object
+                  description: UI configuration for the digital invoice page.
+                  properties:
+                    theme_id:
+                      type: string
+                      description: ID of the theme to apply to this invoice, overriding the theme configured for its legal entity. You can find the theme ID in the Airwallex web app under Settings > Themes.
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `duplicate_request_id`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 1|Create an Invoice
+      tags:
+      - Billing > Invoices
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/billing/invoices/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          billing_customer_id: bcus_hkpd7fedfgb004apkvs
+          collection_method: AUTO_CHARGE
+          currency: USD
+          days_until_due: 1
+          default_tax_percent: 10
+          discounts:
+          - coupon:
+              id: coup_abc123
+            type: COUPON
+          due_at: 2022-01-01T10:15:30+0000
+          enable_automatic_tax: true
+          footer: 'Please include the reference number in your payment reference.
+
+            For remittance advice, contact accounts@example.com.'
+          legal_entity_id: le_ib2DZgZJN72T7bObvNuMYQ
+          linked_payment_account_id: acct_ncI2nypPKSq2VXKxscAcg
+          memo: manual invoice
+          metadata:
+            foo: bar
+          number: INV-2026-0001
+          payment_options:
+            payment_method_save:
+              mode: ENABLED
+              next_triggered_by: MERCHANT
+            payment_method_types:
+            - card
+            - googlepay
+            - applepay
+          payment_source_id: psrc_d3Ds20ae5VihKs092
+          request_id: ee939540-3203-4a2c-9172-89a566485dd9
+          ui_options:
+            theme_id: tm_sgpdvff8whip0bfgzzt
+        response_body:
+          amount_due: 100
+          applied_discounts:
+          - amount_off: 10
+            applied_to: SUBSCRIPTION
+            applied_to_id: sub_hkpdkcmxdgazzq53jbk
+            billing_customer_id: bcus_7fz9qm2n4k
+            checkout_id: bco_sgstcdcpnh8sv3awiwo
+            currency: USD
+            discount_model: PERCENTAGE
+            duration:
+              period: 3
+              period_unit: MONTH
+            duration_type: CUSTOM
+            ends_at: 2027-01-01T00:00:00+0000
+            id: disc_hkpdkcmxdgazzq53jbk
+            name: Black Friday 20% Off
+            percentage_off: 20
+            source: COUPON
+            source_id: coup_hkpdkcmxdgazzq53jbk
+            starts_at: 2026-01-01T00:00:00+0000
+          automatic_tax_status: APPLIED
+          bank_transfer_instructions:
+            currency: USD
+            account_name: Tromp, Littel and Luettgen
+            account_number: '8453687204'
+            bank_name: Community Federal Savings Bank
+            routing_number: '026073150'
+            reference: QCNLQC
+          billing_customer_id: bcus_hkpd7fedfgb004apkvs
+          collection_method: AUTO_CHARGE
+          created_at: 2022-01-01T10:15:30+0000
+          credit_note_amount_after_payment: 10
+          credit_note_amount_before_payment: 10
+          currency: USD
+          days_until_due: 1
+          default_tax_percent: 10
+          due_at: 2022-12-05T10:15:30+0000
+          enable_automatic_tax: true
+          finalized_at: 2022-12-05T10:15:30+0000
+          footer: 'Please include the reference number in your payment reference.
+
+            For remittance advice, contact accounts@example.com.'
+          hosted_url: https://invoice.airwallex.com/billing/invoices/payment?s=jwt_token
+          id: inv_hkpd49cskgblns6iimw
+          last_payment_attempt_at: 2022-12-05T10:15:30+0000
+          legal_entity_id: le_ib2DZgZJN72T7bObvNuMYQ
+          linked_payment_account_id: acct_ncI2nypPKSq2VXKxscAcg
+          memo: Invoice memo.
+          metadata:
+            foo: bar
+          next_payment_attempt_at: 2022-12-05T10:15:30+0000
+          number: INV-YOLI0II9-0685
+          paid_at: 2022-12-05T10:15:30+0000
+          paid_out_of_band: false
+          past_payment_attempt_count: 1
+          payment_options:
+            payment_method_save:
+              mode: ENABLED
+              next_triggered_by: MERCHANT
+            payment_method_types:
+            - card
+            - googlepay
+            - applepay
+          payment_source_id: psrc_d3Ds20ae5VihKs092
+          payment_status: UNPAID
+          pdf_url: https://invoice.airwallex.com/billing/invoices/pdf?s=jwt_token
+          remaining_payment_attempt_count: 1
+          status: FINALIZED
+          subscription_id: sub_hkpdkcmxdgazzq53jbk
+          ui_options:
+            theme_id: tm_sgpdvff8whip0bfgzzt
+          total_amount: 100
+          total_discount_amounts:
+          - amount: 10
+            applied_discount_id: disc_hkpdkcmxdgazzq53jbk
+          total_tax_amount: 0
+          updated_at: 2022-01-01T10:15:30+0000
+          voided_at: 2022-12-05T10:15:30+0000
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.invoice:write
+        group: Billing
+        resource_name: Invoices
+      x-domain: Billing
+      x-resource: Invoices
+      x-urlPath: create
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/invoices/{id}:
+    get:
+      description: Retrieves the details of an Invoice.
+      operationId: retrieveInvoice
+      parameters:
+      - description: ID of the Invoice object.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 2|Retrieve an Invoice
+      tags:
+      - Billing > Invoices
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/billing/invoices/invoice_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          amount_due: 100
+          applied_discounts:
+          - amount_off: 10
+            applied_to: SUBSCRIPTION
+            applied_to_id: sub_hkpdkcmxdgazzq53jbk
+            billing_customer_id: bcus_7fz9qm2n4k
+            checkout_id: bco_sgstcdcpnh8sv3awiwo
+            currency: USD
+            discount_model: PERCENTAGE
+            duration:
+              period: 3
+              period_unit: MONTH
+            duration_type: CUSTOM
+            ends_at: 2027-01-01T00:00:00+0000
+            id: disc_hkpdkcmxdgazzq53jbk
+            name: Black Friday 20% Off
+            percentage_off: 20
+            source: COUPON
+            source_id: coup_hkpdkcmxdgazzq53jbk
+            starts_at: 2026-01-01T00:00:00+0000
+          automatic_tax_status: APPLIED
+          bank_transfer_instructions:
+            currency: USD
+            account_name: Tromp, Littel and Luettgen
+            account_number: '8453687204'
+            bank_name: Community Federal Savings Bank
+            routing_number: '026073150'
+            reference: QCNLQC
+          billing_customer_id: bcus_hkpd7fedfgb004apkvs
+          collection_method: AUTO_CHARGE
+          created_at: 2022-01-01T10:15:30+0000
+          credit_note_amount_after_payment: 10
+          credit_note_amount_before_payment: 10
+          currency: USD
+          days_until_due: 1
+          default_tax_percent: 10
+          due_at: 2022-12-05T10:15:30+0000
+          enable_automatic_tax: true
+          finalized_at: 2022-12-05T10:15:30+0000
+          footer: 'Please include the reference number in your payment reference.
+
+            For remittance advice, contact accounts@example.com.'
+          hosted_url: https://invoice.airwallex.com/billing/invoices/payment?s=jwt_token
+          id: inv_hkpd49cskgblns6iimw
+          last_payment_attempt_at: 2022-12-05T10:15:30+0000
+          legal_entity_id: le_ib2DZgZJN72T7bObvNuMYQ
+          linked_payment_account_id: acct_ncI2nypPKSq2VXKxscAcg
+          memo: Invoice memo.
+          metadata:
+            foo: bar
+          next_payment_attempt_at: 2022-12-05T10:15:30+0000
+          number: INV-YOLI0II9-0685
+          paid_at: 2022-12-05T10:15:30+0000
+          paid_out_of_band: false
+          past_payment_attempt_count: 1
+          payment_options:
+            payment_method_save:
+              mode: ENABLED
+              next_triggered_by: MERCHANT
+            payment_method_types:
+            - card
+            - googlepay
+            - applepay
+          payment_source_id: psrc_d3Ds20ae5VihKs092
+          payment_status: UNPAID
+          pdf_url: https://invoice.airwallex.com/billing/invoices/pdf?s=jwt_token
+          remaining_payment_attempt_count: 1
+          status: FINALIZED
+          subscription_id: sub_hkpdkcmxdgazzq53jbk
+          ui_options:
+            theme_id: tm_sgpdvff8whip0bfgzzt
+          total_amount: 100
+          total_discount_amounts:
+          - amount: 10
+            applied_discount_id: disc_hkpdkcmxdgazzq53jbk
+          total_tax_amount: 0
+          updated_at: 2022-01-01T10:15:30+0000
+          voided_at: 2022-12-05T10:15:30+0000
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.invoice:read
+        group: Billing
+        resource_name: Invoices
+      - scope: billing.invoice:write
+        group: Billing
+        resource_name: Invoices
+      x-domain: Billing
+      x-resource: Invoices
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/invoices:
+    get:
+      description: Retrieves a list of Invoices based on the query parameters.
+      operationId: listInvoices
+      parameters:
+      - description: ID of the [Billing Customer](/docs/api/billing/billing_customers) who the invoice is addressed to.
+        in: query
+        name: billing_customer_id
+        required: false
+        schema:
+          type: string
+      - description: ID of the [Subscription](/docs/api/billing/subscriptions) which generated this invoice, if any.
+        in: query
+        name: subscription_id
+        required: false
+        schema:
+          type: string
+      - description: Status of the invoice. Once the invoice is created, it will be defaulted to `DRAFT`, and once the invoice is finalized, it will turn to `FINALIZED`. When an invoice is voided, it will become `VOIDED`.
+        in: query
+        name: status
+        required: false
+        schema:
+          type: string
+      - description: Status of the payment for the invoice, one of `UNPAID` and `PAID`.
+        in: query
+        name: payment_status
+        required: false
+        schema:
+          type: string
+      - description: The start date of `created_at` in ISO8601 format (inclusive).
+        in: query
+        name: from_created_at
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - description: The end date of `created_at` in ISO8601 format (exclusive).
+        in: query
+        name: to_created_at
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - description: A bookmark for use in pagination to retrieve either the next page or the previous page of results. You can fetch the value for this identifier from the response of the previous API call. To retrieve the next page of results, pass the value of `page_after` (if not `null`) from the response to a subsequent call. To retrieve the previous page of results, pass the value of `page_before` (if not `null`) from the response to a subsequent call.
+        in: query
+        name: page
+        required: false
+        schema:
+          type: string
+      - description: Number of Invoices per page. Defaults to `20`.
+        in: query
+        name: page_size
+        required: false
+        schema:
+          maximum: 1000
+          minimum: 1
+          type: integer
+          format: int32
+          default: 20
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CursorPaginationClientApiResponseInvoice'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 3|List all Invoices
+      tags:
+      - Billing > Invoices
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/billing/invoices
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - amount_due: 100
+            applied_discounts:
+            - amount_off: 10
+              applied_to: SUBSCRIPTION
+              applied_to_id: sub_hkpdkcmxdgazzq53jbk
+              billing_customer_id: bcus_7fz9qm2n4k
+              checkout_id: bco_sgstcdcpnh8sv3awiwo
+              currency: USD
+              discount_model: PERCENTAGE
+              duration:
+                period: 3
+                period_unit: MONTH
+              duration_type: CUSTOM
+              ends_at: 2027-01-01T00:00:00+0000
+              id: disc_hkpdkcmxdgazzq53jbk
+              name: Black Friday 20% Off
+              percentage_off: 20
+              source: COUPON
+              source_id: coup_hkpdkcmxdgazzq53jbk
+              starts_at: 2026-01-01T00:00:00+0000
+            automatic_tax_status: APPLIED
+            billing_customer_id: bcus_hkpd7fedfgb004apkvs
+            collection_method: AUTO_CHARGE
+            created_at: 2022-01-01T10:15:30+0000
+            credit_note_amount_after_payment: 10
+            credit_note_amount_before_payment: 10
+            currency: USD
+            days_until_due: 1
+            default_tax_percent: 10
+            due_at: 2022-12-05T10:15:30+0000
+            enable_automatic_tax: true
+            finalized_at: 2022-12-05T10:15:30+0000
+            hosted_url: https://invoice.airwallex.com/billing/invoices/payment?s=jwt_token
+            id: inv_hkpd49cskgblns6iimw
+            last_payment_attempt_at: 2022-12-05T10:15:30+0000
+            legal_entity_id: le_ib2DZgZJN72T7bObvNuMYQ
+            linked_payment_account_id: acct_ncI2nypPKSq2VXKxscAcg
+            memo: Invoice memo.
+            metadata:
+              foo: bar
+            next_payment_attempt_at: 2022-12-05T10:15:30+0000
+            number: INV-YOLI0II9-0685
+            paid_at: 2022-12-05T10:15:30+0000
+            paid_out_of_band: false
+            past_payment_attempt_count: 1
+            payment_options:
+              payment_method_save:
+                mode: ENABLED
+                next_triggered_by: MERCHANT
+              payment_method_types:
+              - card
+              - googlepay
+              - applepay
+            payment_source_id: psrc_d3Ds20ae5VihKs092
+            payment_status: UNPAID
+            pdf_url: https://invoice.airwallex.com/billing/invoices/pdf?s=jwt_token
+            remaining_payment_attempt_count: 1
+            status: FINALIZED
+            subscription_id: sub_hkpdkcmxdgazzq53jbk
+            total_amount: 100
+            total_discount_amounts:
+            - amount: 10
+              applied_discount_id: disc_hkpdkcmxdgazzq53jbk
+            total_tax_amount: 0
+            ui_options:
+              theme_id: tm_sgpdvff8whip0bfgzzt
+            updated_at: 2022-01-01T10:15:30+0000
+            voided_at: 2022-12-05T10:15:30+0000
+          page_after: <string>
+          page_before: <string>
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.invoice:read
+        group: Billing
+        resource_name: Invoices
+      - scope: billing.invoice:write
+        group: Billing
+        resource_name: Invoices
+      x-domain: Billing
+      x-resource: Invoices
+      x-urlPath: list
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/invoices/{id}/update:
+    post:
+      description: Updates a draft Invoice. Only fields provided in the request are updated, while omitted fields remain unchanged. Array fields are fully replaced if included. Set a field to null or an empty string (for strings) to clear its value.
+      operationId: updateInvoice
+      parameters:
+      - description: ID of the Invoice object.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                billing_customer_id:
+                  type: string
+                  description: ID of the [Billing Customer](/docs/api/billing/billing_customers) who this Invoice is to be issued to.
+                collection_method:
+                  pattern: ^(CHARGE_ON_CHECKOUT|OUT_OF_BAND|AUTO_CHARGE)$
+                  type: string
+                  description: Specify how payment is collected, one of `AUTO_CHARGE`, `CHARGE_ON_CHECKOUT` or `OUT_OF_BAND`.
+                currency:
+                  type: string
+                  description: The currency of the Invoice in 3-letter ISO-4217 format.
+                days_until_due:
+                  type: integer
+                  description: Number of days from invoice finalization until payment is due. Only one of `days_until_due` and `due_at` should be passed.
+                  format: int32
+                default_tax_percent:
+                  maximum: 100
+                  minimum: 0
+                  type: number
+                  description: The tax percent between `0` and `100` to be applied to each Line Item's price. The tax will be exclusive.
+                discounts:
+                  type: array
+                  description: Desired set of invoice-level discounts. If provided, replaces all existing discounts. Currently, only one element is supported.
+                  items:
+                    required:
+                    - coupon
+                    type: object
+                    properties:
+                      coupon:
+                        required:
+                        - id
+                        type: object
+                        description: Coupon to redeem into a discount for this resource. Only required when `type` = `COUPON`.
+                        properties:
+                          id:
+                            type: string
+                            description: Id of the Coupon object.
+                      type:
+                        pattern: ^(COUPON)$
+                        type: string
+                        description: 'Specifies how to obtain a new discount. One of: `COUPON`.'
+                due_at:
+                  type: string
+                  description: Due date set by the merchant for this invoice, if any. Only one of `days_until_due` and `due_at` should be passed.
+                enable_automatic_tax:
+                  type: boolean
+                  description: Whether automatic tax is enabled for this invoice. When enabled, the system attempts to calculate taxes automatically.
+                footer:
+                  type: string
+                  description: Additional payment instructions or supplementary information that merchants can share with their customers. Displayed in the Invoice PDF.
+                legal_entity_id:
+                  type: string
+                  description: ID of the legal entity to be used as billing entity. You can find this ID in the Airwallex web app > Settings.
+                linked_payment_account_id:
+                  type: string
+                  description: ID of the linked payment account to collect payment. You can find this ID in the Airwallex web app > Settings > Account details, within the Account Information section. Required if `collection_method` is `CHARGE_ON_CHECKOUT` when the invoice is finalized.
+                memo:
+                  type: string
+                  description: String used to describe the object. Referenced as memo or invoice note in Webapp.
+                metadata:
+                  type: object
+                  additionalProperties:
+                    type: string
+                    description: A set of key-value pairs that you can attach to an invoice object. It can be useful for storing additional information about the invoice in a structured format.
+                  description: A set of key-value pairs that you can attach to an invoice object. It can be useful for storing additional information about the invoice in a structured format.
+                payment_options:
+                  type: object
+                  description: Payment settings of this Invoice. Only applicable if collection_method is `CHARGE_ON_CHECKOUT`.
+                  properties:
+                    payment_method_save:
+                      type: object
+                      description: Settings for saving this payment method for future use.
+                      properties:
+                        mode:
+                          type: string
+                          description: "Controls whether the payment method can be saved for future use. Possible values: `ENABLED`, `DISABLED`, or `COLLECT_CONSENT`.  \n`ENABLED`: The payment method will be saved for future use.  \n`DISABLED`: The payment method will not be saved.  \n`COLLECT_CONSENT`: The digital invoice UI asks the customer whether they want to save the payment method. Only applicable to cards."
+                        next_triggered_by:
+                          type: string
+                          description: "Indicates who will use the saved payment source to trigger future payments. One of `MERCHANT` or `CUSTOMER`.  \nIf `MERCHANT`, a Payment Source is created for future use. If `CUSTOMER`, the payment method is saved only with the payment provider."
+                    payment_method_types:
+                      type: array
+                      description: "Specify which payment methods to display on the digital invoice page and set their display order. Only methods supported for the specified currency and the customer's country code will appear on the digital invoice page.  \nPossible enum values: `afterpay`, `airwallex_pay`, `alfamart`, `alipaycn`, `alipayhk`, `applepay`, `atome`, `au_pay`, `axs_kiosk`, `bancontact`, `bank_transfer`, `bigc`,`bitpay`, `bkash`, `blik`, `boost`, `card`, `cash_app_pay`, `dana`, `doku_ewallet`, `dragonpay`, `duit_now`, `d_barai`, `enets`, `eps`, `esun`, `family_mart`, `fps`, `fpx`, `gcash`, `giropay`, `googlepay`, `go_pay`, `grabpay`, `hi_life`, `ideal`, `indomaret`, `jenius_pay`, `kakaopay`, `klarna`, `konbini`, `korean_local_card`, `laybuy`, `line_pay`, `linkaja`, `maxima`, `merpay`, `multibanco`, `mybank`, `narvesen`, `naver_pay`, `online_banking`, `ovo`, `p24`, `paybybankapp`, `payco`, `payeasy`, `payeasy_atm`, `payme`, `paypal`, `paypay`, `paypost`, `paysafecard`, `paysafecash`, `paysera`, `payu`, `pay_now`, `perlas_terminals`, `permatanet`, `permata_atm`, `pix`, `poli`, `prompt_pay`, `rabbit_line_pay`, `rakuten_pay`, `safetypay`, `samsung_pay`, `sam_kiosk`, `satispay`, `seven_eleven`, `shopee_pay`, `skrill`, `sofort`, `spei`, `tesco_lotus`, `tng`, `toss_pay`, `truemoney`, `trustly`, `twint`, `upi`, `venmo`, `verkkopankki`, `wechatpay`, `zip`."
+                      items:
+                        type: string
+                        description: "Specify which payment methods to display on the digital invoice page and set their display order. Only methods supported for the specified currency and the customer's country code will appear on the digital invoice page.  \nPossible enum values: `afterpay`, `airwallex_pay`, `alfamart`, `alipaycn`, `alipayhk`, `applepay`, `atome`, `au_pay`, `axs_kiosk`, `bancontact`, `bank_transfer`, `bigc`,`bitpay`, `bkash`, `blik`, `boost`, `card`, `cash_app_pay`, `dana`, `doku_ewallet`, `dragonpay`, `duit_now`, `d_barai`, `enets`, `eps`, `esun`, `family_mart`, `fps`, `fpx`, `gcash`, `giropay`, `googlepay`, `go_pay`, `grabpay`, `hi_life`, `ideal`, `indomaret`, `jenius_pay`, `kakaopay`, `klarna`, `konbini`, `korean_local_card`, `laybuy`, `line_pay`, `linkaja`, `maxima`, `merpay`, `multibanco`, `mybank`, `narvesen`, `naver_pay`, `online_banking`, `ovo`, `p24`, `paybybankapp`, `payco`, `payeasy`, `payeasy_atm`, `payme`, `paypal`, `paypay`, `paypost`, `paysafecard`, `paysafecash`, `paysera`, `payu`, `pay_now`, `perlas_terminals`, `permatanet`, `permata_atm`, `pix`, `poli`, `prompt_pay`, `rabbit_line_pay`, `rakuten_pay`, `safetypay`, `samsung_pay`, `sam_kiosk`, `satispay`, `seven_eleven`, `shopee_pay`, `skrill`, `sofort`, `spei`, `tesco_lotus`, `tng`, `toss_pay`, `truemoney`, `trustly`, `twint`, `upi`, `venmo`, `verkkopankki`, `wechatpay`, `zip`."
+                payment_source_id:
+                  type: string
+                  description: "ID of the [Payment Source](/docs/api/billing/payment_sources) to pay for the invoice. Required when `collection_method` is `AUTO_CHARGE`.  \nIf `collection_method` is `CHARGE_ON_CHECKOUT`, a Payment Source is automatically created during invoice payment when `payment_options.payment_method_save.next_triggered_by` is `MERCHANT` and `payment_options.payment_method_save.mode` is `ENABLED`, or when it is `COLLECT_CONSENT` and the customer has given consent."
+                ui_options:
+                  type: object
+                  description: UI configuration for the digital invoice page.
+                  properties:
+                    theme_id:
+                      type: string
+                      description: ID of the theme to apply to this invoice, overriding the theme configured for its legal entity. You can find the theme ID in the Airwallex web app under Settings > Themes.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 4|Update an Invoice
+      tags:
+      - Billing > Invoices
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/billing/invoices/invoice_id/update
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          billing_customer_id: bcus_hkpd7fedfgb004apkvs
+          collection_method: AUTO_CHARGE
+          currency: USD
+          days_until_due: 1
+          default_tax_percent: 10
+          discounts:
+          - coupon:
+              id: coup_abc123
+            type: COUPON
+          due_at: 2025-01-27T12:00:00+0000
+          enable_automatic_tax: true
+          footer: 'Please include the reference number in your payment reference.
+
+            For remittance advice, contact accounts@example.com.'
+          legal_entity_id: le_ib2DZgZJN72T7bObvNuMYQ
+          linked_payment_account_id: acct_ncI2nypPKSq2VXKxscAcg
+          memo: memo example
+          metadata:
+            foo: bar
+          payment_options:
+            payment_method_save:
+              mode: ENABLED
+              next_triggered_by: MERCHANT
+            payment_method_types:
+            - card
+            - googlepay
+            - applepay
+          payment_source_id: psrc_d3Ds20ae5VihKs092
+          ui_options:
+            theme_id: tm_sgpdvff8whip0bfgzzt
+        response_body:
+          amount_due: 100
+          applied_discounts:
+          - amount_off: 10
+            applied_to: SUBSCRIPTION
+            applied_to_id: sub_hkpdkcmxdgazzq53jbk
+            billing_customer_id: bcus_7fz9qm2n4k
+            checkout_id: bco_sgstcdcpnh8sv3awiwo
+            currency: USD
+            discount_model: PERCENTAGE
+            duration:
+              period: 3
+              period_unit: MONTH
+            duration_type: CUSTOM
+            ends_at: 2027-01-01T00:00:00+0000
+            id: disc_hkpdkcmxdgazzq53jbk
+            name: Black Friday 20% Off
+            percentage_off: 20
+            source: COUPON
+            source_id: coup_hkpdkcmxdgazzq53jbk
+            starts_at: 2026-01-01T00:00:00+0000
+          automatic_tax_status: APPLIED
+          billing_customer_id: bcus_hkpd7fedfgb004apkvs
+          collection_method: AUTO_CHARGE
+          created_at: 2022-01-01T10:15:30+0000
+          credit_note_amount_after_payment: 10
+          credit_note_amount_before_payment: 10
+          currency: USD
+          days_until_due: 1
+          default_tax_percent: 10
+          due_at: 2022-12-05T10:15:30+0000
+          enable_automatic_tax: true
+          finalized_at: 2022-12-05T10:15:30+0000
+          footer: 'Please include the reference number in your payment reference.
+
+            For remittance advice, contact accounts@example.com.'
+          hosted_url: https://invoice.airwallex.com/billing/invoices/payment?s=jwt_token
+          id: inv_hkpd49cskgblns6iimw
+          last_payment_attempt_at: 2022-12-05T10:15:30+0000
+          legal_entity_id: le_ib2DZgZJN72T7bObvNuMYQ
+          linked_payment_account_id: acct_ncI2nypPKSq2VXKxscAcg
+          memo: Invoice memo.
+          metadata:
+            foo: bar
+          next_payment_attempt_at: 2022-12-05T10:15:30+0000
+          number: INV-YOLI0II9-0685
+          paid_at: 2022-12-05T10:15:30+0000
+          paid_out_of_band: false
+          past_payment_attempt_count: 1
+          payment_options:
+            payment_method_save:
+              mode: ENABLED
+              next_triggered_by: MERCHANT
+            payment_method_types:
+            - card
+            - googlepay
+            - applepay
+          payment_source_id: psrc_d3Ds20ae5VihKs092
+          payment_status: UNPAID
+          pdf_url: https://invoice.airwallex.com/billing/invoices/pdf?s=jwt_token
+          remaining_payment_attempt_count: 1
+          status: FINALIZED
+          subscription_id: sub_hkpdkcmxdgazzq53jbk
+          ui_options:
+            theme_id: tm_sgpdvff8whip0bfgzzt
+          total_amount: 100
+          total_discount_amounts:
+          - amount: 10
+            applied_discount_id: disc_hkpdkcmxdgazzq53jbk
+          total_tax_amount: 0
+          updated_at: 2022-01-01T10:15:30+0000
+          voided_at: 2022-12-05T10:15:30+0000
+          bank_transfer_instructions:
+            currency: USD
+            account_name: Tromp, Littel and Luettgen
+            account_number: '8453687204'
+            bank_name: Community Federal Savings Bank
+            routing_number: '026073150'
+            reference: QCNLQC
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.invoice:write
+        group: Billing
+        resource_name: Invoices
+      x-domain: Billing
+      x-resource: Invoices
+      x-urlPath: update
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/invoices/preview:
+    post:
+      description: Preview the upcoming invoice of an existing Subscription (by specifying a `subscription_id`), or the first invoice before a new Subscription is created (without specifying a `subscription_id`).
+      operationId: invoices_preview
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                billing_customer_id:
+                  type: string
+                  description: ID of the [Billing Customer](/docs/api/billing/billing_customers) who this Invoice is to be issued to.
+                billing_cycle_anchor_at:
+                  type: string
+                  description: A future timestamp in the first billing cycle as the reference point to align the future billing date.
+                default_tax_percent:
+                  maximum: 100
+                  minimum: 0
+                  type: number
+                  description: The tax percent between `0` and `100` to be applied to each Line Item's price. The tax will be exclusive. Defaults to `0`.
+                discounts:
+                  maxItems: 1
+                  minItems: 0
+                  type: array
+                  description: List of discounts to be applied to the invoice. Invoice line item discounts are applied before invoice discounts. Currently, only one element is supported.
+                  items:
+                    required:
+                    - coupon
+                    - type
+                    type: object
+                    properties:
+                      coupon:
+                        required:
+                        - id
+                        type: object
+                        description: Coupon to redeem into a discount for this resource. Only required when `type` = `COUPON`.
+                        properties:
+                          id:
+                            type: string
+                            description: Id of the Coupon object.
+                      type:
+                        pattern: ^(COUPON)$
+                        type: string
+                        description: 'Specifies how to obtain the discount. One of: `COUPON`.'
+                enable_automatic_tax:
+                  type: boolean
+                  description: Whether automatic tax is enabled for this invoice. When enabled, the system attempts to calculate taxes automatically. Defaults to `false`.
+                ends_at:
+                  type: string
+                  description: "Time when the subscription is scheduled to end. The subscription will continue indefinitely if both of `duration` and `ends_at` are null.\nIt is only applicable when `duration` is empty. \n"
+                items:
+                  type: array
+                  description: List of Subscription Items to be used for generating the invoice.
+                  items:
+                    type: object
+                    properties:
+                      discounts:
+                        maxItems: 1
+                        minItems: 0
+                        type: array
+                        description: List of discounts to be applied to the invoice. Invoice line item discounts are applied before invoice discounts. Currently, only one element is supported.
+                        items:
+                          required:
+                          - coupon
+                          - type
+                          type: object
+                          properties:
+                            coupon:
+                              required:
+                              - id
+                              type: object
+                              description: Coupon to redeem into a discount for this resource. Only required when `type` = `COUPON`.
+                              properties:
+                                id:
+                                  type: string
+                                  description: Id of the Coupon object.
+                            type:
+                              pattern: ^(COUPON)$
+                              type: string
+                              description: 'Specifies how to obtain the discount. One of: `COUPON`.'
+                      price_id:
+                        type: string
+                        description: ID of the [Price](/docs/api/billing/prices) subscribed by the customer. The Price's `recurring` values must match the `recurring` values set out in this subscription. Exactly one of `price_id` or `rate_card_id` is required.
+                      quantity:
+                        minimum: 1
+                        type: integer
+                        description: The product quantity. Defaults to `1`.
+                        format: int32
+                      rate_card_id:
+                        type: string
+                        description: ID of the [Rate Card](/docs/api/billing/rate_cards) object. Exactly one of `price_id` or `rate_card_id` is required.
+                      rate_card_version:
+                        type: integer
+                        description: Pinned Rate Card version number. Required when `rate_card_id` is set.
+                        format: int32
+                      tax_percent:
+                        maximum: 100
+                        minimum: 0
+                        type: number
+                        description: The effective tax percent of this invoice line item.
+                legal_entity_id:
+                  type: string
+                  description: ID of the legal entity to be used for the Invoice as billing entity. You can get this ID from the `legal_entity_id` in the response of the [Retrieve account details](/docs/api/scale/accounts/retrieve) API.
+                starts_at:
+                  type: string
+                  description: Time when the subscription started or scheduled to start. Defaults to start immediately after creation.
+                subscription_id:
+                  type: string
+                  description: ID of the [Subscription](/docs/api/billing/subscriptions) object.
+                trial_ends_at:
+                  type: string
+                  description: The end time of the trial if applicable.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoicePreview'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 5|Preview an Invoice
+      tags:
+      - Billing > Invoices
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/billing/invoices/preview
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          billing_customer_id: bcus_hkpd7fedfgb004apkvs
+          billing_cycle_anchor_at: 2022-01-15T10:15:30+0000
+          default_tax_percent: 10
+          discounts:
+          - coupon:
+              id: coup_abc123
+            type: COUPON
+          enable_automatic_tax: false
+          ends_at: 2023-01-01T10:15:30+0000
+          items:
+          - discounts:
+            - coupon:
+                id: coup_abc123
+              type: COUPON
+            price_id: pri_sgpd7fedwse004apedr
+            quantity: 1
+            tax_percent: 5
+          - rate_card_id: rtc_hkpd8gfdghc115bqlwt
+            rate_card_version: 3
+          legal_entity_id: le_ib2DZgZJN72T7bObvNuMYQ
+          starts_at: 2022-01-01T10:15:30+0000
+          subscription_id: sub_hkpdkcmxdgazzq53jbk
+          trial_ends_at: 2022-01-01T10:15:30+0000
+        response_body:
+          applied_discounts:
+          - amount_off: 10
+            applied_to: SUBSCRIPTION
+            applied_to_id: sub_hkpdkcmxdgazzq53jbk
+            billing_customer_id: bcus_7fz9qm2n4k
+            checkout_id: bco_sgstcdcpnh8sv3awiwo
+            currency: USD
+            discount_model: PERCENTAGE
+            duration:
+              period: 3
+              period_unit: MONTH
+            duration_type: CUSTOM
+            ends_at: 2027-01-01T00:00:00+0000
+            id: disc_hkpdkcmxdgazzq53jbk
+            name: Black Friday 20% Off
+            percentage_off: 20
+            source: COUPON
+            source_id: coup_hkpdkcmxdgazzq53jbk
+            starts_at: 2026-01-01T00:00:00+0000
+          automatic_tax_status: APPLIED
+          billing_customer_id: bcus_hkpd7fedfgb004apkvs
+          created_at: 2022-01-01T10:15:30+0000
+          currency: USD
+          default_tax_percent: 10
+          enable_automatic_tax: true
+          items:
+          - amount: 10
+            applied_discounts:
+            - amount_off: 10
+              applied_to: SUBSCRIPTION
+              applied_to_id: sub_hkpdkcmxdgazzq53jbk
+              billing_customer_id: bcus_7fz9qm2n4k
+              checkout_id: bco_sgstcdcpnh8sv3awiwo
+              currency: USD
+              discount_model: PERCENTAGE
+              duration:
+                period: 3
+                period_unit: MONTH
+              duration_type: CUSTOM
+              ends_at: 2027-01-01T00:00:00+0000
+              id: disc_hkpdkcmxdgazzq53jbk
+              name: Black Friday 20% Off
+              percentage_off: 20
+              source: COUPON
+              source_id: coup_hkpdkcmxdgazzq53jbk
+              starts_at: 2026-01-01T00:00:00+0000
+            currency: USD
+            discount_amounts:
+            - amount: 10
+              applied_discount_id: disc_hkpdkcmxdgazzq53jbk
+            period_ends_at: 2022-01-05T10:15:30+0000
+            period_starts_at: 2022-01-01T10:15:30+0000
+            price:
+              active: true
+              billing_type: IN_ADVANCE
+              created_at: 2022-01-01T10:15:30+0000
+              currency: USD
+              description: 'Standard option: $10 / month.'
+              id: pri_hkpd7fedfgb004apkvs
+              metadata:
+                foo: bar
+              metered: false
+              pricing_model: GRADUATED
+              product_id: prd_hkpd1x2gbgazzvcd42w
+              recurring:
+                period: 1
+                period_unit: MONTH
+              tax_included: false
+              tiers:
+              - unit_amount: 10
+                upper_bound: 20
+              - flat_amount: 20
+              type: RECURRING
+              updated_at: 2022-01-01T10:15:30+0000
+            quantity: 1
+            tax_amount: 1.5
+            tax_breakdown:
+            - name: GST
+              tax_amount: 10
+              tax_percent: 10
+              taxable_amount: 100
+            tax_percent: 5
+          legal_entity_id: le_ib2DZgZJN72T7bObvNuMYQ
+          subscription_id: sub_hkpdkcmxdgazzq53jbk
+          total_amount: 10
+          total_discount_amounts:
+          - amount: 10
+            applied_discount_id: disc_hkpdkcmxdgazzq53jbk
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.invoice:read
+        group: Billing
+        resource_name: Invoices
+      - scope: billing.invoice:write
+        group: Billing
+        resource_name: Invoices
+      x-domain: Billing
+      x-resource: Invoices
+      x-urlPath: preview
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/invoices/{id}/finalize:
+    post:
+      description: Finalizes a draft invoice.
+      operationId: invoices_finalize
+      parameters:
+      - description: ID of the Invoice object.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 6|Finalize an Invoice
+      tags:
+      - Billing > Invoices
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/billing/invoices/invoice_id/finalize
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          amount_due: 100
+          applied_discounts:
+          - amount_off: 10
+            applied_to: SUBSCRIPTION
+            applied_to_id: sub_hkpdkcmxdgazzq53jbk
+            billing_customer_id: bcus_7fz9qm2n4k
+            checkout_id: bco_sgstcdcpnh8sv3awiwo
+            currency: USD
+            discount_model: PERCENTAGE
+            duration:
+              period: 3
+              period_unit: MONTH
+            duration_type: CUSTOM
+            ends_at: 2027-01-01T00:00:00+0000
+            id: disc_hkpdkcmxdgazzq53jbk
+            name: Black Friday 20% Off
+            percentage_off: 20
+            source: COUPON
+            source_id: coup_hkpdkcmxdgazzq53jbk
+            starts_at: 2026-01-01T00:00:00+0000
+          automatic_tax_status: APPLIED
+          bank_transfer_instructions:
+            currency: USD
+            account_name: Tromp, Littel and Luettgen
+            account_number: '8453687204'
+            bank_name: Community Federal Savings Bank
+            routing_number: '026073150'
+            reference: QCNLQC
+          billing_customer_id: bcus_hkpd7fedfgb004apkvs
+          collection_method: AUTO_CHARGE
+          created_at: 2022-01-01T10:15:30+0000
+          credit_note_amount_after_payment: 10
+          credit_note_amount_before_payment: 10
+          currency: USD
+          days_until_due: 1
+          default_tax_percent: 10
+          due_at: 2022-12-05T10:15:30+0000
+          enable_automatic_tax: true
+          finalized_at: 2022-12-05T10:15:30+0000
+          footer: 'Please include the reference number in your payment reference.
+
+            For remittance advice, contact accounts@example.com.'
+          hosted_url: https://invoice.airwallex.com/billing/invoices/payment?s=jwt_token
+          id: inv_hkpd49cskgblns6iimw
+          last_payment_attempt_at: 2022-12-05T10:15:30+0000
+          legal_entity_id: le_ib2DZgZJN72T7bObvNuMYQ
+          linked_payment_account_id: acct_ncI2nypPKSq2VXKxscAcg
+          memo: Invoice memo.
+          metadata:
+            foo: bar
+          next_payment_attempt_at: 2022-12-05T10:15:30+0000
+          number: INV-YOLI0II9-0685
+          paid_at: 2022-12-05T10:15:30+0000
+          paid_out_of_band: false
+          past_payment_attempt_count: 1
+          payment_options:
+            payment_method_save:
+              mode: ENABLED
+              next_triggered_by: MERCHANT
+            payment_method_types:
+            - card
+            - googlepay
+            - applepay
+          payment_source_id: psrc_d3Ds20ae5VihKs092
+          payment_status: UNPAID
+          pdf_url: https://invoice.airwallex.com/billing/invoices/pdf?s=jwt_token
+          remaining_payment_attempt_count: 1
+          status: FINALIZED
+          subscription_id: sub_hkpdkcmxdgazzq53jbk
+          ui_options:
+            theme_id: tm_sgpdvff8whip0bfgzzt
+          total_amount: 100
+          total_discount_amounts:
+          - amount: 10
+            applied_discount_id: disc_hkpdkcmxdgazzq53jbk
+          total_tax_amount: 0
+          updated_at: 2022-01-01T10:15:30+0000
+          voided_at: 2022-12-05T10:15:30+0000
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.invoice:write
+        group: Billing
+        resource_name: Invoices
+      x-domain: Billing
+      x-resource: Invoices
+      x-urlPath: finalize
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/invoices/{id}/mark_as_paid:
+    post:
+      description: Mark a finalized Invoice that has already been paid out-of-band.
+      operationId: markAsPaid
+      parameters:
+      - description: ID of the Invoice object.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 7|Mark an Invoice As Paid
+      tags:
+      - Billing > Invoices
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/billing/invoices/invoice_id/mark_as_paid
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          amount_due: 100
+          applied_discounts:
+          - amount_off: 10
+            applied_to: SUBSCRIPTION
+            applied_to_id: sub_hkpdkcmxdgazzq53jbk
+            billing_customer_id: bcus_7fz9qm2n4k
+            checkout_id: bco_sgstcdcpnh8sv3awiwo
+            currency: USD
+            discount_model: PERCENTAGE
+            duration:
+              period: 3
+              period_unit: MONTH
+            duration_type: CUSTOM
+            ends_at: 2027-01-01T00:00:00+0000
+            id: disc_hkpdkcmxdgazzq53jbk
+            name: Black Friday 20% Off
+            percentage_off: 20
+            source: COUPON
+            source_id: coup_hkpdkcmxdgazzq53jbk
+            starts_at: 2026-01-01T00:00:00+0000
+          automatic_tax_status: APPLIED
+          billing_customer_id: bcus_hkpd7fedfgb004apkvs
+          collection_method: AUTO_CHARGE
+          created_at: 2022-01-01T10:15:30+0000
+          credit_note_amount_after_payment: 10
+          credit_note_amount_before_payment: 10
+          currency: USD
+          days_until_due: 1
+          default_tax_percent: 10
+          due_at: 2022-12-05T10:15:30+0000
+          enable_automatic_tax: true
+          finalized_at: 2022-12-05T10:15:30+0000
+          hosted_url: https://invoice.airwallex.com/billing/invoices/payment?s=jwt_token
+          id: inv_hkpd49cskgblns6iimw
+          last_payment_attempt_at: 2022-12-05T10:15:30+0000
+          legal_entity_id: le_ib2DZgZJN72T7bObvNuMYQ
+          linked_payment_account_id: acct_ncI2nypPKSq2VXKxscAcg
+          memo: Invoice memo.
+          metadata:
+            foo: bar
+          next_payment_attempt_at: 2022-12-05T10:15:30+0000
+          number: INV-YOLI0II9-0685
+          paid_at: 2022-12-05T10:15:30+0000
+          paid_out_of_band: false
+          past_payment_attempt_count: 1
+          payment_options:
+            payment_method_save:
+              mode: ENABLED
+              next_triggered_by: MERCHANT
+            payment_method_types:
+            - card
+            - googlepay
+            - applepay
+          payment_source_id: psrc_d3Ds20ae5VihKs092
+          payment_status: UNPAID
+          pdf_url: https://invoice.airwallex.com/billing/invoices/pdf?s=jwt_token
+          remaining_payment_attempt_count: 1
+          status: FINALIZED
+          subscription_id: sub_hkpdkcmxdgazzq53jbk
+          total_amount: 100
+          total_discount_amounts:
+          - amount: 10
+            applied_discount_id: disc_hkpdkcmxdgazzq53jbk
+          total_tax_amount: 0
+          ui_options:
+            theme_id: tm_sgpdvff8whip0bfgzzt
+          updated_at: 2022-01-01T10:15:30+0000
+          voided_at: 2022-12-05T10:15:30+0000
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.invoice:write
+        group: Billing
+        resource_name: Invoices
+      x-domain: Billing
+      x-resource: Invoices
+      x-urlPath: mark_as_paid
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/invoices/{id}/pay:
+    post:
+      description: Pay a finalized `AUTO_CHARGE` Invoice using an existing Payment Source.
+      operationId: payInvoice
+      parameters:
+      - description: Unique identifier of the Invoice object.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - payment_source_id
+              properties:
+                payment_source_id:
+                  type: string
+                  description: 'ID of an existing Payment Source that belongs to the customer and will be used to pay the Invoice. This is a one-time payment instruction and does not change the Payment Source saved on the Subscription.
+
+
+                    The Payment Source''s `linked_payment_account_id` must match the Invoice''s `linked_payment_account_id`.'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 8|Pay an Invoice
+      tags:
+      - Billing > Invoices
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/billing/invoices/inv_hkpd49cskgblns6iimw/pay
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          payment_source_id: psrc_d3Ds20ae5VihKs092
+        response_body:
+          amount_due: 0
+          applied_discounts: []
+          automatic_tax_status: DISABLED
+          billing_customer_id: bcus_hkpd7fedfgb004apkvs
+          created_at: 2022-01-01T10:15:30+0000
+          currency: USD
+          enable_automatic_tax: false
+          id: inv_hkpd49cskgblns6iimw
+          paid_out_of_band: false
+          payment_status: PAID
+          status: FINALIZED
+          total_amount: 100
+          total_discount_amounts: []
+          total_tax_amount: 0
+          ui_options:
+            theme_id: tm_sgpdvff8whip0bfgzzt
+          updated_at: 2022-12-05T10:15:30+0000
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.invoice:write
+        group: Billing
+        resource_name: Invoices
+      x-domain: Billing
+      x-resource: Invoices
+      x-urlPath: pay
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/invoices/{id}/delete:
+    post:
+      description: Delete a draft Invoice.
+      operationId: deleteInvoice
+      parameters:
+      - description: ID of the Invoice object.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceDeleted'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 9|Delete a Draft Invoice
+      tags:
+      - Billing > Invoices
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/billing/invoices/invoice_id/delete
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          deleted: true
+          id: inv_hkpd49cskgblns6iimw
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.invoice:write
+        group: Billing
+        resource_name: Invoices
+      x-domain: Billing
+      x-resource: Invoices
+      x-urlPath: delete
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/invoices/{id}/void:
+    post:
+      description: Void a finalized Invoice.
+      operationId: invoices_void
+      parameters:
+      - description: ID of the Invoice object.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 10|Void an Invoice
+      tags:
+      - Billing > Invoices
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/billing/invoices/invoice_id/void
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          amount_due: 100
+          applied_discounts:
+          - amount_off: 10
+            applied_to: SUBSCRIPTION
+            applied_to_id: sub_hkpdkcmxdgazzq53jbk
+            billing_customer_id: bcus_7fz9qm2n4k
+            checkout_id: bco_sgstcdcpnh8sv3awiwo
+            currency: USD
+            discount_model: PERCENTAGE
+            duration:
+              period: 3
+              period_unit: MONTH
+            duration_type: CUSTOM
+            ends_at: 2027-01-01T00:00:00+0000
+            id: disc_hkpdkcmxdgazzq53jbk
+            name: Black Friday 20% Off
+            percentage_off: 20
+            source: COUPON
+            source_id: coup_hkpdkcmxdgazzq53jbk
+            starts_at: 2026-01-01T00:00:00+0000
+          automatic_tax_status: APPLIED
+          billing_customer_id: bcus_hkpd7fedfgb004apkvs
+          collection_method: AUTO_CHARGE
+          created_at: 2022-01-01T10:15:30+0000
+          credit_note_amount_after_payment: 10
+          credit_note_amount_before_payment: 10
+          currency: USD
+          days_until_due: 1
+          default_tax_percent: 10
+          due_at: 2022-12-05T10:15:30+0000
+          enable_automatic_tax: true
+          finalized_at: 2022-12-05T10:15:30+0000
+          hosted_url: https://invoice.airwallex.com/billing/invoices/payment?s=jwt_token
+          id: inv_hkpd49cskgblns6iimw
+          last_payment_attempt_at: 2022-12-05T10:15:30+0000
+          legal_entity_id: le_ib2DZgZJN72T7bObvNuMYQ
+          linked_payment_account_id: acct_ncI2nypPKSq2VXKxscAcg
+          memo: Invoice memo.
+          metadata:
+            foo: bar
+          next_payment_attempt_at: 2022-12-05T10:15:30+0000
+          number: INV-YOLI0II9-0685
+          paid_at: 2022-12-05T10:15:30+0000
+          paid_out_of_band: false
+          past_payment_attempt_count: 1
+          payment_options:
+            payment_method_save:
+              mode: ENABLED
+              next_triggered_by: MERCHANT
+            payment_method_types:
+            - card
+            - googlepay
+            - applepay
+          payment_source_id: psrc_d3Ds20ae5VihKs092
+          payment_status: UNPAID
+          pdf_url: https://invoice.airwallex.com/billing/invoices/pdf?s=jwt_token
+          remaining_payment_attempt_count: 1
+          status: FINALIZED
+          subscription_id: sub_hkpdkcmxdgazzq53jbk
+          total_amount: 100
+          total_discount_amounts:
+          - amount: 10
+            applied_discount_id: disc_hkpdkcmxdgazzq53jbk
+          total_tax_amount: 0
+          ui_options:
+            theme_id: tm_sgpdvff8whip0bfgzzt
+          updated_at: 2022-01-01T10:15:30+0000
+          voided_at: 2022-12-05T10:15:30+0000
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.invoice:write
+        group: Billing
+        resource_name: Invoices
+      x-domain: Billing
+      x-resource: Invoices
+      x-urlPath: void
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/invoices/{id}/add_line_items:
+    post:
+      description: This is only possible when the status of an Invoice is in `DRAFT`. You can add up to 100 line items at a time. This bulk operation is atomic.
+      operationId: invoices_addLineItems
+      parameters:
+      - description: ID of the Invoice object that this Invoice Line Item belongs to.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - line_items
+              - request_id
+              type: object
+              properties:
+                line_items:
+                  maxItems: 100
+                  minItems: 0
+                  type: array
+                  description: List of Invoice Line Item to be created.
+                  items:
+                    type: object
+                    properties:
+                      description:
+                        maxLength: 500
+                        minLength: 0
+                        type: string
+                        description: Description of the Invoice Line Item.
+                      discounts:
+                        maxItems: 1
+                        minItems: 0
+                        type: array
+                        description: A list of discounts to be applied to the invoice line item. Discounts of invoice line items are applied before invoice discounts. Currently, only one element is supported.
+                        items:
+                          required:
+                          - coupon
+                          - type
+                          type: object
+                          properties:
+                            coupon:
+                              required:
+                              - id
+                              type: object
+                              description: Coupon to redeem into a discount for this resource. Only required when `type` = `COUPON`.
+                              properties:
+                                id:
+                                  type: string
+                                  description: Id of the Coupon object.
+                            type:
+                              pattern: ^(COUPON)$
+                              type: string
+                              description: 'Specifies how to obtain the discount. One of: `COUPON`.'
+                      metadata:
+                        type: object
+                        additionalProperties:
+                          type: string
+                          description: A set of string key-value pairs that you can attach to this object for storing additional information.
+                        description: A set of string key-value pairs that you can attach to this object for storing additional information.
+                      price:
+                        required:
+                        - pricing_model
+                        type: object
+                        description: One-time price definition following the same schema as the [Price](/docs/api/billing/prices) resource. Exactly one of `price_id` or `price` is required.
+                        properties:
+                          description:
+                            maxLength: 500
+                            minLength: 0
+                            type: string
+                            description: Price description.
+                          flat_amount:
+                            maximum: 9999999999
+                            minimum: 0
+                            type: number
+                            description: The fixed amount to be charged. Only required when the pricing model is `FLAT`.
+                          pricing_model:
+                            type: string
+                            description: 'Specify how to calculate the total billing amount when a quantity is provided. One of
+
+                              - `FLAT`: a fixed price.
+
+                              - `PER_UNIT`: a fixed price per unit quantity.'
+                          product:
+                            required:
+                            - name
+                            type: object
+                            description: One-time product definition following the same schema as the [Product](/docs/api/billing/products). Exactly one of `product_id` or `product` is required.
+                            properties:
+                              description:
+                                maxLength: 500
+                                minLength: 0
+                                type: string
+                                description: Product description. Used for internal classification and identification.
+                              metadata:
+                                type: object
+                                additionalProperties:
+                                  type: string
+                                  description: A set of string key-value pairs that you can attach to this object for storing additional information.
+                                description: A set of string key-value pairs that you can attach to this object for storing additional information.
+                              name:
+                                maxLength: 200
+                                minLength: 0
+                                type: string
+                                description: Product name.
+                              tax_code:
+                                type: string
+                                description: The tax category of the product.
+                              unit:
+                                maxLength: 30
+                                minLength: 0
+                                type: string
+                                description: Product unit.
+                          product_id:
+                            type: string
+                            description: ID of the [Product](/docs/api/billing/products) object this price is associated with. Exactly one of `product_id` or `product` is required.
+                          tax_included:
+                            type: boolean
+                            description: Whether the price includes tax. Defaults to `false`.
+                          unit_amount:
+                            maximum: 9999999999
+                            minimum: 0
+                            type: number
+                            description: The amount to be charged per product unit. Only required when the pricing model is `PER_UNIT`.
+                      price_id:
+                        type: string
+                        description: ID of the price object. Exactly one of `price` or `price_id` is required.
+                      quantity:
+                        minimum: 1
+                        type: integer
+                        description: The product quantity.
+                        format: int32
+                      tax_percent:
+                        maximum: 100
+                        minimum: 0
+                        type: number
+                        description: The effective tax percent of this subscription item.
+                request_id:
+                  maxLength: 64
+                  minLength: 0
+                  type: string
+                  description: Unique request ID specified by the merchant.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 11|Create Invoice Line Items and Add Them to an Invoice
+      tags:
+      - Billing > Invoices
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/billing/invoices/invoice_id/add_line_items
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          line_items:
+          - description: Description of the Invoice Line Item.
+            discounts:
+            - coupon:
+                id: coup_abc123
+              type: COUPON
+            metadata:
+              foo: bar
+            price:
+              description: 'Standard option: $10 / month.'
+              pricing_model: FLAT
+              product:
+                description: The license to use software in one month.
+                metadata:
+                  foo: bar
+                name: Software License
+                tax_code: pct_0504010000
+                unit: month
+              product_id: prd_hkpd1x2gbgazzvcd42w
+              tax_included: false
+            price_id: pri_hkpd7fedfgb004apkvs
+            quantity: 1
+            tax_percent: 5
+          request_id: ee939540-3203-4a2c-9172-89a566485dd9
+        response_body:
+          amount_due: 100
+          applied_discounts:
+          - amount_off: 10
+            applied_to: SUBSCRIPTION
+            applied_to_id: sub_hkpdkcmxdgazzq53jbk
+            billing_customer_id: bcus_7fz9qm2n4k
+            checkout_id: bco_sgstcdcpnh8sv3awiwo
+            currency: USD
+            discount_model: PERCENTAGE
+            duration:
+              period: 3
+              period_unit: MONTH
+            duration_type: CUSTOM
+            ends_at: 2027-01-01T00:00:00+0000
+            id: disc_hkpdkcmxdgazzq53jbk
+            name: Black Friday 20% Off
+            percentage_off: 20
+            source: COUPON
+            source_id: coup_hkpdkcmxdgazzq53jbk
+            starts_at: 2026-01-01T00:00:00+0000
+          automatic_tax_status: APPLIED
+          billing_customer_id: bcus_hkpd7fedfgb004apkvs
+          collection_method: AUTO_CHARGE
+          created_at: 2022-01-01T10:15:30+0000
+          credit_note_amount_after_payment: 10
+          credit_note_amount_before_payment: 10
+          currency: USD
+          days_until_due: 1
+          default_tax_percent: 10
+          due_at: 2022-12-05T10:15:30+0000
+          enable_automatic_tax: true
+          finalized_at: 2022-12-05T10:15:30+0000
+          hosted_url: https://invoice.airwallex.com/billing/invoices/payment?s=jwt_token
+          id: inv_hkpd49cskgblns6iimw
+          last_payment_attempt_at: 2022-12-05T10:15:30+0000
+          legal_entity_id: le_ib2DZgZJN72T7bObvNuMYQ
+          linked_payment_account_id: acct_ncI2nypPKSq2VXKxscAcg
+          memo: Invoice memo.
+          metadata:
+            foo: bar
+          next_payment_attempt_at: 2022-12-05T10:15:30+0000
+          number: INV-YOLI0II9-0685
+          paid_at: 2022-12-05T10:15:30+0000
+          paid_out_of_band: false
+          past_payment_attempt_count: 1
+          payment_options:
+            payment_method_save:
+              mode: ENABLED
+              next_triggered_by: MERCHANT
+            payment_method_types:
+            - card
+            - googlepay
+            - applepay
+          payment_source_id: psrc_d3Ds20ae5VihKs092
+          payment_status: UNPAID
+          pdf_url: https://invoice.airwallex.com/billing/invoices/pdf?s=jwt_token
+          remaining_payment_attempt_count: 1
+          status: FINALIZED
+          subscription_id: sub_hkpdkcmxdgazzq53jbk
+          total_amount: 100
+          total_discount_amounts:
+          - amount: 10
+            applied_discount_id: disc_hkpdkcmxdgazzq53jbk
+          total_tax_amount: 0
+          ui_options:
+            theme_id: tm_sgpdvff8whip0bfgzzt
+          updated_at: 2022-01-01T10:15:30+0000
+          voided_at: 2022-12-05T10:15:30+0000
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.invoice:write
+        group: Billing
+        resource_name: Invoices
+      x-domain: Billing
+      x-resource: Invoices
+      x-urlPath: add_line_items
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/invoices/{id}/line_items/{item_id}:
+    get:
+      description: Retrieves the details of a line item on an Invoice.
+      operationId: invoices_retrieveLineItem
+      parameters:
+      - description: ID of the invoice object that this Invoice Line Item belongs to.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - description: ID of the Invoice Line Item object.
+        in: path
+        name: item_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceItem'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 12|Retrieve an Invoice Line Item
+      tags:
+      - Billing > Invoices
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/billing/invoices/invoice_id/line_items/item_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          amount: 2
+          applied_discounts:
+          - amount_off: 10
+            applied_to: SUBSCRIPTION
+            applied_to_id: sub_hkpdkcmxdgazzq53jbk
+            billing_customer_id: bcus_7fz9qm2n4k
+            checkout_id: bco_sgstcdcpnh8sv3awiwo
+            currency: USD
+            discount_model: PERCENTAGE
+            duration:
+              period: 3
+              period_unit: MONTH
+            duration_type: CUSTOM
+            ends_at: 2027-01-01T00:00:00+0000
+            id: disc_hkpdkcmxdgazzq53jbk
+            name: Black Friday 20% Off
+            percentage_off: 20
+            source: COUPON
+            source_id: coup_hkpdkcmxdgazzq53jbk
+            starts_at: 2026-01-01T00:00:00+0000
+          created_at: 2022-01-01T10:15:30+0000
+          currency: USD
+          description: This is a description.
+          discount_amounts:
+          - amount: 10
+            applied_discount_id: disc_hkpdkcmxdgazzq53jbk
+          id: iit_hkpd49cskgblnsnzgm1
+          invoice_id: inv_hkpd49cskgblns6iimw
+          line_item_group_id: aaea4c0e-d8b4-4b19-b249-ca28d7e17d54
+          label: Tier 0 (First 10) - Per unit fee
+          metadata:
+            foo: bar
+          period_ends_at: 2022-01-05T10:15:30+0000
+          period_starts_at: 2022-01-01T10:15:30+0000
+          price:
+            active: true
+            billing_type: IN_ADVANCE
+            created_at: 2022-01-01T10:15:30+0000
+            currency: USD
+            description: 'Standard option: $10 / month.'
+            flat_amount: 0
+            id: pri_hkpd7fedfgb004apkvs
+            lot:
+              rounding_mode: UP
+              size: 10
+            metadata:
+              foo: bar
+            meter_id: <string>
+            metered: false
+            pricing_model: GRADUATED
+            product:
+              active: true
+              created_at: 2022-01-01T10:15:30+0000
+              description: The license to use software in one month.
+              id: prd_hkpd1x2gbgazzvcd42w
+              metadata:
+                foo: bar
+              name: Software License
+              tax_code: pct_0504010000
+              unit: month
+              updated_at: 2022-01-01T10:15:30+0000
+            product_id: prd_hkpd1x2gbgazzvcd42w
+            recurring:
+              period: 1
+              period_unit: MONTH
+            tax_included: false
+            tiers:
+            - level: 1
+              unit_amount: 10
+              upper_bound: 20
+            - flat_amount: 20
+              level: 2
+            type: RECURRING
+            unit_amount: 0
+            unit_description: <string>
+            updated_at: 2022-01-01T10:15:30+0000
+          quantity: 1
+          price_tier:
+            level: 1
+            lower_bound: 0
+            unit_amount: 10
+            upper_bound: 20
+          remaining_creditable_amount: 2
+          remaining_creditable_quantity: 1
+          tax_amount: 1.5
+          tax_breakdown:
+          - name: GST
+            tax_amount: 10
+            tax_percent: 10
+            taxable_amount: 100
+          tax_percent: 7.5
+          updated_at: 2022-01-01T10:15:30+0000
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.invoice:read
+        group: Billing
+        resource_name: Invoices
+      - scope: billing.invoice:write
+        group: Billing
+        resource_name: Invoices
+      x-domain: Billing
+      x-resource: Invoices
+      x-urlPath: retrieve_line_items
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/invoices/{id}/line_items:
+    get:
+      description: Retrieves a list of Invoice Line Items based on the query parameters.
+      operationId: invoices_listLineItems
+      parameters:
+      - description: ID of the Invoice object that the Invoice Line Items belong to.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - description: A bookmark for use in pagination to retrieve either the next page or the previous page of results. You can fetch the value for this identifier from the response of the previous API call. To retrieve the next page of results, pass the value of `page_after` (if not `null`) from the response to a subsequent call. To retrieve the previous page of results, pass the value of `page_before` (if not `null`) from the response to a subsequent call.
+        in: query
+        name: page
+        required: false
+        schema:
+          type: string
+      - description: Number of invoiceItems per page. Defaults to `20`.
+        in: query
+        name: page_size
+        required: false
+        schema:
+          maximum: 1000
+          minimum: 1
+          type: integer
+          format: int32
+          default: 20
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CursorPaginationClientApiResponseInvoiceItem'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 13|List all Invoice Line Items
+      tags:
+      - Billing > Invoices
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/billing/invoices/invoice_id/line_items
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - amount: 2
+            applied_discounts:
+            - amount_off: 10
+              applied_to: SUBSCRIPTION
+              applied_to_id: sub_hkpdkcmxdgazzq53jbk
+              billing_customer_id: bcus_7fz9qm2n4k
+              checkout_id: bco_sgstcdcpnh8sv3awiwo
+              currency: USD
+              discount_model: PERCENTAGE
+              duration:
+                period: 3
+                period_unit: MONTH
+              duration_type: CUSTOM
+              ends_at: 2027-01-01T00:00:00+0000
+              id: disc_hkpdkcmxdgazzq53jbk
+              name: Black Friday 20% Off
+              percentage_off: 20
+              source: COUPON
+              source_id: coup_hkpdkcmxdgazzq53jbk
+              starts_at: 2026-01-01T00:00:00+0000
+            created_at: 2022-01-01T10:15:30+0000
+            currency: USD
+            description: This is a description.
+            discount_amounts:
+            - amount: 10
+              applied_discount_id: disc_hkpdkcmxdgazzq53jbk
+            id: iit_hkpd49cskgblnsnzgm1
+            invoice_id: inv_hkpd49cskgblns6iimw
+            line_item_group_id: aaea4c0e-d8b4-4b19-b249-ca28d7e17d54
+            label: Tier 0 (First 10) - Per unit fee
+            metadata:
+              foo: bar
+            period_ends_at: 2022-01-05T10:15:30+0000
+            period_starts_at: 2022-01-01T10:15:30+0000
+            price:
+              active: true
+              billing_type: IN_ADVANCE
+              created_at: 2022-01-01T10:15:30+0000
+              currency: USD
+              description: 'Standard option: $10 / month.'
+              id: pri_hkpd7fedfgb004apkvs
+              lot:
+                rounding_mode: UP
+                size: 10
+              metadata:
+                foo: bar
+              metered: false
+              pricing_model: GRADUATED
+              product:
+                active: true
+                created_at: 2022-01-01T10:15:30+0000
+                description: The license to use software in one month.
+                id: prd_hkpd1x2gbgazzvcd42w
+                metadata:
+                  foo: bar
+                name: Software License
+                tax_code: pct_0504010000
+                unit: month
+                updated_at: 2022-01-01T10:15:30+0000
+              product_id: prd_hkpd1x2gbgazzvcd42w
+              recurring:
+                period: 1
+                period_unit: MONTH
+              tax_included: false
+              tiers:
+              - level: 1
+                unit_amount: 10
+                upper_bound: 20
+              - flat_amount: 20
+                level: 2
+              type: RECURRING
+              updated_at: 2022-01-01T10:15:30+0000
+            quantity: 1
+            price_tier:
+              level: 1
+              lower_bound: 0
+              unit_amount: 10
+              upper_bound: 20
+            remaining_creditable_amount: 2
+            remaining_creditable_quantity: 1
+            tax_amount: 1.5
+            tax_breakdown:
+            - name: GST
+              tax_amount: 10
+              tax_percent: 10
+              taxable_amount: 100
+            tax_percent: 7.5
+            updated_at: 2022-01-01T10:15:30+0000
+          page_after: <string>
+          page_before: <string>
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.invoice:read
+        group: Billing
+        resource_name: Invoices
+      - scope: billing.invoice:write
+        group: Billing
+        resource_name: Invoices
+      x-domain: Billing
+      x-resource: Invoices
+      x-urlPath: line_items
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/invoices/{id}/update_line_items:
+    post:
+      description: This is only possible when the status of an Invoice is in `DRAFT`. You can update up to 100 line items at a time. This bulk operation is atomic.
+      operationId: invoices_updateLineItems
+      parameters:
+      - description: ID of the Invoice object that this Invoice Line Item belongs to.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - line_items
+              type: object
+              properties:
+                line_items:
+                  maxItems: 100
+                  minItems: 0
+                  type: array
+                  description: List of Invoice Line Item to be updated.
+                  items:
+                    required:
+                    - id
+                    type: object
+                    properties:
+                      description:
+                        type: string
+                        description: Description of the Invoice Line Item.
+                      discounts:
+                        type: array
+                        description: Desired set of invoice line item level discounts. If provided, replaces all existing discounts. Currently, only one element is supported.
+                        items:
+                          required:
+                          - coupon
+                          type: object
+                          properties:
+                            coupon:
+                              required:
+                              - id
+                              type: object
+                              description: Coupon to redeem into a discount for this resource. Only required when `type` = `COUPON`.
+                              properties:
+                                id:
+                                  type: string
+                                  description: Id of the Coupon object.
+                            type:
+                              pattern: ^(COUPON)$
+                              type: string
+                              description: 'Specifies how to obtain a new discount. One of: `COUPON`.'
+                      id:
+                        type: string
+                        description: ID of the Invoice Line Item.
+                      metadata:
+                        type: object
+                        additionalProperties:
+                          type: string
+                          description: A set of string key-value pairs that you can attach to this object for storing additional information.
+                        description: A set of string key-value pairs that you can attach to this object for storing additional information.
+                      quantity:
+                        minimum: 1
+                        type: integer
+                        description: The product quantity.
+                        format: int32
+                      tax_percent:
+                        type: number
+                        description: The effective tax percent of this subscription item.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 14|Update Invoice Line Items in an Invoice
+      tags:
+      - Billing > Invoices
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/billing/invoices/invoice_id/update_line_items
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          line_items:
+          - discounts:
+            - coupon:
+                id: coup_abc123
+              type: COUPON
+            id: iit_sgstjv2p9h24g7trp1e
+            metadata:
+              foo: bar
+            quantity: 1
+            tax_percent: 5
+        response_body:
+          amount_due: 100
+          applied_discounts:
+          - amount_off: 10
+            applied_to: SUBSCRIPTION
+            applied_to_id: sub_hkpdkcmxdgazzq53jbk
+            billing_customer_id: bcus_7fz9qm2n4k
+            checkout_id: bco_sgstcdcpnh8sv3awiwo
+            currency: USD
+            discount_model: PERCENTAGE
+            duration:
+              period: 3
+              period_unit: MONTH
+            duration_type: CUSTOM
+            ends_at: 2027-01-01T00:00:00+0000
+            id: disc_hkpdkcmxdgazzq53jbk
+            name: Black Friday 20% Off
+            percentage_off: 20
+            source: COUPON
+            source_id: coup_hkpdkcmxdgazzq53jbk
+            starts_at: 2026-01-01T00:00:00+0000
+          automatic_tax_status: APPLIED
+          billing_customer_id: bcus_hkpd7fedfgb004apkvs
+          collection_method: AUTO_CHARGE
+          created_at: 2022-01-01T10:15:30+0000
+          credit_note_amount_after_payment: 10
+          credit_note_amount_before_payment: 10
+          currency: USD
+          days_until_due: 1
+          default_tax_percent: 10
+          due_at: 2022-12-05T10:15:30+0000
+          enable_automatic_tax: true
+          finalized_at: 2022-12-05T10:15:30+0000
+          hosted_url: https://invoice.airwallex.com/billing/invoices/payment?s=jwt_token
+          id: inv_hkpd49cskgblns6iimw
+          last_payment_attempt_at: 2022-12-05T10:15:30+0000
+          legal_entity_id: le_ib2DZgZJN72T7bObvNuMYQ
+          linked_payment_account_id: acct_ncI2nypPKSq2VXKxscAcg
+          memo: Invoice memo.
+          metadata:
+            foo: bar
+          next_payment_attempt_at: 2022-12-05T10:15:30+0000
+          number: INV-YOLI0II9-0685
+          paid_at: 2022-12-05T10:15:30+0000
+          paid_out_of_band: false
+          past_payment_attempt_count: 1
+          payment_options:
+            payment_method_save:
+              mode: ENABLED
+              next_triggered_by: MERCHANT
+            payment_method_types:
+            - card
+            - googlepay
+            - applepay
+          payment_source_id: psrc_d3Ds20ae5VihKs092
+          payment_status: UNPAID
+          pdf_url: https://invoice.airwallex.com/billing/invoices/pdf?s=jwt_token
+          remaining_payment_attempt_count: 1
+          status: FINALIZED
+          subscription_id: sub_hkpdkcmxdgazzq53jbk
+          total_amount: 100
+          total_discount_amounts:
+          - amount: 10
+            applied_discount_id: disc_hkpdkcmxdgazzq53jbk
+          total_tax_amount: 0
+          ui_options:
+            theme_id: tm_sgpdvff8whip0bfgzzt
+          updated_at: 2022-01-01T10:15:30+0000
+          voided_at: 2022-12-05T10:15:30+0000
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.invoice:write
+        group: Billing
+        resource_name: Invoices
+      x-domain: Billing
+      x-resource: Invoices
+      x-urlPath: update_line_items
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/invoices/{id}/delete_line_items:
+    post:
+      description: This is only possible when the status of an Invoice is in `DRAFT`. You can delete up to 100 line items at a time. This bulk operation is atomic.
+      operationId: invoices_deleteLineItems
+      parameters:
+      - description: ID of the Invoice object that this Invoice Line Item belongs to.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - line_item_ids
+              type: object
+              properties:
+                line_item_ids:
+                  maxItems: 100
+                  minItems: 0
+                  type: array
+                  description: List of Invoice Line Item IDs to be deleted.
+                  items:
+                    maxLength: 100
+                    minLength: 0
+                    type: string
+                    description: List of Invoice Line Item IDs to be deleted.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 15|Delete Invoice Line Items Within an Invoice
+      tags:
+      - Billing > Invoices
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/billing/invoices/invoice_id/delete_line_items
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          line_item_ids:
+          - iit_hkpd49cskgblnsnzgm1
+          - iit_cs8e0ZgQzd2QnCxVpzu
+        response_body:
+          amount_due: 100
+          applied_discounts:
+          - amount_off: 10
+            applied_to: SUBSCRIPTION
+            applied_to_id: sub_hkpdkcmxdgazzq53jbk
+            billing_customer_id: bcus_7fz9qm2n4k
+            checkout_id: bco_sgstcdcpnh8sv3awiwo
+            currency: USD
+            discount_model: PERCENTAGE
+            duration:
+              period: 3
+              period_unit: MONTH
+            duration_type: CUSTOM
+            ends_at: 2027-01-01T00:00:00+0000
+            id: disc_hkpdkcmxdgazzq53jbk
+            name: Black Friday 20% Off
+            percentage_off: 20
+            source: COUPON
+            source_id: coup_hkpdkcmxdgazzq53jbk
+            starts_at: 2026-01-01T00:00:00+0000
+          automatic_tax_status: APPLIED
+          billing_customer_id: bcus_hkpd7fedfgb004apkvs
+          collection_method: AUTO_CHARGE
+          created_at: 2022-01-01T10:15:30+0000
+          credit_note_amount_after_payment: 10
+          credit_note_amount_before_payment: 10
+          currency: USD
+          days_until_due: 1
+          default_tax_percent: 10
+          due_at: 2022-12-05T10:15:30+0000
+          enable_automatic_tax: true
+          finalized_at: 2022-12-05T10:15:30+0000
+          hosted_url: https://invoice.airwallex.com/billing/invoices/payment?s=jwt_token
+          id: inv_hkpd49cskgblns6iimw
+          last_payment_attempt_at: 2022-12-05T10:15:30+0000
+          legal_entity_id: le_ib2DZgZJN72T7bObvNuMYQ
+          linked_payment_account_id: acct_ncI2nypPKSq2VXKxscAcg
+          memo: Invoice memo.
+          metadata:
+            foo: bar
+          next_payment_attempt_at: 2022-12-05T10:15:30+0000
+          number: INV-YOLI0II9-0685
+          paid_at: 2022-12-05T10:15:30+0000
+          paid_out_of_band: false
+          past_payment_attempt_count: 1
+          payment_options:
+            payment_method_save:
+              mode: ENABLED
+              next_triggered_by: MERCHANT
+            payment_method_types:
+            - card
+            - googlepay
+            - applepay
+          payment_source_id: psrc_d3Ds20ae5VihKs092
+          payment_status: UNPAID
+          pdf_url: https://invoice.airwallex.com/billing/invoices/pdf?s=jwt_token
+          remaining_payment_attempt_count: 1
+          status: FINALIZED
+          subscription_id: sub_hkpdkcmxdgazzq53jbk
+          total_amount: 100
+          total_discount_amounts:
+          - amount: 10
+            applied_discount_id: disc_hkpdkcmxdgazzq53jbk
+          total_tax_amount: 0
+          ui_options:
+            theme_id: tm_sgpdvff8whip0bfgzzt
+          updated_at: 2022-01-01T10:15:30+0000
+          voided_at: 2022-12-05T10:15:30+0000
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.invoice:write
+        group: Billing
+        resource_name: Invoices
+      x-domain: Billing
+      x-resource: Invoices
+      x-urlPath: delete_line_items
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/invoices/{id}/line_item_groups/{group_id}:
+    get:
+      description: Retrieves the details of a line item group on an Invoice.
+      operationId: retrieveLineItemGroups
+      parameters:
+      - description: ID of the Invoice object that this Line Item Group belongs to.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - description: ID of the Line Item Group.
+        in: path
+        name: group_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LineItemGroup'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 16|Retrieve an Invoice Line Item Group
+      tags:
+      - Billing > Invoices
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/billing/invoices/invoice_id/line_item_groups/group_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: aaea4c0e-d8b4-4b19-b249-ca28d7e17d54
+          invoice_id: inv_hkpd49cskgblns6iimw
+          label: line_item_group_1
+          period_ends_at: 2026-02-01T00:00:00+0000
+          period_starts_at: 2026-01-01T00:00:00+0000
+          total_amount: 20
+          total_discount_amount: 0
+          total_quantity: 20
+          total_remaining_creditable_amount: 20
+          total_remaining_creditable_quantity: 20
+          total_tax_amount: 0
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.invoice:read
+        group: Billing
+        resource_name: Invoices
+      - scope: billing.invoice:write
+        group: Billing
+        resource_name: Invoices
+      x-domain: Billing
+      x-resource: Invoices
+      x-urlPath: retrieve_line_item_groups
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/invoices/{id}/line_item_groups:
+    get:
+      description: Retrieves a list of line item groups for an Invoice.
+      operationId: listLineItemGroups
+      parameters:
+      - description: ID of the Invoice object that the Line Item Groups belong to.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - description: A bookmark for use in pagination to retrieve either the next page or the previous page of results. You can fetch the value for this identifier from the response of the previous API call. To retrieve the next page of results, pass the value of `page_after` (if not `null`) from the response to a subsequent call. To retrieve the previous page of results, pass the value of `page_before` (if not `null`) from the response to a subsequent call.
+        in: query
+        name: page
+        required: false
+        schema:
+          type: string
+      - description: Number of line item groups per page. Defaults to `20`.
+        in: query
+        name: page_size
+        required: false
+        schema:
+          maximum: 1000
+          minimum: 1
+          type: integer
+          format: int32
+          default: 20
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CursorPaginationClientApiResponseLineItemGroup'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 17|List all Invoice Line Item Groups
+      tags:
+      - Billing > Invoices
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/billing/invoices/invoice_id/line_item_groups
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - id: aaea4c0e-d8b4-4b19-b249-ca28d7e17d54
+            invoice_id: inv_hkpd49cskgblns6iimw
+            label: line_item_group_1
+            period_ends_at: 2026-02-01T00:00:00+0000
+            period_starts_at: 2026-01-01T00:00:00+0000
+            total_amount: 20
+            total_discount_amount: 0
+            total_quantity: 20
+            total_remaining_creditable_amount: 20
+            total_remaining_creditable_quantity: 20
+            total_tax_amount: 0
+          page_after: <string>
+          page_before: <string>
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.invoice:read
+        group: Billing
+        resource_name: Invoices
+      - scope: billing.invoice:write
+        group: Billing
+        resource_name: Invoices
+      x-domain: Billing
+      x-resource: Invoices
+      x-urlPath: line_item_groups
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    InvoicePaymentMethodSave:
+      type: object
+      properties:
+        mode:
+          type: string
+          description: "Controls whether the payment method can be saved for future use. Possible values: `ENABLED`, `DISABLED`, or `COLLECT_CONSENT`.  \n`ENABLED`: The payment method will be saved for future use.  \n`DISABLED`: The payment method will not be saved.  \n`COLLECT_CONSENT`: The digital invoice UI asks the customer whether they want to save the payment method."
+        next_triggered_by:
+          type: string
+          description: "Indicates who will use the saved payment source to trigger future payments. One of `MERCHANT` or `CUSTOMER`.  \nIf `MERCHANT`, a Payment Source is created for future use. If `CUSTOMER`, the payment method is saved only with the payment provider."
+      description: Settings for saving this payment method for future use.
+    CursorPaginationClientApiResponseInvoiceItem:
+      required:
+      - items
+      type: object
+      properties:
+        items:
+          type: array
+          description: Paged results.
+          items:
+            $ref: '#/components/schemas/InvoiceItem'
+        page_after:
+          type: string
+          description: The page cursor used for searching after page.
+        page_before:
+          type: string
+          description: The page cursor used for search before page.
+    InvoiceDeleted:
+      required:
+      - deleted
+      - id
+      type: object
+      properties:
+        deleted:
+          type: boolean
+          description: Indicates whether the delete command was executed successfully.
+        id:
+          type: string
+          description: ID of the Invoice object.
+    PriceLot:
+      required:
+      - rounding_mode
+      - size
+      type: object
+      properties:
+        rounding_mode:
+          pattern: ^UP$
+          type: string
+          description: Specifies how to round the calculated lots when the total quantity is not an exact multiple of the size. One of `UP`.
+        size:
+          minimum: 2
+          type: integer
+          description: The amount of quantity that constitutes a single billable lot.
+          format: int32
+      description: Defines how quantity is grouped into billable lots. The unit_amount is then applied per lot. If not set, quantity is treated as the number of billable lots. Only applicable for `PER_UNIT` price.
+    Invoice:
+      required:
+      - amount_due
+      - applied_discounts
+      - automatic_tax_status
+      - billing_customer_id
+      - created_at
+      - currency
+      - enable_automatic_tax
+      - id
+      - paid_out_of_band
+      - payment_status
+      - status
+      - total_amount
+      - total_discount_amounts
+      - total_tax_amount
+      - updated_at
+      type: object
+      properties:
+        amount_due:
+          type: number
+          description: The total amount remaining to be paid on this invoice. When the amount due reaches 0, the invoice payment status transitions to `PAID`.
+        applied_discounts:
+          type: array
+          description: List of discounts that are applied to the invoice. Discounts of invoice line items are applied before invoice discounts.
+          items:
+            $ref: '#/components/schemas/DiscountResponse'
+        automatic_tax_status:
+          type: string
+          description: The automatic tax status of this invoice.
+          enum:
+          - APPLIED
+          - LOCATION_NOT_SUPPORTED
+          - LOCATION_NOT_REGISTERED_BY_MERCHANT
+          - ADDRESS_INCOMPLETE
+          - DISABLED
+          x-enumDescriptions:
+            APPLIED: The automatic tax is applied.
+            LOCATION_NOT_SUPPORTED: Automatic tax calculation isn't supported in the customer's location.
+            LOCATION_NOT_REGISTERED_BY_MERCHANT: The merchant isn't registered to collect tax in the customer's location.
+            ADDRESS_INCOMPLETE: The customer address was insufficient or invalid to determine the correct tax.
+            DISABLED: The automatic tax is disabled.
+        bank_transfer_instructions:
+          $ref: '#/components/schemas/InvoiceBankTransferInstructions'
+          description: Bank transfer instructions for paying this Invoice. Included when bank transfer is enabled, the Invoice currency is supported, and the Billing Customer is eligible.
+        billing_customer_id:
+          type: string
+          description: ID of the [Billing Customer](/docs/api/billing/billing_customers) who this Invoice is issued to.
+        collection_method:
+          type: string
+          description: Specify how payment is collected, one of `AUTO_CHARGE`, `CHARGE_ON_CHECKOUT` or `OUT_OF_BAND`.
+        created_at:
+          type: string
+          description: Time when this invoice was created.
+        credit_note_amount_after_payment:
+          type: number
+          description: The total amount of all credit notes issued for this invoice after invoice payment.
+        credit_note_amount_before_payment:
+          type: number
+          description: The total amount of all credit notes issued for this invoice before invoice payment.
+        currency:
+          type: string
+          description: The currency of the Invoice in 3-letter ISO-4217 format.
+        days_until_due:
+          type: integer
+          description: Number of days from invoice finalization until payment is due.
+          format: int32
+        default_tax_percent:
+          maximum: 100
+          minimum: 0
+          type: number
+          description: The tax percent between `0` and `100` to be applied to each Line Item's price. The tax will be exclusive.
+        due_at:
+          type: string
+          description: Due date set by the merchant for this invoice, if any.
+        e_invoicing_document_id:
+          type: string
+          description: The ID of the [E-Invoicing Document](/docs/api/billing/e-invoicing_documents) associated with this Invoice. `null` when no E-Invoicing Document has been created.
+        enable_automatic_tax:
+          type: boolean
+          description: Whether automatic tax is enabled for this invoice. When enabled, the system attempts to calculate taxes automatically.
+        finalized_at:
+          type: string
+          description: The time that the invoice draft was finalized.
+        footer:
+          type: string
+          description: Additional payment instructions or supplementary information that merchants can share with their customers. Displayed in the Invoice PDF.
+        hosted_url:
+          type: string
+          description: URL of the hosted page where customers can view and pay this invoice. The URL is valid for 35 days.
+        id:
+          type: string
+          description: ID of the Invoice object.
+        last_payment_attempt_at:
+          type: string
+          description: Time of last payment attempt. Only applicable when `subscription_id` is not `null`.
+        legal_entity_id:
+          type: string
+          description: ID of the legal entity to be used as billing entity. You can find this ID in the Airwallex web app > Settings.
+        linked_payment_account_id:
+          type: string
+          description: ID of the linked payment account to collect payment. You can find this ID in the Airwallex web app > Settings > Account details, within the Account Information section.
+        memo:
+          type: string
+          description: String used to describe the object. Referenced as memo or invoice note in Webapp.
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+            description: A set of string key-value pairs that you can attach to this object for storing additional information.
+          description: A set of string key-value pairs that you can attach to this object for storing additional information.
+        next_payment_attempt_at:
+          type: string
+          description: Time of next payment attempt. Only applicable when `subscription_id` is not `null`.
+        number:
+          type: string
+          description: A unique, identifying string that appears on emails sent to the customer for this invoice.
+        paid_at:
+          type: string
+          description: The time that the invoice was paid.
+        paid_out_of_band:
+          type: boolean
+          description: Returns `true` if the invoice was manually marked paid, returns `false` if the invoice hasn't been paid yet or was paid on Airwallex.
+        past_payment_attempt_count:
+          type: integer
+          description: The number of payment attempts made on this invoice so far. Only applicable when `subscription_id` is not `null`.
+          format: int32
+        payment_options:
+          $ref: '#/components/schemas/InvoicePaymentOptions'
+          description: Payment settings of this Invoice. Only applicable if collection_method is `CHARGE_ON_CHECKOUT`.
+        payment_source_id:
+          type: string
+          description: "ID of the [Payment Source](/docs/api/billing/payment_sources) to pay for the invoice.  \nIf `collection_method` is `CHARGE_ON_CHECKOUT`, a Payment Source is automatically created during invoice payment when `payment_options.payment_method_save.next_triggered_by` is `MERCHANT` and `payment_options.payment_method_save.mode` is `ENABLED`, or when it is `COLLECT_CONSENT` and the customer has given consent."
+        payment_status:
+          type: string
+          description: Status of the payment for the invoice, one of `UNPAID` and `PAID`.
+        pdf_url:
+          type: string
+          description: The link to download the PDF for the invoice. The URL will be valid for 35 days. If the invoice has not been finalized yet, this will be `null`.
+        remaining_payment_attempt_count:
+          type: integer
+          description: The number of the remaining payment attempts. If `0`, no more payment attempts would be triggered automatically for this invoice. Only applicable when `subscription_id` is not `null`.
+          format: int32
+        status:
+          type: string
+          description: Status of the invoice. Once the invoice is created, it will be defaulted to `DRAFT`, and once the invoice is finalized, it will turn to `FINALIZED`. When an invoice is voided, it will become `VOIDED`.
+        subscription_id:
+          type: string
+          description: ID of the [Subscription](/docs/api/billing/subscriptions) that generated this invoice, if any.
+        ui_options:
+          type: object
+          description: UI configuration for the digital invoice page.
+          properties:
+            theme_id:
+              type: string
+              description: ID of the theme to apply to this invoice, overriding the theme configured for its legal entity.
+        total_amount:
+          type: number
+          description: The total amount of the invoice, including tax and discount if applicable.
+        total_discount_amounts:
+          type: array
+          description: ' The aggregate amounts calculated per discount across all Invoice Line Items and the Invoice.'
+          items:
+            $ref: '#/components/schemas/DiscountAmount'
+        total_tax_amount:
+          type: number
+          description: The aggregate amounts calculated for all line items.
+        updated_at:
+          type: string
+          description: Time when this invoice was last updated.
+        voided_at:
+          type: string
+          description: The time that the invoice was voided.
+    DiscountAmount:
+      required:
+      - amount
+      - applied_discount_id
+      type: object
+      properties:
+        amount:
+          type: number
+          description: The amount of the applied discount.
+        applied_discount_id:
+          type: string
+          description: ID of the Discount object which is applied.
+    DiscountResponse:
+      required:
+      - applied_to
+      - applied_to_id
+      - billing_customer_id
+      - created_at
+      - discount_model
+      - duration_type
+      - id
+      - name
+      - source
+      - starts_at
+      - updated_at
+      type: object
+      properties:
+        amount_off:
+          type: number
+          description: The fixed amount to deduct when `discount_model` is `FLAT`.
+        applied_to:
+          type: string
+          description: "Specifies the type of object this discount applies to. Possible values: \n- `SUBSCRIPTION`: Applies to an entire subscription. \n- `SUBSCRIPTION_ITEM`: Applies to a specific item within a subscription. \n- `INVOICE`: Applies to an entire invoice. \n- `INVOICE_LINE_ITEM`: Applies to a specific line item on an invoice."
+        applied_to_id:
+          type: string
+          description: ID of the specific target object the discount is applied to. Must correspond to the object type defined in applied_to.
+        billing_customer_id:
+          type: string
+          description: The ID of the billing customer to whom the coupon is applied.
+        checkout_id:
+          type: string
+          description: The ID of the Checkout where this discount was redeemed, if applicable.
+        created_at:
+          type: string
+          description: Time when the Discount was created.
+          format: date-time
+        currency:
+          type: string
+          description: The currency of `amount_off` when `discount_model` is `FLAT`.
+        discount_model:
+          type: string
+          description: "Specified how to calculate the discount amount when applied, one of \n- `FLAT`: fixed amount off.\n- `PERCENTAGE`: percentage off."
+        duration:
+          $ref: '#/components/schemas/CouponDuration'
+          description: The duration of the discount to apply, when `duration_type` is `CUSTOM`. `null` if `duration_type` is `ONCE` or `INDEFINITELY`.
+        duration_type:
+          type: string
+          description: "Determines how long the coupon's discount remains active after being applied. Possible values: \n- `ONCE`: Applies only to the first charge of a subscription or a one-off invoice.\n- `CUSTOM`: Applies to all charges within a specified number of billing cycles, as defined by duration.\n- `INDEFINITELY`: Applies to all future charges for the subscription until it is removed."
+        ends_at:
+          type: string
+          description: The timestamp when the discount expires. Present only when the associated coupon's duration_type is CUSTOM.
+        id:
+          type: string
+          description: ID of the Discount object.
+        name:
+          type: string
+          description: Name of the discount. For discounts created from a coupon, defaults to the coupon name at creation time.
+        percentage_off:
+          type: number
+          description: The percentage between 0 to 100 to be applied to deduct when `discount_model` is `PERCENTAGE`.
+        source:
+          type: string
+          description: "Source of the Discount. Possible values: \n- `COUPON`: the discount is applied through a coupon."
+        source_id:
+          type: string
+          description: ID of the creating source, e.g. is the ID of the coupon if source = COUPON.
+        starts_at:
+          type: string
+          description: Time when the discount takes effect. For discounts applied to a subscription or subscription item, this corresponds to the start date of the first billing period.
+        updated_at:
+          type: string
+          description: Time when the Discount was updated.
+          format: date-time
+    InvoiceItem:
+      required:
+      - amount
+      - applied_discounts
+      - created_at
+      - currency
+      - discount_amounts
+      - id
+      - invoice_id
+      - updated_at
+      type: object
+      properties:
+        amount:
+          type: number
+          description: The amount of the Invoice Line Item.
+        applied_discounts:
+          type: array
+          description: List of discounts that are applied to the invoice. Discounts of invoice line items are applied before invoice discounts.
+          items:
+            $ref: '#/components/schemas/DiscountResponse'
+        created_at:
+          type: string
+          description: Time when the price was created.
+        currency:
+          type: string
+          description: The currency of the Invoice Line Item in 3-letter ISO-4217 format.
+        description:
+          type: string
+          description: Description of the Invoice Line Item.
+        discount_amounts:
+          type: array
+          description: The amount of discount calculated per discount for this line item. The Discount applied to the invoice will be apportioned to the [DiscountAmountResponse](/docs/api/billing/invoices)s of each invoice line item.
+          items:
+            $ref: '#/components/schemas/DiscountAmount'
+        id:
+          type: string
+          description: ID of the Invoice Line Item object.
+        invoice_id:
+          type: string
+          description: ID of the [Invoice](/docs/api/billing/invoices) object that this Invoice Line Item belongs to.
+        label:
+          type: string
+          description: String to describe what this line item charges for.
+        line_item_group_id:
+          type: string
+          description: The ID of the line item group this line item belongs to.
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+            description: A set of string key-value pairs that you can attach to this object for storing additional information.
+          description: A set of string key-value pairs that you can attach to this object for storing additional information.
+        period_ends_at:
+          type: string
+          description: The end of the billing period associated with this Invoice Line Item. This value is exclusive.
+        period_starts_at:
+          type: string
+          description: The start of the billing period associated with this Invoice Line Item. This value is inclusive.
+        price:
+          $ref: '#/components/schemas/PriceWithProduct'
+          description: Price subscribed by the customer. Mutually exclusive with `rate_card_item`.
+        quantity:
+          type: integer
+          description: The product quantity.
+          format: int32
+        price_tier:
+          $ref: '#/components/schemas/InvoiceItemPriceTier'
+          description: The price tier this line item belongs to. Only present for graduated or volume pricing. Mutually exclusive with `rate_card_item_tier`.
+        rate_card_item:
+          $ref: '#/components/schemas/RateCardItem'
+          description: Rate Card Item billed to the customer. Mutually exclusive with `price`.
+        rate_card_item_tier:
+          $ref: '#/components/schemas/InvoiceItemPriceTier'
+          description: The Rate Card Item tier this line item belongs to. Only present for graduated or volume pricing. Mutually exclusive with `price_tier`.
+        remaining_creditable_amount:
+          type: number
+          description: The total amount currently available to be credited for this invoice line item, excluding tax and discount.
+        remaining_creditable_quantity:
+          type: number
+          description: Defines the maximum quantity of this line item available for future credits.
+        tax_amount:
+          type: number
+          description: The tax amount for this line item.
+        tax_breakdown:
+          type: array
+          description: The tax breakdown details the exact taxes that apply to this line item.
+          items:
+            $ref: '#/components/schemas/TaxBreakdownItem'
+        tax_percent:
+          type: number
+          description: The effective tax percent of this invoice line item.
+        updated_at:
+          type: string
+          description: Time when the price was last updated.
+    CursorPaginationClientApiResponseLineItemGroup:
+      required:
+      - items
+      type: object
+      properties:
+        items:
+          type: array
+          description: Paged results.
+          items:
+            $ref: '#/components/schemas/LineItemGroup'
+        page_after:
+          type: string
+          description: The page cursor used for searching after page.
+        page_before:
+          type: string
+          description: The page cursor used for search before page.
+    PriceTier:
+      required:
+      - level
+      type: object
+      properties:
+        flat_amount:
+          type: number
+          description: The flat amount to be charged for this tier when pricing model is `GRADUATED`, or the overall flat amount to be charged when pricing model is `VOLUME`.
+          minimum: 0
+        level:
+          type: integer
+          description: The sequential position of the tier within the price definition. Starts from 1.
+          format: int32
+        lot:
+          $ref: '#/components/schemas/PriceLot'
+          description: Defines how quantity is grouped into billable lots. The unit_amount is then applied per lot. If not set, quantity is treated as the number of billable lots. Only applicable for `VOLUME` and `GRADUATED` prices.
+        unit_amount:
+          type: number
+          description: The per-unit amount to be charged for this tier when pricing model is `GRADUATED`, or the overall per-unit amount to be charged when pricing model is `VOLUME`.
+          minimum: 0
+        unit_description:
+          type: string
+          description: Description of the billable unit for the tier.
+        upper_bound:
+          type: number
+          description: The upper quantity limit of this tier. This tier is applicable when the quantity does not exceed the upper bound of this tier, and is greater than the upper bound of the tier below it(or `0` if this is the first tier). For the last tier, the upper bound must be left empty.
+          minimum: 0
+    Price:
+      required:
+      - active
+      - created_at
+      - currency
+      - id
+      - metered
+      - pricing_model
+      - product_id
+      - tax_included
+      - type
+      - updated_at
+      type: object
+      properties:
+        active:
+          type: boolean
+          description: '`true` if the price is available for new purchases, `false` otherwise.'
+        billing_type:
+          type: string
+          description: "Indicates when should the price be billed, one of \n- `IN_ADVANCE`: billed at the beginning of the billing cycle.\n- `IN_ARREARS`: billed at the end of the billing cycle."
+        created_at:
+          type: string
+          description: Time when the price was created.
+        currency:
+          type: string
+          description: Currency of the price (in 3-letter ISO-4217 format).
+        description:
+          type: string
+          description: Price description.
+        flat_amount:
+          type: number
+          description: The fixed amount to be charged. Only required when the pricing model is `FLAT`.
+        id:
+          type: string
+          description: ID of the Price object.
+        lot:
+          $ref: '#/components/schemas/PriceLot'
+          description: Defines how quantity is grouped into billable lots. The unit_amount is then applied per lot. If not set, quantity is treated as the number of billable lots. Only applicable for `PER_UNIT` price.
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+            description: A set of string key-value pairs that you can attach to this object for storing additional information.
+          description: A set of string key-value pairs that you can attach to this object for storing additional information.
+        meter_id:
+          type: string
+          description: ID of the Meter object specifying how to calculate the usage for this price.
+        metered:
+          type: boolean
+          description: Specify how to determine the quantity of the product used in each billing cycle for subscription payments. `true` if the quantity is dynamically determined during the billing cycle. The merchant should call the Ingest Usage Events API to submit usage data when the product is used. `false` if the quantity is determined when creating a subscription.
+        pricing_model:
+          type: string
+          description: 'Specify how to calculate the total billing amount when a quantity is provided. One of
+
+            - `FLAT`: a fixed price.
+
+            - `PER_UNIT`: a fixed price per unit quantity.
+
+            - `VOLUME`: the unit price is based on which tier the total quantity falls in.
+
+            - `GRADUATED`: the unit price changes as the quantity increases.'
+        product_id:
+          type: string
+          description: ID of the [Product](/docs/api/billing/products) object this price is associated with.
+        recurring:
+          $ref: '#/components/schemas/PriceRecurring'
+          description: The frequency at which the price is charged. null for one-time charge.
+        tax_included:
+          type: boolean
+          description: Whether the price includes tax.
+        tiers:
+          type: array
+          description: List of quantity-based pricing tiers for this price. Required when the pricing model is `VOLUME` or `GRADUATED`.
+          items:
+            $ref: '#/components/schemas/PriceTier'
+        type:
+          type: string
+          description: One of `ONE_OFF` or `RECURRING` depending on whether the price is for a one-off purchase or a recurring (subscription) purchase.
+        unit_amount:
+          type: number
+          description: The amount to be charged per product unit. Only required when the pricing model is `PER_UNIT`.
+        unit_description:
+          type: string
+          description: Description of the billable unit for the price.
+        updated_at:
+          type: string
+          description: Time when the price was last updated.
+      description: Price subscribed by the customer.
+    CouponDuration:
+      required:
+      - period
+      - period_unit
+      type: object
+      properties:
+        period:
+          type: integer
+          description: The number of period units.
+          format: int32
+          minimum: 1
+        period_unit:
+          type: string
+          description: Specifies duration. One of `DAY`, `WEEK`, `MONTH`, `YEAR`.
+          pattern: ^(DAY|WEEK|MONTH|YEAR)$
+      description: The duration of the coupon to apply, when `duration_type`is `CUSTOM`. `null` if `duration_type` is `ONCE` or `INDEFINITELY`.
+    CursorPaginationClientApiResponseInvoice:
+      required:
+      - items
+      type: object
+      properties:
+        items:
+          type: array
+          description: Paged results.
+          items:
+            $ref: '#/components/schemas/Invoice'
+        page_after:
+          type: string
+          description: The page cursor used for searching after page.
+        page_before:
+          type: string
+          description: The page cursor used for search before page.
+    TaxBreakdownItem:
+      required:
+      - name
+      - tax_amount
+      - tax_percent
+      - taxable_amount
+      type: object
+      properties:
+        name:
+          type: string
+          description: The display name of this tax component.
+        tax_amount:
+          type: number
+          description: The amount of tax charged for this component.
+        tax_percent:
+          type: number
+          description: The tax percent applied for this component.
+        taxable_amount:
+          type: number
+          description: The portion of the subtotal that this tax component applies to.
+    InvoicePreview:
+      required:
+      - applied_discounts
+      - automatic_tax_status
+      - billing_customer_id
+      - created_at
+      - currency
+      - enable_automatic_tax
+      - items
+      - total_amount
+      - total_discount_amounts
+      type: object
+      properties:
+        applied_discounts:
+          type: array
+          description: List of discounts that are applied to the invoice. Discounts of invoice line items are applied before invoice discounts.
+          items:
+            $ref: '#/components/schemas/DiscountResponse'
+        automatic_tax_status:
+          type: string
+          description: The automatic tax status of this invoice.
+          enum:
+          - APPLIED
+          - LOCATION_NOT_SUPPORTED
+          - LOCATION_NOT_REGISTERED_BY_MERCHANT
+          - ADDRESS_INCOMPLETE
+          - DISABLED
+          x-enumDescriptions:
+            APPLIED: The automatic tax is applied.
+            LOCATION_NOT_SUPPORTED: Automatic tax calculation isn't supported in the customer's location.
+            LOCATION_NOT_REGISTERED_BY_MERCHANT: The merchant isn't registered to collect tax in the customer's location.
+            ADDRESS_INCOMPLETE: The customer address was insufficient or invalid to determine the correct tax.
+            DISABLED: The automatic tax is disabled.
+        billing_customer_id:
+          type: string
+          description: ID of the [Billing Customer](/docs/api/billing/billing_customers) who will be charged.
+        created_at:
+          type: string
+          description: Time when this invoice will be created.
+        currency:
+          type: string
+          description: The currency of the Invoice in 3-letter ISO-4217 format.
+        default_tax_percent:
+          type: number
+          description: The tax percent between `0` and `100` to be applied to each Line Item's price. The tax will be exclusive. Defaults to `0`.
+          maximum: 100
+          minimum: 0
+        enable_automatic_tax:
+          type: boolean
+          description: Whether automatic tax is enabled for this invoice. When enabled, the system attempts to calculate taxes automatically.
+        items:
+          type: array
+          description: The preview invoice items.
+          items:
+            $ref: '#/components/schemas/InvoiceItemPreview'
+        legal_entity_id:
+          type: string
+          description: ID of the legal entity to be used for the Invoice as billing entity.
+        subscription_id:
+          type: string
+          description: ID of the [Subscription](/docs/api/billing/subscriptions) which generated this invoice, if any.
+        total_amount:
+          type: number
+          description: The total amount of the invoice.
+        total_discount_amounts:
+          type: array
+          description: ' The aggregate amounts calculated per discount across all Invoice Line Items and the Invoice.'
+          items:
+            $ref: '#/components/schemas/DiscountAmount'
+    RateCardItem:
+      required:
+      - created_at
+      - dimension_values
+      - id
+      - pricing_model
+      - rate_card_id
+      type: object
+      properties:
+        created_at:
+          type: string
+          description: Time when this rate card item was created.
+        dimension_values:
+          type: object
+          additionalProperties:
+            type: string
+            description: A dimension value that this item applies to.
+          description: The dimension values this item applies to. Each key must be one of the Rate Card Version's `dimension_keys` (a subset is allowed). Any key omitted here acts as a wildcard, matching any value for that dimension; an empty object matches all usage (a catch-all).
+        id:
+          type: string
+          description: ID of the Rate Card Item object.
+        lot:
+          $ref: '#/components/schemas/RateCardItemLot'
+          description: Defines how quantity is grouped into billable lots. The `unit_amount` is then applied per lot. If not set, quantity is treated as the number of billable lots. Only applicable for `PER_UNIT`.
+        pricing_model:
+          type: string
+          description: 'Specify how to calculate the total billing amount when a quantity is provided. One of
+
+            - `PER_UNIT`: a fixed price per unit quantity.
+
+            - `VOLUME`: the unit price is based on which tier the total quantity falls in.
+
+            - `GRADUATED`: the unit price changes as the quantity increases.'
+        rate_card_id:
+          type: string
+          description: ID of the Rate Card this item belongs to.
+        tiers:
+          type: array
+          description: List of quantity-based pricing tiers for this item. Only present when the pricing model is `VOLUME` or `GRADUATED`.
+          items:
+            $ref: '#/components/schemas/RateCardItemTier'
+        unit_amount:
+          type: number
+          description: The amount to be charged per product unit. Only present when the pricing model is `PER_UNIT`.
+        unit_description:
+          type: string
+          description: Description of the billable unit for this item.
+      description: A Rate Card Item represents the price for one dimension combination within a Rate Card version.
+    ProductResponse:
+      required:
+      - active
+      - created_at
+      - id
+      - name
+      - unit
+      - updated_at
+      type: object
+      properties:
+        active:
+          type: boolean
+          description: '`true` if the product is available for new purchases, `false` otherwise.'
+        created_at:
+          type: string
+          description: Time when this product was created.
+        description:
+          type: string
+          description: Product description.
+        id:
+          type: string
+          description: ID of the Product object.
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+            description: A set of string key-value pairs that you can attach to this object for storing additional information.
+          description: A set of string key-value pairs that you can attach to this object for storing additional information.
+        name:
+          type: string
+          description: Product name.
+        tax_code:
+          type: string
+          description: The tax category of the product.
+        unit:
+          type: string
+          description: Product unit.
+        updated_at:
+          type: string
+          description: Time when this product was last updated.
+      description: Details of the [Product](/docs/api/billing/products) object this price is associated with.
+    LineItemGroup:
+      required:
+      - id
+      - invoice_id
+      type: object
+      properties:
+        id:
+          type: string
+          description: The id of the line item group.
+        invoice_id:
+          type: string
+          description: ID of the [Invoice](/docs/api/billing/invoices) object that this Invoice Line Item Group belongs to.
+        label:
+          type: string
+          description: Describes what this line item group charges for.
+        period_ends_at:
+          type: string
+          description: The end of the billing period associated with this Invoice Line Item Group. This value is exclusive.
+        period_starts_at:
+          type: string
+          description: The start of the billing period associated with this Invoice Line Item Group. This value is inclusive.
+        total_amount:
+          type: number
+          description: Total amount of all line items in this group.
+        total_discount_amount:
+          type: number
+          description: Total discount amount of all line items in this group.
+        total_quantity:
+          type: number
+          description: Total quantity across all line items in this group.
+        total_remaining_creditable_amount:
+          type: number
+          description: Total amount available for future credits in this group.
+        total_remaining_creditable_quantity:
+          type: number
+          description: Total quantity available for future credits in this group.
+        total_tax_amount:
+          type: number
+          description: Total tax amount of all line items in this group.
+    RateCardItemLot:
+      required:
+      - rounding_mode
+      - size
+      type: object
+      properties:
+        rounding_mode:
+          pattern: ^UP$
+          type: string
+          description: Specifies how to round the calculated lots when the total quantity is not an exact multiple of the size. One of `UP`.
+        size:
+          minimum: 2
+          type: integer
+          description: The amount of quantity that constitutes a single billable lot.
+          format: int32
+      description: Defines how quantity is grouped into billable lots. The `unit_amount` is then applied per lot. If not set, quantity is treated as the number of billable lots. Only applicable for `PER_UNIT`.
+    InvoicePaymentOptions:
+      type: object
+      properties:
+        payment_method_save:
+          $ref: '#/components/schemas/InvoicePaymentMethodSave'
+          description: Settings for saving this payment method for future use.
+        payment_method_types:
+          type: array
+          description: Specify which payment methods to display on the digital invoice page and set their display order. Only methods supported for the specified currency and the customer's country code will appear on the digital invoice page.
+          items:
+            type: string
+            description: Specify which payment methods to display on the digital invoice page and set their display order. Only methods supported for the specified currency and the customer's country code will appear on the digital invoice page.
+      description: Payment settings of this Invoice. Only applicable if collection_method is `CHARGE_ON_CHECKOUT`.
+    PriceRecurring:
+      required:
+      - period
+      - period_unit
+      type: object
+      properties:
+        period:
+          type: integer
+          description: The number of period units between subscription billing cycles. For example, the billing cycle is bi-monthly if `period=2` and `period_unit=MONTH`.
+          format: int32
+        period_unit:
+          type: string
+          description: Specifies billing frequency. One of `DAY`, `WEEK`, `MONTH` or `YEAR`.
+      description: The frequency at which the price is charged. null for one-time charge.
+    RateCardItemTier:
+      required:
+      - level
+      type: object
+      properties:
+        flat_amount:
+          type: number
+          description: The flat amount to be charged for this tier when pricing model is `GRADUATED`, or the overall flat amount to be charged when pricing model is `VOLUME`.
+          minimum: 0
+        level:
+          type: integer
+          description: The sequential position of the tier within the item definition. Starts from 1.
+          format: int32
+        lot:
+          $ref: '#/components/schemas/RateCardItemLot'
+          description: Defines how quantity is grouped into billable lots. The `unit_amount` is then applied per lot. Only applicable for `VOLUME` and `GRADUATED`.
+        unit_amount:
+          type: number
+          description: The per-unit amount to be charged for this tier when pricing model is `GRADUATED`, or the overall per-unit amount to be charged when pricing model is `VOLUME`.
+          minimum: 0
+        unit_description:
+          type: string
+          description: Description of the billable unit for the tier.
+        upper_bound:
+          type: number
+          description: The upper quantity limit of this tier. For the last tier, the upper bound must be left empty.
+          minimum: 0
+      description: A quantity-based pricing tier for a Rate Card Item.
+    InvoiceBankTransferInstructions:
+      required:
+      - account_name
+      - currency
+      type: object
+      properties:
+        currency:
+          type: string
+          description: Currency of the receiving account (3-letter ISO-4217 code).
+        account_name:
+          type: string
+          description: Name of the account holder receiving the transfer.
+        account_number:
+          type: string
+          description: Bank account number.
+        account_category:
+          type: string
+          description: Category of the receiving bank account. One of `CHECKING`, `SAVINGS`, or `BUSINESS`.
+          enum:
+          - CHECKING
+          - SAVINGS
+          - BUSINESS
+        bank_name:
+          type: string
+          description: Name of the financial institution in which the receiving account is domiciled.
+        iban:
+          type: string
+          description: IBAN number.
+        swift_code:
+          type: string
+          description: Bank SWIFT or BIC code.
+        routing_number:
+          type: string
+          description: Bank routing number. Applicable only to accounts in the United States.
+        sort_code:
+          type: string
+          description: Bank sort code. Applicable only to accounts in the United Kingdom.
+        bsb_number:
+          type: string
+          description: Bank State Branch (BSB) number. Applicable only to accounts in Australia.
+        bank_code:
+          type: string
+          description: Code identifying the bank. Applicable in markets including Singapore and Hong Kong.
+        branch_code:
+          type: string
+          description: Code identifying the bank branch. Used together with `bank_code`.
+        transit_number:
+          type: string
+          description: Bank transit number. Applicable only to accounts in Canada.
+        institution_number:
+          type: string
+          description: Institution number identifying the bank. Applicable only to accounts in Canada.
+        charge_type:
+          type: string
+          description: 'Indicates who bears the bank charges on the transfer. Returned only for international (SWIFT) transfers. Omitted for local transfers.
+
+            Possible value:
+
+            - `OUR`: The payer covers all transfer charges so the full amount is received.'
+          enum:
+          - OUR
+        merchant_address:
+          required:
+          - country_code
+          type: object
+          description: The recipient's registered business address, used when making an international (SWIFT) transfer. Returned only for SWIFT transfers. Omitted for local transfers.
+          properties:
+            country_code:
+              type: string
+              description: Two-letter ISO 3166-1 country code of the recipient's address.
+            state:
+              type: string
+              description: State, province, or region of the recipient's address.
+            suburb:
+              type: string
+              description: Suburb or city of the recipient's address.
+            postcode:
+              type: string
+              description: Postal or ZIP code of the recipient's address.
+            street_address:
+              type: array
+              description: Street address of the recipient, given as one or more address lines.
+              items:
+                type: string
+        reference:
+          type: string
+          description: Unique payment reference to include with the bank transfer to match the payment to this Invoice. Available after the Invoice is finalized.
+    InvoiceItemPreview:
+      required:
+      - amount
+      - applied_discounts
+      - currency
+      - discount_amounts
+      - price
+      - quantity
+      type: object
+      properties:
+        amount:
+          type: number
+          description: The amount of the Invoice Line Item.
+        applied_discounts:
+          type: array
+          description: List of discounts that are applied to the invoice. Discounts of invoice line items are applied before invoice discounts.
+          items:
+            $ref: '#/components/schemas/DiscountResponse'
+        currency:
+          type: string
+          description: The currency of the Invoice Line Item in 3-letter ISO-4217 format.
+        discount_amounts:
+          type: array
+          description: The amount of discount calculated per discount for this line item. The Discount applied to the invoice will be apportioned to the [DiscountAmountResponse](/docs/api/billing/invoices)s of each invoice line item.
+          items:
+            $ref: '#/components/schemas/DiscountAmount'
+        period_ends_at:
+          type: string
+          description: The end of the billing period associated with this Invoice Line Item. This value is exclusive.
+        period_starts_at:
+          type: string
+          description: The start of the billing period associated with this Invoice Line Item. This value is inclusive.
+        price:
+          $ref: '#/components/schemas/Price'
+          description: Price subscribed by the customer.
+        quantity:
+          type: integer
+          description: The product quantity.
+          format: int32
+        remaining_creditable_quantity:
+          type: number
+          description: Defines the maximum quantity of this line item available for future credits.
+        tax_amount:
+          type: number
+          description: The tax amount for this line item.
+        tax_breakdown:
+          type: array
+          description: The tax breakdown details the exact taxes that apply to this line item.
+          items:
+            $ref: '#/components/schemas/TaxBreakdownItem'
+        tax_percent:
+          type: number
+          description: The effective tax percent of this invoice line item.
+    InvoiceItemPriceTier:
+      required:
+      - level
+      type: object
+      properties:
+        flat_amount:
+          type: number
+          description: The flat amount to be charged for this tier when pricing model is `GRADUATED`, or the overall flat amount to be charged when pricing model is `VOLUME`.
+        level:
+          type: integer
+          description: The sequential position of the tier within the price definition. Starts from 1.
+          format: int32
+        lower_bound:
+          type: number
+          description: The lower quantity limit of this tier (inclusive). For the first tier, the lower bound is 0.
+        unit_amount:
+          type: number
+          description: The per-unit amount to be charged for this tier when pricing model is `GRADUATED`, or the overall per-unit amount to be charged when pricing model is `VOLUME`.
+        upper_bound:
+          type: number
+          description: The upper quantity limit of this tier (exclusive). For the last tier, the upper bound is null.
+      description: The price tier this line item belongs to. Only present for graduated or volume pricing.
+    PriceWithProduct:
+      required:
+      - active
+      - created_at
+      - currency
+      - id
+      - metered
+      - pricing_model
+      - product
+      - product_id
+      - tax_included
+      - type
+      - updated_at
+      type: object
+      properties:
+        active:
+          type: boolean
+          description: '`true` if the price is available for new purchases, `false` otherwise.'
+        billing_type:
+          type: string
+          description: "Indicates when should the price be billed, one of \n- `IN_ADVANCE`: billed at the beginning of the billing cycle.\n- `IN_ARREARS`: billed at the end of the billing cycle."
+        created_at:
+          type: string
+          description: Time when the price was created.
+        currency:
+          type: string
+          description: Currency of the price (in 3-letter ISO-4217 format).
+        description:
+          type: string
+          description: Price description.
+        flat_amount:
+          type: number
+          description: The fixed amount to be charged. Only required when the pricing model is `FLAT`.
+        id:
+          type: string
+          description: ID of the Price object.
+        lot:
+          $ref: '#/components/schemas/PriceLot'
+          description: Defines how quantity is grouped into billable lots. The unit_amount is then applied per lot. If not set, quantity is treated as the number of billable lots. Only applicable for `PER_UNIT` price.
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+            description: A set of string key-value pairs that you can attach to this object for storing additional information.
+          description: A set of string key-value pairs that you can attach to this object for storing additional information.
+        meter_id:
+          type: string
+          description: ID of the Meter object specifying how to calculate the usage for this price.
+        metered:
+          type: boolean
+          description: Specify how to determine the quantity of the product used in each billing cycle for subscription payments. `true` if the quantity is dynamically determined during the billing cycle. The merchant should call the Ingest Usage Events API to submit usage data when the product is used. `false` if the quantity is determined when creating a subscription.
+        pricing_model:
+          type: string
+          description: 'Specify how to calculate the total billing amount when a quantity is provided. One of
+
+            - `FLAT`: a fixed price.
+
+            - `PER_UNIT`: a fixed price per unit quantity.
+
+            - `VOLUME`: the unit price is based on which tier the total quantity falls in.
+
+            - `GRADUATED`: the unit price changes as the quantity increases.'
+        product:
+          $ref: '#/components/schemas/ProductResponse'
+          description: Details of the [Product](/docs/api/billing/products) object this price is associated with.
+        product_id:
+          type: string
+          description: ID of the [Product](/docs/api/billing/products) object this price is associated with.
+        recurring:
+          $ref: '#/components/schemas/PriceRecurring'
+        tax_included:
+          type: boolean
+          description: Whether the price includes tax.
+        tiers:
+          type: array
+          description: List of quantity-based pricing tiers for this price. Required when the pricing model is `VOLUME` or `GRADUATED`.
+          items:
+            $ref: '#/components/schemas/PriceTier'
+        type:
+          type: string
+          description: One of `ONE_OFF` or `RECURRING` depending on whether the price is for a one-off purchase or a recurring (subscription) purchase.
+        unit_amount:
+          type: number
+          description: The amount to be charged per product unit. Only required when the pricing model is `PER_UNIT`.
+        unit_description:
+          type: string
+          description: Description of the billable unit for the price.
+        updated_at:
+          type: string
+          description: Time when the price was last updated.
+      description: Price subscribed by the customer.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

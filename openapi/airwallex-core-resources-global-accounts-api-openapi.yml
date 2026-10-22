@@ -1,0 +1,2578 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Core Resources > Global Accounts API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Core Resources > Global Accounts
+  description: Global Accounts are foreign currency accounts that function as local bank accounts. They can be used to collect funds from around the world. You get account details that enable you to collect funds from various platforms such as Amazon, eBay and Shopify, among others. Global Accounts can also be used to top up your Airwallex balance.
+  x-domain: Core Resources
+  x-resource: Global Accounts
+  x-urlPath: core_resources/global_accounts
+paths:
+  /api/v1/global_accounts/create:
+    post:
+      tags:
+      - Core Resources > Global Accounts
+      summary: 1|Create a Global Account
+      description: Submit a request to create a new global account in your chosen currency. This global account can be used for the purpose of receiving funds from your payers via the local clearing system or swift system.
+      operationId: createGlobalAccount
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - country_code
+              - request_id
+              - required_features
+              properties:
+                alternate_account_identifiers:
+                  type: object
+                  description: For a specific local clearing system, this serves as the unique alternate identifier for a global account.
+                  properties:
+                    email:
+                      type: string
+                      description: Applicable only for CA Global Accounts. [Supported Formats](/docs/global-treasury/get-started/global-accounts/manage-global-accounts#supported-email-format-under-alternate_account_identifiers).
+                country_code:
+                  type: string
+                  description: Country of the global account (2-letter ISO 3166-2 country code).
+                deposit_conversion_currency:
+                  type: string
+                  description: Target currency that incoming funds will be converted to. Applicable only when Global Account country is ID. [Supported currencies](/docs/transactional-fx/supported-regions-and-currencies) (3-letter ISO-4217 code).
+                nick_name:
+                  type: string
+                  description: 'Nickname of the global account. Default: current account''s business name.'
+                request_id:
+                  type: string
+                  description: Unique request identifier.
+                required_features:
+                  type: array
+                  description: Required features of the global account.
+                  items:
+                    type: object
+                    required:
+                    - currency
+                    properties:
+                      currency:
+                        type: string
+                        description: Currency of the global account (3-letter ISO-4217 code).
+                      transfer_method:
+                        type: string
+                        description: 'Transfer method in which a deposit can be received for the specified currency. Possible transfer methods are: `LOCAL`, `SWIFT`. Not applicable for stablecoin global accounts — field is absent from JSON for stablecoin entries.'
+        description: Required information to create a global account.
+        required: true
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActiveGlobalAccount'
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/global_accounts/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          alternate_account_identifiers:
+            email: example@yourdomain.com
+          country_code: GP
+          deposit_conversion_currency: USD
+          nick_name: GBP in UK for Subsidiary Company ABC
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          required_features:
+          - currency: GBP
+            transfer_method: LOCAL
+        response_body:
+          account_name: <string>
+          account_number: '88888888'
+          account_type: Checking
+          alternate_account_identifiers:
+            email: example@yourdomain.com
+          country_code: GP
+          deposit_conversion_currency: USD
+          iban: GB81LHVB04032900176471
+          id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          institution:
+            address: Old Street Yard
+            branch_name: Wakatake ワカタケ
+            city: London
+            name: Saxo Payments A/S
+            zip_code: 018982
+          nick_name: GBP in UK for Subsidiary Company ABC
+          request_id: 8d411ad4-aed6-1261-92fa-51225212e2e1
+          required_features:
+          - currency: GBP
+            transfer_method: LOCAL
+          status: ACTIVE
+          supported_features:
+          - alias_types: []
+            currency: GBP
+            local_clearing_system: ACH
+            routing_codes:
+            - type: sort_code
+              value: 040329
+            transfer_method: LOCAL
+            type: DEPOSIT
+          swift_code: SXPYDEHH
+      x-scope:
+      - scope: global_account:write
+        group: Core Resources
+        resource_name: Global Accounts
+      x-domain: Core Resources
+      x-resource: Global Accounts
+      x-urlPath: create
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/global_accounts/{id}:
+    get:
+      tags:
+      - Core Resources > Global Accounts
+      summary: 2|Retrieve a Global Account
+      description: Get global account by an Airwallex global account id.
+      operationId: retrieveGlobalAccount
+      parameters:
+      - name: id
+        in: path
+        description: Query the Airwallex's global account using the global account unique identifier.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GlobalAccountClient'
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/global_accounts/global_account_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          account_name: <string>
+          account_number: '88888888'
+          account_type: Checking
+          alternate_account_identifiers:
+            email: example@yourdomain.com
+          close_reason: Closed upon customer request.
+          country_code: GP
+          deposit_conversion_currency: USD
+          failure_reason: Your Airwallex account has been disabled. Please contact our support team.
+          iban: GB81LHVB04032900176471
+          id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          institution:
+            address: Old Street Yard
+            branch_name: Wakatake ワカタケ
+            city: London
+            name: Saxo Payments A/S
+            zip_code: 018982
+          nick_name: GBP in UK for Subsidiary Company ABC
+          request_id: 8d411ad4-aed6-1261-92fa-51225212e2e1
+          required_features:
+          - currency: GBP
+            transfer_method: LOCAL
+          status: CLOSED
+          supported_features:
+          - alias_types: []
+            currency: GBP
+            local_clearing_system: ACH
+            routing_codes:
+            - type: sort_code
+              value: 040329
+            transfer_method: LOCAL
+            type: DEPOSIT
+          swift_code: SXPYDEHH
+      x-scope:
+      - scope: global_account:read
+        group: Core Resources
+        resource_name: Global Accounts
+      x-domain: Core Resources
+      x-resource: Global Accounts
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/global_accounts:
+    get:
+      tags:
+      - Core Resources > Global Accounts
+      summary: 3|List all Global Accounts
+      description: Get list of global accounts created by your Airwallex account.
+      operationId: listGlobalAccount
+      parameters:
+      - name: country_code
+        in: query
+        description: Country of the global account (2-letter ISO 3166-2 country code).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: US
+      - name: from_created_at
+        in: query
+        description: The start date of `created_at` in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: '2017-04-01'
+      - name: nick_name
+        in: query
+        description: Nickname of the global account.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: Tom
+      - name: page
+        in: query
+        description: A bookmark for use in pagination to retrieve either the next page or the previous page of results. You can fetch the value for this identifier from the response of the previous API call. To retrieve the next page of results, pass the value of page_after (if not null) from the response to a subsequent call. To retrieve the previous page of results, pass the value of page_before (if not null) from the response to a subsequent call.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: page_size
+        in: query
+        description: Number of results per page. Default value is 100.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: required_features.currency
+        in: query
+        description: Currency that was specified during Global Account creation.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: USD
+      - name: status
+        in: query
+        description: Status of the account.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: ACTIVE
+      - name: supported_features.currency
+        in: query
+        description: Currency that is supported by the Global Account.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: USD
+      - name: to_created_at
+        in: query
+        description: The end date of `created_at` in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: 2017-04-01T03:52:34+0000
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedGlobalAccount'
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/global_accounts
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - account_number: '88888888'
+            account_type: Checking
+            alternate_account_identifiers:
+              email: example@yourdomain.com
+            close_reason: Closed upon customer request.
+            country_code: GP
+            deposit_conversion_currency: USD
+            failure_reason: Your Airwallex account has been disabled. Please contact our support team.
+            iban: GB81LHVB04032900176471
+            id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+            institution:
+              address: Old Street Yard
+              branch_name: Wakatake ワカタケ
+              city: London
+              name: Saxo Payments A/S
+              zip_code: 018982
+            nick_name: GBP in UK for Subsidiary Company ABC
+            request_id: 8d411ad4-aed6-1261-92fa-51225212e2e1
+            required_features:
+            - currency: GBP
+              transfer_method: LOCAL
+            status: CLOSED
+            supported_features:
+            - alias_types: []
+              currency: GBP
+              local_clearing_system: ACH
+              routing_codes:
+              - type: sort_code
+                value: 040329
+              transfer_method: LOCAL
+              type: DEPOSIT
+            swift_code: SXPYDEHH
+          page_after: <string>
+          page_before: <string>
+      x-scope:
+      - scope: global_account:read
+        group: Core Resources
+        resource_name: Global Accounts
+      x-domain: Core Resources
+      x-resource: Global Accounts
+      x-urlPath: list
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/global_accounts/{id}/update:
+    post:
+      tags:
+      - Core Resources > Global Accounts
+      summary: 4|Update an Existing Global Account
+      description: Edit an existing global account nick_name, deposit_conversion_currency or alternate_account_identifiers stored on the Airwallex platform.
+      operationId: updateGlobalAccount
+      parameters:
+      - name: id
+        in: path
+        description: Id of the global account to update.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: 46c22228-5831-4c53-a4fa-a3ab4954877c
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - nick_name
+              properties:
+                alternate_account_identifiers:
+                  type: object
+                  description: 'For a specific local clearing system, this serves as the unique alternate identifier for a global account.
+
+                    For CAD Global Accounts: Re-submitting the same email address (alternate_account_identifiers.value from GET /api/v1/global_accounts/{id}) will resend the Autodeposit confirmation email.'
+                  properties:
+                    email:
+                      type: string
+                      description: Applicable only for CA Global Accounts. [Supported Formats](/docs/global-treasury/get-started/global-accounts/manage-global-accounts#supported-email-format-under-alternate_account_identifiers).
+                deposit_conversion_currency:
+                  type: string
+                  description: Target currency that incoming funds will be converted to. Applicable only when Global Account country is ID. [Supported currencies](/docs/transactional-fx/supported-regions-and-currencies) (3-letter ISO-4217 code).
+                nick_name:
+                  type: string
+                  description: Nickname of the global account.
+        description: globalAccountUpdateDto
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GlobalAccountClient'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/global_accounts/global_account_id/update
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          alternate_account_identifiers:
+            email: example@yourdomain.com
+          deposit_conversion_currency: USD
+          nick_name: GBP in UK for Subsidiary Company ABC
+        response_body:
+          account_name: <string>
+          account_number: '88888888'
+          account_type: Checking
+          alternate_account_identifiers:
+            email: example@yourdomain.com
+          close_reason: Closed upon customer request.
+          country_code: GP
+          deposit_conversion_currency: USD
+          failure_reason: Your Airwallex account has been disabled. Please contact our support team.
+          iban: GB81LHVB04032900176471
+          id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          institution:
+            address: Old Street Yard
+            branch_name: Wakatake ワカタケ
+            city: London
+            name: Saxo Payments A/S
+            zip_code: 018982
+          nick_name: GBP in UK for Subsidiary Company ABC
+          request_id: 8d411ad4-aed6-1261-92fa-51225212e2e1
+          required_features:
+          - currency: GBP
+            transfer_method: LOCAL
+          status: CLOSED
+          supported_features:
+          - alias_types: []
+            currency: GBP
+            local_clearing_system: ACH
+            routing_codes:
+            - type: sort_code
+              value: 040329
+            transfer_method: LOCAL
+            type: DEPOSIT
+          swift_code: SXPYDEHH
+      x-scope:
+      - scope: global_account:write
+        group: Core Resources
+        resource_name: Global Accounts
+      x-domain: Core Resources
+      x-resource: Global Accounts
+      x-urlPath: update
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/global_accounts/{id}/generate_statement_letter:
+    post:
+      tags:
+      - Core Resources > Global Accounts
+      summary: 5|Generate Global Account Statement
+      description: Generate global account statement letter, return as file stream.
+      operationId: generateStatementLetter
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the global account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: 46c22228-5831-4c53-a4fa-a3ab4954877c
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - account_statement_type
+              properties:
+                account_statement_type:
+                  type: string
+                  description: Type of account statement. One of `AMAZON`, `EBAY`, `COUPANG`, `GENERAL`.
+                registration_info:
+                  type: object
+                  description: If account statement type is one of `AMAZON`, `EBAY`, `COUPANG`, the registration info field is required.
+                  properties:
+                    agreement:
+                      type: boolean
+                      description: "I confirm that the details are correct and match the details I provided to and appear on the platform. I agree and acknowledge that Airwallex will be relying on this information and my confirmation in the future, including for issuing account statements for platform.  \n  \nThis flag must be `true`."
+                    registered_address:
+                      type: object
+                      description: Registered address info.
+                      properties:
+                        address:
+                          type: string
+                          description: Address line.
+                        city:
+                          type: string
+                          description: City/Town.
+                        country:
+                          type: string
+                          description: Country.
+                        postcode:
+                          type: string
+                          description: Postcode.
+                        state:
+                          type: string
+                          description: State/Province.
+                    registered_email:
+                      type: string
+                      description: Registered email.
+                    registered_name:
+                      type: string
+                      description: Registered owner/company name.
+        description: globalAccountStatementLetterDto
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+                format: byte
+            application/pdf:
+              schema:
+                type: string
+                format: byte
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/pdf:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/global_accounts/global_account_id/generate_statement_letter
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          account_statement_type: AMAZON
+          registration_info:
+            agreement: true
+            registered_address:
+              address: 15 William Street
+              city: Melbourne
+              country: Australia
+              postcode: '3000'
+              state: VIC
+            registered_email: john.walker@gmail.com
+            registered_name: John Walker
+        response_body: <string>
+      x-scope:
+      - scope: global_account:write
+        group: Core Resources
+        resource_name: Global Accounts
+      x-domain: Core Resources
+      x-resource: Global Accounts
+      x-urlPath: generate_statement_letter
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/global_accounts/{id}/close:
+    post:
+      tags:
+      - Core Resources > Global Accounts
+      summary: 6|Close a Global Account
+      description: Close a global account created under your Airwallex account.
+      operationId: close
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the global account to close.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: 46c22228-5831-4c53-a4fa-a3ab4954877c
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GlobalAccountClient'
+        '400':
+          description: '["field_required"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/global_accounts/global_account_id/close
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          account_name: <string>
+          account_number: '88888888'
+          account_type: Checking
+          alternate_account_identifiers:
+            email: example@yourdomain.com
+          close_reason: Closed upon customer request.
+          country_code: GP
+          deposit_conversion_currency: USD
+          failure_reason: Your Airwallex account has been disabled. Please contact our support team.
+          iban: GB81LHVB04032900176471
+          id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          institution:
+            address: Old Street Yard
+            branch_name: Wakatake ワカタケ
+            city: London
+            name: Saxo Payments A/S
+            zip_code: 018982
+          nick_name: GBP in UK for Subsidiary Company ABC
+          request_id: 8d411ad4-aed6-1261-92fa-51225212e2e1
+          required_features:
+          - currency: GBP
+            transfer_method: LOCAL
+          status: CLOSED
+          supported_features:
+          - alias_types: []
+            currency: GBP
+            local_clearing_system: ACH
+            routing_codes:
+            - type: sort_code
+              value: 040329
+            transfer_method: LOCAL
+            type: DEPOSIT
+          swift_code: SXPYDEHH
+      x-scope:
+      - scope: global_account:write
+        group: Core Resources
+        resource_name: Global Accounts
+      x-domain: Core Resources
+      x-resource: Global Accounts
+      x-urlPath: close
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/global_accounts/{global_account_id}/aliases/create:
+    post:
+      tags:
+      - Core Resources > Global Accounts
+      summary: 7|Create an Alias for a Global Account
+      description: 'Creates an alias for a Global Account to receive funds. Supported alias types include: `EMAIL`, `PHONE_NUMBER`, and `AUSTRALIAN_BUSINESS_NUMBER`. For alias types `EMAIL` or `PHONE_NUMBER`, a verification code will be sent via email or SMS respectively. You must submit this code for verification using the Submit Alias verification code endpoint to complete the alias creation process.'
+      operationId: aliasesCreate
+      parameters:
+      - name: global_account_id
+        in: path
+        description: The unique ID of the Global Account.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - local_clearing_system
+              - request_id
+              - type
+              - value
+              properties:
+                local_clearing_system:
+                  type: string
+                  description: Local clearing system to be registered with.
+                request_id:
+                  type: string
+                  description: Unique request ID.
+                type:
+                  type: string
+                  description: Alias type.
+                value:
+                  type: string
+                  description: Alias value.
+        description: Required information to create a global account alias.
+        required: true
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GlobalAccountAliasClient'
+        '400':
+          description: '["field_required","invalid_argument","already_exists","duplicate_request_id"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/global_accounts/global_account_id/aliases/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          local_clearing_system: NPP
+          request_id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          type: EMAIL
+          value: john.doe@example.com
+        response_body:
+          global_account_id: global_account_id
+          id: alias_id
+          local_clearing_system: NPP
+          next_action:
+            expires_at: 2026-01-31T06:57:10+0000
+            remaining_attempts: 3
+            type: submit_verification_code
+          reason: <string>
+          request_id: 8d411ad4-aed6-1261-92fa-51225212e2e1
+          status: ACTIVE
+          type: EMAIL
+          value: john.doe@example.com
+      x-urlPath: create_aliases
+      x-scope:
+      - scope: global_account:write
+        group: Core Resources
+        resource_name: Global Accounts
+      x-domain: Core Resources
+      x-resource: Global Accounts
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/global_accounts/{global_account_id}/aliases/{id}:
+    get:
+      tags:
+      - Core Resources > Global Accounts
+      summary: 8|Retrieve an Alias
+      description: Retrieves details of an alias using the given alias ID.
+      operationId: retrieveAliases
+      parameters:
+      - name: global_account_id
+        in: path
+        description: The unique ID of the Global Account.
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: The unique ID of the Alias.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GlobalAccountAliasClient'
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/global_accounts/global_account_id/aliases/alias_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          global_account_id: global_account_id
+          id: alias_id
+          local_clearing_system: NPP
+          next_action:
+            expires_at: 2026-01-31T06:57:10+0000
+            remaining_attempts: 3
+            type: submit_verification_code
+          reason: <string>
+          request_id: 8d411ad4-aed6-1261-92fa-51225212e2e1
+          status: ACTIVE
+          type: EMAIL
+          value: john.doe@example.com
+      x-urlPath: retrieve_aliases
+      x-scope:
+      - scope: global_account:read
+        group: Core Resources
+        resource_name: Global Accounts
+      - scope: global_account:write
+        group: Core Resources
+        resource_name: Global Accounts
+      x-domain: Core Resources
+      x-resource: Global Accounts
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/global_accounts/{global_account_id}/aliases:
+    get:
+      tags:
+      - Core Resources > Global Accounts
+      summary: 9|List all Aliases
+      description: Retrieves a list of aliases registered to a given Global Account.
+      operationId: listAliases
+      parameters:
+      - name: from_created_at
+        in: query
+        description: The start time of `created_at` in ISO 8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: '1970-01-01T00:00:00+00:00'
+      - name: global_account_id
+        in: path
+        description: The unique ID of the Global Account.
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: A bookmark for use in pagination to retrieve either the next page or the previous page of results. You can fetch the value for this identifier from the response of the previous API call. To retrieve the next page of results, pass the value of page_after (if not null) from the response to a subsequent call. To retrieve the previous page of results, pass the value of page_before (if not null) from the response to a subsequent call.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: page_size
+        in: query
+        description: Number of results per page. Default value is 100, maximum value is 2000.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: status
+        in: query
+        description: Status of the alias.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: to_created_at
+        in: query
+        description: The end time of `created_at` in ISO 8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: '2099-12-31T23:59:59+00:00'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedGlobalAccountAliasClient'
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/global_accounts/global_account_id/aliases
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - global_account_id: global_account_id
+            id: alias_id
+            local_clearing_system: NPP
+            next_action:
+              expires_at: 2026-01-31T06:57:10+0000
+              remaining_attempts: 3
+              type: submit_verification_code
+            request_id: 8d411ad4-aed6-1261-92fa-51225212e2e1
+            status: ACTIVE
+            type: EMAIL
+            value: john.doe@example.com
+          page_after: <string>
+          page_before: <string>
+      x-urlPath: aliases
+      x-scope:
+      - scope: global_account:read
+        group: Core Resources
+        resource_name: Global Accounts
+      - scope: global_account:write
+        group: Core Resources
+        resource_name: Global Accounts
+      x-domain: Core Resources
+      x-resource: Global Accounts
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/global_accounts/{global_account_id}/aliases/{id}/initiate_port:
+    post:
+      tags:
+      - Core Resources > Global Accounts
+      summary: 10|Initiate an Alias Port for a Global Account
+      description: Initiates an alias port to transfer the alias details to a different Airwallex Global Account or to another external bank account. After you submit the request, the alias status changes to PORT_INITIATED and then requires further action to complete the port once the alias becomes portable. To complete the port, register the alias details to another Airwallex Global Account using Create an Alias for a Global Account or with another external bank account provider.
+      operationId: aliasesInitiatePort
+      parameters:
+      - name: global_account_id
+        in: path
+        description: The unique ID of the Global Account.
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: The unique ID of the Alias.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GlobalAccountAliasClient'
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/global_accounts/global_account_id/aliases/alias_id/initiate_port
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          global_account_id: global_account_id
+          id: alias_id
+          local_clearing_system: NPP
+          next_action:
+            expires_at: 2026-01-31T06:57:10+0000
+            remaining_attempts: 3
+            type: submit_verification_code
+          reason: <string>
+          request_id: 8d411ad4-aed6-1261-92fa-51225212e2e1
+          status: ACTIVE
+          type: EMAIL
+          value: john.doe@example.com
+      x-urlPath: initiate_port_aliases
+      x-scope:
+      - scope: global_account:write
+        group: Core Resources
+        resource_name: Global Accounts
+      x-domain: Core Resources
+      x-resource: Global Accounts
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/global_accounts/{global_account_id}/aliases/{id}/submit_verification_code:
+    post:
+      tags:
+      - Core Resources > Global Accounts
+      summary: 11|Submit Alias Verification Code
+      description: Submits the verification code (received via email or SMS) to complete the alias creation process. If the code has expired or the verification attempt limit is reached, request a new verification code using the Request new Alias verification code endpoint.
+      operationId: aliasesSubmitVerificationCode
+      parameters:
+      - name: global_account_id
+        in: path
+        description: The unique ID of the Global Account.
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: The unique ID of the Alias.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - code
+              properties:
+                code:
+                  type: string
+                  description: The verification code sent by Airwallex to complete the alias creation.
+        description: The verification code sent by Airwallex to confirm the alias creation.
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GlobalAccountAliasClient'
+        '400':
+          description: '["field_required","invalid_argument","invalid_verification_code"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/global_accounts/global_account_id/aliases/alias_id/submit_verification_code
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          code: '123456'
+        response_body:
+          global_account_id: global_account_id
+          id: alias_id
+          local_clearing_system: NPP
+          next_action:
+            expires_at: 2026-01-31T06:57:10+0000
+            remaining_attempts: 3
+            type: submit_verification_code
+          reason: <string>
+          request_id: 8d411ad4-aed6-1261-92fa-51225212e2e1
+          status: ACTIVE
+          type: EMAIL
+          value: john.doe@example.com
+      x-urlPath: submit_verification_code_aliases
+      x-scope:
+      - scope: global_account:write
+        group: Core Resources
+        resource_name: Global Accounts
+      x-domain: Core Resources
+      x-resource: Global Accounts
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/global_accounts/{global_account_id}/aliases/{id}/request_new_verification_code:
+    post:
+      tags:
+      - Core Resources > Global Accounts
+      summary: 12|Request New Alias Verification Code
+      description: Requests new verification code for an alias to complete the alias creation process.
+      operationId: aliasesRequestNewVerificationCode
+      parameters:
+      - name: global_account_id
+        in: path
+        description: The unique ID of the Global Account.
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: The unique ID of the Alias.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GlobalAccountAliasClient'
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/global_accounts/global_account_id/aliases/alias_id/request_new_verification_code
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          global_account_id: global_account_id
+          id: alias_id
+          local_clearing_system: NPP
+          next_action:
+            expires_at: 2026-01-31T06:57:10+0000
+            remaining_attempts: 3
+            type: submit_verification_code
+          reason: <string>
+          request_id: 8d411ad4-aed6-1261-92fa-51225212e2e1
+          status: ACTIVE
+          type: EMAIL
+          value: john.doe@example.com
+      x-urlPath: request_new_verification_code_aliases
+      x-scope:
+      - scope: global_account:write
+        group: Core Resources
+        resource_name: Global Accounts
+      x-domain: Core Resources
+      x-resource: Global Accounts
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/global_accounts/{global_account_id}/aliases/{id}/cancel:
+    post:
+      tags:
+      - Core Resources > Global Accounts
+      summary: 13|Cancel an Alias for a Global Account
+      description: Cancels an alias for a Global Account. Once cancelled, the alias can no longer be used for any transactions, such as receiving funds.
+      operationId: aliasesCancel
+      parameters:
+      - name: global_account_id
+        in: path
+        description: The unique ID of the Global Account.
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: The unique ID of the Alias.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GlobalAccountAliasClient'
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/global_accounts/global_account_id/aliases/alias_id/cancel
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          global_account_id: global_account_id
+          id: alias_id
+          local_clearing_system: NPP
+          next_action:
+            expires_at: 2026-01-31T06:57:10+0000
+            remaining_attempts: 3
+            type: submit_verification_code
+          reason: <string>
+          request_id: 8d411ad4-aed6-1261-92fa-51225212e2e1
+          status: ACTIVE
+          type: EMAIL
+          value: john.doe@example.com
+      x-urlPath: cancel_aliases
+      x-scope:
+      - scope: global_account:write
+        group: Core Resources
+        resource_name: Global Accounts
+      x-domain: Core Resources
+      x-resource: Global Accounts
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/global_accounts/{global_account_id}/mandates/{id}:
+    get:
+      tags:
+      - Core Resources > Global Accounts
+      summary: 14|Retrieve a Direct Debit Payout Mandate
+      description: Get a Direct Debit Payout Mandate by an Airwallex global account id and mandate id.
+      operationId: globalAccount_retrieveMandate
+      parameters:
+      - name: global_account_id
+        in: path
+        description: The unique identifier of the Global Account with the mandate.
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: The unique identifier of the mandate.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DirectDebitOutMandate'
+        '400':
+          description: '["resource_not_found"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/global_accounts/global_account_id/mandates/global_account_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          created_at: '2022-09-19T08:40:48Z'
+          creditor_name: creditor
+          currency: GBP
+          debtor_name: debtor
+          global_account_id: 035253e2-1b14-43d0-b98f-a62fd91bb985
+          id: 11987bad-bb6d-4e30-ba49-d19826c3e803
+          payment_scheme: Bacs
+          setup_time: '2022-09-19T00:00:00Z'
+          status: ACTIVE
+      x-scope:
+      - scope: global_account:read
+        group: Core Resources
+        resource_name: Global Accounts
+      x-domain: Core Resources
+      x-resource: Global Accounts
+      x-urlPath: retrieve_mandates
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/global_accounts/{global_account_id}/mandates:
+    get:
+      tags:
+      - Core Resources > Global Accounts
+      summary: 15|List all Direct Debit Payout Mandates
+      description: Get a list of Direct Debit Payout Mandates by an Airwallex global account id.
+      operationId: listMandates
+      parameters:
+      - name: from_created_at
+        in: query
+        description: The start time of `created_at` (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: '1970-01-01'
+      - name: global_account_id
+        in: path
+        description: The unique identifier of the Global Account with the mandate.
+        required: true
+        schema:
+          type: string
+      - name: page_num
+        in: query
+        description: Page number starts from 0, default value is 0.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of results per page, default value is 50.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: status
+        in: query
+        description: Status of the mandate, possible value should be `ACTIVE`, `CANCELLED`.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: to_created_at
+        in: query
+        description: The end time of `created_at` (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: Paged results.
+                    items:
+                      $ref: '#/components/schemas/DirectDebitOutMandate'
+        '400':
+          description: '["invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/global_accounts/global_account_id/mandates
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - created_at: '2022-09-19T08:40:48Z'
+            creditor_name: creditor
+            currency: GBP
+            debtor_name: debtor
+            global_account_id: 035253e2-1b14-43d0-b98f-a62fd91bb985
+            id: 11987bad-bb6d-4e30-ba49-d19826c3e803
+            payment_scheme: Bacs
+            setup_time: '2022-09-19T00:00:00Z'
+            status: ACTIVE
+      x-scope:
+      - scope: global_account:read
+        group: Core Resources
+        resource_name: Global Accounts
+      x-domain: Core Resources
+      x-resource: Global Accounts
+      x-urlPath: mandates
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/global_accounts/{global_account_id}/mandates/{id}/cancel:
+    post:
+      tags:
+      - Core Resources > Global Accounts
+      summary: 16|Cancel a Direct Debit Payout Mandate
+      description: Cancel a Direct Debit Payout Mandate by an Airwallex global account id and mandate id.
+      operationId: mandatesCancel
+      parameters:
+      - name: global_account_id
+        in: path
+        description: The unique identifier of the Global Account with the mandate.
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: The unique identifier of the mandate.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
+        '400':
+          description: '["resource_not_found", "invalid_state_for_operation"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/global_accounts/global_account_id/mandates/global_account_id/cancel
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body: false
+      x-scope:
+      - scope: global_account:write
+        group: Core Resources
+        resource_name: Global Accounts
+      x-domain: Core Resources
+      x-resource: Global Accounts
+      x-urlPath: cancel_mandates
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/global_accounts/{id}/transactions:
+    get:
+      tags:
+      - Core Resources > Global Accounts
+      summary: 17|List all Global Account Transactions
+      description: Obtain transaction details of funds received into your specified global account.
+      operationId: globalAccount_listTransactions
+      parameters:
+      - name: from_created_at
+        in: query
+        description: The start date of `created_at` in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: '2017-04-01'
+      - name: id
+        in: path
+        description: Unique identifier of the global account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: 46c22228-5831-4c53-a4fa-a3ab4954877c
+      - name: page_num
+        in: query
+        description: Page number, starts from 0.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of results per page. Default value is 100.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: to_created_at
+        in: query
+        description: The end date of `created_at` in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          default: 2017-04-01T03:52:34+0000
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: Paged results.
+                    items:
+                      $ref: '#/components/schemas/GlobalAccountTransaction'
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/global_accounts/global_account_id/transactions
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - amount: 10000
+            create_time: 2017-03-22T16:08:02+1100
+            currency: AUD
+            fee_amount: 10
+            fee_currency: AUD
+            id: 90b98dc6-63a0-403f-816b-ac5305b42a11
+            payer_country: US
+            payer_name: AMZNnt70paD1
+            status: PENDING
+            type: CREDIT
+      x-scope:
+      - scope: global_account:read
+        group: Core Resources
+        resource_name: Global Accounts
+      x-domain: Core Resources
+      x-resource: Global Accounts
+      x-urlPath: transactions
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    ClientInstitution:
+      type: object
+      required:
+      - address
+      - city
+      - name
+      properties:
+        address:
+          type: string
+          description: Financial institution address line.
+        branch_name:
+          type: string
+          description: Financial institution branch name.
+        city:
+          type: string
+          description: Financial institution city/town.
+        name:
+          type: string
+          description: Financial institution in which your account is domiciled.
+        zip_code:
+          type: string
+          description: Financial institution zip code.
+      description: Details of the Financial institution of your global account.
+    AlternateAccountIdentifiers:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Applicable only for CA Global Accounts. [Supported Formats](/docs/global-treasury/get-started/global-accounts/manage-global-accounts#supported-email-format-under-alternate_account_identifiers).
+      description: For a specific local clearing system, this serves as the unique alternate identifier for a global account.
+    GlobalAccountTransaction:
+      type: object
+      required:
+      - amount
+      - currency
+      properties:
+        amount:
+          type: number
+          description: Amount of the transaction in `transaction currency`.
+        create_time:
+          type: string
+          description: The time of the transaction created.
+        currency:
+          type: string
+          description: Currency of the transaction (3-letter ISO-4217 code).
+        description:
+          type: string
+          description: Description of the transaction.
+        fee_amount:
+          type: number
+          description: Fee amount of the transaction in `transaction currency`.
+        fee_currency:
+          type: string
+          description: Fee currency of the transaction (3-letter ISO-4217 code).
+        id:
+          type: string
+          format: uuid
+          description: Unique id of the transaction.
+        payer_country:
+          type: string
+          description: Payer country code of the transaction (2-letter ISO 3166-2 country code).
+          enum:
+          - UNDEFINED
+          - AC
+          - AD
+          - AE
+          - AF
+          - AG
+          - AI
+          - AL
+          - AM
+          - AN
+          - AO
+          - AQ
+          - AR
+          - AS
+          - AT
+          - AU
+          - AW
+          - AX
+          - AZ
+          - BA
+          - BB
+          - BD
+          - BE
+          - BF
+          - BG
+          - BH
+          - BI
+          - BJ
+          - BL
+          - BM
+          - BN
+          - BO
+          - BQ
+          - BR
+          - BS
+          - BT
+          - BU
+          - BV
+          - BW
+          - BY
+          - BZ
+          - CA
+          - CC
+          - CD
+          - CF
+          - CG
+          - CH
+          - CI
+          - CK
+          - CL
+          - CM
+          - CN
+          - CO
+          - CP
+          - CR
+          - CS
+          - CU
+          - CV
+          - CW
+          - CX
+          - CY
+          - CZ
+          - DE
+          - DG
+          - DJ
+          - DK
+          - DM
+          - DO
+          - DZ
+          - EA
+          - EC
+          - EE
+          - EG
+          - EH
+          - ER
+          - ES
+          - ET
+          - EU
+          - EZ
+          - FI
+          - FJ
+          - FK
+          - FM
+          - FO
+          - FR
+          - FX
+          - GA
+          - GB
+          - GD
+          - GE
+          - GF
+          - GG
+          - GH
+          - GI
+          - GL
+          - GM
+          - GN
+          - GP
+          - GQ
+          - GR
+          - GS
+          - GT
+          - GU
+          - GW
+          - GY
+          - HK
+          - HM
+          - HN
+          - HR
+          - HT
+          - HU
+          - IC
+          - ID
+          - IE
+          - IL
+          - IM
+          - IN
+          - IO
+          - IQ
+          - IR
+          - IS
+          - IT
+          - JE
+          - JM
+          - JO
+          - JP
+          - KE
+          - KG
+          - KH
+          - KI
+          - KM
+          - KN
+          - KP
+          - KR
+          - KW
+          - KY
+          - KZ
+          - LA
+          - LB
+          - LC
+          - LI
+          - LK
+          - LR
+          - LS
+          - LT
+          - LU
+          - LV
+          - LY
+          - MA
+          - MC
+          - MD
+          - ME
+          - MF
+          - MG
+          - MH
+          - MK
+          - ML
+          - MM
+          - MN
+          - MO
+          - MP
+          - MQ
+          - MR
+          - MS
+          - MT
+          - MU
+          - MV
+          - MW
+          - MX
+          - MY
+          - MZ
+          - NA
+          - NC
+          - NE
+          - NF
+          - NG
+          - NI
+          - NL
+          - 'NO'
+          - NP
+          - NR
+          - NT
+          - NU
+          - NZ
+          - OM
+          - PA
+          - PE
+          - PF
+          - PG
+          - PH
+          - PK
+          - PL
+          - PM
+          - PN
+          - PR
+          - PS
+          - PT
+          - PW
+          - PY
+          - QA
+          - RE
+          - RO
+          - RS
+          - RU
+          - RW
+          - SA
+          - SB
+          - SC
+          - SD
+          - SE
+          - SF
+          - SG
+          - SH
+          - SI
+          - SJ
+          - SK
+          - SL
+          - SM
+          - SN
+          - SO
+          - SR
+          - SS
+          - ST
+          - SU
+          - SV
+          - SX
+          - SY
+          - SZ
+          - TA
+          - TC
+          - TD
+          - TF
+          - TG
+          - TH
+          - TJ
+          - TK
+          - TL
+          - TM
+          - TN
+          - TO
+          - TP
+          - TR
+          - TT
+          - TV
+          - TW
+          - TZ
+          - UA
+          - UG
+          - UK
+          - UM
+          - US
+          - UY
+          - UZ
+          - VA
+          - VC
+          - VE
+          - VG
+          - VI
+          - VN
+          - VU
+          - WF
+          - WS
+          - XI
+          - XU
+          - XK
+          - YE
+          - YT
+          - YU
+          - ZA
+          - ZM
+          - ZR
+          - ZW
+        payer_name:
+          type: string
+          description: Payer name of the transaction.
+        status:
+          type: string
+          description: Status of the transaction.
+          enum:
+          - PENDING
+          - SETTLED
+          - REJECTED
+          - CANCELLED
+        type:
+          type: string
+          description: Type of the transaction.
+          enum:
+          - DEBIT
+          - CREDIT
+    DirectDebitOutMandate:
+      type: object
+      required:
+      - created_at
+      - creditor_name
+      - currency
+      - debtor_name
+      - global_account_id
+      - id
+      - payment_scheme
+      - setup_time
+      - status
+      properties:
+        created_at:
+          type: string
+          description: Time when the mandate was created in Airwallex.
+        creditor_name:
+          type: string
+          description: Creditor who receives the direct debit payout under the mandate.
+        currency:
+          type: string
+          description: Currency supported by the mandate.
+        debtor_name:
+          type: string
+          description: Debtor who pays the direct debit payout under the mandate.
+        global_account_id:
+          type: string
+          description: The unique identifier of the Global Account with the mandate.
+        id:
+          type: string
+          description: The unique identifier of the mandate.
+        payment_scheme:
+          type: string
+          description: Payment scheme associated with the mandate.
+        setup_time:
+          type: string
+          description: The time when the mandate was lodged, format should be “yyyy-MM-dd’T’HH:mm:ssXXX”.
+        status:
+          type: string
+          description: Status of the mandate, possible values should be `ACTIVE`, `CANCELLED`.
+    ActiveGlobalAccount:
+      type: object
+      required:
+      - account_name
+      - country_code
+      - id
+      - institution
+      - required_features
+      - status
+      - supported_features
+      properties:
+        account_name:
+          type: string
+          description: Global account name.
+        account_number:
+          type: string
+          description: Global account number.
+        account_type:
+          type: string
+          description: Account type of the financial institution account.
+          enum:
+          - Checking
+          - Saving
+          - Current
+          - Payment
+        alternate_account_identifiers:
+          $ref: '#/components/schemas/AlternateAccountIdentifiers'
+          description: For a specific local clearing system, this serves as the unique alternate identifier for a global account.
+        country_code:
+          type: string
+          description: Country of the global account specified in the request (2-letter ISO 3166-2 country code).
+        deposit_conversion_currency:
+          type: string
+          description: Target currency that incoming funds will be converted to. Applicable only when Global Account country is ID. [Supported currencies](/docs/transactional-fx/supported-regions-and-currencies) (3-letter ISO-4217 code).
+        iban:
+          type: string
+          description: IBAN number.
+        id:
+          type: string
+          description: Global account unique identifier.
+        institution:
+          $ref: '#/components/schemas/ClientInstitution'
+          description: Details of the Financial institution of your global account.
+        nick_name:
+          type: string
+          description: Nickname of the global account .
+        request_id:
+          type: string
+          description: Unique request identifier specified in the request.
+        required_features:
+          type: array
+          description: Required features when creating the global account.
+          items:
+            $ref: '#/components/schemas/GlobalAccountRequiredFeature'
+        status:
+          type: string
+          description: Status of global account. One of `ACTIVE`, `PROCESSING` is returned.
+        supported_features:
+          type: array
+          description: Supported features of your global account.
+          items:
+            $ref: '#/components/schemas/GlobalAccountSupportedFeature'
+        swift_code:
+          type: string
+          description: Bank SWIFT code.
+    NextActionForGaAlias:
+      type: object
+      required:
+      - type
+      properties:
+        expires_at:
+          type: string
+          description: The expiration time of the verification code in ISO8601 format.
+        remaining_attempts:
+          type: integer
+          format: int32
+          description: Remaining attempts you have to submit the verification code. When this reaches 0, the code becomes invalid and you must call [Request new verification code for an alias](/docs/api/core_resources/global_accounts/aliases/request_new_verification_code) to generate a new one.
+        type:
+          type: string
+          description: Type of action to be taken.
+          enum:
+          - submit_verification_code
+          - request_new_verification_code
+          - complete_port
+      description: Details of the next action to be taken.
+    PagedGlobalAccountAliasClient:
+      type: object
+      properties:
+        items:
+          type: array
+          description: Paged results.
+          items:
+            $ref: '#/components/schemas/GlobalAccountAliasClient'
+        page_after:
+          type: string
+          description: The page cursor used for searching after page.
+        page_before:
+          type: string
+          description: The page cursor used for search before page.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    GlobalAccountAliasClient:
+      type: object
+      required:
+      - global_account_id
+      - id
+      - local_clearing_system
+      - request_id
+      - status
+      - type
+      - value
+      properties:
+        global_account_id:
+          type: string
+          description: Global account ID.
+        id:
+          type: string
+          description: Alias ID.
+        local_clearing_system:
+          type: string
+          description: Local clearing system to be registered with.
+          enum:
+          - NPP
+        next_action:
+          $ref: '#/components/schemas/NextActionForGaAlias'
+          description: Details of the next action to be taken.
+        reason:
+          type: string
+          description: Explanation for the status of the Alias. If there are no additional details, we will return null.
+        request_id:
+          type: string
+          description: Unique request ID specified in the request.
+        status:
+          type: string
+          description: Alias status.
+          enum:
+          - REQUIRES_ACTION
+          - PROCESSING
+          - ACTIVE
+          - PORT_INITIATED
+          - PORTED
+          - CANCELLATION_REQUESTED
+          - CANCELLED
+          - FAILED
+          - SUSPENSION_REQUESTED
+          - SUSPENDED
+        type:
+          type: string
+          description: Alias type.
+          enum:
+          - EMAIL
+          - PHONE_NUMBER
+          - AUSTRALIAN_BUSINESS_NUMBER
+        value:
+          type: string
+          description: Alias value.
+    PagedGlobalAccount:
+      type: object
+      properties:
+        items:
+          type: array
+          description: Paged results.
+          items:
+            $ref: '#/components/schemas/GlobalAccountClient'
+        page_after:
+          type: string
+          description: The page cursor used for searching after page.
+        page_before:
+          type: string
+          description: The page cursor used for search before page.
+    GlobalAccountClient:
+      type: object
+      required:
+      - account_name
+      - country_code
+      - id
+      - institution
+      - required_features
+      - status
+      - supported_features
+      properties:
+        account_name:
+          type: string
+          description: Global account name.
+        account_number:
+          type: string
+          description: Global account number (fiat). For stablecoin global accounts this field is omitted, use stablecoin_address for the deposit wallet.
+        account_type:
+          type: string
+          description: Account type of the financial institution account.
+          enum:
+          - Checking
+          - Saving
+          - Current
+          - Payment
+        alternate_account_identifiers:
+          $ref: '#/components/schemas/AlternateAccountIdentifiers'
+          description: For a specific local clearing system, this serves as the unique alternate identifier for a global account.
+        close_reason:
+          type: string
+          description: Global Account closure reason.
+        country_code:
+          type: string
+          description: Country of the global account specified in the request (2-letter ISO 3166-2 country code).
+        deposit_conversion_currency:
+          type: string
+          description: Target currency that incoming funds will be converted to. Applicable only when Global Account country is ID. [Supported currencies](/docs/transactional-fx/supported-regions-and-currencies) (3-letter ISO-4217 code).
+        failure_reason:
+          type: string
+          description: Global Account failure reason.
+        iban:
+          type: string
+          description: IBAN number.
+        id:
+          type: string
+          description: Global account unique identifier.
+        institution:
+          $ref: '#/components/schemas/ClientInstitution'
+          description: Details of the Financial institution of your global account.
+        nick_name:
+          type: string
+          description: Nickname of the global account .
+        request_id:
+          type: string
+          description: Unique request identifier specified in the request.
+        required_features:
+          type: array
+          description: Required features when creating the global account.
+          items:
+            $ref: '#/components/schemas/GlobalAccountRequiredFeature'
+        status:
+          type: string
+          description: Status of global account.
+          enum:
+          - ACTIVE
+          - CLOSED
+          - PROCESSING
+          - FAILED
+        supported_features:
+          type: array
+          description: Supported features of your global account.
+          items:
+            $ref: '#/components/schemas/GlobalAccountSupportedFeature'
+        swift_code:
+          type: string
+          description: Bank SWIFT code.
+    ClientRoutingCode:
+      type: object
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          description: Routing code type.
+          enum:
+          - ach
+          - bsb
+          - sort_code
+          - bank_code
+          - branch_code
+          - fedwire
+          - fedNow
+          - rtp
+          - transit_number
+          - institution_number
+          - swift
+          - citad_bank_code
+          - cnpj
+        value:
+          type: string
+          description: Routing code value.
+    GlobalAccountSupportedFeature:
+      type: object
+      required:
+      - currency
+      - routing_codes
+      - type
+      properties:
+        alias_types:
+          type: array
+          description: Alias types that can be registered with the local clearing system via [Create alias](/docs/api/core_resources/global_accounts/create_aliases).
+          items:
+            type: string
+            enum:
+            - EMAIL
+            - PHONE_NUMBER
+            - AUSTRALIAN_BUSINESS_NUMBER
+        currency:
+          type: string
+          description: Currency of the global account (3-letter ISO-4217 code).
+        local_clearing_system:
+          type: string
+          description: Supported local clearing system.
+          enum:
+          - BANK_TRANSFER
+          - NPP
+          - OSKO
+          - DIRECT_ENTRY_TRANSFER
+          - BECS
+          - PAYTO
+          - EFT
+          - INTERAC
+          - SEPA
+          - SEPA_INSTANT
+          - TARGET2
+          - INTRADAGCLEARING
+          - KRONOS2
+          - STRAKSCLEARING
+          - BACS
+          - CHAPS
+          - FASTER_PAYMENTS
+          - ACH
+          - FPS
+          - RTGS
+          - ATM_PRIMA
+          - BI_FAST
+          - IPI
+          - SKN
+          - ZENGIN
+          - HOFINET
+          - SPEI
+          - DUITNOW
+          - GIRO
+          - RENTAS
+          - ELIXIR
+          - EXPRESS_ELIXIR
+          - SORBNET
+          - FAST
+          - FEDWIRE
+          - FEDNOW
+          - ZAHAV
+          - MASAV
+          - NAPAS
+          - CITAD
+          - TED
+          - PIX
+          - RTP
+          - INSTAPAY
+          - PESONET
+        routing_codes:
+          type: array
+          description: Routing information.
+          items:
+            $ref: '#/components/schemas/ClientRoutingCode'
+        transfer_method:
+          type: string
+          description: Transfer method in which a deposit can be received or a direct debit can be initiated. Not applicable for stablecoin global accounts — field is absent from JSON for stablecoin entries.
+          enum:
+          - LOCAL
+          - SWIFT
+        type:
+          type: string
+          description: Type of the supported feature.
+          enum:
+          - DEPOSIT
+          - DIRECT_DEBIT
+    GlobalAccountRequiredFeature:
+      type: object
+      required:
+      - currency
+      properties:
+        currency:
+          type: string
+          description: Currency of the global account (3-letter ISO-4217 code).
+        transfer_method:
+          type: string
+          description: 'Transfer method in which a deposit can be received for the specified currency. Possible transfer methods are: `LOCAL`, `SWIFT`. Not applicable for stablecoin global accounts — field is absent from JSON for stablecoin entries.'
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

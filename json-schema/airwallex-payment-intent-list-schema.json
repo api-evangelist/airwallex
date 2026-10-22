@@ -1,0 +1,1752 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/airwallex/main/json-schema/airwallex-payment-intent-list-schema.json",
+  "title": "PaymentIntentList",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/airwallex-openapi.yml#/components/schemas/PaymentIntentList",
+  "type": "object",
+  "properties": {
+    "additional_info": {
+      "$ref": "#/$defs/Payment_Acceptance_AdditionalInfo",
+      "description": "Additional info for the transaction."
+    },
+    "amount": {
+      "type": "number",
+      "description": "Payment amount. This is the order amount you would like to charge your customer."
+    },
+    "cancellation_reason": {
+      "type": "string",
+      "description": "Reason for cancelling the Payment Intent. Only present when the Payment Intent was successfully cancelled, i.e. status is `CANCELLED`."
+    },
+    "cancelled_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last time at which this Payment Intent was cancelled. Only present when the Payment Intent was successfully cancelled, i.e. status is `CANCELLED`."
+    },
+    "captured_amount": {
+      "type": "number",
+      "description": "Amount that captured from this Payment Intent."
+    },
+    "client_secret": {
+      "type": "string",
+      "description": "Payment Intent's client secret for browser or app. Returned by Payment Intent create API or Payment Intent retrieve API \n\nThe provided client_secret is valid for 60 minutes."
+    },
+    "connected_account_id": {
+      "type": "string",
+      "description": "Account identifier of the connected account."
+    },
+    "conversion_quote_id": {
+      "type": "string",
+      "description": "The unique identifier of the conversion quote applied to the intent."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Time at which this Payment Intent was created."
+    },
+    "currency": {
+      "type": "string",
+      "description": "Amount currency."
+    },
+    "customer": {
+      "$ref": "#/$defs/CustomerDetails",
+      "description": "The details of the customer who is making a business payment for this Payment Intent, in which case it's not desired to create a Customer API resource. "
+    },
+    "customer_id": {
+      "type": "string",
+      "description": "The unique identifier of the Customer who is paying for this Payment Intent."
+    },
+    "descriptor": {
+      "type": "string",
+      "description": "Descriptor that will be displayed to the customer."
+    },
+    "funds_split_data": {
+      "type": "array",
+      "description": "The data that will create funds splits automatically after the Payment Intent succeeds.",
+      "items": {
+        "$ref": "#/$defs/FundsSplitData"
+      }
+    },
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the Payment Intent."
+    },
+    "invoice_id": {
+      "type": "string",
+      "description": "Invoice unique identifier."
+    },
+    "latest_payment_attempt": {
+      "$ref": "#/$defs/PaymentAttemptId",
+      "description": "Latest Payment Attempt that was created under the Payment Intent."
+    },
+    "merchant_category_code": {
+      "type": "string",
+      "description": "Four-digit code to categorize the business or service. This field is only applicable for approved merchants to specify an alternative category code."
+    },
+    "merchant_order_id": {
+      "type": "string",
+      "description": "The order unique identifier created in merchant's order system that corresponds to this Payment Intent."
+    },
+    "merchant_website_url": {
+      "type": "string",
+      "description": "URL of the merchant's website where the customer is completing the transaction."
+    },
+    "metadata": {
+      "type": "object",
+      "description": "A set of key-value pairs that you can attach to this Payment Intent. You can specify up to 50 keys with key names up to 50 characters long and values up to 500 characters long.",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "next_action": {
+      "$ref": "#/$defs/Payment_Acceptance_NextAction",
+      "description": "Next action for merchant."
+    },
+    "order": {
+      "$ref": "#/$defs/Payment_Acceptance_PurchaseOrder",
+      "description": "Purchase order related to this Payment Intent."
+    },
+    "payment_consent": {
+      "$ref": "#/$defs/PaymentConsentOptions",
+      "description": "The associated **Payment Consent** to set up along with the Payment Intent."
+    },
+    "payment_consent_id": {
+      "type": "string",
+      "description": "Unique identifier of the Payment Consent related to this Payment Intent."
+    },
+    "payment_link_id": {
+      "type": "string",
+      "description": "Payment Link unique identifier (if this intent was created by Payment Link)."
+    },
+    "payment_method_options": {
+      "$ref": "#/$defs/PaymentMethodOptionsForCreate",
+      "description": "Options for Payment Method."
+    },
+    "request_id": {
+      "type": "string",
+      "description": "Unique request identifier specified by the merchant in the last operation."
+    },
+    "return_url": {
+      "type": "string",
+      "description": "The web page URL or application scheme URI to redirect the customer after payment authentication."
+    },
+    "risk_control_options": {
+      "$ref": "#/$defs/RiskControlOptions",
+      "description": "Risk Control Options."
+    },
+    "status": {
+      "type": "string",
+      "description": "Please note that this list of statuses is not exhaustive, you should be prepared to handle intent statuses beyond those explicitly mentioned.\n\n- **REQUIRES_PAYMENT_METHOD**: The Payment Intent is waiting for the [confirm](/docs/api/payments/payment_intents/confirm) request.\n  - This status is returned right after the Payment Intent is created or the previous Payment Attempt has failed or expired.\n- **REQUIRES_CUSTOMER_ACTION**: The Payment Intent is waiting for further customer action of authentication, e.g. 3DS verification and QR code scan. Please check the `next_action`.\n- **PENDING_REVIEW**: The Payment Intent was successfully authorized, but it is currently under review for risk compliance.\n- **REQUIRES_CAPTURE**: The Payment Intent is waiting for your [capture](/docs/api/payments/payment_intents/capture) to complete the payment.\n- **PENDING**: The Payment Intent is pending the final result from the provider. No further action is required.\n- **SUCCEEDED**: The Payment Intent has succeeded. The payment is complete.\n- **CANCELLED**: The Payment Intent has been canceled by your [request](/docs/api/payments/payment_intents/cancel). The payment is closed.\n"
+    },
+    "triggered_by": {
+      "type": "string",
+      "description": "Indicates who initiated the payment — the `merchant` or the `customer`.\n- `merchant`: The payment is initiated by the merchant to collect a subsequent payment where the customer is not in session.\n- `customer`: The payment is initiated by the customer using stored payment method details. \n"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last time at which this Payment Intent was updated or operated on."
+    }
+  },
+  "$defs": {
+    "Accommodation": {
+      "type": "object",
+      "required": [
+        "address",
+        "check_in_date",
+        "check_out_date",
+        "guest_nationality",
+        "guest_phone",
+        "name",
+        "room_type",
+        "type"
+      ],
+      "properties": {
+        "address": {
+          "$ref": "#/$defs/AccommodationAddress",
+          "description": "The address of this accommodation."
+        },
+        "check_in_date": {
+          "type": "string",
+          "description": "Check-in date, in YYYY-MM-DD format."
+        },
+        "check_out_date": {
+          "type": "string",
+          "description": "Check-out date, in YYYY-MM-DD format."
+        },
+        "early_checkin": {
+          "type": "boolean",
+          "description": "Indicates if early check-in was paid for."
+        },
+        "guest_email": {
+          "type": "string",
+          "description": "Guest email address for communication and confirmations."
+        },
+        "guest_name": {
+          "type": "string",
+          "description": "Full legal name of the guest."
+        },
+        "guest_nationality": {
+          "type": "string",
+          "description": "Nationality of the guest (ISO 3166-1 alpha-2 code)."
+        },
+        "guest_phone": {
+          "type": "string",
+          "description": "Guest phone number."
+        },
+        "late_checkout": {
+          "type": "boolean",
+          "description": "Indicates if late checkout was paid for."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the accommodation."
+        },
+        "pre_tax_amount": {
+          "type": "number",
+          "description": "Accommodation amount excluding tax."
+        },
+        "ratings": {
+          "type": "array",
+          "description": "Hotel rating(s) (from various sources).",
+          "items": {
+            "$ref": "#/$defs/Rating"
+          }
+        },
+        "room_type": {
+          "type": "string",
+          "description": "Type of room. For example `Presidential Suite`, `Single Room`, `Double Room`, `Suite`."
+        },
+        "tax_amount": {
+          "type": "number",
+          "description": "Taxes and fees applied to the accommodation price."
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of accommodation. For example `Hotel`, `Hostel`, `Resort`, `Apartment`."
+        }
+      }
+    },
+    "AccommodationAddress": {
+      "type": "object",
+      "required": [
+        "city",
+        "country_code",
+        "postcode",
+        "street"
+      ],
+      "properties": {
+        "city": {
+          "type": "string",
+          "description": "City of the address. Maximum of 100 characters."
+        },
+        "country_code": {
+          "type": "string",
+          "description": "The two-letter country code in ISO 3166-1 alpha-2 format."
+        },
+        "postcode": {
+          "type": "string",
+          "description": "Postcode of the address. Maximum of 10 characters."
+        },
+        "state": {
+          "type": "string",
+          "description": "State or province of the address. Maximum of 100 characters."
+        },
+        "street": {
+          "type": "string",
+          "description": "Street of the address. Maximum of 1000 characters."
+        }
+      },
+      "description": "The address of this accommodation."
+    },
+    "AccountFundingAddress": {
+      "type": "object",
+      "required": [
+        "country_code"
+      ],
+      "properties": {
+        "city": {
+          "type": "string",
+          "description": "City of the address."
+        },
+        "country_code": {
+          "type": "string",
+          "description": "The two-letter country code in ISO 3166-1 alpha-2 format."
+        },
+        "line1": {
+          "type": "string",
+          "description": "Address line1."
+        },
+        "line2": {
+          "type": "string",
+          "description": "Address line2."
+        },
+        "postcode": {
+          "type": "string",
+          "description": "Postcode of the address."
+        },
+        "state": {
+          "type": "string",
+          "description": "State or province of the address."
+        }
+      },
+      "description": "Address of the recipient."
+    },
+    "AccountFundingData": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "recipient": {
+          "$ref": "#/$defs/AccountFundingRecipient",
+          "description": "Details of the recipient for this account funding transaction."
+        },
+        "sender": {
+          "$ref": "#/$defs/AccountFundingSender",
+          "description": "Details of the sender for this account funding transaction."
+        },
+        "transfer_between_own_accounts": {
+          "type": "boolean",
+          "description": "Indicates whether the transfer is between the customer's own accounts. If true, Airwallex will compare the cardholder's name and the recipient's name, and will trigger 3DS if the names do not match."
+        },
+        "type": {
+          "type": "string",
+          "description": "Account funding transaction type. Possible values: \n\n- **ACCOUNT_TO_ACCOUNT_TRANSFER**: An account-to-account transfer, either within the same financial institution or to a different one.\n- **STORED_VALUE_DIGITAL_WALLET_TRANSFER**: Adding funds to or cashing out a Stored Value Digital Wallet (SVDW) account.\n- **STAGED_DIGITAL_WALLET_TRANSFER**: Funding a Staged Digital Wallet before the cardholder makes a purchase.\n- **PREPAID_CARD_TOP_UP**: Prepaid card or gift card top-up (adding value to an eligible reloadable prepaid card or funding the cardholder’s own prepaid account).\n- **LIQUID_ASSET_PURCHASE**: Funds transfer for the acquisition of liquid assets (for example, stocks, shares, foreign currency and cryptocurrency).\n"
+        }
+      },
+      "description": "Additional info for account funding transactions to ensure compliance with card networks."
+    },
+    "AccountFundingRecipient": {
+      "type": "object",
+      "properties": {
+        "account_number": {
+          "type": "string",
+          "description": "Account number of the recipient receiving funds. If you are funding a card, provide the first six digits and last four digits of the card number (e.g., \"411111xxxxxxxx1111\")."
+        },
+        "address": {
+          "$ref": "#/$defs/AccountFundingAddress",
+          "description": "Address of the recipient."
+        },
+        "first_name": {
+          "type": "string",
+          "description": "First name of the recipient."
+        },
+        "last_name": {
+          "type": "string",
+          "description": "Last name of the recipient."
+        },
+        "middle_name": {
+          "type": "string",
+          "description": "Middle name of the recipient."
+        }
+      },
+      "description": "Details of the recipient for this account funding transaction."
+    },
+    "AccountFundingSender": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "$ref": "#/$defs/AccountFundingAddress",
+          "description": "Address of the sender."
+        },
+        "date_of_birth": {
+          "type": "string",
+          "description": "The sender’s date of birth. Format: YYYY-MM-DD (e.g., \"1989-07-15\")."
+        },
+        "first_name": {
+          "type": "string",
+          "description": "First name of the sender."
+        },
+        "last_name": {
+          "type": "string",
+          "description": "Last name of the sender."
+        },
+        "middle_name": {
+          "type": "string",
+          "description": "Middle name of the sender."
+        }
+      },
+      "description": "Details of the sender for this account funding transaction."
+    },
+    "CarRental": {
+      "type": "object",
+      "required": [
+        "agreement_number",
+        "driver_name",
+        "driver_nationality",
+        "drop_off_at",
+        "pick_up_at"
+      ],
+      "properties": {
+        "agreement_number": {
+          "type": "string",
+          "description": "Rental agreement number."
+        },
+        "driver_email": {
+          "type": "string",
+          "description": "Driver email address for communication and confirmations."
+        },
+        "driver_name": {
+          "type": "string",
+          "description": "Full legal name of the driver."
+        },
+        "driver_nationality": {
+          "type": "string",
+          "description": "Nationality of the driver (ISO 3166-1 alpha-2 code)."
+        },
+        "driver_phone": {
+          "type": "string",
+          "description": "Driver phone number."
+        },
+        "drop_off_address": {
+          "$ref": "#/$defs/CarRentalAddress",
+          "description": "The return address of this rental."
+        },
+        "drop_off_at": {
+          "type": "string",
+          "description": "Rental drop-off time, in ISO8601 format. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`)."
+        },
+        "insurances": {
+          "type": "array",
+          "description": "The list of insurances.",
+          "items": {
+            "$ref": "#/$defs/InsuranceDetails"
+          }
+        },
+        "pick_up_address": {
+          "$ref": "#/$defs/CarRentalAddress",
+          "description": "The start address of this rental."
+        },
+        "pick_up_at": {
+          "type": "string",
+          "description": "Rental pick-up time, in ISO8601 format. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`)."
+        },
+        "pre_tax_amount": {
+          "type": "number",
+          "description": "Rental amount excluding tax."
+        },
+        "tax_amount": {
+          "type": "number",
+          "description": "Taxes and fees applied to the rental price."
+        },
+        "vehicle": {
+          "$ref": "#/$defs/Vehicle",
+          "description": "The details of the vehicle."
+        }
+      }
+    },
+    "CarRentalAddress": {
+      "type": "object",
+      "required": [
+        "city",
+        "country_code",
+        "street"
+      ],
+      "properties": {
+        "city": {
+          "type": "string",
+          "description": "City of the address. Maximum of 100 characters."
+        },
+        "country_code": {
+          "type": "string",
+          "description": "The two-letter country code in ISO 3166-1 alpha-2 format."
+        },
+        "postcode": {
+          "type": "string",
+          "description": "Postcode of the address. Maximum of 10 characters."
+        },
+        "state": {
+          "type": "string",
+          "description": "State or province of the address. Maximum of 100 characters."
+        },
+        "street": {
+          "type": "string",
+          "description": "Street of the address. Maximum of 1000 characters."
+        }
+      },
+      "description": "The return address of this rental."
+    },
+    "CardOptionsForCreate": {
+      "type": "object",
+      "properties": {
+        "authorization_type": {
+          "type": "string",
+          "description": "The authorization type of the card payment. One of `final_auth`, `pre_auth`. Only applicable when `payment_method` is provided. Default to `final_auth`. Currently only available when `brand` is `visa` or `mastercard`."
+        },
+        "auto_capture": {
+          "type": "boolean",
+          "description": "Specifies whether the funds should be requested automatically after the payment is authorized. Only applicable when `payment_method` is provided. Default to `true`."
+        },
+        "card_input_via": {
+          "type": "string",
+          "description": "The channel through which the cardholder inputs the card. One of `ecommerce`, `moto`."
+        },
+        "merchant_trigger_reason": {
+          "type": "string",
+          "description": "Types of transactions where the merchant is allowed to initiate payments because it is a customary, legitimate need of the merchant’s industry. Only applicable for merchant-initiated transactions.",
+          "enum": [
+            "delayed_charges",
+            "incremental_authorization",
+            "no_show",
+            "partial_shipment",
+            "reauthorization",
+            "resubmission"
+          ]
+        },
+        "three_ds_action": {
+          "type": "string",
+          "description": "Set it to `FORCE_3DS` if you want to enforce 3DS with our 3DS provider. Set it to EXTERNAL_3DS if you want to use your own 3DS provider, in this case `payment_method_options.card.external_three_ds` should be provided in the confirm request. Set it to SKIP_3DS if you want to skip 3DS regardless of the risk score. `null` by default."
+        }
+      },
+      "description": "The Payment Method options for card."
+    },
+    "CustomerDetails": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "$ref": "#/$defs/Payment_Acceptance_Address",
+          "description": "Address of the customer."
+        },
+        "business_name": {
+          "type": "string",
+          "description": "Business name of the customer."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the customer."
+        },
+        "first_name": {
+          "type": "string",
+          "description": "First name of the customer."
+        },
+        "last_name": {
+          "type": "string",
+          "description": "Last name of the customer."
+        },
+        "merchant_customer_id": {
+          "type": "string",
+          "description": "Unique identifier of the customer in merchant's system. Maximum length is 64."
+        },
+        "phone_number": {
+          "type": "string",
+          "description": "Phone number of the customer."
+        }
+      },
+      "description": "Details of the customer making a payment for this Payment Intent. When `customer_id` is provided in the request you must leave this object empty unless you want to provide `additional_info` related to the customer for this payment."
+    },
+    "CustomerPurchaseSummary": {
+      "type": "object",
+      "required": [
+        "payment_method_type"
+      ],
+      "properties": {
+        "currency": {
+          "type": "string",
+          "description": "The currency of successful purchase volume in 3-letter ISO 4217 currency code. Please refer to [supported currencies](/docs/payments/supported-currencies)."
+        },
+        "first_successful_purchase_date": {
+          "type": "string",
+          "description": "The date on which the customer completed their first purchase in the merchant's system with the specified payment method type."
+        },
+        "last_successful_purchase_date": {
+          "type": "string",
+          "description": "The date on which the customer completed their last purchase in the merchant's system with the specified payment method type."
+        },
+        "payment_method_type": {
+          "type": "string",
+          "description": "Payment method type, one of `affirm`, `afterpay`, `atome`, `klarna`, and `other`."
+        },
+        "successful_purchase_amount": {
+          "type": "number",
+          "description": "Total volume of successful purchases. Please refer to [supported currencies](/docs/payments/supported-currencies) for supported minor units."
+        },
+        "successful_purchase_count": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Total number of successful purchases."
+        }
+      }
+    },
+    "CustomerSocialNetwork": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "The customer's email address on the social network."
+        },
+        "name": {
+          "type": "string",
+          "description": "The social network used by the customer. Can be one of: `FACEBOOK`, `GOOGLE`, `TWITTER`, `REDDIT`, `PINTEREST`, `WECHAT`, `QQ`, `TWITCH`, `APPLE`, `DRIBBBLE`, `GITHUB`, `LINKEDIN`, `MAKER_STUDIOS`, `STACK_EXCHANGE`, `VIMEO`, `STEAM`, `KAKAO`, `NAVER`, `GRAB`, `JKOPAY`, `LINE`, `OTHER`."
+        },
+        "profile_id": {
+          "type": "string",
+          "description": "The customer's profile unique identifier on the social network."
+        }
+      }
+    },
+    "DccData": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "description": "The proposed payment amount after Dynamic Currency Conversion (DCC)."
+        },
+        "client_rate": {
+          "type": "number",
+          "description": "The proposed client rate for DCC."
+        },
+        "currency": {
+          "type": "string",
+          "description": "Three-letter ISO code of the payment currency after DCC."
+        },
+        "currency_pair": {
+          "type": "string",
+          "description": "Six-letter code representing the pair of Payment Intent currency and the proposed payment currency after DCC. Notice the preceding currency does not always represent the Payment Intent currency. The order of currencies only indicates the exchanging direction of `client_rate`."
+        },
+        "rate_expiry": {
+          "type": "string",
+          "description": "Time at which the proposed `client_rate` expires."
+        },
+        "rate_timestamp": {
+          "type": "string",
+          "description": "Time at which the proposed `client_rate` was generated."
+        }
+      },
+      "description": "The DCC data that can be used to complete this action."
+    },
+    "Discount": {
+      "type": "object",
+      "properties": {
+        "coupon_code": {
+          "type": "string",
+          "description": "Coupon code used."
+        }
+      },
+      "description": "Discount used by the customer."
+    },
+    "EnhancedSchemeCustomer": {
+      "type": "object",
+      "properties": {
+        "first_name": {
+          "type": "string",
+          "description": "First name of the customer."
+        },
+        "last_name": {
+          "type": "string",
+          "description": "Last name of the customer."
+        },
+        "reference": {
+          "type": "string",
+          "description": "A reference number or code supplied by the cardholder to the merchant, which could be used for invoice management at the cardholder's side. Maximum of 17 characters."
+        }
+      },
+      "description": "Details of the customer making a payment for this Payment Intent."
+    },
+    "EnhancedSchemeData": {
+      "type": "object",
+      "properties": {
+        "customer": {
+          "$ref": "#/$defs/EnhancedSchemeCustomer",
+          "description": "Details of the customer making a payment for this Payment Intent."
+        },
+        "customer_tax_identifier": {
+          "type": "string",
+          "description": "Tax identifier of the customer. Maximum of 13 characters."
+        },
+        "duty_amount": {
+          "type": "number",
+          "description": "The total charges for any import or export duty included in the transaction. This amount must be expressed in the original currency of the transaction."
+        },
+        "invoice_reference": {
+          "type": "string",
+          "description": "Invoice reference number. Maximum of 17 characters."
+        },
+        "local_tax_amount": {
+          "type": "number",
+          "description": "The amount of state or provincial tax on the transaction amount. This amount must be expressed in the original currency of the transaction."
+        },
+        "merchant_tax_identifier": {
+          "type": "string",
+          "description": "Tax identifier of the merchant. This can be a VAT / GST / other tax related identifier. Maximum of 20 characters."
+        },
+        "national_tax_amount": {
+          "type": "number",
+          "description": "The amount of national tax on the transaction amount. This amount must be expressed in the original currency of the transaction."
+        },
+        "products": {
+          "type": "array",
+          "description": "Product list.",
+          "items": {
+            "$ref": "#/$defs/EnhancedSchemeProduct"
+          }
+        },
+        "shipping": {
+          "$ref": "#/$defs/EnhancedSchemeShipping",
+          "description": "Shipping information."
+        },
+        "summary_commodity_code": {
+          "type": "string",
+          "description": "The first 2,4 or 6 digits of  [UNSPSC Commodity Code](https://www.ungm.org/Public/UNSPSC) that best categorizes the items being purchased. If the items belong to different categories, choose a category that best represents the items. Maximum of 15 characters."
+        },
+        "total_tax_amount": {
+          "type": "number",
+          "description": "The total amount of sales tax or value added tax (VAT) on the transaction amount. This amount must be expressed in the original currency of the transaction."
+        },
+        "vat_invoice_reference": {
+          "type": "string",
+          "description": "Value added tax invoice reference number. Maximum of 15 characters."
+        }
+      },
+      "description": "Level 2 & Level 3 data that will be sent to card schemes. By providing Level 2 or Level 3 data with your transactions, you may be able to qualify for reduced interchange rates."
+    },
+    "EnhancedSchemeProduct": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "Merchant’s product identifier code. Maximum of 12 characters."
+        },
+        "commodity_code": {
+          "type": "string",
+          "description": "The [UNSPSC Commodity Code](https://www.ungm.org/Public/UNSPSC) for the product. Maximum of 12 characters."
+        },
+        "description": {
+          "type": "string",
+          "description": "Product description. Maximum of 26 characters."
+        },
+        "discount_amount": {
+          "type": "number",
+          "description": "The discount amount for the product. This amount must be expressed in the original currency of the transaction."
+        },
+        "quantity": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Product quantity."
+        },
+        "tax_percent": {
+          "type": "number",
+          "description": "The tax rate percentage for the product. Should be less than 100, up to 2 decimal places."
+        },
+        "total_amount": {
+          "type": "number",
+          "description": "The total amount for the product. This amount must be expressed in the original currency of the transaction."
+        },
+        "total_tax_amount": {
+          "type": "number",
+          "description": "The total amount of tax for the product. This amount must be expressed in the original currency of the transaction."
+        },
+        "unit": {
+          "type": "string",
+          "description": "The unit of measure code used for the product. Maximum of 12 characters."
+        },
+        "unit_price": {
+          "type": "number",
+          "description": "Product unit price. This amount must be expressed in the original currency of the transaction."
+        }
+      }
+    },
+    "EnhancedSchemeShipping": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "$ref": "#/$defs/Payment_Acceptance_Address",
+          "description": "Shipping address."
+        },
+        "date": {
+          "type": "string",
+          "description": "The date the goods were shipped to the destination, in YYYY-MM-DD format."
+        },
+        "fee_amount": {
+          "type": "number",
+          "description": "Shipping fee amount. This amount must be expressed in the same currency as the transaction amount."
+        },
+        "from_postcode": {
+          "type": "string",
+          "description": "The postcode of the location the goods are being shipped from. Maximum of 10 characters."
+        }
+      },
+      "description": "Shipping information."
+    },
+    "EventInfo": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "arena_location": {
+          "$ref": "#/$defs/Payment_Acceptance_Address",
+          "description": "The location of the venue."
+        },
+        "arena_name": {
+          "type": "string",
+          "description": "The name of the venue."
+        },
+        "arena_seat_number": {
+          "type": "string",
+          "description": "The seat number of the venue."
+        },
+        "company": {
+          "type": "string",
+          "description": "The name of the company arranging the event."
+        },
+        "customer_name": {
+          "type": "string",
+          "description": "The name of the customer."
+        },
+        "customer_title": {
+          "type": "string",
+          "description": "The title used before the customer’s  name. One of mr, ms, and mrs."
+        },
+        "ends_at": {
+          "type": "string",
+          "description": "The event's end date and time in ISO 8601 format. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`)."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the event."
+        },
+        "starts_at": {
+          "type": "string",
+          "description": "The event's start date and time in ISO 8601 format. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`)."
+        },
+        "type": {
+          "type": "string",
+          "description": "The category or type of the event."
+        }
+      }
+    },
+    "Flight": {
+      "type": "object",
+      "required": [
+        "arrival_airport_code",
+        "arrival_city",
+        "arrival_country",
+        "departure_airport_code",
+        "departure_city",
+        "departure_country",
+        "flight_number",
+        "passenger_name",
+        "passenger_nationality",
+        "scheduled_arrival_at",
+        "scheduled_departure_at",
+        "type"
+      ],
+      "properties": {
+        "arrival_airport_code": {
+          "type": "string",
+          "description": "IATA code of the arrival airport."
+        },
+        "arrival_city": {
+          "type": "string",
+          "description": "City where the arrival airport is located."
+        },
+        "arrival_country": {
+          "type": "string",
+          "description": "Country where the arrival airport is located (ISO 3166-1 alpha-2 code)."
+        },
+        "class_of_service": {
+          "type": "string",
+          "description": "Class of service. For example `Economy`, `Premium Economy`, `Business`, `First`."
+        },
+        "departure_airport_code": {
+          "type": "string",
+          "description": "IATA code of the departure airport."
+        },
+        "departure_city": {
+          "type": "string",
+          "description": "City where the departure airport is located."
+        },
+        "departure_country": {
+          "type": "string",
+          "description": "Country where the departure airport is located (ISO 3166-1 alpha-2 code)."
+        },
+        "flight_number": {
+          "type": "string",
+          "description": "Airline's unique flight number."
+        },
+        "insurances": {
+          "type": "array",
+          "description": "The list of insurance.",
+          "items": {
+            "$ref": "#/$defs/InsuranceDetails"
+          }
+        },
+        "passenger_email": {
+          "type": "string",
+          "description": "Passenger email address for communication and confirmations."
+        },
+        "passenger_name": {
+          "type": "string",
+          "description": "Full legal name of the passenger."
+        },
+        "passenger_nationality": {
+          "type": "string",
+          "description": "Nationality of the passenger (ISO 3166-1 alpha-2 code)."
+        },
+        "passenger_phone": {
+          "type": "string",
+          "description": "Passenger phone number."
+        },
+        "pre_tax_amount": {
+          "type": "number",
+          "description": "Ticket amount excluding tax."
+        },
+        "scheduled_arrival_at": {
+          "type": "string",
+          "description": "Scheduled arrival date and time in ISO8601 format. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`)."
+        },
+        "scheduled_departure_at": {
+          "type": "string",
+          "description": "Scheduled departure date and time in ISO8601 format. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`)."
+        },
+        "seat_number": {
+          "type": "string",
+          "description": "Assigned seat number on the flight."
+        },
+        "tax_amount": {
+          "type": "number",
+          "description": "Taxes and fees applied to the ticket price."
+        },
+        "type": {
+          "type": "string",
+          "description": "Whether the flight is domestic or international. One of `DOMESTIC`, `INTERNATIONAL`."
+        }
+      }
+    },
+    "FundsSplitData": {
+      "type": "object",
+      "required": [
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "type": "number",
+          "description": "Amount of this split. Please refer to [supported currencies](/docs/payments/supported-currencies) for supported minor units."
+        },
+        "destination": {
+          "type": "string",
+          "description": "The destination that the money is splitting to. The value could be either:\n- a connected account ID. Used to split funds when collecting payments directly\n- a platform account ID. Used to split funds when collecting payments on behalf of connected accounts\nIf a value is not specified, the destination will be as specified in the Payment Intent."
+        }
+      }
+    },
+    "InsuranceDetails": {
+      "type": "object",
+      "required": [
+        "company",
+        "price",
+        "type"
+      ],
+      "properties": {
+        "company": {
+          "type": "string",
+          "description": "The insurance company name. Maximum length is 100."
+        },
+        "price": {
+          "type": "number",
+          "description": "The insurance price in payment intent currency."
+        },
+        "type": {
+          "type": "string",
+          "description": "The insurance type. One of `cancellation`, `delay`, `casualty`,  `baggage`, and `other`."
+        }
+      }
+    },
+    "IntentCustomerAdditionalInfo": {
+      "type": "object",
+      "properties": {
+        "account_type": {
+          "type": "string",
+          "description": "Customer account type. One of `GUEST`, `PRIVATE`, `BUSINESS`, `VIP`, `MERCHANT_OPERATED`, `TRIAL`, `MERCHANT_EMPLOYEE`, `PREMIUM_PAID`, `SMALL_BUSINESS`, `AGENT`."
+        },
+        "first_successful_order_date": {
+          "type": "string",
+          "description": "Date at which the customer completes the first order on the merchant's site."
+        },
+        "last_login_ip_address": {
+          "type": "string",
+          "description": "The public IP address used by the customer in the last login."
+        },
+        "last_modified_at": {
+          "type": "string",
+          "description": "The last time at which the customer modified their account in the merchant's system. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`)."
+        },
+        "linked_social_networks": {
+          "type": "array",
+          "description": "Social network data related to the customer.",
+          "items": {
+            "$ref": "#/$defs/CustomerSocialNetwork"
+          }
+        },
+        "purchase_summaries": {
+          "type": "array",
+          "description": "The purchase summaries of this customer with different payment methods in the merchant's system for risk analysis.",
+          "items": {
+            "$ref": "#/$defs/CustomerPurchaseSummary"
+          }
+        },
+        "registered_via_social_media": {
+          "type": "boolean",
+          "description": "Whether the customer registers through social media. Default to `false`."
+        },
+        "registration_date": {
+          "type": "string",
+          "description": "Date at which the customer registers on the merchant's site."
+        },
+        "registration_ip_address": {
+          "type": "string",
+          "description": "The public IP address used by the customer when registering on the merchant's site."
+        }
+      },
+      "description": "(Optional) Additional customer information to be sent to the external risk control system. This information may increase the success rate of your transactions if provided."
+    },
+    "OnlineTicketAgencyData": {
+      "type": "object",
+      "properties": {
+        "events": {
+          "type": "array",
+          "description": "The details of the event.",
+          "items": {
+            "$ref": "#/$defs/EventInfo"
+          }
+        }
+      },
+      "description": "The additional information for online ticket agency data."
+    },
+    "OnlineTravelAgencyCustomer": {
+      "type": "object",
+      "properties": {
+        "loyalty_program_name": {
+          "type": "string",
+          "description": "The name of the loyalty program."
+        },
+        "loyalty_program_points": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Points or miles in the loyalty program."
+        },
+        "loyalty_program_tier": {
+          "type": "string",
+          "description": "Tier of the loyalty program. For example `Silver`, `Gold`, `Platinum`."
+        },
+        "type": {
+          "type": "string",
+          "description": "Customer account type. One of `GUEST`, `MEMBER`."
+        }
+      },
+      "description": "Details of the customer making a payment for this Payment Intent."
+    },
+    "OnlineTravelAgencyData": {
+      "type": "object",
+      "properties": {
+        "accommodations": {
+          "type": "array",
+          "description": "The details of accommodation.",
+          "items": {
+            "$ref": "#/$defs/Accommodation"
+          }
+        },
+        "buses": {
+          "type": "array",
+          "description": "The details of the buses travel.",
+          "items": {
+            "$ref": "#/$defs/TravelInfo"
+          }
+        },
+        "car_rentals": {
+          "type": "array",
+          "description": "The details of the car rental.",
+          "items": {
+            "$ref": "#/$defs/CarRental"
+          }
+        },
+        "customer": {
+          "$ref": "#/$defs/OnlineTravelAgencyCustomer",
+          "description": "Details of the customer making a payment for this Payment Intent."
+        },
+        "ferries": {
+          "type": "array",
+          "description": "The details of the ferries travel.",
+          "items": {
+            "$ref": "#/$defs/TravelInfo"
+          }
+        },
+        "flights": {
+          "type": "array",
+          "description": "The details of the flights.",
+          "items": {
+            "$ref": "#/$defs/Flight"
+          }
+        },
+        "order": {
+          "$ref": "#/$defs/OnlineTravelAgencyOrder",
+          "description": "Purchase order related to this Payment Intent."
+        },
+        "trains": {
+          "type": "array",
+          "description": "The details of the trains travel.",
+          "items": {
+            "$ref": "#/$defs/TravelInfo"
+          }
+        }
+      },
+      "description": "The additional information for online travel agency data."
+    },
+    "OnlineTravelAgencyOrder": {
+      "type": "object",
+      "required": [
+        "cancellable",
+        "created_at"
+      ],
+      "properties": {
+        "cancellable": {
+          "type": "boolean",
+          "description": "Indicates if the booking is cancellable."
+        },
+        "created_at": {
+          "type": "string",
+          "description": "The time of the order was made, in ISO8601 format. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`)."
+        },
+        "prepayment_model": {
+          "type": "string",
+          "description": "The model of payment. One of `FULL`, `PARTIAL`."
+        }
+      },
+      "description": "Purchase order related to this Payment Intent."
+    },
+    "PaymentAttemptId": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Payment Attempt."
+        }
+      },
+      "description": "Latest Payment Attempt that was created under the Payment Intent."
+    },
+    "PaymentConsentOptions": {
+      "type": "object",
+      "required": [
+        "next_triggered_by"
+      ],
+      "properties": {
+        "merchant_trigger_reason": {
+          "type": "string",
+          "description": "Indicate whether the subsequent payments are scheduled. Only applicable when `next_triggered_by` is `merchant`. One of `scheduled`, `unscheduled`, `installments`. \nDefault: `unscheduled`."
+        },
+        "next_triggered_by": {
+          "type": "string",
+          "description": "The party to trigger subsequent payments. One of `merchant`, `customer`."
+        },
+        "terms_of_use": {
+          "$ref": "#/$defs/TermsOfUse",
+          "description": "Terms to specify how this Payment Consent will be used."
+        }
+      },
+      "description": "The associated **Payment Consent** to set up along with the Payment Intent."
+    },
+    "PaymentMethodOptionsForCreate": {
+      "type": "object",
+      "properties": {
+        "card": {
+          "$ref": "#/$defs/CardOptionsForCreate",
+          "description": "The Payment Method options for card."
+        },
+        "wechatpay": {
+          "$ref": "#/$defs/WeChatPayOptions",
+          "description": "The Payment Method options for wechatpay."
+        }
+      },
+      "description": "Options for Payment Method."
+    },
+    "PaymentSchedule": {
+      "type": "object",
+      "properties": {
+        "period": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The number of period units between billing cycles. For example, the payment cycle is one month if period=1 and period_unit=MONTH. Required when merchant_trigger_reason = scheduled."
+        },
+        "period_unit": {
+          "type": "string",
+          "description": "Specifies billing frequency. One of `DAY`, `WEEK`,  `MONTH`, and `YEAR`. Required when merchant_trigger_reason = scheduled."
+        }
+      }
+    },
+    "Payment_Acceptance_AdditionalInfo": {
+      "type": "object",
+      "properties": {
+        "account_funding_data": {
+          "$ref": "#/$defs/AccountFundingData",
+          "description": "Additional info for account funding transactions to ensure compliance with card networks."
+        },
+        "customer_activity_data": {
+          "$ref": "#/$defs/IntentCustomerAdditionalInfo",
+          "description": "(Optional) Additional customer information to be sent to the external risk control system. This information may increase the success rate of your transactions if provided."
+        },
+        "enhanced_scheme_data": {
+          "$ref": "#/$defs/EnhancedSchemeData",
+          "description": "Level 2 & Level 3 data that will be sent to card schemes. By providing Level 2 or Level 3 data with your transactions, you may be able to qualify for reduced interchange rates."
+        },
+        "online_ticket_agency_data": {
+          "$ref": "#/$defs/OnlineTicketAgencyData",
+          "description": "The additional information for online ticket agency data."
+        },
+        "online_travel_agency_data": {
+          "$ref": "#/$defs/OnlineTravelAgencyData",
+          "description": "The additional information for online travel agency data."
+        }
+      },
+      "description": "Additional info for the transaction."
+    },
+    "Payment_Acceptance_Address": {
+      "type": "object",
+      "required": [
+        "country_code"
+      ],
+      "properties": {
+        "city": {
+          "type": "string",
+          "description": "City of the address. Maximum of 100 characters."
+        },
+        "country_code": {
+          "type": "string",
+          "description": "The two-letter country code in ISO 3166-1 alpha-2 format."
+        },
+        "postcode": {
+          "type": "string",
+          "description": "Postcode of the address. Maximum of 10 characters."
+        },
+        "state": {
+          "type": "string",
+          "description": "State or province of the address. Maximum of 100 characters."
+        },
+        "street": {
+          "type": "string",
+          "description": "Street of the address. Maximum of 1000 characters."
+        }
+      },
+      "description": "The billing address as it appears on the credit card issuer’s records."
+    },
+    "Payment_Acceptance_NextAction": {
+      "type": "object",
+      "properties": {
+        "content_type": {
+          "type": "string",
+          "description": "The content type of the request when `method` is `POST`. If not provided, the content type should be `application/json`."
+        },
+        "data": {
+          "type": "object",
+          "description": "The additional data that can be used to complete this action."
+        },
+        "dcc_data": {
+          "$ref": "#/$defs/DccData",
+          "description": "The DCC data that can be used to complete this action."
+        },
+        "fallback_url": {
+          "type": "string",
+          "description": "Fallback url to redirect the shopper to the web page if the redirection to the app fails. Returned only if the flow is `mobile_app`."
+        },
+        "method": {
+          "type": "string",
+          "description": "The redirect method if the action type is `redirect`. One of `GET`, `POST`."
+        },
+        "package_name": {
+          "type": "string",
+          "description": "Android package name. Returned only if the flow is `mobile_app` and the os_type is `android`."
+        },
+        "qrcode": {
+          "type": "string",
+          "description": "QR Code text representation if the action type is `render_qrcode`, only applicable to `wechatpay`, `alipaycn`, `alipayhk`, `kakaopay`, `gcash`, `tng`, `truemoney`, `rabbit_line_pay`, `fps`."
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of next action. One of `render_qrcode`, `call_sdk`, `redirect`, `redirect_iframe`, `request_pin`."
+        },
+        "url": {
+          "type": "string",
+          "description": "The redirect url."
+        }
+      },
+      "description": "Next action for merchant."
+    },
+    "Payment_Acceptance_PurchaseOrder": {
+      "type": "object",
+      "properties": {
+        "discount": {
+          "$ref": "#/$defs/Discount",
+          "description": "Discount used by the customer."
+        },
+        "foreign_retailer_amount": {
+          "type": "number",
+          "description": "The total amount from all foreign retailers in a marketplace transaction. Must be greater than or equal to 0 and less than or equal to the payment intent amount."
+        },
+        "products": {
+          "type": "array",
+          "description": "Product list.",
+          "items": {
+            "$ref": "#/$defs/Product"
+          }
+        },
+        "sellers": {
+          "type": "array",
+          "description": "Seller list.",
+          "items": {
+            "$ref": "#/$defs/Seller"
+          }
+        },
+        "shipping": {
+          "$ref": "#/$defs/Payment_Acceptance_Shipping",
+          "description": "Shipping information."
+        },
+        "surcharge": {
+          "$ref": "#/$defs/SurchargeRes",
+          "description": "Surcharge Information."
+        },
+        "tip": {
+          "$ref": "#/$defs/Tip",
+          "description": "Tip information."
+        },
+        "type": {
+          "type": "string",
+          "description": "Industry category of the order. Maximum of 128 characters."
+        }
+      },
+      "description": "Purchase order related to this Payment Intent."
+    },
+    "Payment_Acceptance_Shipping": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "$ref": "#/$defs/Payment_Acceptance_Address",
+          "description": "Shipping address."
+        },
+        "fee_amount": {
+          "type": "number",
+          "description": "Shipping fee amount."
+        },
+        "first_name": {
+          "type": "string",
+          "description": "First name of the recipient. Maximum of 128 characters."
+        },
+        "last_name": {
+          "type": "string",
+          "description": "Last name of the recipient. Maximum of 128 characters."
+        },
+        "phone_number": {
+          "type": "string",
+          "description": "Phone number of the recipient. Maximum of 50 characters."
+        },
+        "shipping_company": {
+          "type": "string",
+          "description": "Name of the shipping company. Maximum of 100 characters."
+        },
+        "shipping_delayed_at": {
+          "type": "string",
+          "description": "Use if customer chose to deliver the item at a later time. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`)."
+        },
+        "shipping_method": {
+          "type": "string",
+          "description": "Shipping method for the product. Maximum of 128 characters."
+        },
+        "tracking_number": {
+          "type": "string",
+          "description": "Tracking number of the shipment. Maximum of 100 characters."
+        },
+        "tracking_url": {
+          "type": "string",
+          "description": "URL where the customer can track the shipment. Maximum of 1024 characters."
+        }
+      },
+      "description": "Shipping information."
+    },
+    "Product": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string",
+          "description": "Product category at the merchant store, such as home furnishings, pet supplies, apparel and accessories."
+        },
+        "code": {
+          "type": "string",
+          "description": "Merchant’s product identifier code. Maximum of 128 characters."
+        },
+        "desc": {
+          "type": "string",
+          "description": "Product description. Maximum of 500 characters."
+        },
+        "effective_end_at": {
+          "type": "string",
+          "description": "The effective end time of the product, only applicable when product type is `intangible_good`. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`)."
+        },
+        "effective_start_at": {
+          "type": "string",
+          "description": "The effective start time of the product, only applicable when product type is `intangible_good`. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`)."
+        },
+        "image_url": {
+          "type": "string",
+          "description": "The preview image url for this product, which is usually displayed as thumbnail in the order details."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the product. Maximum of 255 characters."
+        },
+        "quantity": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Product quantity."
+        },
+        "seller": {
+          "$ref": "#/$defs/ProductSeller",
+          "description": "Seller info of the purchase order."
+        },
+        "sku": {
+          "type": "string",
+          "description": "Stock keeping unit. A unique identifier assigned by the merchant to identify and track this specific product. Maximum of 128 characters."
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of product, such as `physical_good`, `intangible_good`, or `service`. Maximum of 128 characters."
+        },
+        "unit_price": {
+          "type": "number",
+          "description": "Product unit price."
+        },
+        "url": {
+          "type": "string",
+          "description": "The url that links to the product page at merchant site."
+        }
+      }
+    },
+    "ProductSeller": {
+      "type": "object",
+      "properties": {
+        "identifier": {
+          "type": "string",
+          "description": "The identifier of the seller in the merchant's system."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the seller in the merchant's system."
+        }
+      },
+      "description": "Seller info of the purchase order."
+    },
+    "Rating": {
+      "type": "object",
+      "properties": {
+        "score": {
+          "type": "string",
+          "description": "The score of this rating."
+        },
+        "source": {
+          "type": "string",
+          "description": "The source of this rating."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of this rating. For example `Internal`, `External`."
+        }
+      }
+    },
+    "RiskControlOptions": {
+      "type": "object",
+      "properties": {
+        "skip_risk_processing": {
+          "type": "boolean",
+          "description": "Set it to `true` if you want to skip fraud processing. Please contact your account manager to enable the feature to take effect. Defaults to `false`. "
+        },
+        "tra_applicable": {
+          "type": "boolean",
+          "description": "Set it to 'true' if you want to use TRA exemption when create payment intent, only applicable when you skip risk processing."
+        }
+      },
+      "description": "Risk Control Options."
+    },
+    "Seller": {
+      "type": "object",
+      "properties": {
+        "additional_info": {
+          "$ref": "#/$defs/SellerAdditionalInfo",
+          "description": "The additional information of the seller in the merchant's system for risk analysis."
+        },
+        "business_info": {
+          "$ref": "#/$defs/SellerBusinessInfo",
+          "description": "The business information of the seller in the merchant's system for risk analysis."
+        },
+        "identifier": {
+          "type": "string",
+          "description": "The identifier of the seller in the merchant's system. Maximum length is 64."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the seller in the merchant's system. Maximum length is 100."
+        }
+      }
+    },
+    "SellerAdditionalInfo": {
+      "type": "object",
+      "properties": {
+        "address_updated_at": {
+          "type": "string",
+          "description": "The timestamp of the latest address change. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`)."
+        },
+        "email_updated_at": {
+          "type": "string",
+          "description": "The timestamp of the latest email change. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`)."
+        },
+        "password_updated_at": {
+          "type": "string",
+          "description": "The timestamp of the latest password change. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`)."
+        },
+        "products_updated_at": {
+          "type": "string",
+          "description": "The timestamp of the latest change of product listing details. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`)."
+        },
+        "sales_summary": {
+          "$ref": "#/$defs/SellerSalesSummary",
+          "description": "The sales summary of this seller during the last period."
+        }
+      },
+      "description": "The additional information of the seller in the merchant's system for risk analysis."
+    },
+    "SellerBusinessInfo": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "$ref": "#/$defs/Payment_Acceptance_Address",
+          "description": "Address of the seller."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the seller."
+        },
+        "phone_number": {
+          "type": "string",
+          "description": "Phone number of the seller."
+        },
+        "rating": {
+          "type": "number",
+          "description": "The latest customer rating (out of 10) for this seller."
+        },
+        "registration_date": {
+          "type": "string",
+          "description": "The date on which the seller registered in the merchant's system."
+        }
+      },
+      "description": "The business information of the seller in the merchant's system for risk analysis."
+    },
+    "SellerSalesSummary": {
+      "type": "object",
+      "properties": {
+        "currency": {
+          "type": "string",
+          "description": "The currency of sales amount."
+        },
+        "period": {
+          "type": "string",
+          "description": "The period of this sales summary. Default to 12M (last 12 months)."
+        },
+        "sales_amount": {
+          "type": "number",
+          "description": "The volume of sales completed by the seller in the last period."
+        },
+        "sales_count": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The number of sales completed by the seller in the last period."
+        }
+      },
+      "description": "The sales summary of this seller during the last period."
+    },
+    "SurchargeRes": {
+      "type": "object",
+      "required": [
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "type": "number",
+          "description": "The surcharge amount. This amount is included in the Payment Intent's total `amount`."
+        },
+        "percent": {
+          "type": "number",
+          "description": "The surcharge rate in percentage. For example, 5 represents a 5% surcharge."
+        }
+      },
+      "description": "Surcharge Information."
+    },
+    "TermsOfUse": {
+      "type": "object",
+      "required": [
+        "payment_amount_type"
+      ],
+      "properties": {
+        "billing_cycle_charge_day": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The granularity per billing cycle. Required when payment_schedule.period_unit is WEEK, MONTH, or YEAR. (e.g. charge_day_per_billing_cycle= 5, payment_schedule.period_unit  = MONTH, payment_schedule.period = 1 if collect payment on the 5th of each month)."
+        },
+        "end_date": {
+          "type": "string",
+          "description": "End date to expect payment request."
+        },
+        "first_payment_amount": {
+          "type": "number",
+          "description": "The first payment. It could include the costs associated with the first debited amount.Optional if payment agreement type is `VARIABLE`."
+        },
+        "fixed_payment_amount": {
+          "type": "number",
+          "description": "The fixed payment amount that can be charged for a single payment.Required if payment agreement type is `FIXED`."
+        },
+        "max_payment_amount": {
+          "type": "number",
+          "description": "The maximum payment amount that can be charged for a single payment.Optional if payment agreement type is `VARIABLE`."
+        },
+        "min_payment_amount": {
+          "type": "number",
+          "description": "The minimum payment amount that can be charged for a single payment.Optional if payment agreement type is `VARIABLE`."
+        },
+        "payment_amount_type": {
+          "type": "string",
+          "description": "The agreed type of amounts for subsequent payment. Should be one of `FIXED`, `VARIABLE`.\n\n- **FIXED**: payment amount is fixed. A specific amount is required.\n- **VARIABLE**: payment amount is variable at each collection. A max limit is recommended."
+        },
+        "payment_currency": {
+          "type": "string",
+          "description": "The currency of this payment. Please refer to [supported currencies](/docs/payments/supported-currencies)."
+        },
+        "payment_schedule": {
+          "$ref": "#/$defs/PaymentSchedule"
+        },
+        "start_date": {
+          "type": "string",
+          "description": "Start date to expect payment request."
+        },
+        "total_billing_cycles": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The total number of billing cycles. For example, the mandate will last for 1 year if `total_billing_cycles`=12, `payment_schedule.period`=1 and `payment_schedule.period_unit`=MONTH if the `merchant_trigger_reason` is `scheduled`. Merchant can bill customers 12 times when `total_billing_cycles`=12 if the `merchant_trigger_reason` is `unscheduled`The mandate will continue indefinitely if total_billing_cycles is null. "
+        }
+      },
+      "description": "Terms to specify how this Payment Consent will be used."
+    },
+    "Tip": {
+      "type": "object",
+      "required": [
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "type": "number",
+          "description": "The tip amount. This amount is included in the total `amount`."
+        }
+      },
+      "description": "Tip information."
+    },
+    "TravelInfo": {
+      "type": "object",
+      "required": [
+        "arrival_city",
+        "class_of_service",
+        "departure_city",
+        "passenger_name"
+      ],
+      "properties": {
+        "arrival_city": {
+          "type": "string",
+          "description": "The city of the arrival. Maximum length is 100."
+        },
+        "carrier": {
+          "type": "string",
+          "description": "The name of the transportation company."
+        },
+        "class_of_service": {
+          "type": "string",
+          "description": "The itinerary service class."
+        },
+        "departure_city": {
+          "type": "string",
+          "description": "The city of the departure. Maximum length is 100."
+        },
+        "insurances": {
+          "type": "array",
+          "description": "The insurance list for the itinerary.",
+          "items": {
+            "$ref": "#/$defs/InsuranceDetails"
+          }
+        },
+        "passenger_identifier": {
+          "type": "string",
+          "description": "The identifier of the traveler in the merchant's system. Maximum length is 64."
+        },
+        "passenger_name": {
+          "type": "string",
+          "description": "The name of the traveler. Maximum length is 100."
+        },
+        "passenger_title": {
+          "type": "string",
+          "description": "The title used before the traveler’s name. One of `mr`, `ms`, and `mrs`."
+        },
+        "price": {
+          "type": "number",
+          "description": "The itinerary unit price in payment intent currency."
+        },
+        "scheduled_arrival_at": {
+          "type": "string",
+          "description": "The estimated arrival datetime in ISO 8601 format. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`)."
+        },
+        "scheduled_departure_at": {
+          "type": "string",
+          "description": "The departure datetime in ISO 8601 format. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`)."
+        }
+      }
+    },
+    "Vehicle": {
+      "type": "object",
+      "required": [
+        "license_plate",
+        "manufacturer",
+        "model"
+      ],
+      "properties": {
+        "condition": {
+          "type": "string",
+          "description": "Condition of the vehicle. One of `GOOD`, `FAIR`, `POOR`."
+        },
+        "license_plate": {
+          "type": "string",
+          "description": "License plate number."
+        },
+        "manufacture_year": {
+          "type": "string",
+          "description": "Year of manufacture."
+        },
+        "manufacturer": {
+          "type": "string",
+          "description": "Manufacturer of the vehicle."
+        },
+        "model": {
+          "type": "string",
+          "description": "Model of the vehicle."
+        },
+        "vin": {
+          "type": "string",
+          "description": "Vehicle Identification Number."
+        }
+      },
+      "description": "The details of the vehicle."
+    },
+    "WeChatPayOptions": {
+      "type": "object",
+      "properties": {
+        "enable_funds_split": {
+          "type": "boolean",
+          "description": "Indicates whether funds split will be enabled for this WeChat Pay order."
+        }
+      },
+      "description": "The Payment Method options for wechatpay."
+    }
+  }
+}

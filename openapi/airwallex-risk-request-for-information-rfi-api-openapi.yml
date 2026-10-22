@@ -1,0 +1,970 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Risk > Request for Information (RFI) API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Risk > Request for Information (RFI)
+  description: As part of reviewing customer profiles and activity, Airwallex may request additional information about an account by raising an RFI. Airwallex will initiate a request for information which may then contain one or more follow up questions if more clarification is needed.
+  x-domain: Risk
+  x-resource: Request for Information (RFI)
+  x-urlPath: risk/request_for_information_rfi
+paths:
+  /api/v1/rfis/{id}:
+    get:
+      tags:
+      - Risk > Request for Information (RFI)
+      summary: 1|Retrieve an RFI
+      description: Retrieves details of an RFI using the given RFI unique identifier.
+      operationId: retrieveRequestForInformationRfi
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the RFI.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RfiSession'
+        '400':
+          description: '["invalid_state_for_operation"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '403':
+          description: '["account_not_authorised_for_operation"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: '["resource_not_found"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too many requests
+        '500':
+          description: '["internal_server_error"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/rfis/request_for_information_rfi_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          account_id: acct_e_2wbiZ3Mx-ynlX-7Qidbg
+          active_request:
+            created_at: 2023-04-12T07:29:36+0000
+            expires_at: 2023-04-19T07:29:36+0000
+            questions:
+            - answer:
+                address:
+                  address_line1: 200 Collins Street
+                  address_line2: 200 Collins Street
+                  country_code: AU
+                  postcode: '3000'
+                  state: VIC
+                  suburb: Melbourne
+                attachments:
+                - file_id: ZTEyOWJjZTItZGI5NS00NzI5LWI1YTQtZmQ2MmZlNDEwNzFlLHwsaG9uZ2tvbmcsfCzpvI7og5xDSS5wZGZfMTY4MzI1Nzg5OTUwOQ
+                identity_document:
+                  back_file_id: N2EwYTllMTgtZmZjOS00ZDllLWI1MDQtMDMyZjAzZTRjZWE0LHwsLHwsQ05fQkxfbmV3LnBuZ18xNjgzNTUyNjg3Nzg3
+                  front_file_id: N2EwYTllMTgtZmZjOS00ZDllLWI1MDQtMDMyZjAzZTRjZWE0LHwsLHwsQ05fQkxfbmV3LnBuZ18xNjgzNTUyNjg3Nzg3
+                  issuing_country: AU
+                  number: '123456789'
+                  type: DRIVING_LICENSE
+                type: TEXT
+              attachments:
+              - file_id: ZTEyOWJjZTItZGI5NS00NzI5LWI1YTQtZmQ2MmZlNDEwNzFlLHwsaG9uZ2tvbmcsfCzpvI7og5xDSS5wZGZfMTY4MzI1Nzg5OTUwOQ
+              comment: Please provide more information
+              description:
+                en: Information confirmation
+                zh: 信息确认
+              id: ba7bfb51-77bc-4991-b651-0969ece1d263
+              key: PROOF_OF_ADDRESS
+              liveness:
+                status: NOT_STARTED
+              sources:
+              - id: 318ce9e9-c370-42bd-8192-e78283770c43
+                person:
+                  first_name: John
+                  last_name: Smith
+                type: CARDHOLDER
+              title:
+                en: Information confirmation
+                zh: 信息确认
+              uploaded_orders:
+              - order_id: e10a8291-fabb-480d-a208-7c8f1c2cc5ec
+            updated_at: 2023-04-14T07:29:36+0000
+          answered_requests:
+          - created_at: 2023-04-12T07:29:36+0000
+            expires_at: 2023-04-19T07:29:36+0000
+            questions:
+            - answer:
+                address:
+                  address_line1: 200 Collins Street
+                  address_line2: 200 Collins Street
+                  country_code: AU
+                  postcode: '3000'
+                  state: VIC
+                  suburb: Melbourne
+                attachments:
+                - file_id: ZTEyOWJjZTItZGI5NS00NzI5LWI1YTQtZmQ2MmZlNDEwNzFlLHwsaG9uZ2tvbmcsfCzpvI7og5xDSS5wZGZfMTY4MzI1Nzg5OTUwOQ
+                identity_document:
+                  back_file_id: N2EwYTllMTgtZmZjOS00ZDllLWI1MDQtMDMyZjAzZTRjZWE0LHwsLHwsQ05fQkxfbmV3LnBuZ18xNjgzNTUyNjg3Nzg3
+                  front_file_id: N2EwYTllMTgtZmZjOS00ZDllLWI1MDQtMDMyZjAzZTRjZWE0LHwsLHwsQ05fQkxfbmV3LnBuZ18xNjgzNTUyNjg3Nzg3
+                  issuing_country: AU
+                  number: '123456789'
+                  type: DRIVING_LICENSE
+                type: TEXT
+              attachments:
+              - file_id: ZTEyOWJjZTItZGI5NS00NzI5LWI1YTQtZmQ2MmZlNDEwNzFlLHwsaG9uZ2tvbmcsfCzpvI7og5xDSS5wZGZfMTY4MzI1Nzg5OTUwOQ
+              comment: Please provide more information
+              description:
+                en: Information confirmation
+                zh: 信息确认
+              id: ba7bfb51-77bc-4991-b651-0969ece1d263
+              key: PROOF_OF_ADDRESS
+              liveness:
+                status: NOT_STARTED
+              sources:
+              - id: 318ce9e9-c370-42bd-8192-e78283770c43
+                person:
+                  first_name: John
+                  last_name: Smith
+                type: CARDHOLDER
+              title:
+                en: Information confirmation
+                zh: 信息确认
+              uploaded_orders:
+              - order_id: e10a8291-fabb-480d-a208-7c8f1c2cc5ec
+            updated_at: 2023-04-14T07:29:36+0000
+          created_at: 2023-04-11T07:29:36+0000
+          id: de73d13b-cb60-4541-8fa6-4bc50c1cbe92
+          status: ACTION_REQUIRED
+          sub_type: TRANSACTION_MONITORING
+          type: KYC
+          updated_at: 2023-04-12T07:29:36+0000
+      x-scope:
+      - scope: risk.rfi:read
+        group: Risk
+        resource_name: Request for Information (RFI)
+      x-domain: Risk
+      x-resource: Request for Information (RFI)
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/rfis:
+    get:
+      tags:
+      - Risk > Request for Information (RFI)
+      summary: 2|List all RFIs
+      description: Returns a list of RFIs raised for your Airwallex account, sorted by the RFI creation date in descending order.
+      operationId: listRequestForInformationRfi
+      parameters:
+      - name: end_created_at
+        in: query
+        description: The end date of created_at in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: from_created_at
+        in: query
+        description: The start date of created_at in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: A bookmark for use in pagination to retrieve either the next page or the previous page of results. You can fetch the value for this identifier from the response of the previous API call. To retrieve the next page of results, pass the value of page_after (if not null) from the response to a subsequent call. To retrieve the previous page of results, pass the value of page_before (if not null) from the response to a subsequent call.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: page_size
+        in: query
+        description: A limit on the number of records to be returned on a page, between 1 and 2000. The default is 100.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+      - name: statuses
+        in: query
+        description: List of RFI status separated by `,`. One of `ACTION_REQUIRED`, `ANSWERED`, `CLOSED`.
+        required: false
+        allowEmptyValue: false
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: types
+        in: query
+        description: List of RFI types separated by `,`. Currently only supports `KYC`, `KYC_ONGOING`, `CARDHOLDER`, `TRANSACTION` and `PAYMENT_ENABLEMENT` type.
+        required: false
+        allowEmptyValue: false
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedRfiSessionQueryResult'
+        '400':
+          description: '["invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: '["internal_server_error"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/rfis
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - account_id: acct_e_2wbiZ3Mx-ynlX-7Qidbg
+            active_request:
+              created_at: 2023-04-12T07:29:36+0000
+              expires_at: 2023-04-19T07:29:36+0000
+              questions:
+              - answer:
+                  address:
+                    address_line1: 200 Collins Street
+                    address_line2: 200 Collins Street
+                    country_code: AU
+                    postcode: '3000'
+                    state: VIC
+                    suburb: Melbourne
+                  attachments:
+                  - file_id: ZTEyOWJjZTItZGI5NS00NzI5LWI1YTQtZmQ2MmZlNDEwNzFlLHwsaG9uZ2tvbmcsfCzpvI7og5xDSS5wZGZfMTY4MzI1Nzg5OTUwOQ
+                  identity_document:
+                    back_file_id: N2EwYTllMTgtZmZjOS00ZDllLWI1MDQtMDMyZjAzZTRjZWE0LHwsLHwsQ05fQkxfbmV3LnBuZ18xNjgzNTUyNjg3Nzg3
+                    front_file_id: N2EwYTllMTgtZmZjOS00ZDllLWI1MDQtMDMyZjAzZTRjZWE0LHwsLHwsQ05fQkxfbmV3LnBuZ18xNjgzNTUyNjg3Nzg3
+                    issuing_country: AU
+                    number: '123456789'
+                    type: DRIVING_LICENSE
+                  type: TEXT
+                attachments:
+                - file_id: ZTEyOWJjZTItZGI5NS00NzI5LWI1YTQtZmQ2MmZlNDEwNzFlLHwsaG9uZ2tvbmcsfCzpvI7og5xDSS5wZGZfMTY4MzI1Nzg5OTUwOQ
+                comment: Please provide more information
+                description:
+                  en: Information confirmation
+                  zh: 信息确认
+                id: ba7bfb51-77bc-4991-b651-0969ece1d263
+                key: PROOF_OF_ADDRESS
+                liveness:
+                  status: NOT_STARTED
+                sources:
+                - id: 318ce9e9-c370-42bd-8192-e78283770c43
+                  person:
+                    first_name: John
+                    last_name: Smith
+                  type: CARDHOLDER
+                title:
+                  en: Information confirmation
+                  zh: 信息确认
+                uploaded_orders:
+                - order_id: e10a8291-fabb-480d-a208-7c8f1c2cc5ec
+              updated_at: 2023-04-14T07:29:36+0000
+            answered_requests:
+            - created_at: 2023-04-12T07:29:36+0000
+              expires_at: 2023-04-19T07:29:36+0000
+              questions:
+              - answer:
+                  address:
+                    address_line1: 200 Collins Street
+                    address_line2: 200 Collins Street
+                    country_code: AU
+                    postcode: '3000'
+                    state: VIC
+                    suburb: Melbourne
+                  attachments:
+                  - file_id: ZTEyOWJjZTItZGI5NS00NzI5LWI1YTQtZmQ2MmZlNDEwNzFlLHwsaG9uZ2tvbmcsfCzpvI7og5xDSS5wZGZfMTY4MzI1Nzg5OTUwOQ
+                  identity_document:
+                    back_file_id: N2EwYTllMTgtZmZjOS00ZDllLWI1MDQtMDMyZjAzZTRjZWE0LHwsLHwsQ05fQkxfbmV3LnBuZ18xNjgzNTUyNjg3Nzg3
+                    front_file_id: N2EwYTllMTgtZmZjOS00ZDllLWI1MDQtMDMyZjAzZTRjZWE0LHwsLHwsQ05fQkxfbmV3LnBuZ18xNjgzNTUyNjg3Nzg3
+                    issuing_country: AU
+                    number: '123456789'
+                    type: DRIVING_LICENSE
+                  type: TEXT
+                attachments:
+                - file_id: ZTEyOWJjZTItZGI5NS00NzI5LWI1YTQtZmQ2MmZlNDEwNzFlLHwsaG9uZ2tvbmcsfCzpvI7og5xDSS5wZGZfMTY4MzI1Nzg5OTUwOQ
+                comment: Please provide more information
+                description:
+                  en: Information confirmation
+                  zh: 信息确认
+                id: ba7bfb51-77bc-4991-b651-0969ece1d263
+                key: PROOF_OF_ADDRESS
+                liveness:
+                  status: NOT_STARTED
+                sources:
+                - id: 318ce9e9-c370-42bd-8192-e78283770c43
+                  person:
+                    first_name: John
+                    last_name: Smith
+                  type: CARDHOLDER
+                title:
+                  en: Information confirmation
+                  zh: 信息确认
+                uploaded_orders:
+                - order_id: e10a8291-fabb-480d-a208-7c8f1c2cc5ec
+              updated_at: 2023-04-14T07:29:36+0000
+            created_at: 2023-04-11T07:29:36+0000
+            id: de73d13b-cb60-4541-8fa6-4bc50c1cbe92
+            status: ACTION_REQUIRED
+            sub_type: TRANSACTION_MONITORING
+            type: KYC
+            updated_at: 2023-04-12T07:29:36+0000
+          page_after: YWZ0ZXI9MTdiYTVhYzktM2FiMC00NmIzLWE4ODctMTNjNmU5NTg2N2Qy
+          page_before: YmVmb3JlPTg0NDg0ODIwLTU0N2UtNDc5YS1iMTY3LTgzYjQwMzcwODQ2ZQ==
+      x-scope:
+      - scope: risk.rfi:read
+        group: Risk
+        resource_name: Request for Information (RFI)
+      x-domain: Risk
+      x-resource: Request for Information (RFI)
+      x-urlPath: list
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/rfis/{id}/respond:
+    post:
+      tags:
+      - Risk > Request for Information (RFI)
+      summary: 3|Respond to an RFI
+      description: Allows you to respond to an RFI request by providing the required answers.
+      operationId: respond
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the RFI.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                questions:
+                  type: array
+                  description: List of questions.
+                  items:
+                    type: object
+                    properties:
+                      answer:
+                        type: object
+                        description: Response to the question.
+                        properties:
+                          address:
+                            type: object
+                            description: Response for `ADDRESS` type.
+                            properties:
+                              address_line1:
+                                type: string
+                                description: The first line of a physical address, typically including the street number and name of the building or residence. A P.O. box is not acceptable.
+                              address_line2:
+                                type: string
+                                description: An optional field that can be used to capture additional information about the address, such as the apartment/ suite number, or floor number.
+                              country_code:
+                                type: string
+                                description: Country code. (2-letter ISO 3166-2 country code).
+                              postcode:
+                                type: string
+                                description: Postcode or zip code. Only applicable if relevant to selected country.
+                              state:
+                                type: string
+                                description: Name of state. Only applicable if relevant to selected country.
+                              suburb:
+                                type: string
+                                description: Name of city/suburb.
+                          attachments:
+                            type: array
+                            description: Response for `ATTACHMENT` type.
+                            items:
+                              type: object
+                              properties:
+                                file_id:
+                                  type: string
+                                  description: File id provided in the response from the File Service API.
+                          comment:
+                            type: string
+                            description: Comment for this response.
+                          confirmed:
+                            type: boolean
+                            description: Response for `CONFIRMATION` type.
+                          identity_document:
+                            type: object
+                            description: Response for `IDENTITY_DOCUMENT` type.
+                            properties:
+                              back_file_id:
+                                type: string
+                                description: File id of the photo of the back of the document.
+                              front_file_id:
+                                type: string
+                                description: File id of the photo of the front of the document.
+                              issuing_country:
+                                type: string
+                                description: Country issuing the document. (2-letter ISO 3166-2 country code).
+                              number:
+                                type: string
+                                description: Identity number.
+                              type:
+                                type: string
+                                description: Type of identity document. One of `DRIVING_LICENSE`,`PASSPORT`,`IDENTITY_CARD`,`MEDICARE_CARD`,`SSN`,`ITIN`.
+                          text:
+                            type: string
+                            description: Response for `TEXT` type.
+                          type:
+                            type: string
+                            description: The type of response to the question.
+                            enum:
+                            - TEXT
+                            - ATTACHMENT
+                            - IDENTITY_DOCUMENT
+                            - CONFIRMATION
+                            - LIVENESS
+                            - ADDRESS
+                      id:
+                        type: string
+                        description: Unique identifier for the question.
+        description: RFI response.
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RfiSession'
+        '400':
+          description: '["invalid_state_for_operation"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '403':
+          description: '["account_not_authorised_for_operation"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: '["resource_not_found"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too many requests
+        '500':
+          description: '["internal_server_error"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/rfis/request_for_information_rfi_id/respond
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          questions:
+          - answer:
+              address:
+                address_line1: 200 Collins Street
+                address_line2: 200 Collins Street
+                country_code: AU
+                postcode: '3000'
+                state: VIC
+                suburb: Melbourne
+              attachments:
+              - file_id: ZTEyOWJjZTItZGI5NS00NzI5LWI1YTQtZmQ2MmZlNDEwNzFlLHwsaG9uZ2tvbmcsfCzpvI7og5xDSS5wZGZfMTY4MzI1Nzg5OTUwOQ
+              identity_document:
+                back_file_id: N2EwYTllMTgtZmZjOS00ZDllLWI1MDQtMDMyZjAzZTRjZWE0LHwsLHwsQ05fQkxfbmV3LnBuZ18xNjgzNTUyNjg3Nzg3
+                front_file_id: N2EwYTllMTgtZmZjOS00ZDllLWI1MDQtMDMyZjAzZTRjZWE0LHwsLHwsQ05fQkxfbmV3LnBuZ18xNjgzNTUyNjg3Nzg3
+                issuing_country: AU
+                number: '123456789'
+                type: DRIVING_LICENSE
+              type: TEXT
+            id: ba7bfb51-77bc-4991-b651-0969ece1d263
+        response_body:
+          account_id: acct_e_2wbiZ3Mx-ynlX-7Qidbg
+          active_request:
+            created_at: 2023-04-12T07:29:36+0000
+            expires_at: 2023-04-19T07:29:36+0000
+            questions:
+            - answer:
+                address:
+                  address_line1: 200 Collins Street
+                  address_line2: 200 Collins Street
+                  country_code: AU
+                  postcode: '3000'
+                  state: VIC
+                  suburb: Melbourne
+                attachments:
+                - file_id: ZTEyOWJjZTItZGI5NS00NzI5LWI1YTQtZmQ2MmZlNDEwNzFlLHwsaG9uZ2tvbmcsfCzpvI7og5xDSS5wZGZfMTY4MzI1Nzg5OTUwOQ
+                identity_document:
+                  back_file_id: N2EwYTllMTgtZmZjOS00ZDllLWI1MDQtMDMyZjAzZTRjZWE0LHwsLHwsQ05fQkxfbmV3LnBuZ18xNjgzNTUyNjg3Nzg3
+                  front_file_id: N2EwYTllMTgtZmZjOS00ZDllLWI1MDQtMDMyZjAzZTRjZWE0LHwsLHwsQ05fQkxfbmV3LnBuZ18xNjgzNTUyNjg3Nzg3
+                  issuing_country: AU
+                  number: '123456789'
+                  type: DRIVING_LICENSE
+                type: TEXT
+              attachments:
+              - file_id: ZTEyOWJjZTItZGI5NS00NzI5LWI1YTQtZmQ2MmZlNDEwNzFlLHwsaG9uZ2tvbmcsfCzpvI7og5xDSS5wZGZfMTY4MzI1Nzg5OTUwOQ
+              comment: Please provide more information
+              description:
+                en: Information confirmation
+                zh: 信息确认
+              id: ba7bfb51-77bc-4991-b651-0969ece1d263
+              key: PROOF_OF_ADDRESS
+              liveness:
+                status: NOT_STARTED
+              sources:
+              - id: 318ce9e9-c370-42bd-8192-e78283770c43
+                person:
+                  first_name: John
+                  last_name: Smith
+                type: CARDHOLDER
+              title:
+                en: Information confirmation
+                zh: 信息确认
+              uploaded_orders:
+              - order_id: e10a8291-fabb-480d-a208-7c8f1c2cc5ec
+            updated_at: 2023-04-14T07:29:36+0000
+          answered_requests:
+          - created_at: 2023-04-12T07:29:36+0000
+            expires_at: 2023-04-19T07:29:36+0000
+            questions:
+            - answer:
+                address:
+                  address_line1: 200 Collins Street
+                  address_line2: 200 Collins Street
+                  country_code: AU
+                  postcode: '3000'
+                  state: VIC
+                  suburb: Melbourne
+                attachments:
+                - file_id: ZTEyOWJjZTItZGI5NS00NzI5LWI1YTQtZmQ2MmZlNDEwNzFlLHwsaG9uZ2tvbmcsfCzpvI7og5xDSS5wZGZfMTY4MzI1Nzg5OTUwOQ
+                identity_document:
+                  back_file_id: N2EwYTllMTgtZmZjOS00ZDllLWI1MDQtMDMyZjAzZTRjZWE0LHwsLHwsQ05fQkxfbmV3LnBuZ18xNjgzNTUyNjg3Nzg3
+                  front_file_id: N2EwYTllMTgtZmZjOS00ZDllLWI1MDQtMDMyZjAzZTRjZWE0LHwsLHwsQ05fQkxfbmV3LnBuZ18xNjgzNTUyNjg3Nzg3
+                  issuing_country: AU
+                  number: '123456789'
+                  type: DRIVING_LICENSE
+                type: TEXT
+              attachments:
+              - file_id: ZTEyOWJjZTItZGI5NS00NzI5LWI1YTQtZmQ2MmZlNDEwNzFlLHwsaG9uZ2tvbmcsfCzpvI7og5xDSS5wZGZfMTY4MzI1Nzg5OTUwOQ
+              comment: Please provide more information
+              description:
+                en: Information confirmation
+                zh: 信息确认
+              id: ba7bfb51-77bc-4991-b651-0969ece1d263
+              key: PROOF_OF_ADDRESS
+              liveness:
+                status: NOT_STARTED
+              sources:
+              - id: 318ce9e9-c370-42bd-8192-e78283770c43
+                person:
+                  first_name: John
+                  last_name: Smith
+                type: CARDHOLDER
+              title:
+                en: Information confirmation
+                zh: 信息确认
+              uploaded_orders:
+              - order_id: e10a8291-fabb-480d-a208-7c8f1c2cc5ec
+            updated_at: 2023-04-14T07:29:36+0000
+          created_at: 2023-04-11T07:29:36+0000
+          id: de73d13b-cb60-4541-8fa6-4bc50c1cbe92
+          status: ACTION_REQUIRED
+          sub_type: TRANSACTION_MONITORING
+          type: KYC
+          updated_at: 2023-04-12T07:29:36+0000
+      x-scope:
+      - scope: risk.rfi:write
+        group: Risk
+        resource_name: Request for Information (RFI)
+      x-domain: Risk
+      x-resource: Request for Information (RFI)
+      x-urlPath: respond_rfis
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    PagedRfiSessionQueryResult:
+      type: object
+      properties:
+        items:
+          type: array
+          description: Paged results.
+          items:
+            $ref: '#/components/schemas/RfiSession'
+        page_after:
+          type: string
+          description: A bookmark for use in pagination to retrieve the next page of results. Provide this identifier in the page request parameter in a subsequent call to retrieve the next page of results. The value will be null for the last page.
+        page_before:
+          type: string
+          description: A bookmark for use in pagination to retrieve the previous page of results. Provide this identifier in the page request parameter in a subsequent call to retrieve the previous page of results. The value will be null for the first page.
+    RfiSupportingDoc:
+      type: object
+      properties:
+        file_id:
+          type: string
+          description: File id used in File Service API to get file download link.
+    RfiIdentityDocument:
+      type: object
+      properties:
+        back_file_id:
+          type: string
+          description: File id of the photo of the back of the document.
+        front_file_id:
+          type: string
+          description: File id of the photo of the front of the document.
+        issuing_country:
+          type: string
+          description: Country issuing the document. (2-letter ISO 3166-2 country code).
+        number:
+          type: string
+          description: Identity number.
+        type:
+          type: string
+          description: Type of identity document. One of `DRIVING_LICENSE`,`PASSPORT`,`IDENTITY_CARD`,`MEDICARE_CARD`,`SSN`,`ITIN`.
+      description: Response for `IDENTITY_DOCUMENT` type.
+    UploadedOrder:
+      type: object
+      properties:
+        order_id:
+          type: string
+          description: Unique identifier of the uploaded order.
+    RfiAddress:
+      type: object
+      properties:
+        address_line1:
+          type: string
+          description: The first line of a physical address, typically including the street number and name of the building or residence. A P.O. box is not acceptable.
+        address_line2:
+          type: string
+          description: An optional field that can be used to capture additional information about the address, such as the apartment/ suite number, or floor number.
+        country_code:
+          type: string
+          description: Country code. (2-letter ISO 3166-2 country code).
+        postcode:
+          type: string
+          description: Postcode or zip code. Only applicable if relevant to selected country.
+        state:
+          type: string
+          description: Name of state. Only applicable if relevant to selected country.
+        suburb:
+          type: string
+          description: Name of city/suburb.
+      description: Response for `ADDRESS` type.
+    RfiRequestItemSource:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the source.
+        person:
+          $ref: '#/components/schemas/RfiRequestItemSourcePerson'
+          description: Information for `PERSON` source.
+        type:
+          type: string
+          description: 'The type of the source. Type of values and their corresponding API:
+
+
+
+            -   `PERSON`: [Get account by ID](/docs/api/scale/accounts/retrieve)
+
+
+            -   `BUSINESS`: match `account_details.business_person_details.person_id` with the source id
+
+            -   `INDIVIDUAL`: match `account_details.individual_details.person_id` with the source id
+
+            -   If there is no matched person on your account, this indicates that Airwallex has introduced a new individual during the review process. Once verification is complete, this person will be added to your account.
+
+
+            -   `CARDHOLDER`: [Get cardholder details](/docs/api/issuing/cardholders/retrieve)
+
+            -   `PAYMENT_INTENT`: [Retrieve a PaymentIntent](/docs/api/payments/payment_intents/retrieve)
+
+
+            For `TRANSACTION` RFI:
+
+
+            -   `CHARGE`: [Get a charge by ID](/docs/api/scale/charges/retrieve)
+
+            -   `CONNECTED_ACCOUNT_TRANSFER`: [Get a connected account transfer by ID](/docs/api/scale/connected_account_transfers/retrieve)
+
+            -   `DIRECT_DEBIT`: [Get direct debit by ID](/docs/api/core_resources/direct_debits/retrieve)
+
+            -   `DEPOSIT`: [Get a deposit by ID](/docs/api/core_resources/deposits/retrieve)
+
+            -   `TRANSFER`: [Get a transfer by ID](/docs/api/payouts/transfers/retrieve).'
+    RfiRequestItem:
+      type: object
+      properties:
+        answer:
+          $ref: '#/components/schemas/RfiRequestItemResponse'
+          description: Response to the question.
+        attachments:
+          type: array
+          description: The supporting documents of the question.
+          items:
+            $ref: '#/components/schemas/RfiSupportingDoc'
+        comment:
+          type: string
+          description: Additional description for this question.
+        description:
+          $ref: '#/components/schemas/RfiRequestItemContent'
+          description: The description of the question.
+        id:
+          type: string
+          description: Unique identifier for the question.
+        key:
+          type: string
+          description: "The unique coded value for the RFI scenario the question relates to. This field is used to support automation of RFI responses from the platform for well defined business requirements  \n  \nPossible values:  \n\n-   `PROOF_OF_ADDRESS`\n-   `ID_COPY`."
+        liveness:
+          $ref: '#/components/schemas/Liveness'
+          description: Information for the `LIVENESS` type questions.
+        sources:
+          type: array
+          description: In the case where a question is linked to a specific source (such as a cardholder) then the source will be specified.
+          items:
+            $ref: '#/components/schemas/RfiRequestItemSource'
+        title:
+          $ref: '#/components/schemas/RfiRequestItemContent'
+          description: The title of the question.
+        uploaded_orders:
+          type: array
+          description: The uploaded orders which are related to the transaction, only applicable for `TRANSACTION` RFI.
+          items:
+            $ref: '#/components/schemas/UploadedOrder'
+    RfiFileId:
+      type: object
+      properties:
+        file_id:
+          type: string
+          description: File id provided in the response from the File Service API.
+    RfiRequestItemContent:
+      type: object
+      properties:
+        en:
+          type: string
+          description: Content in English.
+        zh:
+          type: string
+          description: Content in Chinese.
+      description: The description of the question.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    RfiRequest:
+      type: object
+      properties:
+        created_at:
+          type: string
+          description: Timestamp the RFI request was created.
+        expires_at:
+          type: string
+          description: Timestamp the RFI request will expire, and the RFI status will be transited to `CLOSED`.
+        questions:
+          type: array
+          description: List of questions.
+          items:
+            $ref: '#/components/schemas/RfiRequestItem'
+        updated_at:
+          type: string
+          description: The latest timestamp the RFI request was updated.
+      description: The current RFI request you are required to respond to.
+    RfiSession:
+      type: object
+      properties:
+        account_id:
+          type: string
+          description: Airwallex account unique identifier.
+        active_request:
+          $ref: '#/components/schemas/RfiRequest'
+          description: The current RFI request you are required to respond to.
+        answered_requests:
+          type: array
+          description: The list of RFI requests that have already been responded to.
+          items:
+            $ref: '#/components/schemas/RfiRequest'
+        created_at:
+          type: string
+          description: Timestamp the RFI was created.
+        id:
+          type: string
+          description: Unique identifier for the RFI.
+        status:
+          type: string
+          description: "The status of the RFI. Possible values:  \n  \n\n-   `ACTION_REQUIRED`: Airwallex requires you to respond to the RFI request\n-   `ANSWERED`: You have already responded to the RFI request and your response is being reviewed by Airwallex\n-   `CLOSED`: The review is complete and no further information is required."
+        sub_type:
+          type: string
+          description: "The sub type of RFI.  \nFor `TRANSACTION` RFI:  \n-   `TRANSACTION_MONITORING`: Internal transaction monitoring\n-   `TRANSACTION_SCREENING`: Internal transaction screening\n-   `BANKING_PARTNER_INQUIRY`: External banking partner inquiry."
+        type:
+          type: string
+          description: The type of RFI. Currently supports `KYC`, `KYC_ONGOING`, `CARDHOLDER`, `TRANSACTION`, `PAYMENT_ENABLEMENT` and `MERCHANT_RISK` types.
+        updated_at:
+          type: string
+          description: The latest timestamp the RFI was updated.
+    Liveness:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The status of the liveness verification.
+          enum:
+          - NOT_STARTED
+          - STARTED
+          - SUBMITTED
+          - SUCCEEDED
+          - FAILED
+        url:
+          type: string
+          description: "This URL is used for liveness verification, necessary in certain cases. Ensure recipients open it on their mobile devices, equipped with a valid ID or passport and a working camera.  \n  \nPlease note:  \n\n-   If `LIVENESS` is the only question in the RFI, the `Respond to an RFI` API does not need a separate call. It will be auto-resolved after verification.\n-   For RFIs with both `LIVENESS` and other questions, please complete liveness verification before responding to the rest."
+      description: Information for the `LIVENESS` type questions.
+    RfiRequestItemSourcePerson:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: First name of the person.
+        last_name:
+          type: string
+          description: Last name of the person.
+      description: Information for `PERSON` source.
+    RfiRequestItemResponse:
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/RfiAddress'
+          description: Response for `ADDRESS` type.
+        attachments:
+          type: array
+          description: Response for `ATTACHMENT` type.
+          items:
+            $ref: '#/components/schemas/RfiFileId'
+        comment:
+          type: string
+          description: comment for this response.
+        confirmed:
+          type: boolean
+          description: Response for `CONFIRMATION` type.
+        identity_document:
+          $ref: '#/components/schemas/RfiIdentityDocument'
+          description: Response for `IDENTITY_DOCUMENT` type.
+        text:
+          type: string
+          description: Response for `TEXT` type.
+        type:
+          type: string
+          description: The type of response to the question.
+          enum:
+          - TEXT
+          - ATTACHMENT
+          - IDENTITY_DOCUMENT
+          - CONFIRMATION
+          - LIVENESS
+          - ADDRESS
+      description: Response to the question.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

@@ -1,0 +1,147 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Risk > Fraud Feedback (Issuing) API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Risk > Fraud Feedback (Issuing)
+  description: 'The **Fraud Feedback** API may be used to confirm whether an issuing transaction was authorized or not authorized by the cardholder. A transaction confirmed to be authorized will allow Airwallex to better understand the cardholder''s transaction patterns and increase the success rate of similar transactions. A transaction confirmed not to have been authorized by the cardholder will be labelled as fraudulent and the card will be blocked.
+
+
+    Please note all future transactions on a blocked card will be blocked. If you require a card to be unblocked please contact support.
+
+
+    Frozen cards may be unfrozen via the update a Card API.'
+  x-domain: Risk
+  x-resource: Fraud Feedback (Issuing)
+  x-urlPath: risk/fraud_feedback_issuing
+paths:
+  /api/v1/risk/issuing/fraud_feedback:
+    post:
+      tags:
+      - Risk > Fraud Feedback (Issuing)
+      summary: 1|Fraud Feedback (Issuing)
+      description: Create a confirmation on whether a transaction was authorized by the cardholder.
+      operationId: issuingFraudFeedback
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - authorization_id
+              properties:
+                authorization_id:
+                  type: string
+                  description: Unique id for the authorization.
+                cardholder_decision:
+                  type: string
+                  description: The cardholder authorization status. Use `AUTHORIZED_BY_CARDHOLDER`, `NOT_AUTHORIZED_BY_CARDHOLDER`.
+        description: userAuthorizationRespondRequest
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAuthorizationRespond'
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: '["invalid_state_for_operation"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+        '403':
+          description: '["account_not_authorised_for_operation"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: '["resource_not_found"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: '["internal_server_error"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/risk/issuing/fraud_feedback
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          authorization_id: authorization_id
+          cardholder_decision: AUTHORIZED_BY_CARDHOLDER
+        response_body:
+          authorization_id: authorization_id
+          card_id: card_id
+          cardholder_decision: AUTHORIZED_BY_CARDHOLDER
+      x-scope:
+      - scope: risk.issuing_fraud_feedback:write
+        group: Risk
+        resource_name: Issuing Fraud Feedback
+      x-domain: Risk
+      x-resource: Fraud Feedback (Issuing)
+      x-urlPath: fraud_feedback_issuing
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    UserAuthorizationRespond:
+      type: object
+      properties:
+        authorization_id:
+          type: string
+          description: Unique id for the authorization.
+        card_id:
+          type: string
+          description: Card id for the authorization.
+        cardholder_decision:
+          type: string
+          description: User Response to authorization.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

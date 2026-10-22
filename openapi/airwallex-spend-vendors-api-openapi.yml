@@ -1,0 +1,1877 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Spend > Vendors API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Spend > Vendors
+  description: Manages vendor records for accounts payable and purchase order workflows. Supports vendor creation, retrieval, listing with filters, and sync status updates for integration with external accounting systems.
+  x-domain: Spend
+  x-resource: Vendors
+  x-urlPath: spend/vendors
+paths:
+  /api/v1/spend/vendors/create:
+    post:
+      tags:
+      - Spend > Vendors
+      x-stage: beta
+      summary: 1|Create a Vendor
+      description: Creates a new vendor.
+      operationId: createVendor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - external_id
+              - legal_entity_ids
+              - name
+              - request_id
+              - status
+              - sync_status
+              properties:
+                request_id:
+                  type: string
+                  description: Unique identifier for this request to ensure idempotency. To prevent accidental duplication, clients should generate a random UUID.
+                external_id:
+                  type: string
+                  description: External identifier for this vendor in your system.
+                name:
+                  type: string
+                  description: Name of the vendor.
+                legal_entity_ids:
+                  type: array
+                  description: List of unique identifiers of the legal entities associated with the vendor.
+                  items:
+                    type: string
+                    description: List of unique identifiers of the legal entities associated with the vendor.
+                status:
+                  type: string
+                  description: Vendor status.
+                  enum:
+                  - DRAFT
+                  - AWAITING_APPROVAL
+                  - ACTIVE
+                  - ARCHIVED
+                sync_status:
+                  type: string
+                  description: Sync status for an accounting system.
+                  enum:
+                  - NOT_SYNCED
+                  - SYNCED
+                  - SYNC_FAILED
+                owner_email:
+                  type: string
+                  description: Email of the vendor owner.
+                business_registration_number:
+                  type: string
+                  description: Business registration number of the vendor.
+                business_name:
+                  type: string
+                  description: Business/legal name of the vendor.
+                country_code:
+                  type: string
+                  description: Country code of the vendor (ISO 3166-1 alpha-2).
+                  enum:
+                  - UNDEFINED
+                  - AC
+                  - AD
+                  - AE
+                  - AF
+                  - AG
+                  - AI
+                  - AL
+                  - AM
+                  - AN
+                  - AO
+                  - AQ
+                  - AR
+                  - AS
+                  - AT
+                  - AU
+                  - AW
+                  - AX
+                  - AZ
+                  - BA
+                  - BB
+                  - BD
+                  - BE
+                  - BF
+                  - BG
+                  - BH
+                  - BI
+                  - BJ
+                  - BL
+                  - BM
+                  - BN
+                  - BO
+                  - BQ
+                  - BR
+                  - BS
+                  - BT
+                  - BU
+                  - BV
+                  - BW
+                  - BY
+                  - BZ
+                  - CA
+                  - CC
+                  - CD
+                  - CF
+                  - CG
+                  - CH
+                  - CI
+                  - CK
+                  - CL
+                  - CM
+                  - CN
+                  - CO
+                  - CP
+                  - CR
+                  - CS
+                  - CU
+                  - CV
+                  - CW
+                  - CX
+                  - CY
+                  - CZ
+                  - DE
+                  - DG
+                  - DJ
+                  - DK
+                  - DM
+                  - DO
+                  - DZ
+                  - EA
+                  - EC
+                  - EE
+                  - EG
+                  - EH
+                  - ER
+                  - ES
+                  - ET
+                  - EU
+                  - EZ
+                  - FI
+                  - FJ
+                  - FK
+                  - FM
+                  - FO
+                  - FR
+                  - FX
+                  - GA
+                  - GB
+                  - GD
+                  - GE
+                  - GF
+                  - GG
+                  - GH
+                  - GI
+                  - GL
+                  - GM
+                  - GN
+                  - GP
+                  - GQ
+                  - GR
+                  - GS
+                  - GT
+                  - GU
+                  - GW
+                  - GY
+                  - HK
+                  - HM
+                  - HN
+                  - HR
+                  - HT
+                  - HU
+                  - IC
+                  - ID
+                  - IE
+                  - IL
+                  - IM
+                  - IN
+                  - IO
+                  - IQ
+                  - IR
+                  - IS
+                  - IT
+                  - JE
+                  - JM
+                  - JO
+                  - JP
+                  - KE
+                  - KG
+                  - KH
+                  - KI
+                  - KM
+                  - KN
+                  - KP
+                  - KR
+                  - KW
+                  - KY
+                  - KZ
+                  - LA
+                  - LB
+                  - LC
+                  - LI
+                  - LK
+                  - LR
+                  - LS
+                  - LT
+                  - LU
+                  - LV
+                  - LY
+                  - MA
+                  - MC
+                  - MD
+                  - ME
+                  - MF
+                  - MG
+                  - MH
+                  - MK
+                  - ML
+                  - MM
+                  - MN
+                  - MO
+                  - MP
+                  - MQ
+                  - MR
+                  - MS
+                  - MT
+                  - MU
+                  - MV
+                  - MW
+                  - MX
+                  - MY
+                  - MZ
+                  - NA
+                  - NC
+                  - NE
+                  - NF
+                  - NG
+                  - NI
+                  - NL
+                  - 'NO'
+                  - NP
+                  - NR
+                  - NT
+                  - NU
+                  - NZ
+                  - OM
+                  - PA
+                  - PE
+                  - PF
+                  - PG
+                  - PH
+                  - PK
+                  - PL
+                  - PM
+                  - PN
+                  - PR
+                  - PS
+                  - PT
+                  - PW
+                  - PY
+                  - QA
+                  - RE
+                  - RO
+                  - RS
+                  - RU
+                  - RW
+                  - SA
+                  - SB
+                  - SC
+                  - SD
+                  - SE
+                  - SF
+                  - SG
+                  - SH
+                  - SI
+                  - SJ
+                  - SK
+                  - SL
+                  - SM
+                  - SN
+                  - SO
+                  - SR
+                  - SS
+                  - ST
+                  - SU
+                  - SV
+                  - SX
+                  - SY
+                  - SZ
+                  - TA
+                  - TC
+                  - TD
+                  - TF
+                  - TG
+                  - TH
+                  - TJ
+                  - TK
+                  - TL
+                  - TM
+                  - TN
+                  - TO
+                  - TP
+                  - TR
+                  - TT
+                  - TV
+                  - TW
+                  - TZ
+                  - UA
+                  - UG
+                  - UK
+                  - UM
+                  - US
+                  - UY
+                  - UZ
+                  - VA
+                  - VC
+                  - VE
+                  - VG
+                  - VI
+                  - VN
+                  - VU
+                  - WF
+                  - WS
+                  - XI
+                  - XU
+                  - XK
+                  - YE
+                  - YT
+                  - YU
+                  - ZA
+                  - ZM
+                  - ZR
+                  - ZW
+                address:
+                  type: object
+                  properties:
+                    street_address:
+                      type: string
+                      description: Street address line.
+                    city:
+                      type: string
+                      description: City, district, suburb, or town.
+                    state:
+                      type: string
+                      description: State, province, or region.
+                    postcode:
+                      type: string
+                      description: Postal/ZIP code.
+                    country_code:
+                      type: string
+                      description: Country code (ISO 3166-1 alpha-2).
+                      enum:
+                      - UNDEFINED
+                      - AC
+                      - AD
+                      - AE
+                      - AF
+                      - AG
+                      - AI
+                      - AL
+                      - AM
+                      - AN
+                      - AO
+                      - AQ
+                      - AR
+                      - AS
+                      - AT
+                      - AU
+                      - AW
+                      - AX
+                      - AZ
+                      - BA
+                      - BB
+                      - BD
+                      - BE
+                      - BF
+                      - BG
+                      - BH
+                      - BI
+                      - BJ
+                      - BL
+                      - BM
+                      - BN
+                      - BO
+                      - BQ
+                      - BR
+                      - BS
+                      - BT
+                      - BU
+                      - BV
+                      - BW
+                      - BY
+                      - BZ
+                      - CA
+                      - CC
+                      - CD
+                      - CF
+                      - CG
+                      - CH
+                      - CI
+                      - CK
+                      - CL
+                      - CM
+                      - CN
+                      - CO
+                      - CP
+                      - CR
+                      - CS
+                      - CU
+                      - CV
+                      - CW
+                      - CX
+                      - CY
+                      - CZ
+                      - DE
+                      - DG
+                      - DJ
+                      - DK
+                      - DM
+                      - DO
+                      - DZ
+                      - EA
+                      - EC
+                      - EE
+                      - EG
+                      - EH
+                      - ER
+                      - ES
+                      - ET
+                      - EU
+                      - EZ
+                      - FI
+                      - FJ
+                      - FK
+                      - FM
+                      - FO
+                      - FR
+                      - FX
+                      - GA
+                      - GB
+                      - GD
+                      - GE
+                      - GF
+                      - GG
+                      - GH
+                      - GI
+                      - GL
+                      - GM
+                      - GN
+                      - GP
+                      - GQ
+                      - GR
+                      - GS
+                      - GT
+                      - GU
+                      - GW
+                      - GY
+                      - HK
+                      - HM
+                      - HN
+                      - HR
+                      - HT
+                      - HU
+                      - IC
+                      - ID
+                      - IE
+                      - IL
+                      - IM
+                      - IN
+                      - IO
+                      - IQ
+                      - IR
+                      - IS
+                      - IT
+                      - JE
+                      - JM
+                      - JO
+                      - JP
+                      - KE
+                      - KG
+                      - KH
+                      - KI
+                      - KM
+                      - KN
+                      - KP
+                      - KR
+                      - KW
+                      - KY
+                      - KZ
+                      - LA
+                      - LB
+                      - LC
+                      - LI
+                      - LK
+                      - LR
+                      - LS
+                      - LT
+                      - LU
+                      - LV
+                      - LY
+                      - MA
+                      - MC
+                      - MD
+                      - ME
+                      - MF
+                      - MG
+                      - MH
+                      - MK
+                      - ML
+                      - MM
+                      - MN
+                      - MO
+                      - MP
+                      - MQ
+                      - MR
+                      - MS
+                      - MT
+                      - MU
+                      - MV
+                      - MW
+                      - MX
+                      - MY
+                      - MZ
+                      - NA
+                      - NC
+                      - NE
+                      - NF
+                      - NG
+                      - NI
+                      - NL
+                      - 'NO'
+                      - NP
+                      - NR
+                      - NT
+                      - NU
+                      - NZ
+                      - OM
+                      - PA
+                      - PE
+                      - PF
+                      - PG
+                      - PH
+                      - PK
+                      - PL
+                      - PM
+                      - PN
+                      - PR
+                      - PS
+                      - PT
+                      - PW
+                      - PY
+                      - QA
+                      - RE
+                      - RO
+                      - RS
+                      - RU
+                      - RW
+                      - SA
+                      - SB
+                      - SC
+                      - SD
+                      - SE
+                      - SF
+                      - SG
+                      - SH
+                      - SI
+                      - SJ
+                      - SK
+                      - SL
+                      - SM
+                      - SN
+                      - SO
+                      - SR
+                      - SS
+                      - ST
+                      - SU
+                      - SV
+                      - SX
+                      - SY
+                      - SZ
+                      - TA
+                      - TC
+                      - TD
+                      - TF
+                      - TG
+                      - TH
+                      - TJ
+                      - TK
+                      - TL
+                      - TM
+                      - TN
+                      - TO
+                      - TP
+                      - TR
+                      - TT
+                      - TV
+                      - TW
+                      - TZ
+                      - UA
+                      - UG
+                      - UK
+                      - UM
+                      - US
+                      - UY
+                      - UZ
+                      - VA
+                      - VC
+                      - VE
+                      - VG
+                      - VI
+                      - VN
+                      - VU
+                      - WF
+                      - WS
+                      - XI
+                      - XU
+                      - XK
+                      - YE
+                      - YT
+                      - YU
+                      - ZA
+                      - ZM
+                      - ZR
+                      - ZW
+                  description: Address.
+                contacts:
+                  type: array
+                  description: List of vendor contacts associated with the vendor.
+                  items:
+                    type: object
+                    properties:
+                      contact_name:
+                        type: string
+                        description: Full name of the vendor contact.
+                      email:
+                        type: string
+                        description: Email address of the vendor contact.
+                      phone_number:
+                        type: string
+                        description: Phone number in E.164 format.
+                    description: Vendor Contact.
+                attachments:
+                  type: array
+                  description: List of file IDs to attach to the vendor. Upload each file with [Upload a file](/docs/api/supporting_services/file_service/upload_files) first, setting `purpose` to `SPEND_ATTACHMENT`.
+                  items:
+                    type: string
+                    format: uuid
+                    description: Unique identifier of an uploaded file.
+              description: Vendor Creation Payload.
+        required: true
+      responses:
+        '201':
+          description: Vendor created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vendor'
+        '400':
+          description: Invalid Request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/spend/vendors/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          attachments:
+          - cea842bd-b6b8-4f70-bfa5-4d28e7978db7
+          request_id: 985461d5-016f-4e1f-a387-5f1380b42d92
+          external_id: VENDOR-EXT-001
+          name: Airwallex
+          legal_entity_ids:
+          - le_U3jlHqQRNHWn2zAKeeT8sg
+          - le_V4kmIrRSOMXo3bBLffU9th
+          status: ACTIVE
+          sync_status: SYNCED
+          owner_email: example@airwallex.com
+          business_registration_number: '123456789'
+          business_name: Airwallex Pty Ltd
+          country_code: US
+          address:
+            street_address: 123 Main Street
+            city: San Francisco
+            state: California
+            postcode: '94105'
+            country_code: US
+          contacts:
+          - contact_name: Airwallex
+            email: example@airwallex.com
+            phone_number: '+61499999999'
+        response_body:
+          id: 985461d5-016f-4e1f-a387-5f1380b42d92
+          legal_entity_ids:
+          - le_U3jlHqQRNHWn2zAKeeT8sg
+          - le_V4kmIrRSOMXo3bBLffU9th
+          name: Airwallex
+          business_name: Airwallex Pty Ltd
+          country_code: US
+          address:
+            street_address: 123 Main Street
+            city: San Francisco
+            state: California
+            postcode: '94105'
+            country_code: US
+          status: ACTIVE
+          sync_status: SYNCED
+          sync_error_message: 'Failed to sync vendor: a vendor with this name already exists.'
+          approvers:
+          - approver1@airwallex.com
+          - approver2@airwallex.com
+          owner_email: example@airwallex.com
+          business_registration_number: '123456789'
+          external_id: VENDOR-EXT-001
+          contacts:
+          - contact_name: Airwallex
+            email: example@airwallex.com
+            phone_number: '+61499999999'
+          attachments:
+          - id: cea842bd-b6b8-4f70-bfa5-4d28e7978db7
+            content_type: application/pdf
+            file_name: vendor_agreement.pdf
+            file_url: https://www.airwallex.com/vendor_agreement.pdf
+            created_at: '2025-02-02T00:00:00Z'
+          comments:
+          - content: Expense approved - valid business purpose confirmed
+            created_by: manager@company.com
+            created_at: '2025-01-01T00:00:00Z'
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-02-02T00:00:00Z'
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: spend.vendor:write
+        group: Spend
+        resource_name: Vendors
+      x-domain: Spend
+      x-resource: Vendors
+      x-urlPath: create
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/spend/vendors/{id}:
+    get:
+      tags:
+      - Spend > Vendors
+      x-stage: beta
+      summary: 2|Retrieve a Vendor
+      description: Retrieves the details of an existing vendor.
+      operationId: retrieveVendor
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the vendor.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vendor'
+        '400':
+          description: Invalid Request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/spend/vendors/vendor_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: 985461d5-016f-4e1f-a387-5f1380b42d92
+          legal_entity_ids:
+          - le_U3jlHqQRNHWn2zAKeeT8sg
+          - le_V4kmIrRSOMXo3bBLffU9th
+          name: Airwallex
+          business_name: Airwallex Pty Ltd
+          country_code: US
+          address:
+            street_address: 123 Main Street
+            city: San Francisco
+            state: California
+            postcode: '94105'
+            country_code: US
+          status: ACTIVE
+          sync_status: SYNCED
+          sync_error_message: 'Failed to sync vendor: a vendor with this name already exists.'
+          approvers:
+          - approver1@airwallex.com
+          - approver2@airwallex.com
+          owner_email: example@airwallex.com
+          business_registration_number: '123456789'
+          external_id: VENDOR-EXT-001
+          contacts:
+          - contact_name: Airwallex
+            email: example@airwallex.com
+            phone_number: '+61499999999'
+          attachments:
+          - id: cea842bd-b6b8-4f70-bfa5-4d28e7978db7
+            content_type: application/pdf
+            file_name: vendor_agreement.pdf
+            file_url: https://www.airwallex.com/vendor_agreement.pdf
+            created_at: '2025-02-02T00:00:00Z'
+          comments:
+          - content: Expense approved - valid business purpose confirmed
+            created_by: manager@company.com
+            created_at: '2025-01-01T00:00:00Z'
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-02-02T00:00:00Z'
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: spend.vendor:read
+        group: Spend
+        resource_name: Vendors
+      x-domain: Spend
+      x-resource: Vendors
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/spend/vendors:
+    get:
+      tags:
+      - Spend > Vendors
+      x-stage: beta
+      summary: 3|List all Vendors
+      description: Returns a list of vendors filtered by the specified query parameters.
+      operationId: listVendors
+      parameters:
+      - name: page
+        in: query
+        description: A bookmark for use in pagination to retrieve either the next page or the previous page of results. You can fetch the value for this identifier from the response of the previous API call.
+        required: false
+        schema:
+          type: string
+      - name: page_size
+        in: query
+        description: The number of items returned per page, between 1 and 100. The default is 100.
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 100
+      - name: from_created_at
+        in: query
+        description: Filter by vendors created after this timestamp (inclusive) in ISO8601 format. If not specified, defaults to last 30 days from `to_created_at`.
+        required: false
+        schema:
+          type: string
+      - name: to_created_at
+        in: query
+        description: Filter by vendors created before this timestamp (exclusive) in ISO8601 format. If not specified, defaults to now.
+        required: false
+        schema:
+          type: string
+      - name: from_updated_at
+        in: query
+        description: Filter by vendors updated after this timestamp (inclusive) in ISO8601 format.
+        required: false
+        schema:
+          type: string
+      - name: to_updated_at
+        in: query
+        description: Filter by vendors updated before this timestamp (exclusive) in ISO8601 format.
+        required: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: Filter by vendor status.
+        required: false
+        schema:
+          type: string
+          enum:
+          - DRAFT
+          - AWAITING_APPROVAL
+          - ACTIVE
+          - ARCHIVED
+      - name: sync_status
+        in: query
+        description: Filter by sync status.
+        required: false
+        schema:
+          type: string
+          enum:
+          - NOT_SYNCED
+          - SYNCED
+          - SYNC_FAILED
+      - name: legal_entity_id
+        in: query
+        description: Filter by legal entity unique identifier.
+        required: false
+        schema:
+          type: string
+      - name: external_id
+        in: query
+        description: Filter by vendor external unique identifier.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VendorPagination'
+        '400':
+          description: Invalid Request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/spend/vendors
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - id: 985461d5-016f-4e1f-a387-5f1380b42d92
+            legal_entity_ids:
+            - le_U3jlHqQRNHWn2zAKeeT8sg
+            - le_V4kmIrRSOMXo3bBLffU9th
+            name: Airwallex
+            business_name: Airwallex Pty Ltd
+            country_code: US
+            address:
+              street_address: 123 Main Street
+              city: San Francisco
+              state: California
+              postcode: '94105'
+              country_code: US
+            status: ACTIVE
+            sync_status: SYNCED
+            sync_error_message: 'Failed to sync vendor: a vendor with this name already exists.'
+            approvers:
+            - approver1@airwallex.com
+            - approver2@airwallex.com
+            owner_email: example@airwallex.com
+            business_registration_number: '123456789'
+            external_id: VENDOR-EXT-001
+            contacts:
+            - contact_name: Airwallex
+              email: example@airwallex.com
+              phone_number: '+61499999999'
+            attachments:
+            - id: cea842bd-b6b8-4f70-bfa5-4d28e7978db7
+              content_type: application/pdf
+              file_name: vendor_agreement.pdf
+              file_url: https://www.airwallex.com/vendor_agreement.pdf
+              created_at: '2025-02-02T00:00:00Z'
+            comments:
+            - content: Expense approved - valid business purpose confirmed
+              created_by: manager@company.com
+              created_at: '2025-01-01T00:00:00Z'
+            created_at: '2025-01-01T00:00:00Z'
+            updated_at: '2025-02-02T00:00:00Z'
+          page_after: eyJwYWdlX2JlZm9yZSI6IjIwMjUtMDctMDFUMDA6MDA6MDBaIn0=
+          page_before: eyJwYWdlX2JlZm9yZSI6IjIwMjUtMDctMDFUMDA6MDA6MDBaIn0=
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: spend.vendor:read
+        group: Spend
+        resource_name: Vendors
+      x-domain: Spend
+      x-resource: Vendors
+      x-urlPath: list
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/spend/vendors/{id}/sync:
+    post:
+      tags:
+      - Spend > Vendors
+      x-stage: beta
+      summary: 4|Update Vendor Sync Status
+      description: Updates the sync status of a vendor.
+      operationId: syncVendors
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the vendor.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - sync_status
+              properties:
+                sync_status:
+                  type: string
+                  description: Sync status for an accounting system.
+                  enum:
+                  - NOT_SYNCED
+                  - SYNCED
+                  - SYNC_FAILED
+                sync_error_message:
+                  type: string
+                  description: Error message for sync failures. Only applicable when sync_status is `SYNC_FAILED`.
+              description: Vendor Update Sync Status Payload.
+        required: true
+      responses:
+        '200':
+          description: Vendor sync status updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vendor'
+        '400':
+          description: Invalid Request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/spend/vendors/vendor_id/sync
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          sync_status: SYNC_FAILED
+          sync_error_message: 'Failed to sync vendor: a vendor with this name already exists.'
+        response_body:
+          id: 985461d5-016f-4e1f-a387-5f1380b42d92
+          legal_entity_ids:
+          - le_U3jlHqQRNHWn2zAKeeT8sg
+          - le_V4kmIrRSOMXo3bBLffU9th
+          name: Airwallex
+          business_name: Airwallex Pty Ltd
+          country_code: US
+          address:
+            street_address: 123 Main Street
+            city: San Francisco
+            state: California
+            postcode: '94105'
+            country_code: US
+          status: ACTIVE
+          sync_status: SYNCED
+          sync_error_message: 'Failed to sync vendor: a vendor with this name already exists.'
+          approvers:
+          - approver1@airwallex.com
+          - approver2@airwallex.com
+          owner_email: example@airwallex.com
+          business_registration_number: '123456789'
+          external_id: VENDOR-EXT-001
+          contacts:
+          - contact_name: Airwallex
+            email: example@airwallex.com
+            phone_number: '+61499999999'
+          attachments:
+          - id: cea842bd-b6b8-4f70-bfa5-4d28e7978db7
+            content_type: application/pdf
+            file_name: vendor_agreement.pdf
+            file_url: https://www.airwallex.com/vendor_agreement.pdf
+            created_at: '2025-02-02T00:00:00Z'
+          comments:
+          - content: Expense approved - valid business purpose confirmed
+            created_by: manager@company.com
+            created_at: '2025-01-01T00:00:00Z'
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-02-02T00:00:00Z'
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: spend.vendor:write
+        group: Spend
+        resource_name: Vendors
+      x-domain: Spend
+      x-resource: Vendors
+      x-urlPath: sync
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    VendorPagination:
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          description: List of items returned.
+          items:
+            $ref: '#/components/schemas/Vendor'
+        page_after:
+          type: string
+          description: A pointer to the end of the page list used in pagination to retrieve the next page of results.
+        page_before:
+          type: string
+          description: A pointer to the start of the page list use in pagination to retrieve the previous page of results.
+      description: Paginated list of vendors.
+    Comment:
+      type: object
+      required:
+      - content
+      - created_at
+      properties:
+        content:
+          type: string
+          description: Text body of the comment.
+        created_by:
+          type: string
+          description: Email address of the user who created this comment. Used for attribution, notifications, and audit trail tracking.
+        created_at:
+          type: string
+          description: Timestamp for when the resource was created in ISO8601 format.
+      description: User comment or note providing additional context, clarification, or communication related to expenses, reimbursements, or approval workflows. Used for audit trails and collaboration.
+    Spend_Address:
+      type: object
+      properties:
+        street_address:
+          type: string
+          description: Street address line.
+        city:
+          type: string
+          description: City, district, suburb, or town.
+        state:
+          type: string
+          description: State, province, or region.
+        postcode:
+          type: string
+          description: Postal/ZIP code.
+        country_code:
+          type: string
+          description: Country code (ISO 3166-1 alpha-2).
+          enum:
+          - UNDEFINED
+          - AC
+          - AD
+          - AE
+          - AF
+          - AG
+          - AI
+          - AL
+          - AM
+          - AN
+          - AO
+          - AQ
+          - AR
+          - AS
+          - AT
+          - AU
+          - AW
+          - AX
+          - AZ
+          - BA
+          - BB
+          - BD
+          - BE
+          - BF
+          - BG
+          - BH
+          - BI
+          - BJ
+          - BL
+          - BM
+          - BN
+          - BO
+          - BQ
+          - BR
+          - BS
+          - BT
+          - BU
+          - BV
+          - BW
+          - BY
+          - BZ
+          - CA
+          - CC
+          - CD
+          - CF
+          - CG
+          - CH
+          - CI
+          - CK
+          - CL
+          - CM
+          - CN
+          - CO
+          - CP
+          - CR
+          - CS
+          - CU
+          - CV
+          - CW
+          - CX
+          - CY
+          - CZ
+          - DE
+          - DG
+          - DJ
+          - DK
+          - DM
+          - DO
+          - DZ
+          - EA
+          - EC
+          - EE
+          - EG
+          - EH
+          - ER
+          - ES
+          - ET
+          - EU
+          - EZ
+          - FI
+          - FJ
+          - FK
+          - FM
+          - FO
+          - FR
+          - FX
+          - GA
+          - GB
+          - GD
+          - GE
+          - GF
+          - GG
+          - GH
+          - GI
+          - GL
+          - GM
+          - GN
+          - GP
+          - GQ
+          - GR
+          - GS
+          - GT
+          - GU
+          - GW
+          - GY
+          - HK
+          - HM
+          - HN
+          - HR
+          - HT
+          - HU
+          - IC
+          - ID
+          - IE
+          - IL
+          - IM
+          - IN
+          - IO
+          - IQ
+          - IR
+          - IS
+          - IT
+          - JE
+          - JM
+          - JO
+          - JP
+          - KE
+          - KG
+          - KH
+          - KI
+          - KM
+          - KN
+          - KP
+          - KR
+          - KW
+          - KY
+          - KZ
+          - LA
+          - LB
+          - LC
+          - LI
+          - LK
+          - LR
+          - LS
+          - LT
+          - LU
+          - LV
+          - LY
+          - MA
+          - MC
+          - MD
+          - ME
+          - MF
+          - MG
+          - MH
+          - MK
+          - ML
+          - MM
+          - MN
+          - MO
+          - MP
+          - MQ
+          - MR
+          - MS
+          - MT
+          - MU
+          - MV
+          - MW
+          - MX
+          - MY
+          - MZ
+          - NA
+          - NC
+          - NE
+          - NF
+          - NG
+          - NI
+          - NL
+          - 'NO'
+          - NP
+          - NR
+          - NT
+          - NU
+          - NZ
+          - OM
+          - PA
+          - PE
+          - PF
+          - PG
+          - PH
+          - PK
+          - PL
+          - PM
+          - PN
+          - PR
+          - PS
+          - PT
+          - PW
+          - PY
+          - QA
+          - RE
+          - RO
+          - RS
+          - RU
+          - RW
+          - SA
+          - SB
+          - SC
+          - SD
+          - SE
+          - SF
+          - SG
+          - SH
+          - SI
+          - SJ
+          - SK
+          - SL
+          - SM
+          - SN
+          - SO
+          - SR
+          - SS
+          - ST
+          - SU
+          - SV
+          - SX
+          - SY
+          - SZ
+          - TA
+          - TC
+          - TD
+          - TF
+          - TG
+          - TH
+          - TJ
+          - TK
+          - TL
+          - TM
+          - TN
+          - TO
+          - TP
+          - TR
+          - TT
+          - TV
+          - TW
+          - TZ
+          - UA
+          - UG
+          - UK
+          - UM
+          - US
+          - UY
+          - UZ
+          - VA
+          - VC
+          - VE
+          - VG
+          - VI
+          - VN
+          - VU
+          - WF
+          - WS
+          - XI
+          - XU
+          - XK
+          - YE
+          - YT
+          - YU
+          - ZA
+          - ZM
+          - ZR
+          - ZW
+      description: Address.
+    Vendor:
+      type: object
+      required:
+      - approvers
+      - attachments
+      - comments
+      - contacts
+      - created_at
+      - id
+      - legal_entity_ids
+      - name
+      - status
+      - sync_status
+      - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the vendor.
+        legal_entity_ids:
+          type: array
+          description: Unique identifiers of the legal entities associated with this vendor.
+          items:
+            type: string
+            description: Unique identifiers of the legal entities associated with this vendor.
+        name:
+          type: string
+          description: Display name of the vendor.
+        business_name:
+          type: string
+          description: Business/legal name of the vendor.
+        country_code:
+          type: string
+          description: Country of the vendor, as an ISO 3166-1 alpha-2 country code.
+          enum:
+          - UNDEFINED
+          - AC
+          - AD
+          - AE
+          - AF
+          - AG
+          - AI
+          - AL
+          - AM
+          - AN
+          - AO
+          - AQ
+          - AR
+          - AS
+          - AT
+          - AU
+          - AW
+          - AX
+          - AZ
+          - BA
+          - BB
+          - BD
+          - BE
+          - BF
+          - BG
+          - BH
+          - BI
+          - BJ
+          - BL
+          - BM
+          - BN
+          - BO
+          - BQ
+          - BR
+          - BS
+          - BT
+          - BU
+          - BV
+          - BW
+          - BY
+          - BZ
+          - CA
+          - CC
+          - CD
+          - CF
+          - CG
+          - CH
+          - CI
+          - CK
+          - CL
+          - CM
+          - CN
+          - CO
+          - CP
+          - CR
+          - CS
+          - CU
+          - CV
+          - CW
+          - CX
+          - CY
+          - CZ
+          - DE
+          - DG
+          - DJ
+          - DK
+          - DM
+          - DO
+          - DZ
+          - EA
+          - EC
+          - EE
+          - EG
+          - EH
+          - ER
+          - ES
+          - ET
+          - EU
+          - EZ
+          - FI
+          - FJ
+          - FK
+          - FM
+          - FO
+          - FR
+          - FX
+          - GA
+          - GB
+          - GD
+          - GE
+          - GF
+          - GG
+          - GH
+          - GI
+          - GL
+          - GM
+          - GN
+          - GP
+          - GQ
+          - GR
+          - GS
+          - GT
+          - GU
+          - GW
+          - GY
+          - HK
+          - HM
+          - HN
+          - HR
+          - HT
+          - HU
+          - IC
+          - ID
+          - IE
+          - IL
+          - IM
+          - IN
+          - IO
+          - IQ
+          - IR
+          - IS
+          - IT
+          - JE
+          - JM
+          - JO
+          - JP
+          - KE
+          - KG
+          - KH
+          - KI
+          - KM
+          - KN
+          - KP
+          - KR
+          - KW
+          - KY
+          - KZ
+          - LA
+          - LB
+          - LC
+          - LI
+          - LK
+          - LR
+          - LS
+          - LT
+          - LU
+          - LV
+          - LY
+          - MA
+          - MC
+          - MD
+          - ME
+          - MF
+          - MG
+          - MH
+          - MK
+          - ML
+          - MM
+          - MN
+          - MO
+          - MP
+          - MQ
+          - MR
+          - MS
+          - MT
+          - MU
+          - MV
+          - MW
+          - MX
+          - MY
+          - MZ
+          - NA
+          - NC
+          - NE
+          - NF
+          - NG
+          - NI
+          - NL
+          - 'NO'
+          - NP
+          - NR
+          - NT
+          - NU
+          - NZ
+          - OM
+          - PA
+          - PE
+          - PF
+          - PG
+          - PH
+          - PK
+          - PL
+          - PM
+          - PN
+          - PR
+          - PS
+          - PT
+          - PW
+          - PY
+          - QA
+          - RE
+          - RO
+          - RS
+          - RU
+          - RW
+          - SA
+          - SB
+          - SC
+          - SD
+          - SE
+          - SF
+          - SG
+          - SH
+          - SI
+          - SJ
+          - SK
+          - SL
+          - SM
+          - SN
+          - SO
+          - SR
+          - SS
+          - ST
+          - SU
+          - SV
+          - SX
+          - SY
+          - SZ
+          - TA
+          - TC
+          - TD
+          - TF
+          - TG
+          - TH
+          - TJ
+          - TK
+          - TL
+          - TM
+          - TN
+          - TO
+          - TP
+          - TR
+          - TT
+          - TV
+          - TW
+          - TZ
+          - UA
+          - UG
+          - UK
+          - UM
+          - US
+          - UY
+          - UZ
+          - VA
+          - VC
+          - VE
+          - VG
+          - VI
+          - VN
+          - VU
+          - WF
+          - WS
+          - XI
+          - XU
+          - XK
+          - YE
+          - YT
+          - YU
+          - ZA
+          - ZM
+          - ZR
+          - ZW
+        address:
+          $ref: '#/components/schemas/Spend_Address'
+        status:
+          type: string
+          description: Vendor status.
+          enum:
+          - DRAFT
+          - AWAITING_APPROVAL
+          - ACTIVE
+          - ARCHIVED
+        sync_status:
+          type: string
+          description: Sync status for an accounting system.
+          enum:
+          - NOT_SYNCED
+          - SYNCED
+          - SYNC_FAILED
+        sync_error_message:
+          type: string
+          description: Error message describing the sync failure reason, populated when the sync status is updated via the API. Null when no sync error has occurred.
+        approvers:
+          type: array
+          description: List of user emails who can approve the vendor.
+          items:
+            type: string
+            description: List of user emails who can approve the vendor.
+        owner_email:
+          type: string
+          description: Email of the internal owner responsible for managing this vendor.
+        business_registration_number:
+          type: string
+          description: Business registration number of the vendor.
+        external_id:
+          type: string
+          description: External identifier for this vendor in your system.
+        contacts:
+          type: array
+          description: Contacts associated with this vendor.
+          items:
+            $ref: '#/components/schemas/VendorContact'
+        attachments:
+          type: array
+          description: List of file attachments associated with the vendor.
+          items:
+            $ref: '#/components/schemas/Attachment'
+        comments:
+          type: array
+          description: List of comments associated with the vendor.
+          items:
+            $ref: '#/components/schemas/Comment'
+        created_at:
+          type: string
+          description: Timestamp for when the resource was created in ISO8601 format.
+        updated_at:
+          type: string
+          description: Timestamp for when the resource was updated in ISO8601 format.
+      description: Vendor representing an external supplier or service provider, used for managing accounts payable relationships, purchase orders, and bill payments.
+    VendorContact:
+      type: object
+      properties:
+        contact_name:
+          type: string
+          description: Full name of the vendor contact.
+        email:
+          type: string
+          description: Email address of the vendor contact.
+        phone_number:
+          type: string
+          description: Phone number in E.164 format.
+      description: Vendor Contact.
+    Attachment:
+      type: object
+      required:
+      - content_type
+      - created_at
+      - file_name
+      - file_url
+      - id
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the attachment.
+        content_type:
+          type: string
+          description: MIME type of the attached file. Common types include `image/jpeg`, `image/png`, and `application/pdf`.
+        file_name:
+          type: string
+          description: Original filename of the uploaded attachment, including the file extension.
+        file_url:
+          type: string
+          description: URL to access and download the attachment file.
+        created_at:
+          type: string
+          description: Timestamp for when the resource was created in ISO8601 format.
+      description: File attachment containing supporting documentation such as receipts, invoices, or other proof of expense. Used for compliance, audit trails, and approval workflows.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

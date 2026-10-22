@@ -1,0 +1,172 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Authentication > Embedded Components API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Authentication > Embedded Components
+  description: Authorize to use embedded components.
+  x-domain: Authentication
+  x-resource: Embedded Components
+  x-urlPath: authentication/embedded_components
+paths:
+  /api/v1/authentication/authorize:
+    post:
+      tags:
+      - Authentication > Embedded Components
+      summary: 1|Authorize an Account
+      description: 'Authorize the platform itself, or a connected account with header `x-on-behalf-of` to use embedded components.
+
+
+        Platforms can embed core Airwallex functionalities directly into their website through our pre-built components, avoiding a redirect experience. Key features include:
+
+        * Dynamic adjustment of UI to meet local compliance requirements, based on country and business model
+
+        * Conversion-optimized flow leveraging Airwallex’s own product improvements
+
+        * Customized theming to reflect your company’s brand
+
+
+        For a list of components supported via this API, see Payouts, Onboarding, Risk and Compliance support in Airwallex.js.
+
+
+        Contact your Airwallex Account Manager to start using components.'
+      operationId: embeddedComponents_authorize
+      parameters:
+      - name: x-on-behalf-of
+        in: header
+        description: Unique ID of the connected account that this request is made on behalf of.
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - code_challenge
+              - scope
+              properties:
+                code_challenge:
+                  type: string
+                  description: A challenge token generated together with the `code_verifier` by your application with the S256 generation method, which references the Oauth design as described in [RFC 7636 Section 4](https://datatracker.ietf.org/doc/html/rfc7636#section-4).
+                identity:
+                  type: string
+                  description: Used for embedded SCA. It's the platform’s identifier for the user, such as a user unique identifier.
+                scope:
+                  type: array
+                  description: "The scopes indicate the resources your application is allowed to access. The value should be expressed as a list. Currently supported scopes:\n * `onboarding:write`: used by the embedded onboarding component.\n * `transfer:write`: used by the embedded payout component and the embedded beneficiary component.\n * `kyb:write`: used by the embedded KYB component.\n * `rfi:read`: used by the embedded RFI component to view open RFIs.\n * `rfi:write`: used by the embedded RFI component to edit and submit responses to RFIs.\n * `sca:read`: used by the embedded SCA component to get the context of SCA.\n * `sca:write`: used by the embedded SCA component to set up or change the authentication factors of SCA.\n * `tax_form:read`: used by the embedded tax form component to get details of tax forms.\n * `tax_form:write`: used by the embedded tax form component to create or edit tax forms."
+                  items:
+                    type: string
+        description: Request to authorize to use embedded components.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DropInSDKAuthorizeRes'
+        '400':
+          description: '["field_required","invalid_argument","validation_failed"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      deprecated: false
+      x-examples:
+      - key: authorize-platform
+        name: Authorize the platform itself
+        method: POST
+        uri: /api/v1/authentication/authorize
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          code_challenge: aNggeDw6KT4422DzzGe1RUZC2DJ-cpLi3hM8b7YRFeE
+          identity: 089cc0ec-0a6f-4150-9f66-365432178035
+          scope:
+          - transfer:write
+        response_body:
+          authorization_code: Du7J_zbDL3epWNJ2wa7Merdz9yc_iuSOTZ8LXWYagNYH
+      - key: authorize-connected-account
+        name: Authorize a connected account
+        method: POST
+        uri: /api/v1/authentication/authorize
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+          x-on-behalf-of: acct_JD0UmuRLNcytX7sBj0lfWA
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          code_challenge: aNggeDw6KT4422DzzGe1RUZC2DJ-cpLi3hM8b7YRFeE
+          identity: 089cc0ec-0a6f-4150-9f66-365432178035
+          scope:
+          - onboarding:write
+        response_body:
+          authorization_code: Du7J_zbDL3epWNJ2wa7Merdz9yc_iuSOTZ8LXWYagNYH
+      security: []
+      x-oauthSupported: false
+      x-oboSupported: false
+      x-domain: Authentication
+      x-resource: Embedded Components
+      x-urlPath: authorize
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    DropInSDKAuthorizeRes:
+      type: object
+      required:
+      - authorization_code
+      properties:
+        authorization_code:
+          type: string
+          description: The authorization code generated by Airwallex. It is used to exchange tokens. The authorization code expires in 30 seconds and becomes invalid once an access token is exchanged.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

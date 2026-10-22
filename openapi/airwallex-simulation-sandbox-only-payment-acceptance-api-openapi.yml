@@ -1,0 +1,1011 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Simulation (Sandbox Only) > Payment Acceptance API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Simulation (Sandbox Only) > Payment Acceptance
+  x-urlPath: simulation/payments
+  description: Simulate shopper actions on dispute in the sandbox environment.
+  x-domain: Simulation (Sandbox Only)
+  x-resource: Payment Acceptance
+paths:
+  /api/v1/simulation/pa/shopper_actions/{action}:
+    post:
+      servers:
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+      tags:
+      - Simulation (Sandbox Only) > Payment Acceptance
+      summary: 1|Simulate a Shopper Action
+      description: You can use this endpoint to simulate the shopper actions after obtaining a redirect URL for a PaymentIntent or PaymentConsent. Upon successful simulation of a shopper action on the given URL, a response with HTTP status `200 OK` and empty body will be returned. This endpoint is only available in the sandbox environment.
+      operationId: simulation_createShopperAction
+      x-oboSupported: false
+      parameters:
+      - name: action
+        in: path
+        description: "Action to simulate on a given redirect URL. Supported values are:  \n  \nPaymentIntent: `pay` and `reject`.  \n  \nPaymentConsent: `verify`."
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - url
+              properties:
+                url:
+                  type: string
+                  description: The url with which shoppers actions will be simulated after redirection. Usually obtained from the response of [Confirm a PaymentIntent](/docs/api/payments/payment_intents/confirm) and [Verify a PaymentConsent](/docs/api/payments/payment_consents/verify).
+        description: Request body for simulating shopper actions on a given URL.
+        required: true
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `operation_not_supported`.'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`.'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/simulation/pa/shopper_actions/action
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          url: https://api.sandbox.airwallex.com/pa/sandbox/sg/mck_hkdmt2qn2gk5b13d15o
+      x-scope:
+      - scope: simulation:write
+        group: Simulations
+        resource_name: Simulations
+      x-domain: Simulation (Sandbox Only)
+      x-resource: Payment Acceptance
+      x-urlPath: shopper_actions
+      x-oauthSupported: true
+      x-resourceLevel: account
+  /api/v1/simulation/pa/payment_disputes/create:
+    post:
+      servers:
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+      tags:
+      - Simulation (Sandbox Only) > Payment Acceptance
+      summary: 2|Create a Payment Dispute
+      description: By creating a dispute, we raise a dispute for the merchant to respond.
+      operationId: simulation_createPaymentDispute
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - due_at
+              - payment_intent_id
+              - reason_code
+              - stage
+              properties:
+                amount:
+                  type: number
+                  description: The amount of dispute in transaction currency. The original payment amount is used by default.
+                comment:
+                  type: string
+                  description: The text description of why the dispute is raised.
+                documents:
+                  type: array
+                  description: The documents explain why the dispute is raised. The list of File unique identifiers submitted via File Service.
+                  items:
+                    type: string
+                due_at:
+                  type: string
+                  format: date-time
+                  description: The due date of dispute.
+                payment_intent_id:
+                  type: string
+                  description: The unique identifier of PaymentIntent to raise a dispute against.
+                reason_code:
+                  type: string
+                  description: The reason code for the dispute. Must be a valid reason code for the given processor.
+                stage:
+                  type: string
+                  description: The stage of dispute.
+        description: create dispute request.
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulationPaymentDispute'
+        '400':
+          description: invalid_argument
+        '401':
+          description: credentials_invalid
+        '500':
+          description: service_unavailable
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/simulation/pa/payment_disputes/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          amount: 100
+          comment: <string>
+          documents:
+          - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ
+          due_at: 2025-05-20T13:14:00+0000
+          payment_intent_id: int_hkpdskz7vg1xc7uscdj
+          reason_code: <string>
+          stage: RFI
+        response_body:
+          accept_details:
+          - accepted_at: 2023-09-18T03:11:00+0000
+            accepted_by: user@email.com
+            description: ACCEPT
+            reason: ee939540-3203-4a2c-9172-89a566485dd9
+            refund:
+              amount: 10
+              reason: REQUESTED_BY_CUSTOMER
+          acquirer_reference_number: '789456'
+          amount: 100
+          card_brand: visa
+          challenge_details:
+          - challenged_at: 2023-09-18T03:11:00+0000
+            challenged_by: test@airwallex.com
+            customer_info:
+              billing_address: Billing address
+              device_id: 00000000-000000000000000
+              email: test@airwallex.com
+              ip: 212.121.222.123
+              name: John Deo
+              phone_number: '13800000000'
+            delivery_info:
+              address: Shipping address
+              delivered_at: 2023-09-18T03:11:00+0000
+              fee_amount: 10
+              fee_currency: USD
+              name: Joe Doe
+              phone_number: '13800000000'
+              shipped_at: 2023-09-18T03:11:00+0000
+              shipping_company: Shipping company
+              shipping_method: Shipping method
+              status: SHIPPED
+              tracking_number: '123456'
+            order_info:
+              created_at: 2023-09-18T03:11:00+0000
+              id: '123456'
+              invoice_number: '456123'
+              products:
+              - currency: USD
+                name: product
+                quantity: 2
+                unit_price: 100
+              total_amount: 200
+              total_currency: USD
+            product_description: product description
+            product_type: PHYSICAL_GOODS
+            reason: CUSTOMER_WITHDRAWN
+            refund_refusal_reason: reason
+            seller_info:
+              name: seller
+              store_name: store
+              store_physical_address: store address
+              store_url: https://www.store-url.com
+            stage: CHARGEBACK
+            supporting_documents:
+              customer_communication_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              customer_signature_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              documents:
+              - description: document descriptions.
+                file_ids:
+                - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+                type: PRIMARY
+              duplicate_charge_defense_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              generated_files:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              other_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              proof_of_delivery_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              receipt_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              refund_policy_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+          created_at: 2023-09-18T03:11:00+0000
+          currency: USD
+          customer_id: cus_ps8e0ZgQzd2QnCxVpzJrHD6KOVu
+          customer_name: John Doe
+          due_at: 2023-09-18T03:11:00+0000
+          id: dst_nlstrf5jxgp32pfqbtq
+          issuer_comment: comment
+          issuer_documents:
+          - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+          merchant_order_id: '123456'
+          mode: COLLABORATION
+          payment_attempt_id: att_nlstskcx5gipkzd6kse_dwsja0_decrp
+          payment_intent_id: int_nlstbs6rlgipjdwsja0_decrp
+          payment_method_type: VISA
+          reason:
+            description: <string>
+            original_code: <string>
+            type: PRODUCT_NOT_RECEIVED
+          refunds:
+          - acquirer_reference_number: 02709821210000001031868
+            id: rfd_ps8e0ZgQzd2QnCxVpzJrHD6KOVu
+          stage: CHARGEBACK
+          status: RECEIVED
+          transaction_type: PAYMENT
+          updated_at: 2023-09-18T03:11:00+0000
+      x-scope:
+      - scope: simulation:write
+        group: Simulations
+        resource_name: Simulations
+      x-domain: Simulation (Sandbox Only)
+      x-resource: Payment Acceptance
+      x-urlPath: create_payment_disputes
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+  /api/v1/simulation/pa/payment_disputes/{id}/resolve:
+    post:
+      servers:
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+      tags:
+      - Simulation (Sandbox Only) > Payment Acceptance
+      summary: 3|Resolve a Payment Dispute
+      description: 'By resolving a dispute, the dispute transitions to the final status.
+
+
+        - When `in_favor_of` = `MERCHANT`, the dispute becomes `WON` or `REVERSED`
+
+        - When `in_favor_of` = `CUSTOMER`, the dispute becomes `LOST`.'
+      operationId: simulation_resolvePaymentDispute
+      parameters:
+      - name: id
+        in: path
+        description: PaymentDispute unique identifier.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - in_favor_of
+              properties:
+                amount:
+                  type: number
+                  description: The resolved amount. The full disputed amount is used by default.
+                comment:
+                  type: string
+                  description: The text explains why the dispute is resolved.
+                in_favor_of:
+                  type: string
+                  description: The party who is in favor of when resolving the dispute.
+                  enum:
+                  - CUSTOMER
+                  - MERCHANT
+        description: resolve dispute request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulationPaymentDispute'
+        '400':
+          description: invalid_argument
+        '401':
+          description: credentials_invalid
+        '500':
+          description: service_unavailable
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/simulation/pa/payment_disputes/payment_acceptance_id/resolve
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          amount: 100
+          comment: <string>
+          in_favor_of: MERCHANT
+        response_body:
+          accept_details:
+          - accepted_at: 2023-09-18T03:11:00+0000
+            accepted_by: user@email.com
+            description: ACCEPT
+            reason: ee939540-3203-4a2c-9172-89a566485dd9
+            refund:
+              amount: 10
+              reason: REQUESTED_BY_CUSTOMER
+          acquirer_reference_number: '789456'
+          amount: 100
+          card_brand: visa
+          challenge_details:
+          - challenged_at: 2023-09-18T03:11:00+0000
+            challenged_by: test@airwallex.com
+            customer_info:
+              billing_address: Billing address
+              device_id: 00000000-000000000000000
+              email: test@airwallex.com
+              ip: 212.121.222.123
+              name: John Deo
+              phone_number: '13800000000'
+            delivery_info:
+              address: Shipping address
+              delivered_at: 2023-09-18T03:11:00+0000
+              fee_amount: 10
+              fee_currency: USD
+              name: Joe Doe
+              phone_number: '13800000000'
+              shipped_at: 2023-09-18T03:11:00+0000
+              shipping_company: Shipping company
+              shipping_method: Shipping method
+              status: SHIPPED
+              tracking_number: '123456'
+            order_info:
+              created_at: 2023-09-18T03:11:00+0000
+              id: '123456'
+              invoice_number: '456123'
+              products:
+              - currency: USD
+                name: product
+                quantity: 2
+                unit_price: 100
+              total_amount: 200
+              total_currency: USD
+            product_description: product description
+            product_type: PHYSICAL_GOODS
+            reason: CUSTOMER_WITHDRAWN
+            refund_refusal_reason: reason
+            seller_info:
+              name: seller
+              store_name: store
+              store_physical_address: store address
+              store_url: https://www.store-url.com
+            stage: CHARGEBACK
+            supporting_documents:
+              customer_communication_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              customer_signature_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              documents:
+              - description: document descriptions.
+                file_ids:
+                - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+                type: PRIMARY
+              duplicate_charge_defense_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              generated_files:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              other_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              proof_of_delivery_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              receipt_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              refund_policy_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+          created_at: 2023-09-18T03:11:00+0000
+          currency: USD
+          customer_id: cus_ps8e0ZgQzd2QnCxVpzJrHD6KOVu
+          customer_name: John Doe
+          due_at: 2023-09-18T03:11:00+0000
+          id: dst_nlstrf5jxgp32pfqbtq
+          issuer_comment: comment
+          issuer_documents:
+          - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+          merchant_order_id: '123456'
+          mode: COLLABORATION
+          payment_attempt_id: att_nlstskcx5gipkzd6kse_dwsja0_decrp
+          payment_intent_id: int_nlstbs6rlgipjdwsja0_decrp
+          payment_method_type: VISA
+          reason:
+            description: <string>
+            original_code: <string>
+            type: PRODUCT_NOT_RECEIVED
+          refunds:
+          - acquirer_reference_number: 02709821210000001031868
+            id: rfd_ps8e0ZgQzd2QnCxVpzJrHD6KOVu
+          stage: CHARGEBACK
+          status: RECEIVED
+          transaction_type: PAYMENT
+          updated_at: 2023-09-18T03:11:00+0000
+      x-scope:
+      - scope: simulation:write
+        group: Simulations
+        resource_name: Simulations
+      x-domain: Simulation (Sandbox Only)
+      x-resource: Payment Acceptance
+      x-urlPath: resolve_payment_disputes
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+  /api/v1/simulation/pa/payment_disputes/{id}/escalate:
+    post:
+      servers:
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+      tags:
+      - Simulation (Sandbox Only) > Payment Acceptance
+      summary: 4|Escalate a Payment Dispute
+      description: By escalating a dispute, the evidence provided by the merchant is declined, and the dispute is escalated to the next stage.
+      operationId: simulation_escalatePaymentDispute
+      parameters:
+      - name: id
+        in: path
+        description: PaymentDispute unique identifier.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - due_at
+              properties:
+                amount:
+                  type: number
+                  description: The adjusted amount of dispute.
+                comment:
+                  type: string
+                  description: The text description of why the dispute is escalated.
+                documents:
+                  type: array
+                  description: The documents explain why the dispute is escalated. The list of File unique identifiers submitted via File Service.
+                  items:
+                    type: string
+                due_at:
+                  type: string
+                  format: date-time
+                  description: The new due date of the dispute.
+        description: escalate dispute request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulationPaymentDispute'
+        '400':
+          description: invalid_argument
+        '401':
+          description: credentials_invalid
+        '500':
+          description: service_unavailable
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/simulation/pa/payment_disputes/payment_acceptance_id/escalate
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          amount: 100
+          comment: <string>
+          documents:
+          - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ
+          due_at: 2025-08-14T09:14:00+0000
+        response_body:
+          accept_details:
+          - accepted_at: 2023-09-18T03:11:00+0000
+            accepted_by: user@email.com
+            description: ACCEPT
+            reason: ee939540-3203-4a2c-9172-89a566485dd9
+            refund:
+              amount: 10
+              reason: REQUESTED_BY_CUSTOMER
+          acquirer_reference_number: '789456'
+          amount: 100
+          card_brand: visa
+          challenge_details:
+          - challenged_at: 2023-09-18T03:11:00+0000
+            challenged_by: test@airwallex.com
+            customer_info:
+              billing_address: Billing address
+              device_id: 00000000-000000000000000
+              email: test@airwallex.com
+              ip: 212.121.222.123
+              name: John Deo
+              phone_number: '13800000000'
+            delivery_info:
+              address: Shipping address
+              delivered_at: 2023-09-18T03:11:00+0000
+              fee_amount: 10
+              fee_currency: USD
+              name: Joe Doe
+              phone_number: '13800000000'
+              shipped_at: 2023-09-18T03:11:00+0000
+              shipping_company: Shipping company
+              shipping_method: Shipping method
+              status: SHIPPED
+              tracking_number: '123456'
+            order_info:
+              created_at: 2023-09-18T03:11:00+0000
+              id: '123456'
+              invoice_number: '456123'
+              products:
+              - currency: USD
+                name: product
+                quantity: 2
+                unit_price: 100
+              total_amount: 200
+              total_currency: USD
+            product_description: product description
+            product_type: PHYSICAL_GOODS
+            reason: CUSTOMER_WITHDRAWN
+            refund_refusal_reason: reason
+            seller_info:
+              name: seller
+              store_name: store
+              store_physical_address: store address
+              store_url: https://www.store-url.com
+            stage: CHARGEBACK
+            supporting_documents:
+              customer_communication_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              customer_signature_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              documents:
+              - description: document descriptions.
+                file_ids:
+                - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+                type: PRIMARY
+              duplicate_charge_defense_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              generated_files:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              other_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              proof_of_delivery_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              receipt_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              refund_policy_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+          created_at: 2023-09-18T03:11:00+0000
+          currency: USD
+          customer_id: cus_ps8e0ZgQzd2QnCxVpzJrHD6KOVu
+          customer_name: John Doe
+          due_at: 2023-09-18T03:11:00+0000
+          id: dst_nlstrf5jxgp32pfqbtq
+          issuer_comment: comment
+          issuer_documents:
+          - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+          merchant_order_id: '123456'
+          mode: COLLABORATION
+          payment_attempt_id: att_nlstskcx5gipkzd6kse_dwsja0_decrp
+          payment_intent_id: int_nlstbs6rlgipjdwsja0_decrp
+          payment_method_type: VISA
+          reason:
+            description: <string>
+            original_code: <string>
+            type: PRODUCT_NOT_RECEIVED
+          refunds:
+          - acquirer_reference_number: 02709821210000001031868
+            id: rfd_ps8e0ZgQzd2QnCxVpzJrHD6KOVu
+          stage: CHARGEBACK
+          status: RECEIVED
+          transaction_type: PAYMENT
+          updated_at: 2023-09-18T03:11:00+0000
+      x-scope:
+      - scope: simulation:write
+        group: Simulations
+        resource_name: Simulations
+      x-domain: Simulation (Sandbox Only)
+      x-resource: Payment Acceptance
+      x-urlPath: escalate_payment_disputes
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+components:
+  schemas:
+    SimulationReasonDetails:
+      type: object
+      properties:
+        description:
+          type: string
+          description: PaymentDispute reason description.
+        original_code:
+          type: string
+          description: PaymentDispute reason code.
+        type:
+          type: string
+          description: 'PaymentDispute reason type. Possible values: `CREDIT_NOT_PROCESSED`, `FRAUDULENT`, `DUPLICATE_CHARGE`, `PRODUCT_NOT_RECEIVED`, `PRODUCT_UNACCEPTABLE`, `UNRECOGNIZED_CHARGE`, `CANCELLED_PRODUCT`, `MISREPRESENTATION`, `COUNTERFEIT_PRODUCT`, `PROCESSING_ERRORS`, `AUTHORIZATION`, `NOT_RECOGNIZED`, `BANK_REJECTION`, `FUND_REVERSAL`, `CONSUMER_DISPUTE`, `POINT_OF_INTERACTION_ERROR` and `UNKNOWN`.'
+      description: PaymentDispute reason.
+    SimulationAcceptDetails:
+      type: object
+      properties:
+        accepted_at:
+          type: string
+          format: date-time
+          description: The time when the user accepted the PaymentDispute.
+        accepted_by:
+          type: string
+          description: User unique identifier of person/system actioned on case.
+        description:
+          type: string
+          description: The accept description.
+        reason:
+          type: string
+          description: "The accept reason. One of \n\n- `AGREEMENT_REACHED_WITH_CUSTOMER`\n- `CUSTOMER_RELATIONSHIP_MAINTENANCE` \n- `LOW_VALUE_TRANSACTION`\n- `VALID_CUSTOMER_DISPUTE` \n- `NO_ACTION_TAKEN_BY_MERCHANT`\n- `RDR_AUTO_ACCEPTED` \n- `COLLABORATION_ACCEPTED_MANUAL`\n- `COLLABORATION_AUTO_ACCEPTED`\n- `COLLABORATION_AUTO_ACCEPTED_BY_EXPIRY`\n- `OTHERS`.\n"
+        refund:
+          $ref: '#/components/schemas/SimulationRefundRequest'
+          description: The Refund requested to be created.
+        stage:
+          type: string
+          description: The stage when dispute is accepted.
+    SimulationSupportingDocuments:
+      type: object
+      properties:
+        customer_communication_documents:
+          type: array
+          description: "The file IDs of customer communication. Applicable when stage is `CHARGEBACK`.  \nDeprecated. Use `documents` instead."
+          items:
+            type: string
+        customer_signature_documents:
+          type: array
+          description: "The file IDs of customer signature. Applicable when stage is `CHARGEBACK`.  \nDeprecated. Use `documents` instead."
+          items:
+            type: string
+        documents:
+          type: array
+          description: List of documents.
+          items:
+            $ref: '#/components/schemas/SimulationDisputeDocument'
+        duplicate_charge_defense_documents:
+          type: array
+          description: "The file IDs of duplicate payment evidence. Applicable when stage is `CHARGEBACK`.  \nDeprecated. Use `documents` instead."
+          items:
+            type: string
+        generated_files:
+          type: array
+          description: The file unique identifiers of the files generated by Airwallex automatically based on text evidence or refund information.
+          items:
+            type: string
+        other_documents:
+          type: array
+          description: "The list of file IDs of other documents.  \nDeprecated. Use `documents` instead."
+          items:
+            type: string
+        proof_of_delivery_documents:
+          type: array
+          description: "The file IDs of proof of delivery. Applicable when stage is `CHARGEBACK`.  \nDeprecated. Use `documents` instead."
+          items:
+            type: string
+        receipt_documents:
+          type: array
+          description: "The file IDs of the receipt. Applicable when stage is `CHARGEBACK`.  \nDeprecated. Use `documents` instead."
+          items:
+            type: string
+        refund_policy_documents:
+          type: array
+          description: "The file IDs of the refund policy. Applicable when stage is `CHARGEBACK`.  \nDeprecated. Use `documents` instead."
+          items:
+            type: string
+      description: The file unique identifiers of support documents.
+    SimulationDisputeDocument:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Additional file descriptions or explanations.
+        file_ids:
+          type: array
+          description: File unique identifiers of the documents.
+          items:
+            type: string
+        type:
+          type: string
+          description: 'Type of the documents. Possible values: `PRIMARY`, `ORDER`, `CUSTOMER`, `OTHER`.
+
+
+            - **PRIMARY**: The primary evidence depends on the challenge reason.
+
+            - **ORDER**: Order related evidence.
+
+            - **CUSTOMER**: Customer related evidence.
+
+            - **OTHER**: Other supporting evidence.
+
+            '
+    SimulationOrderInformation:
+      type: object
+      properties:
+        created_at:
+          type: string
+          format: date-time
+          description: Time at which this order was created.
+        id:
+          type: string
+          description: The order unique identifier.
+        invoice_number:
+          type: string
+          description: The invoice number of order.
+        products:
+          type: array
+          description: The products of order.
+          items:
+            $ref: '#/components/schemas/SimulationProduct'
+        total_amount:
+          type: number
+          description: The total amount of order.
+        total_currency:
+          type: string
+          description: The currency of total amount.
+      description: The order information. Applicable when the stage is `RFI`.
+    SimulationCustomerInformation:
+      type: object
+      properties:
+        billing_address:
+          type: string
+          description: Customer billing address.
+        device_id:
+          type: string
+          description: Customer device unique identifier.
+        email:
+          type: string
+          description: Customer email.
+        ip:
+          type: string
+          description: Customer ip.
+        name:
+          type: string
+          description: Customer name.
+        phone_number:
+          type: string
+          description: Customer phone number.
+      description: Customer information.
+    SimulationSellerInformation:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Seller name.
+        store_name:
+          type: string
+          description: Store name.
+        store_physical_address:
+          type: string
+          description: Store physical address.
+        store_url:
+          type: string
+          description: Store URL.
+      description: Merchant information.
+    SimulationChallengeDetails:
+      type: object
+      properties:
+        challenged_at:
+          type: string
+          format: date-time
+          description: The time when the user challenges PaymentDispute.
+        challenged_by:
+          type: string
+          description: User unique identifier of person/system challenges PaymentDispute.
+        customer_info:
+          $ref: '#/components/schemas/SimulationCustomerInformation'
+          description: Customer information.
+        delivery_info:
+          $ref: '#/components/schemas/SimulationDeliveryInformation'
+          description: The delivery information.
+        order_info:
+          $ref: '#/components/schemas/SimulationOrderInformation'
+          description: The order information. Applicable when the stage is `RFI`.
+        product_description:
+          type: string
+          description: The description of product.
+        product_type:
+          type: string
+          description: The type of Product.
+        reason:
+          type: string
+          description: "The reason why the merchant challenges the dispute. Possible values: \n\n- **CUSTOMER_WITHDRAWN**: The customer withdrew the dispute\n- **CUSTOMER_REFUNDED**: The customer has already been refunded\n- **PRODUCT_RECEIVED**: The customer has already received / will receive the product or service\n- **NOT_ENTITLED**: The customer is not entitled to refund\n- **AUTHENTIC_PRODUCT**: The product is not damaged, defective or counterfeit\n- **OTHER_REASONS**: Other reasons for challenging.\n"
+        refund_refusal_reason:
+          type: string
+          description: Explanation of why refund is refused.
+        seller_info:
+          $ref: '#/components/schemas/SimulationSellerInformation'
+          description: Merchant information.
+        stage:
+          type: string
+          description: The stage when evidence is submitted.
+        supporting_documents:
+          $ref: '#/components/schemas/SimulationSupportingDocuments'
+          description: The file unique identifiers of support documents.
+    SimulationDeliveryInformation:
+      type: object
+      properties:
+        address:
+          type: string
+          description: The shipping address. Applicable at stage `RFI`.
+        delivered_at:
+          type: string
+          format: date-time
+          description: The date when services or goods are delivered.
+        fee_amount:
+          type: number
+          description: The amount of shipping fee. Applicable at stage `RFI`.
+        fee_currency:
+          type: string
+          description: The currency of shipping fee. Applicable at stage `RFI`.
+        name:
+          type: string
+          description: The recipient's name. Applicable at stage `RFI`.
+        phone_number:
+          type: string
+          description: The recipient's phone number. Applicable at stage `RFI`.
+        shipped_at:
+          type: string
+          format: date-time
+          description: The shipping date (the expected delivery date for `RFI`).
+        shipping_company:
+          type: string
+          description: The company name managing this delivery, such as asendia-usa, 4px, and so on.
+        shipping_method:
+          type: string
+          description: The shipping method, such as Priority Mail, Flat rate, and so on. Applicable at stage `RFI`.
+        status:
+          type: string
+          description: The shipping status, such as `SHIPPED`, `DELIVERED`, and so on. Applicable at stage `RFI`.
+        tracking_number:
+          type: string
+          description: The shipping tracking number.
+      description: The delivery information.
+    SimulationRefundRequest:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: The refund amount when accepting `RFI`. If not specified, it will be same as the remaining amount that has been captured but not yet refunded. Please refer to [supported currencies](/docs/payments/reference/supported-currencies) for supported minor units.
+        reason:
+          type: string
+          description: The refund reason when accepting `RFI`. `OTHERS` is used by default. One of `REQUESTED_BY_CUSTOMER`, `DUPLICATE`, `FRAUDULENT`, `ABANDONED`, and `OTHERS`.
+      description: The Refund requested to be created.
+    SimulationProduct:
+      type: object
+      properties:
+        currency:
+          type: string
+          description: The product currency. Please refer to [supported currencies](/docs/payments/reference/supported-currencies).
+        name:
+          type: string
+          description: The product name.
+        quantity:
+          type: number
+          description: The product quantity.
+        unit_price:
+          type: number
+          description: The product unit price.
+    SimulationPaymentDispute:
+      type: object
+      properties:
+        accept_details:
+          type: array
+          description: Further details on why the client is accepting the PaymentDispute event.
+          items:
+            $ref: '#/components/schemas/SimulationAcceptDetails'
+        acquirer_reference_number:
+          type: string
+          description: The acquirer reference number of original payment.
+        amount:
+          type: number
+          description: PaymentDispute amount.
+        card_brand:
+          type: string
+          description: 'The card brand of original payment, applicable when payment_method_type is `CARD`. Possible values: `visa`, `mastercard`, `maestro`, `union pay`, `american express`, `jcb`, `diners club international` and `discover`.'
+        challenge_details:
+          type: array
+          description: The challenge data submitted at each stage.
+          items:
+            $ref: '#/components/schemas/SimulationChallengeDetails'
+        created_at:
+          type: string
+          format: date-time
+          description: Time at which this PaymentDispute was created.
+        currency:
+          type: string
+          description: PaymentDispute currency.
+        customer_id:
+          type: string
+          description: The customer unique identifier of original payment.
+        customer_name:
+          type: string
+          description: The customer name of original payment.
+        due_at:
+          type: string
+          format: date-time
+          description: PaymentDispute due date.
+        id:
+          type: string
+          description: PaymentDispute unique identifier.
+        issuer_comment:
+          type: string
+          description: The issuer’s comment on PaymentDispute.
+        issuer_documents:
+          type: array
+          description: The issuer’s documents on PaymentDispute.
+          items:
+            type: string
+        merchant_order_id:
+          type: string
+          description: The order unique identifier of original payment.
+        mode:
+          type: string
+          description: 'PaymentDispute mode. Possible values: `ALLOCATION`, `COLLABORATION`, applicable when the stage is `CHARGEBACK`, `PRE_ARBITRATION` and `ARBITRATION`.'
+        payment_attempt_id:
+          type: string
+          description: PaymentAttempt unique identifier.
+        payment_intent_id:
+          type: string
+          description: PaymentIntent unique identifier.
+        payment_method_type:
+          type: string
+          description: The payment method type of original payment.
+        reason:
+          $ref: '#/components/schemas/SimulationReasonDetails'
+          description: PaymentDispute reason.
+        refunds:
+          type: array
+          description: The Refunds of original payment.
+          items:
+            $ref: '#/components/schemas/SimulationRefundDetails'
+        stage:
+          type: string
+          description: PaymentDispute stage.
+        status:
+          type: string
+          description: "PaymentDispute status. Possible values: \n\n- **REQUIRES_RESPONSE**: In this status, you can decide whether to accept or challenge the PaymentDispute.\n  - Applicable when receive notification from card schemes that PaymentDispute has entered `RFI`, `PRE_CHARGEBACK`, `CHARGEBACK`, or `PRE_ARBITRATION` stage.\n- **CHALLENGED**: In this status, we have informed the issuing bank that you would like to challenge the PaymentDispute.\n  - Applicable when you challenge the PaymentDispute. At `PRE_CHARGEBACK` stage, the issuing bank will escalate to the chargeback stage in the following days. At `RFI`, `CHARGEBACK`, and `PRE_ARBITRATION` stage, the issuing bank will review your submitted evidence and decide whether to escalate the PaymentDispute or not.\n- **ACCEPTED**: In this status the PaymentDispute has been accepted and the payment will be refunded to the shopper.\n  - Applicable when you accept the PaymentDispute at `RFI`, `PRE_CHARGEBACK`, `CHARGEBACK`, and `PRE_ARBITRATION` stage.\n- **REVERSED**: In this status, the PaymentDispute has been reversed by the issuing bank. No further action is required.\n  - Applicable when receive notification from card schemes that PaymentDispute has been reversed at `PRE_CHARGEBACK`, `CHARGEBACK`, and `PRE_ARBITRATION` stage.\n- **WON**: In this status, the issuing bank has accepted the response provided, or card schemes have ruled the PaymentDispute decision in your favor. No further action is required.\n  - Applicable at `CHARGEBACK`, `PRE_ARBITRATION` and `ARBITRATION` stage.\n- **LOST**: In this status, the issuing bank has not accepted the evidence provided by you, or card schemes have ruled the PaymentDispute decision in Issuer’s favor. No further action is required.\n  - Applicable at `PRE_ARBITRATION` and `ARBITRATION` stage.\n- **PENDING_CLOSURE**: In this status, the issuing bank has escalated the PaymentDispute to `PRE_ARBITRATION` stage and Airwallex is reviewing the PaymentDispute. Airwallex will decide whether to accept the PaymentDispute or respond to it on your behalf and may reach out to you for more information.\n  - Applicable at `PRE_ARBITRATION` stage.\n- **EXPIRED**: In this status, the `RFI` event has expired as you have not responded to the request within 15 days.\n  - Applicable at `RFI` stage.\n- **PENDING_DECISION**: In this status, we have responded to the issuing bank with evidence provided by you. The issuing bank will review your submitted evidence and decide whether to accept the PaymentDispute or not.\n  - Applicable at `PRE_ARBITRATION` and `ARBITRATION` stage."
+        transaction_type:
+          type: string
+          description: 'The transaction type of the original transaction. Possible values: `PAYMENT`, `REFUND`.'
+        updated_at:
+          type: string
+          format: date-time
+          description: Last time at which this PaymentDispute was updated or operated on.
+    SimulationRefundDetails:
+      type: object
+      properties:
+        acquirer_reference_number:
+          type: string
+          description: The acquirer reference number of Refund.
+        id:
+          type: string
+          description: Refund unique identifier.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

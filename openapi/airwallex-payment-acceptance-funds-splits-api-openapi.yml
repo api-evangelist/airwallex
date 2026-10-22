@@ -1,0 +1,473 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Payment Acceptance > Funds Splits API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Payment Acceptance > Funds Splits
+  description: 'A **Funds Split** will guide you through the process to divide part of the collected funds to another destination before settling to the account that owns the funds.
+
+
+    You may create multiple **Funds Splits** for the same source of funds to send money to different destinations. However, one **Funds Split** will only have one destination.
+
+
+    You may specify the following on a Funds Split.
+
+
+    1. What is the source of funds? Denoted by `source_type`.
+
+    2. How much do you want to split? Denoted by `amount`.
+
+    3. Who will receive the funds? Denoted by `destination`.
+
+
+    Currently, Funds Split only works when the source of funds is a payment acceptance transaction, and the destinations are connected accounts to the funds owner.
+
+
+    Data Retention Policy: You can query and operate Funds Split resources for a maximum of 2 years since creation.'
+  x-domain: Payment Acceptance
+  x-resource: Funds Splits
+  x-urlPath: payments/funds_splits
+paths:
+  /api/v1/pa/funds_splits/create:
+    post:
+      tags:
+      - Payment Acceptance > Funds Splits
+      summary: 1|Create a Funds Split
+      description: 'Start dividing the funds you are collecting by creating a Funds Split.
+
+
+        A **Funds Split** can be created only after the **Payment Intent** succeeds and before funds settlement. Subscribe to `payment_intent.succeeded` webhook to confirm if the payment was successful or alternatively provide `funds_split_data` directly in Create/Confirm/Capture a Payment Intent request.
+
+
+        The destination account has to pass KYC to be able to receive fund splits
+
+
+        The `auto_release` flag controls at what point the split funds will be released and settled to the destination. The behavior is as follows: \* **true(default)** - Automatically release the split funds following the standard settlement mode. \* **false** - Release split funds as a separate manual process by calling release.'
+      operationId: createFundsSplit
+      parameters:
+      - name: x-on-behalf-of
+        in: header
+        description: The account unique identifier that this request is on behalf of.
+        required: false
+        schema:
+          type: string
+          default: acct_JD0UmuRLNcytX7sBj0lfWA
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - amount
+              - destination
+              - request_id
+              - source_id
+              - source_type
+              properties:
+                amount:
+                  type: string
+                  description: Amount of this split. Please refer to [supported currencies](/docs/payments/supported-currencies) for supported minor units.
+                auto_release:
+                  type: boolean
+                  description: Set it to `false` if you want to release split manually. `true` by default.
+                destination:
+                  type: string
+                  description: 'The destination that the money is splitting to. The value could be either:
+
+                    - a connected account ID. Used to split funds when collecting payments directly
+
+                    - a platform account ID. Used to split funds when collecting payments on behalf of connected accounts
+
+                    - a Funds Split Destination ID. Used to split funds to an external destination.'
+                metadata:
+                  type: object
+                  description: A set of key-value pairs that you can attach to the Funds Split. You can specify up to 50 keys with key names up to 50 characters long and values up to 500 characters long.
+                request_id:
+                  type: string
+                  description: Unique request identifier specified by the merchant. Maximum length is 64.
+                source_id:
+                  type: string
+                  description: Unique identifier of which source this split would be created from. Currently only payment_intent_id is supported.
+                source_type:
+                  type: string
+                  description: Type of the source for this split. Currently only PAYMENT_INTENT is supported.
+        description: Funds Split creation request.
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FundSplit'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `duplicate_request`, `operation_not_supported`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/funds_splits/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          request_id: b7a93a42-fd15-4529-885f-4d4d7553f2f5
+          source_id: int_hkpdskz7vg1xc7uscdj
+          source_type: PAYMENT_INTENT
+          amount: '0.23'
+          destination: acct_sjnladsfjklasjd
+          metadata:
+            foo: bar
+        status_code: 201
+        reason_phrase: Created
+        response_body:
+          id: spt_hkpd1k27vg1xc7u
+          request_id: b7a93a42-fd15-4529-885f-4d4d7553f2f5
+          source_id: int_hkpdskz7vg1xc7uscdj
+          source_type: PAYMENT_INTENT
+          currency: USD
+          amount: '0.23'
+          destination: acct_sjnladsfjklasjd
+          status: CREATED
+          auto_release: true
+          metadata:
+            foo: bar
+          created_at: '2023-10-01T00:00:00+00:00'
+      x-scope:
+      - scope: funds_split:write
+        group: Payment Acceptance
+        resource_name: Funds Splits
+      x-domain: Payment Acceptance
+      x-resource: Funds Splits
+      x-urlPath: create
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/funds_splits/{id}:
+    get:
+      tags:
+      - Payment Acceptance > Funds Splits
+      summary: 2|Retrieve a Funds Split
+      description: Retrieve a Funds Split by unique identifier.
+      operationId: retrieveFundsSplit
+      parameters:
+      - name: id
+        in: path
+        description: Funds Split Id.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FundSplit'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url), `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/funds_splits/spt_hkpd1k27vg1xc7u
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: spt_hkpd1k27vg1xc7u
+          request_id: b7a93a42-fd15-4529-885f-4d4d7553f2f5
+          source_id: int_hkpdskz7vg1xc7uscdj
+          source_type: PAYMENT_INTENT
+          currency: USD
+          amount: '0.23'
+          destination: acct_sjnladsfjklasjd
+          status: RELEASED
+          auto_release: true
+          metadata:
+            foo: bar
+          created_at: '2023-10-01T00:00:00+00:00'
+      x-scope:
+      - scope: funds_split:read
+        group: Payment Acceptance
+        resource_name: Funds Splits
+      x-domain: Payment Acceptance
+      x-resource: Funds Splits
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/funds_splits:
+    get:
+      tags:
+      - Payment Acceptance > Funds Splits
+      summary: 3|List all Funds Splits
+      description: List all Fund Splits.
+      operationId: listFundsSplits
+      parameters:
+      - name: page_num
+        in: query
+        description: Page number starting from 0.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: page_size
+        in: query
+        description: Number of Fund Splits to be listed per page. Default value is 10. Maximum is 1000. The value greater than the maximum will be capped to the maximum.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: source_id
+        in: query
+        description: Unique identifier of which source this split would be created from. Currently only payment_intent_id is supported.
+        required: true
+        schema:
+          type: string
+          default: int_hkstskz7vg1xc7uscdj
+      - name: source_type
+        in: query
+        description: Type of the source for this split. Currently only PAYMENT_INTENT is supported.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: A flag which identifies whether there are more results.
+                  items:
+                    type: array
+                    description: List items.
+                    items:
+                      $ref: '#/components/schemas/FundSplit'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/funds_splits
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        query_params:
+          page_num: 0
+          page_size: 10
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          has_more: false
+          items:
+          - id: spt_hkpd1k27vg1xc7u
+            request_id: b7a93a42-fd15-4529-885f-4d4d7553f2f5
+            source_id: int_hkpdskz7vg1xc7uscdj
+            source_type: PAYMENT_INTENT
+            currency: USD
+            amount: '0.23'
+            destination: acct_sjnladsfjklasjd
+            status: CREATED
+            auto_release: true
+            metadata:
+              foo: bar
+            created_at: '2023-10-01T00:00:00+00:00'
+      x-scope:
+      - scope: funds_split:read
+        group: Payment Acceptance
+        resource_name: Funds Splits
+      x-domain: Payment Acceptance
+      x-resource: Funds Splits
+      x-urlPath: list
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/funds_splits/{id}/release:
+    post:
+      tags:
+      - Payment Acceptance > Funds Splits
+      summary: 4|Release a Funds Split
+      description: Call this endpoint when you are ready to let the funds arrive at the destination. A Funds Split is capturable if `auto_release=false`.
+      operationId: fundsSplits_release
+      parameters:
+      - name: id
+        in: path
+        description: Fund Split Id.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              properties:
+                request_id:
+                  type: string
+                  description: Unique request identifier specified by the merchant. Maximum length is 64.
+        description: Fund Split Release Request Raw.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FundSplit'
+        '201':
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `duplicate_request`, `operation_not_supported`, `invalid_status_for_operation`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url), `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/funds_splits/spt_hkpd1k27vg1xc7u/release
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          request_id: 5894cf98-f4e4-49f6-9179-cb50e79beff5
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: spt_hkpd1k27vg1xc7u
+          request_id: 5894cf98-f4e4-49f6-9179-cb50e79beff5
+          source_id: int_hkpdskz7vg1xc7uscdj
+          source_type: PAYMENT_INTENT
+          currency: USD
+          amount: '0.23'
+          destination: acct_sjnladsfjklasjd
+          status: RELEASED
+          auto_release: true
+          metadata:
+            foo: bar
+          created_at: '2023-10-01T00:00:00+00:00'
+      x-scope:
+      - scope: funds_split:write
+        group: Payment Acceptance
+        resource_name: Funds Splits
+      x-domain: Payment Acceptance
+      x-resource: Funds Splits
+      x-urlPath: release
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    FundSplit:
+      type: object
+      properties:
+        amount:
+          type: string
+          description: Amount of this split.
+        auto_release:
+          type: boolean
+          description: Release type of this split.
+        created_at:
+          type: string
+          format: date-time
+          description: Instant when this split is created at.
+        currency:
+          type: string
+          description: Currency of this split.
+        destination:
+          type: string
+          description: 'The destination that the money is splitting to. The value could be either:
+
+            - a connected account ID. Used to split funds when collecting payments directly
+
+            - a platform account ID. Used to split funds when collecting payments on behalf of connected accounts.'
+        id:
+          type: string
+          description: Unique identifier for the Funds Split.
+        metadata:
+          type: object
+          description: A set of key-value pairs that you can attach to the Funds Split. You can specify up to 50 keys with key names up to 50 characters long and values up to 500 characters long.
+        request_id:
+          type: string
+          description: Unique request identifier specified by the merchant in the last operation.
+        source_id:
+          type: string
+          description: The source unique identifier of the transaction that this split is created from.
+        source_type:
+          type: string
+          description: Transaction source type, such as PAYMENT_INTENT.
+        status:
+          type: string
+          description: Status of this split, one of CREATED, RELEASED, SETTLED.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

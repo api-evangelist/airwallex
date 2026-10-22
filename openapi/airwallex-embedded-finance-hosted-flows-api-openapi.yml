@@ -1,0 +1,305 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Embedded Finance > Hosted Flows API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Embedded Finance > Hosted Flows
+  description: 'Airwallex Hosted Flows enable a Platform to redirect end users into Airwallex-hosted web pages to complete a variety of activity flows. Platforms can deliver hosted flows via a secure, short-lived link unique to each connected account. After completion of a flow, the user is redirected back to the platform. Hosted flows are available for accounts created via API.
+
+
+    **Currently supported flows:**
+
+
+    * `onboarding` – Submit KYC information needed to activate the account.
+
+
+    Contact your Airwallex Account Manager to start using hosted flows.
+
+
+    Your Account Manager will create a **flow template**, which defines the series of steps the end user will proceed through. Then, you can create a **flow instance** for a particular connected account and direct users to the provided URL.'
+  x-domain: Embedded Finance
+  x-resource: Hosted Flows
+  x-urlPath: scale/hosted_flows
+paths:
+  /api/v1/hosted_flows/create:
+    post:
+      tags:
+      - Embedded Finance > Hosted Flows
+      summary: 1|Create a Flow
+      description: Create a hosted flow instance for an account. Specify the `account_id` of the connected account for which you are creating the flow, and the hosted flow `template` provided by Airwallex.
+      operationId: createHostedFlow
+      x-oboSupported: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - account_id
+              - template
+              properties:
+                account_id:
+                  type: string
+                  description: Account unique identifier of the connected account for which the hosted flow instance is created.
+                error_url:
+                  type: string
+                  description: If set, the user will be redirected to this URL if an error occurs, with an extra query parameter `ahfi_id`.
+                metadata:
+                  type: object
+                  description: A set of key-value pairs that you can attach to the hosted flow.
+                return_url:
+                  type: string
+                  description: The user be redirected to this URL after finishing the flow, with an extra query parameter `ahfi_id`, this field is only required if Airwallex is hosting the experience.
+                template:
+                  type: string
+                  description: Unique identifier of the template that the created flow instance will follow.
+        description: request to create the flow instance.
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AWXHostedFlow'
+        '400':
+          description: '["Your account does not have a flow template"
+
+            ,"Account does not exist."
+
+            "Invalid value for return_url."
+
+            ]'
+        '401':
+          description: '["credentials_invalid","credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/hosted_flows/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          account_id: acct_wst1AJZWbOx2Ijf-PDS123w
+          error_url: <string>
+          metadata: {}
+          return_url: <string>
+          template: <string>
+        response_body:
+          id: ahfi_Y9_AbPkQQQe0K81XcHLy5w
+          metadata: {}
+          result: {}
+          status: INIT
+          url: <string>
+      x-oauthSupported: false
+      x-scope:
+      - scope: hosted_flow:write
+        group: Embedded Finance
+        resource_name: Hosted Flows
+      x-domain: Embedded Finance
+      x-resource: Hosted Flows
+      x-urlPath: create
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/hosted_flows/{id}:
+    get:
+      tags:
+      - Embedded Finance > Hosted Flows
+      summary: 2|Retrieve a Flow
+      description: Get the AWX Hosted Flow instance by its unique identifier.
+      operationId: retrieveHostedFlow
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the hosted flow instance.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AWXHostedFlow'
+        '401':
+          description: '["credentials_invalid","credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/hosted_flows/hosted_flow_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: ahfi_Y9_AbPkQQQe0K81XcHLy5w
+          metadata: {}
+          result: {}
+          status: INIT
+          url: <string>
+      x-oauthSupported: false
+      x-scope:
+      - scope: hosted_flow:read
+        group: Embedded Finance
+        resource_name: Hosted Flows
+      x-domain: Embedded Finance
+      x-resource: Hosted Flows
+      x-urlPath: retrieve
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/hosted_flows/{id}/authorize:
+    post:
+      tags:
+      - Embedded Finance > Hosted Flows
+      summary: 3|Authorize a Flow
+      description: Explicitly authorize the user to access a created hosted flow instance. You can then redirect the user to the `url` link in the response.
+      operationId: hostedFlows_authorize
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the hosted flow instance.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                identity:
+                  type: string
+                  description: The platform’s identifier for the user, such as a user unique identifier, session unique identifier, or access token.
+        description: request to create the flow instance.
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorizedAWXHostedFlow'
+        '401':
+          description: '["credentials_invalid","credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/hosted_flows/hosted_flow_id/authorize
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          identity: <string>
+        response_body:
+          authorization_code: <string>
+          id: <string>
+          metadata: {}
+          result: {}
+          status: INIT
+          url: <string>
+      x-oauthSupported: false
+      x-scope:
+      - scope: hosted_flow:write
+        group: Embedded Finance
+        resource_name: Hosted Flows
+      x-domain: Embedded Finance
+      x-resource: Hosted Flows
+      x-urlPath: authorize
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    AuthorizedAWXHostedFlow:
+      type: object
+      properties:
+        authorization_code:
+          type: string
+          description: This is a unique code embedded in url to authorize the user into the hosted flow. This code expires after 15 seconds.
+        id:
+          type: string
+          description: Unique identifier of the hosted flow instance.
+        metadata:
+          type: object
+          description: A set of key-value pairs that were specified in the request.
+        result:
+          type: object
+          description: The result of the flow execution, `null` if status is not `FINISHED`.
+        status:
+          type: string
+          description: The status of the flow instance.
+          enum:
+          - INIT
+          - PROCESSING
+          - FINISHED
+        url:
+          type: string
+          description: The URL by which your authorized user can enter the hosted flow. This link is unique to the connected account id specified in the request and expires after 15 seconds.
+    AWXHostedFlow:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the hosted flow instance.
+        metadata:
+          type: object
+          description: The metadata set when creating the flow.
+        result:
+          type: object
+          description: The result of the flow execution, containing optional additional information for each flow action if status is `FINISHED`. It is usually empty.
+        status:
+          type: string
+          description: The `status` of the flow instance.
+          enum:
+          - INIT
+          - PROCESSING
+          - FINISHED
+        url:
+          type: string
+          description: The URL by which only users with Airwallex login credentials can enter the flow. For your own users, make sure to [authorize](/docs/api/scale/hosted_flows/authorize) the flow next. This link is unique to the connected `account_id` specified in the request and expires after 15 seconds.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

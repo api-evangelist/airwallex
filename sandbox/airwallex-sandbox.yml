@@ -1,7 +1,11 @@
 generated: '2026-08-30'
 method: searched
 source: https://www.airwallex.com/docs/developer-tools/sandbox-environment
-docs:
+description: >-
+  Self-serve Airwallex sandbox: a completely separate host (api.sandbox.airwallex.com) with its own
+  account, API keys and web app. Test and live are separated by environment, not by key prefix.
+docs: https://www.airwallex.com/docs/developer-tools/sandbox-environment
+docs_links:
   overview: https://www.airwallex.com/docs/developer-tools/sandbox-environment
   test_cards: https://www.airwallex.com/docs/payments/test-and-go-live/test-card-numbers
   signup: https://www.sandbox.airwallex.com/global/signup

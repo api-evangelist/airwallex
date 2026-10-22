@@ -1,0 +1,509 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/airwallex/main/json-schema/airwallex-invoice-schema.json",
+  "title": "Invoice",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/airwallex-openapi.yml#/components/schemas/Invoice",
+  "required": [
+    "amount_due",
+    "applied_discounts",
+    "automatic_tax_status",
+    "billing_customer_id",
+    "created_at",
+    "currency",
+    "enable_automatic_tax",
+    "id",
+    "paid_out_of_band",
+    "payment_status",
+    "status",
+    "total_amount",
+    "total_discount_amounts",
+    "total_tax_amount",
+    "updated_at"
+  ],
+  "type": "object",
+  "properties": {
+    "amount_due": {
+      "type": "number",
+      "description": "The total amount remaining to be paid on this invoice. When the amount due reaches 0, the invoice payment status transitions to `PAID`."
+    },
+    "applied_discounts": {
+      "type": "array",
+      "description": "List of discounts that are applied to the invoice. Discounts of invoice line items are applied before invoice discounts.",
+      "items": {
+        "$ref": "#/$defs/DiscountResponse"
+      }
+    },
+    "automatic_tax_status": {
+      "type": "string",
+      "description": "The automatic tax status of this invoice.",
+      "enum": [
+        "APPLIED",
+        "LOCATION_NOT_SUPPORTED",
+        "LOCATION_NOT_REGISTERED_BY_MERCHANT",
+        "ADDRESS_INCOMPLETE",
+        "DISABLED"
+      ],
+      "x-enumDescriptions": {
+        "APPLIED": "The automatic tax is applied.",
+        "LOCATION_NOT_SUPPORTED": "Automatic tax calculation isn't supported in the customer's location.",
+        "LOCATION_NOT_REGISTERED_BY_MERCHANT": "The merchant isn't registered to collect tax in the customer's location.",
+        "ADDRESS_INCOMPLETE": "The customer address was insufficient or invalid to determine the correct tax.",
+        "DISABLED": "The automatic tax is disabled."
+      }
+    },
+    "bank_transfer_instructions": {
+      "$ref": "#/$defs/InvoiceBankTransferInstructions",
+      "description": "Bank transfer instructions for paying this Invoice. Included when bank transfer is enabled, the Invoice currency is supported, and the Billing Customer is eligible."
+    },
+    "billing_customer_id": {
+      "type": "string",
+      "description": "ID of the [Billing Customer](/docs/api/billing/billing_customers) who this Invoice is issued to."
+    },
+    "collection_method": {
+      "type": "string",
+      "description": "Specify how payment is collected, one of `AUTO_CHARGE`, `CHARGE_ON_CHECKOUT` or `OUT_OF_BAND`."
+    },
+    "created_at": {
+      "type": "string",
+      "description": "Time when this invoice was created."
+    },
+    "credit_note_amount_after_payment": {
+      "type": "number",
+      "description": "The total amount of all credit notes issued for this invoice after invoice payment."
+    },
+    "credit_note_amount_before_payment": {
+      "type": "number",
+      "description": "The total amount of all credit notes issued for this invoice before invoice payment."
+    },
+    "currency": {
+      "type": "string",
+      "description": "The currency of the Invoice in 3-letter ISO-4217 format."
+    },
+    "days_until_due": {
+      "type": "integer",
+      "description": "Number of days from invoice finalization until payment is due.",
+      "format": "int32"
+    },
+    "default_tax_percent": {
+      "maximum": 100,
+      "minimum": 0,
+      "type": "number",
+      "description": "The tax percent between `0` and `100` to be applied to each Line Item's price. The tax will be exclusive."
+    },
+    "due_at": {
+      "type": "string",
+      "description": "Due date set by the merchant for this invoice, if any."
+    },
+    "e_invoicing_document_id": {
+      "type": "string",
+      "description": "The ID of the [E-Invoicing Document](/docs/api/billing/e-invoicing_documents) associated with this Invoice. `null` when no E-Invoicing Document has been created."
+    },
+    "enable_automatic_tax": {
+      "type": "boolean",
+      "description": "Whether automatic tax is enabled for this invoice. When enabled, the system attempts to calculate taxes automatically."
+    },
+    "finalized_at": {
+      "type": "string",
+      "description": "The time that the invoice draft was finalized."
+    },
+    "footer": {
+      "type": "string",
+      "description": "Additional payment instructions or supplementary information that merchants can share with their customers. Displayed in the Invoice PDF."
+    },
+    "hosted_url": {
+      "type": "string",
+      "description": "URL of the hosted page where customers can view and pay this invoice. The URL is valid for 35 days."
+    },
+    "id": {
+      "type": "string",
+      "description": "ID of the Invoice object."
+    },
+    "last_payment_attempt_at": {
+      "type": "string",
+      "description": "Time of last payment attempt. Only applicable when `subscription_id` is not `null`."
+    },
+    "legal_entity_id": {
+      "type": "string",
+      "description": "ID of the legal entity to be used as billing entity. You can find this ID in the Airwallex web app > Settings."
+    },
+    "linked_payment_account_id": {
+      "type": "string",
+      "description": "ID of the linked payment account to collect payment. You can find this ID in the Airwallex web app > Settings > Account details, within the Account Information section."
+    },
+    "memo": {
+      "type": "string",
+      "description": "String used to describe the object. Referenced as memo or invoice note in Webapp."
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "description": "A set of string key-value pairs that you can attach to this object for storing additional information."
+      },
+      "description": "A set of string key-value pairs that you can attach to this object for storing additional information."
+    },
+    "next_payment_attempt_at": {
+      "type": "string",
+      "description": "Time of next payment attempt. Only applicable when `subscription_id` is not `null`."
+    },
+    "number": {
+      "type": "string",
+      "description": "A unique, identifying string that appears on emails sent to the customer for this invoice."
+    },
+    "paid_at": {
+      "type": "string",
+      "description": "The time that the invoice was paid."
+    },
+    "paid_out_of_band": {
+      "type": "boolean",
+      "description": "Returns `true` if the invoice was manually marked paid, returns `false` if the invoice hasn't been paid yet or was paid on Airwallex."
+    },
+    "past_payment_attempt_count": {
+      "type": "integer",
+      "description": "The number of payment attempts made on this invoice so far. Only applicable when `subscription_id` is not `null`.",
+      "format": "int32"
+    },
+    "payment_options": {
+      "$ref": "#/$defs/InvoicePaymentOptions",
+      "description": "Payment settings of this Invoice. Only applicable if collection_method is `CHARGE_ON_CHECKOUT`."
+    },
+    "payment_source_id": {
+      "type": "string",
+      "description": "ID of the [Payment Source](/docs/api/billing/payment_sources) to pay for the invoice.  \nIf `collection_method` is `CHARGE_ON_CHECKOUT`, a Payment Source is automatically created during invoice payment when `payment_options.payment_method_save.next_triggered_by` is `MERCHANT` and `payment_options.payment_method_save.mode` is `ENABLED`, or when it is `COLLECT_CONSENT` and the customer has given consent."
+    },
+    "payment_status": {
+      "type": "string",
+      "description": "Status of the payment for the invoice, one of `UNPAID` and `PAID`."
+    },
+    "pdf_url": {
+      "type": "string",
+      "description": "The link to download the PDF for the invoice. The URL will be valid for 35 days. If the invoice has not been finalized yet, this will be `null`."
+    },
+    "remaining_payment_attempt_count": {
+      "type": "integer",
+      "description": "The number of the remaining payment attempts. If `0`, no more payment attempts would be triggered automatically for this invoice. Only applicable when `subscription_id` is not `null`.",
+      "format": "int32"
+    },
+    "status": {
+      "type": "string",
+      "description": "Status of the invoice. Once the invoice is created, it will be defaulted to `DRAFT`, and once the invoice is finalized, it will turn to `FINALIZED`. When an invoice is voided, it will become `VOIDED`."
+    },
+    "subscription_id": {
+      "type": "string",
+      "description": "ID of the [Subscription](/docs/api/billing/subscriptions) that generated this invoice, if any."
+    },
+    "ui_options": {
+      "type": "object",
+      "description": "UI configuration for the digital invoice page.",
+      "properties": {
+        "theme_id": {
+          "type": "string",
+          "description": "ID of the theme to apply to this invoice, overriding the theme configured for its legal entity."
+        }
+      }
+    },
+    "total_amount": {
+      "type": "number",
+      "description": "The total amount of the invoice, including tax and discount if applicable."
+    },
+    "total_discount_amounts": {
+      "type": "array",
+      "description": " The aggregate amounts calculated per discount across all Invoice Line Items and the Invoice.",
+      "items": {
+        "$ref": "#/$defs/DiscountAmount"
+      }
+    },
+    "total_tax_amount": {
+      "type": "number",
+      "description": "The aggregate amounts calculated for all line items."
+    },
+    "updated_at": {
+      "type": "string",
+      "description": "Time when this invoice was last updated."
+    },
+    "voided_at": {
+      "type": "string",
+      "description": "The time that the invoice was voided."
+    }
+  },
+  "$defs": {
+    "CouponDuration": {
+      "required": [
+        "period",
+        "period_unit"
+      ],
+      "type": "object",
+      "properties": {
+        "period": {
+          "type": "integer",
+          "description": "The number of period units.",
+          "format": "int32",
+          "minimum": 1
+        },
+        "period_unit": {
+          "type": "string",
+          "description": "Specifies duration. One of `DAY`, `WEEK`, `MONTH`, `YEAR`.",
+          "pattern": "^(DAY|WEEK|MONTH|YEAR)$"
+        }
+      },
+      "description": "The duration of the coupon to apply, when `duration_type`is `CUSTOM`. `null` if `duration_type` is `ONCE` or `INDEFINITELY`."
+    },
+    "DiscountAmount": {
+      "required": [
+        "amount",
+        "applied_discount_id"
+      ],
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "description": "The amount of the applied discount."
+        },
+        "applied_discount_id": {
+          "type": "string",
+          "description": "ID of the Discount object which is applied."
+        }
+      }
+    },
+    "DiscountResponse": {
+      "required": [
+        "applied_to",
+        "applied_to_id",
+        "billing_customer_id",
+        "created_at",
+        "discount_model",
+        "duration_type",
+        "id",
+        "name",
+        "source",
+        "starts_at",
+        "updated_at"
+      ],
+      "type": "object",
+      "properties": {
+        "amount_off": {
+          "type": "number",
+          "description": "The fixed amount to deduct when `discount_model` is `FLAT`."
+        },
+        "applied_to": {
+          "type": "string",
+          "description": "Specifies the type of object this discount applies to. Possible values: \n- `SUBSCRIPTION`: Applies to an entire subscription. \n- `SUBSCRIPTION_ITEM`: Applies to a specific item within a subscription. \n- `INVOICE`: Applies to an entire invoice. \n- `INVOICE_LINE_ITEM`: Applies to a specific line item on an invoice."
+        },
+        "applied_to_id": {
+          "type": "string",
+          "description": "ID of the specific target object the discount is applied to. Must correspond to the object type defined in applied_to."
+        },
+        "billing_customer_id": {
+          "type": "string",
+          "description": "The ID of the billing customer to whom the coupon is applied."
+        },
+        "checkout_id": {
+          "type": "string",
+          "description": "The ID of the Checkout where this discount was redeemed, if applicable."
+        },
+        "created_at": {
+          "type": "string",
+          "description": "Time when the Discount was created.",
+          "format": "date-time"
+        },
+        "currency": {
+          "type": "string",
+          "description": "The currency of `amount_off` when `discount_model` is `FLAT`."
+        },
+        "discount_model": {
+          "type": "string",
+          "description": "Specified how to calculate the discount amount when applied, one of \n- `FLAT`: fixed amount off.\n- `PERCENTAGE`: percentage off."
+        },
+        "duration": {
+          "$ref": "#/$defs/CouponDuration",
+          "description": "The duration of the discount to apply, when `duration_type` is `CUSTOM`. `null` if `duration_type` is `ONCE` or `INDEFINITELY`."
+        },
+        "duration_type": {
+          "type": "string",
+          "description": "Determines how long the coupon's discount remains active after being applied. Possible values: \n- `ONCE`: Applies only to the first charge of a subscription or a one-off invoice.\n- `CUSTOM`: Applies to all charges within a specified number of billing cycles, as defined by duration.\n- `INDEFINITELY`: Applies to all future charges for the subscription until it is removed."
+        },
+        "ends_at": {
+          "type": "string",
+          "description": "The timestamp when the discount expires. Present only when the associated coupon's duration_type is CUSTOM."
+        },
+        "id": {
+          "type": "string",
+          "description": "ID of the Discount object."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the discount. For discounts created from a coupon, defaults to the coupon name at creation time."
+        },
+        "percentage_off": {
+          "type": "number",
+          "description": "The percentage between 0 to 100 to be applied to deduct when `discount_model` is `PERCENTAGE`."
+        },
+        "source": {
+          "type": "string",
+          "description": "Source of the Discount. Possible values: \n- `COUPON`: the discount is applied through a coupon."
+        },
+        "source_id": {
+          "type": "string",
+          "description": "ID of the creating source, e.g. is the ID of the coupon if source = COUPON."
+        },
+        "starts_at": {
+          "type": "string",
+          "description": "Time when the discount takes effect. For discounts applied to a subscription or subscription item, this corresponds to the start date of the first billing period."
+        },
+        "updated_at": {
+          "type": "string",
+          "description": "Time when the Discount was updated.",
+          "format": "date-time"
+        }
+      }
+    },
+    "InvoiceBankTransferInstructions": {
+      "required": [
+        "account_name",
+        "currency"
+      ],
+      "type": "object",
+      "properties": {
+        "currency": {
+          "type": "string",
+          "description": "Currency of the receiving account (3-letter ISO-4217 code)."
+        },
+        "account_name": {
+          "type": "string",
+          "description": "Name of the account holder receiving the transfer."
+        },
+        "account_number": {
+          "type": "string",
+          "description": "Bank account number."
+        },
+        "account_category": {
+          "type": "string",
+          "description": "Category of the receiving bank account. One of `CHECKING`, `SAVINGS`, or `BUSINESS`.",
+          "enum": [
+            "CHECKING",
+            "SAVINGS",
+            "BUSINESS"
+          ]
+        },
+        "bank_name": {
+          "type": "string",
+          "description": "Name of the financial institution in which the receiving account is domiciled."
+        },
+        "iban": {
+          "type": "string",
+          "description": "IBAN number."
+        },
+        "swift_code": {
+          "type": "string",
+          "description": "Bank SWIFT or BIC code."
+        },
+        "routing_number": {
+          "type": "string",
+          "description": "Bank routing number. Applicable only to accounts in the United States."
+        },
+        "sort_code": {
+          "type": "string",
+          "description": "Bank sort code. Applicable only to accounts in the United Kingdom."
+        },
+        "bsb_number": {
+          "type": "string",
+          "description": "Bank State Branch (BSB) number. Applicable only to accounts in Australia."
+        },
+        "bank_code": {
+          "type": "string",
+          "description": "Code identifying the bank. Applicable in markets including Singapore and Hong Kong."
+        },
+        "branch_code": {
+          "type": "string",
+          "description": "Code identifying the bank branch. Used together with `bank_code`."
+        },
+        "transit_number": {
+          "type": "string",
+          "description": "Bank transit number. Applicable only to accounts in Canada."
+        },
+        "institution_number": {
+          "type": "string",
+          "description": "Institution number identifying the bank. Applicable only to accounts in Canada."
+        },
+        "charge_type": {
+          "type": "string",
+          "description": "Indicates who bears the bank charges on the transfer. Returned only for international (SWIFT) transfers. Omitted for local transfers.\nPossible value:\n- `OUR`: The payer covers all transfer charges so the full amount is received.",
+          "enum": [
+            "OUR"
+          ]
+        },
+        "merchant_address": {
+          "required": [
+            "country_code"
+          ],
+          "type": "object",
+          "description": "The recipient's registered business address, used when making an international (SWIFT) transfer. Returned only for SWIFT transfers. Omitted for local transfers.",
+          "properties": {
+            "country_code": {
+              "type": "string",
+              "description": "Two-letter ISO 3166-1 country code of the recipient's address."
+            },
+            "state": {
+              "type": "string",
+              "description": "State, province, or region of the recipient's address."
+            },
+            "suburb": {
+              "type": "string",
+              "description": "Suburb or city of the recipient's address."
+            },
+            "postcode": {
+              "type": "string",
+              "description": "Postal or ZIP code of the recipient's address."
+            },
+            "street_address": {
+              "type": "array",
+              "description": "Street address of the recipient, given as one or more address lines.",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "reference": {
+          "type": "string",
+          "description": "Unique payment reference to include with the bank transfer to match the payment to this Invoice. Available after the Invoice is finalized."
+        }
+      }
+    },
+    "InvoicePaymentMethodSave": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string",
+          "description": "Controls whether the payment method can be saved for future use. Possible values: `ENABLED`, `DISABLED`, or `COLLECT_CONSENT`.  \n`ENABLED`: The payment method will be saved for future use.  \n`DISABLED`: The payment method will not be saved.  \n`COLLECT_CONSENT`: The digital invoice UI asks the customer whether they want to save the payment method."
+        },
+        "next_triggered_by": {
+          "type": "string",
+          "description": "Indicates who will use the saved payment source to trigger future payments. One of `MERCHANT` or `CUSTOMER`.  \nIf `MERCHANT`, a Payment Source is created for future use. If `CUSTOMER`, the payment method is saved only with the payment provider."
+        }
+      },
+      "description": "Settings for saving this payment method for future use."
+    },
+    "InvoicePaymentOptions": {
+      "type": "object",
+      "properties": {
+        "payment_method_save": {
+          "$ref": "#/$defs/InvoicePaymentMethodSave",
+          "description": "Settings for saving this payment method for future use."
+        },
+        "payment_method_types": {
+          "type": "array",
+          "description": "Specify which payment methods to display on the digital invoice page and set their display order. Only methods supported for the specified currency and the customer's country code will appear on the digital invoice page.",
+          "items": {
+            "type": "string",
+            "description": "Specify which payment methods to display on the digital invoice page and set their display order. Only methods supported for the specified currency and the customer's country code will appear on the digital invoice page."
+          }
+        }
+      },
+      "description": "Payment settings of this Invoice. Only applicable if collection_method is `CHARGE_ON_CHECKOUT`."
+    }
+  }
+}

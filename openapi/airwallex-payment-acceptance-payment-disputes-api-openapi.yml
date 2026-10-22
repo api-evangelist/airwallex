@@ -1,0 +1,1895 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Payment Acceptance > Payment Disputes API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Payment Acceptance > Payment Disputes
+  description: 'A dispute occurs when a shopper contests legitimacy of a payment. **PaymentDispute** APIs will enable you to manage your dispute events removing the need to managing dispute events manually via web-app, there by reducing your manual efforts.
+
+
+    Combination of a stage & status of a PaymentDispute will indicate the current situation of dispute. You can use our product documentation to understand the possible next actions based on stage & status combination.
+
+
+    Data Retention Policy: You can query and operate PaymentDispute resources for a maximum of 2 years since creation.'
+  x-domain: Payment Acceptance
+  x-resource: Payment Disputes
+  x-urlPath: payments/payment_disputes
+paths:
+  /api/v1/pa/payment_disputes/{id}:
+    get:
+      tags:
+      - Payment Acceptance > Payment Disputes
+      summary: 1|Retrieve a Payment Dispute
+      description: Retrieve Payment Dispute information using Payment Dispute unique identifier.
+      operationId: retrievePaymentDispute
+      parameters:
+      - name: id
+        in: path
+        description: Payment Dispute unique identifier.
+        required: true
+        schema:
+          type: string
+          default: dst_hkst98v9kgk2t7otgl0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentDispute'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/payment_disputes/dst_hkpdw2eqp9oie
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: dst_hkpdw2eqp9oie
+          stage: CHARGEBACK
+          status: ACCEPTED
+          amount: 100
+          currency: USD
+          mode: COLLABORATION
+          merchant_order_id: D202503210001
+          payment_intent_id: int_hkpdskz7vg1xc7uscdj
+          payment_attempt_id: att_hkpdw2eqp9oie
+          acquirer_reference_number: T1234567890
+          payment_method_type: VISA
+          issuer_comment: ''
+          issuer_documents: []
+          card_brand: visa
+          reason:
+            original_code: '4837'
+            description: Fraudulent transaction.
+            type: FRAUDULENT
+          accept_details:
+          - stage: CHARGEBACK
+            reason: AGREEMENT_REACHED_WITH_CUSTOMER
+            description: Accepted
+            refund:
+              amount: 100
+              reason: REQUESTED_BY_CUSTOMER
+            accepted_by: airwallex
+            accepted_at: '2023-10-01T10:00:00+00:00'
+          challenge_details: []
+          due_at: '2023-11-01T10:00:00+00:00'
+          transaction_type: PAYMENT
+          customer_name: John Doe
+          created_at: '2023-10-01T10:00:00+00:00'
+          updated_at: '2023-10-01T10:00:00+00:00'
+      x-scope:
+      - scope: payment_dispute:read
+        group: Payment Acceptance
+        resource_name: Payment Disputes
+      - scope: payment_dispute:write
+        group: Payment Acceptance
+        resource_name: Payment Disputes
+      x-domain: Payment Acceptance
+      x-resource: Payment Disputes
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/payment_disputes:
+    get:
+      tags:
+      - Payment Acceptance > Payment Disputes
+      summary: 2|List all Payment Disputes
+      description: List all Payment Disputes using stage, status, reason code, due date, created time or updated time.
+      operationId: listPaymentDisputes
+      parameters:
+      - name: connected_account_id
+        in: query
+        description: Optional Airwallex-assigned identifier of the connected account to filter by. Only applicable to platforms.
+        required: false
+        schema:
+          type: string
+      - name: customer_id
+        in: query
+        description: The customer unique identifier of original payment.
+        required: false
+        schema:
+          type: string
+          default: cus_ps8e0ZgQzd2QnCxVpzJrHD6KOVu
+      - name: customer_name
+        in: query
+        description: The customer name of original payment.
+        required: false
+        schema:
+          type: string
+          default: John Doe
+      - name: from_created_at
+        in: query
+        description: The start time of created_at in ISO8601 format.
+        required: false
+        schema:
+          type: string
+          default: 2023-08-08T08:00:00+0000
+      - name: from_due_at
+        in: query
+        description: The start time of due_at in ISO8601 format. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`).
+        required: false
+        schema:
+          type: string
+          default: '2023-08-08T08:00:00+00:00'
+      - name: from_updated_at
+        in: query
+        description: The start time of updated_at in ISO8601 format. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`).
+        required: false
+        schema:
+          type: string
+          default: '2023-08-08T08:00:00+00:00'
+      - name: merchant_order_id
+        in: query
+        description: The order unique identifier of original payment.
+        required: false
+        schema:
+          type: string
+          default: '123456'
+      - name: page
+        in: query
+        description: '`0` or the BASE 64 encoded resource unique identifier of Payment Dispute and navigation direction to indicate the page should be returned. `0` is used by default for initial page.'
+        required: false
+        schema:
+          type: string
+          default: '0'
+      - name: payment_intent_id
+        in: query
+        description: Payment Dispute status.
+        required: false
+        schema:
+          type: string
+          default: int_sgstfwxj9gkanu6hezi
+      - name: payment_method_type
+        in: query
+        description: The payment method type of original payment.
+        required: false
+        schema:
+          type: string
+          default: VISA
+      - name: reason_code
+        in: query
+        description: Payment Dispute reason code.
+        required: false
+        schema:
+          type: string
+          default: '10.4'
+      - name: size
+        in: query
+        description: Number of Payment Disputes to be listed per page. Default value is 10. Maximum is 1000. The value greater than the maximum will be capped to the maximum.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: stage
+        in: query
+        description: Payment Dispute stage.
+        required: false
+        schema:
+          type: string
+          default: CHARGEBACK
+      - name: status
+        in: query
+        description: Payment Dispute status.
+        required: false
+        schema:
+          type: string
+          default: REQUIRES_RESPONSE
+      - name: to_created_at
+        in: query
+        description: The end time of created_at in ISO8601 format.
+        required: false
+        schema:
+          type: string
+          default: 2023-08-08T08:00:00+0000
+      - name: to_due_at
+        in: query
+        description: The end time of due_at in ISO8601 format. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`).
+        required: false
+        schema:
+          type: string
+          default: '2023-08-08T08:00:00+00:00'
+      - name: to_updated_at
+        in: query
+        description: The end time of updated_at in ISO8601 format. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`).
+        required: false
+        schema:
+          type: string
+          default: '2023-08-08T08:00:00+00:00'
+      - name: transaction_type
+        in: query
+        description: 'The transaction type of the original transaction. Possible values: `PAYMENT`, `REFUND`.'
+        required: false
+        schema:
+          type: string
+          default: PAYMENT
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageResponseDTOOfPaymentAcceptancePaymentDispute'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/payment_disputes
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        query_params:
+          page: '0'
+          size: 10
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - id: dst_hkpdw2eqp9oie
+            stage: CHARGEBACK
+            status: ACCEPTED
+            mode: COLLABORATION
+            issuer_comment: ''
+            issuer_documents: []
+            amount: 100
+            currency: USD
+            merchant_order_id: D202503210001
+            payment_intent_id: int_hkpdskz7vg1xc7uscdj
+            payment_attempt_id: att_hkpdw2eqp9oie
+            acquirer_reference_number: T1234567890
+            payment_method_type: VISA
+            card_brand: visa
+            reason:
+              original_code: '4837'
+              description: Fraudulent transaction.
+              type: FRAUDULENT
+            accept_details:
+            - stage: CHARGEBACK
+              reason: AGREEMENT_REACHED_WITH_CUSTOMER
+              description: Accepted
+              refund:
+                amount: 100
+                reason: REQUESTED_BY_CUSTOMER
+              accepted_by: airwallex
+              accepted_at: '2023-10-01T10:00:00+00:00'
+            challenge_details: []
+            due_at: '2023-11-01T10:00:00+00:00'
+            created_at: '2023-10-01T10:00:00+00:00'
+            updated_at: '2023-10-01T10:00:00+00:00'
+            transaction_type: PAYMENT
+            customer_name: John Doe
+      x-scope:
+      - scope: payment_dispute:read
+        group: Payment Acceptance
+        resource_name: Payment Disputes
+      - scope: payment_dispute:write
+        group: Payment Acceptance
+        resource_name: Payment Disputes
+      x-domain: Payment Acceptance
+      x-resource: Payment Disputes
+      x-urlPath: list
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/payment_disputes/{id}/update:
+    post:
+      tags:
+      - Payment Acceptance > Payment Disputes
+      summary: 3|Update a Payment Dispute
+      description: Update a Payment Dispute by ID. Currently only the `metadata` field can be updated.
+      operationId: updatePaymentDispute
+      parameters:
+      - name: id
+        in: path
+        description: Payment Dispute ID.
+        required: true
+        schema:
+          type: string
+          default: dst_hkst98v9kgk2t7otgl0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - metadata
+              properties:
+                metadata:
+                  type: object
+                  description: A set of key-value pairs attached to the dispute. Maximum 50 key-value pairs. Keys and values must not exceed 256 characters.
+                  additionalProperties:
+                    type: string
+        description: Update dispute request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentDispute'
+        '201':
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/payment_disputes/payment_dispute_id/update
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          metadata:
+            key: value
+        response_body:
+          accept_details:
+          - accepted_at: '2023-09-18T03:11:00+00:00'
+            accepted_by: user@email.com
+            description: ACCEPT
+            reason: ee939540-3203-4a2c-9172-89a566485dd9
+            refund:
+              amount: 10
+              reason: REQUESTED_BY_CUSTOMER
+          acquirer_reference_number: '789456'
+          ai_dispute_automation:
+            recommendation:
+              action: Challenge
+              evidence_to_submit:
+              - order_snapshot_file_ids
+              - product_description
+              - merchant_business_model_description
+            status: AVAILABLE
+            unavailable_reason: NOT_SUPPORTED
+          amount: 100
+          card_brand: visa
+          challenge_details:
+          - challenge_method: AI_DISPUTE_AUTOMATION
+            challenged_at: '2023-09-18T03:11:00+00:00'
+            challenged_by: test@airwallex.com
+            customer_info:
+              billing_address: Billing address
+              device_id: 00000000-000000000000000
+              email: test@airwallex.com
+              ip: 212.121.222.123
+              name: John Deo
+              phone_number: '13800000000'
+            delivery_info:
+              address: Shipping address
+              delivered_at: '2023-09-18T03:11:00+00:00'
+              fee_amount: 10
+              fee_currency: USD
+              name: Joe Doe
+              phone_number: '13800000000'
+              shipped_at: '2023-09-18T03:11:00+00:00'
+              shipping_company: Shipping company
+              shipping_method: Shipping method
+              status: SHIPPED
+              tracking_number: '123456'
+            evidence:
+              access_activity_file_ids: []
+              authenticity_proof_file_ids: []
+              customer_communication_file_ids: []
+              duplicate_payment_file_ids: []
+              duplicate_transaction_amount_currency: 100.00 USD
+              duplicate_transaction_created_at: '2024-01-15T10:30:00Z'
+              order_fulfilled_at: '2024-01-15T10:30:00Z'
+              order_fulfillment_file_ids: []
+              order_snapshot_file_ids: []
+              previous_dispute_won_on_same_card_file_ids: []
+              previous_purchase_similar_product_file_ids: []
+              product_consumption_file_ids: []
+              product_description: Digital subscription service
+              product_snapshot_file_ids: []
+              refund_policy_file_ids: []
+              user_agreement_file_ids: []
+            order_info:
+              created_at: '2023-09-18T03:11:00+00:00'
+              id: '123456'
+              invoice_number: '456123'
+              products:
+              - category: Apparel and accessories
+                code: '3414314111'
+                desc: IPHONE 7
+                effective_end_at: '2020-12-31T23:59:59Z'
+                effective_start_at: '2020-01-01T00:00:00Z'
+                image_url: https://example.airwallex.com/product/12345.png
+                name: IPHONE7
+                quantity: 5
+                sku: '100004'
+                type: physical
+                unit_price: 100.01
+                url: https://example.airwallex.com/product/12345
+              total_amount: 200
+              total_currency: USD
+            product_description: product description
+            product_type: PHYSICAL_GOODS
+            reason: CUSTOMER_WITHDRAWN
+            refund_refusal_reason: reason
+            seller_info:
+              name: seller
+              store_name: store
+              store_physical_address: store address
+              store_url: https://www.store-url.com
+            stage: CHARGEBACK
+            supporting_documents:
+              customer_communication_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              customer_signature_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              documents:
+              - description: document descriptions.
+                file_ids:
+                - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+                type: PRIMARY
+              duplicate_charge_defense_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              generated_files:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              other_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              proof_of_delivery_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              receipt_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+              refund_policy_documents:
+              - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+          created_at: '2023-09-18T03:11:00+00:00'
+          currency: USD
+          customer_id: cus_ps8e0ZgQzd2QnCxVpzJrHD6KOVu
+          customer_name: John Doe
+          due_at: '2023-09-18T03:11:00+00:00'
+          id: dst_nlstrf5jxgp32pfqbtq
+          issuer_comment: comment
+          issuer_documents:
+          - YmVkODdkNGMtNWFiZC00MzM0LdGVzdC5wZGZfMTYxNTI2MDIxOQ==
+          merchant_order_id: '123456'
+          metadata: {}
+          mode: COLLABORATION
+          payment_attempt_id: att_nlstskcx5gipkzd6kse_dwsja0_decrp
+          payment_intent_id: int_nlstbs6rlgipjdwsja0_decrp
+          payment_method_type: VISA
+          reason:
+            description: <string>
+            original_code: <string>
+            type: PRODUCT_NOT_RECEIVED
+          refunds:
+          - acquirer_reference_number: 02709821210000001031868
+            id: rfd_ps8e0ZgQzd2QnCxVpzJrHD6KOVu
+          stage: CHARGEBACK
+          status: RECEIVED
+          transaction_type: PAYMENT
+          updated_at: '2023-09-18T03:11:00+00:00'
+      x-scope:
+      - scope: payment_dispute:write
+        group: Payment Acceptance
+        resource_name: Payment Disputes
+      x-domain: Payment Acceptance
+      x-resource: Payment Disputes
+      x-urlPath: update
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/payment_disputes/{id}/accept:
+    post:
+      tags:
+      - Payment Acceptance > Payment Disputes
+      summary: 4|Accept a Payment Dispute
+      description: Accept a Payment Dispute. When a Payment Dispute is under status `REQUIRES_RESPONSE`, you can accept it to avoid further escalation and fees. Accepting the dispute during `RFI` stage will trigger a full refund. The refund amount and reason can be customized by populating the `refund` field.
+      operationId: accept
+      parameters:
+      - name: id
+        in: path
+        description: Payment Dispute unique identifier.
+        required: true
+        schema:
+          type: string
+          default: dst_hkst98v9kgk2t7otgl0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              properties:
+                accepted_by:
+                  type: string
+                  description: User unique identifier of person/system accepts Payment Dispute.
+                description:
+                  type: string
+                  description: The accept description.
+                reason:
+                  type: string
+                  description: "The accept reason, `OTHERS` is used by default. One of \n\n- `AGREEMENT_REACHED_WITH_CUSTOMER`\n- `CUSTOMER_RELATIONSHIP_MAINTENANCE` \n- `LOW_VALUE_TRANSACTION`\n- `VALID_CUSTOMER_DISPUTE` \n- `COLLABORATION_ACCEPTED_MANUAL`\n- `OTHERS`.\n"
+                refund:
+                  type: object
+                  description: The Refund to be created. It is applicable when accepting a dispute at the `RFI` stage.
+                  properties:
+                    amount:
+                      type: number
+                      description: The refund amount when accepting `RFI`. If not specified, it will be same as the remaining amount that has been captured but not yet refunded. Please refer to [supported currencies](/docs/payments/supported-currencies) for supported minor units.
+                    reason:
+                      type: string
+                      description: The refund reason when accepting `RFI`. `OTHERS` is used by default. One of `REQUESTED_BY_CUSTOMER`, `DUPLICATE`, `FRAUDULENT`, `ABANDONED`, and `OTHERS`.
+                request_id:
+                  type: string
+                  description: Unique request identifier specified by the merchant.
+        description: Dispute respond request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentDispute'
+        '201':
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/payment_disputes/dst_hkpdw2eqp9oie/accept
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          accepted_by: airwallex
+          description: Accepted
+          reason: AGREEMENT_REACHED_WITH_CUSTOMER
+          request_id: dd9a28c6-ef7b-44fe-b845-db487bf401c5
+          refund:
+            amount: 100
+            reason: REQUESTED_BY_CUSTOMER
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: dst_hkpdw2eqp9oie
+          stage: CHARGEBACK
+          status: ACCEPTED
+          amount: 100
+          currency: USD
+          mode: COLLABORATION
+          merchant_order_id: D202503210001
+          payment_intent_id: int_hkpdskz7vg1xc7uscdj
+          payment_attempt_id: att_hkpdw2eqp9oie
+          acquirer_reference_number: T1234567890
+          payment_method_type: VISA
+          issuer_comment: ''
+          issuer_documents: []
+          card_brand: visa
+          reason:
+            original_code: '4837'
+            description: Fraudulent transaction.
+            type: FRAUDULENT
+          accept_details:
+          - stage: CHARGEBACK
+            reason: AGREEMENT_REACHED_WITH_CUSTOMER
+            description: Accepted
+            refund:
+              amount: 100
+              reason: REQUESTED_BY_CUSTOMER
+            accepted_by: airwallex
+            accepted_at: '2023-10-01T10:00:00+00:00'
+          challenge_details: []
+          due_at: '2023-11-01T10:00:00+00:00'
+          transaction_type: PAYMENT
+          customer_name: John Doe
+          created_at: '2023-10-01T10:00:00+00:00'
+          updated_at: '2023-10-01T10:00:00+00:00'
+      x-scope:
+      - scope: payment_dispute:write
+        group: Payment Acceptance
+        resource_name: Payment Disputes
+      x-domain: Payment Acceptance
+      x-resource: Payment Disputes
+      x-urlPath: accept
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/payment_disputes/{id}/challenge:
+    post:
+      tags:
+      - Payment Acceptance > Payment Disputes
+      summary: 5|Challenge a Payment Dispute
+      description: Challenge a Payment Dispute. When you receive a Payment Dispute in Chargeback or RFI stage with `REQUIRES_RESPONSE` status then you can further challenge the Payment Dispute. Challenge response should include at least one of the recommended evidence document types attached, please use File Service to upload files and refer to it under `supporting_documents`. There are different suggested information sections in different stages, please check if the section is applicable before submission.
+      operationId: challenge
+      parameters:
+      - name: id
+        in: path
+        description: Payment Dispute unique identifier.
+        required: true
+        schema:
+          type: string
+          default: dst_hkst98v9kgk2t7otgl0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - request_id
+              properties:
+                challenge_method:
+                  type: string
+                  description: "The method used to challenge the dispute. Possible values: \n\n- **AI_DISPUTE_AUTOMATION**: Challenge using [AI Dispute Automation](/docs/payments/payment-operations/disputes/dispute-automation)\n  - Applicable when Payment Dispute stage is `CHARGEBACK` and AI Dispute Automation status is `AVAILABLE`\n- **STANDARD**: Challenge using standard flow\n\nDefault to `STANDARD` if not provided."
+                challenged_by:
+                  type: string
+                  description: User unique identifier of person/system challenges Payment Dispute.
+                customer_info:
+                  type: object
+                  description: Customer information. Applicable when Payment Dispute stage is `CHARGEBACK`.
+                  properties:
+                    billing_address:
+                      type: string
+                      description: Customer billing address.
+                    device_id:
+                      type: string
+                      description: Customer device unique identifier.
+                    email:
+                      type: string
+                      description: Customer email.
+                    ip:
+                      type: string
+                      description: Customer ip.
+                    name:
+                      type: string
+                      description: Customer name.
+                    phone_number:
+                      type: string
+                      description: Customer phone number.
+                delivery_info:
+                  type: object
+                  description: The delivery information of goods or services.
+                  properties:
+                    address:
+                      type: string
+                      description: The shipping address. Applicable at stage `RFI`.
+                    delivered_at:
+                      type: string
+                      format: date-time
+                      description: The date when services or goods are delivered.
+                    fee_amount:
+                      type: number
+                      description: The amount of shipping fee. Applicable at stage `RFI`. Please refer to [supported currencies](/docs/payments/supported-currencies) for supported minor units.
+                    fee_currency:
+                      type: string
+                      description: The currency of shipping fee. Applicable at stage `RFI`. Please refer to [supported currencies](/docs/payments/supported-currencies).
+                    name:
+                      type: string
+                      description: The recipient's name. Applicable at stage `RFI`.
+                    phone_number:
+                      type: string
+                      description: The recipient's phone number. Applicable at stage `RFI`.
+                    shipped_at:
+                      type: string
+                      format: date-time
+                      description: The shipping date (the expected delivery date for `RFI`).
+                    shipping_company:
+                      type: string
+                      description: The company name managing this delivery, such as asendia-usa, 4px, and so on.
+                    shipping_method:
+                      type: string
+                      description: The shipping method, such as Priority Mail, Flat rate, and so on. Applicable at stage `RFI`.
+                    status:
+                      type: string
+                      description: The shipping status, such as `SHIPPED`, `DELIVERED`, and so on. Applicable at stage `RFI`.
+                    tracking_number:
+                      type: string
+                      description: The shipping tracking number.
+                description:
+                  type: string
+                  description: "The additional description of the Payment Dispute.  \nDeprecated. Use `supporting_documents.documents.description` instead."
+                duplicate_charge_info:
+                  type: object
+                  description: The defense information when a Payment Dispute is raised due to a duplicate charge.
+                  properties:
+                    explanation:
+                      type: string
+                      description: The explanation of duplicate payment.
+                    payment_id:
+                      type: string
+                      description: The unique identifier of duplicate payment.
+                evidence:
+                  type: object
+                  description: Evidence required when challenge_method is set to `AI_DISPUTE_AUTOMATION`.
+                  properties:
+                    access_activity_file_ids:
+                      type: array
+                      description: 'File unique identifiers of access activity files. Provide screenshots from your activity log that show the customer''s on-site behaviour, such as login times or download timestamps. Supported file formats: JPG, PNG, WEBP and max 10MB size. Please use [File Service](/docs/api/supporting_services/file_service/upload_files) to upload files.'
+                      items:
+                        type: string
+                    authenticity_proof_file_ids:
+                      type: array
+                      description: 'File unique identifiers of authenticity proof files. Provide documentation that confirms your products are genuine and not counterfeit. This can include certificates, supplier invoices, or brand authorization letters. Supported file formats: JPG, PNG, WEBP and max 10MB size. Please use [File Service](/docs/api/supporting_services/file_service/upload_files) to upload files.'
+                      items:
+                        type: string
+                    customer_communication_file_ids:
+                      type: array
+                      description: 'File unique identifiers of customer communication files. Provide copies of any emails, chat logs, or messages with the customer that show communication before or after the purchase. Supported file formats: JPG, PNG, WEBP and max 10MB size. Please use [File Service](/docs/api/supporting_services/file_service/upload_files) to upload files.'
+                      items:
+                        type: string
+                    duplicate_acquirer_reference_number:
+                      type: string
+                      description: Acquirer reference number of the duplicate transaction.
+                    duplicate_explanation:
+                      type: string
+                      description: Explanation of the duplicate transaction.
+                    duplicate_payment_file_ids:
+                      type: array
+                      description: 'File unique identifiers of duplicate payment files. Provide documents that show how this transaction differs from any potential duplicates. Supported file formats: JPG, PNG, WEBP and max 10MB size. Please use [File Service](/docs/api/supporting_services/file_service/upload_files) to upload files.'
+                      items:
+                        type: string
+                    duplicate_transaction_amount_currency:
+                      type: string
+                      description: Amount and currency of the duplicate transaction.
+                    duplicate_transaction_created_at:
+                      type: string
+                      format: date-time
+                      description: Creation date of the duplicate transaction.
+                    merchant_business_model_description:
+                      type: string
+                      description: Description of the merchant's business model.
+                    order_fulfilled_at:
+                      type: string
+                      format: date-time
+                      description: Date and time when the order was fulfilled.
+                    order_fulfillment_file_ids:
+                      type: array
+                      description: 'File unique identifiers of order fulfillment files. Provide screenshots of delivery confirmation or shipment tracking information that clearly show the order was successfully delivered. Supported file formats: JPG, PNG, WEBP and max 10MB size. Please use [File Service](/docs/api/supporting_services/file_service/upload_files) to upload files.'
+                      items:
+                        type: string
+                    order_snapshot_file_ids:
+                      type: array
+                      description: 'File unique identifiers of order snapshot files. Provide screenshots of the customer''s receipt or order confirmation page as evidence that the customer placed the order. Supported file formats: JPG, PNG, WEBP and max 10MB size. Please use [File Service](/docs/api/supporting_services/file_service/upload_files) to upload files.'
+                      items:
+                        type: string
+                    previous_dispute_won_on_same_card_file_ids:
+                      type: array
+                      description: 'File unique identifiers of previous won disputes on same card. Provide evidence of any previous disputes that you won for transactions using the same card. This helps establish a history of legitimate transactions. Supported file formats: JPG, PNG, WEBP and max 10MB size. Please use [File Service](/docs/api/supporting_services/file_service/upload_files) to upload files.'
+                      items:
+                        type: string
+                    previous_purchase_similar_product_file_ids:
+                      type: array
+                      description: 'File unique identifiers of previous purchases of similar products. Provide proof of the customer''s past purchases of similar items to show their history and relationship with your business. Supported file formats: JPG, PNG, WEBP and max 10MB size. Please use [File Service](/docs/api/supporting_services/file_service/upload_files) to upload files.'
+                      items:
+                        type: string
+                    product_consumption_file_ids:
+                      type: array
+                      description: 'File unique identifiers of product usage files. Provide evidence that the customer has used the product or service, such as a login record or usage timestamp. Supported file formats: JPG, PNG, WEBP and max 10MB size. Please use [File Service](/docs/api/supporting_services/file_service/upload_files) to upload files.'
+                      items:
+                        type: string
+                    product_description:
+                      type: string
+                      description: Description of the product.
+                    product_snapshot_file_ids:
+                      type: array
+                      description: 'File unique identifiers of product snapshot files. Provide a screenshot of the product page or a photo of the item to show that the product matches its description. Supported file formats: JPG, PNG, WEBP and max 10MB size. Please use [File Service](/docs/api/supporting_services/file_service/upload_files) to upload files.'
+                      items:
+                        type: string
+                    refund_policy_file_ids:
+                      type: array
+                      description: 'File unique identifiers for your refund policy documents. Upload all documents that describe your refund policy. Supported file formats: JPG, PNG, WEBP and max 10MB size. Please use [File Service](/docs/api/supporting_services/file_service/upload_files) to upload files.'
+                      items:
+                        type: string
+                    refund_policy_url:
+                      type: string
+                      description: URL of the refund policy page.
+                    user_agreement_file_ids:
+                      type: array
+                      description: 'File unique identifiers of user agreement files. Upload your user agreement forms that outline the terms and conditions for your customers. Supported file formats: JPG, PNG, WEBP and max 10MB size. Please use [File Service](/docs/api/supporting_services/file_service/upload_files) to upload files.'
+                      items:
+                        type: string
+                order_info:
+                  type: object
+                  description: The order information. Applicable when Payment Dispute stage is `RFI`.
+                  properties:
+                    created_at:
+                      type: string
+                      format: date-time
+                      description: Time at which this order was created.
+                    id:
+                      type: string
+                      description: The order unique identifier.
+                    invoice_number:
+                      type: string
+                      description: The invoice number of order.
+                    products:
+                      type: array
+                      description: The products of order.
+                      items:
+                        type: object
+                        properties:
+                          category:
+                            type: string
+                            description: Product category at the merchant store, such as home furnishings, pet supplies, apparel and accessories.
+                          code:
+                            type: string
+                            description: Merchant’s product identifier code. Maximum of 128 characters.
+                          desc:
+                            type: string
+                            description: Product description. Maximum of 500 characters.
+                          effective_end_at:
+                            type: string
+                            description: The effective end time of the product, only applicable when product type is `intangible_good`. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`).
+                          effective_start_at:
+                            type: string
+                            description: The effective start time of the product, only applicable when product type is `intangible_good`. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`).
+                          image_url:
+                            type: string
+                            description: The preview image url for this product, which is usually displayed as thumbnail in the order details.
+                          name:
+                            type: string
+                            description: Name of the product. Maximum of 255 characters.
+                          quantity:
+                            type: integer
+                            format: int32
+                            description: Product quantity.
+                          seller:
+                            type: object
+                            description: Seller info of the purchase order.
+                            properties:
+                              identifier:
+                                type: string
+                                description: The identifier of the seller in the merchant's system.
+                              name:
+                                type: string
+                                description: The name of the seller in the merchant's system.
+                          sku:
+                            type: string
+                            description: Stock keeping unit. A unique identifier assigned by the merchant to identify and track this specific product. Maximum of 128 characters.
+                          type:
+                            type: string
+                            description: Type of product, such as `physical_good`, `intangible_good`, or `service`. Maximum of 128 characters.
+                          unit_price:
+                            type: number
+                            description: Product unit price.
+                          url:
+                            type: string
+                            description: The url that links to the product page at merchant site.
+                    total_amount:
+                      type: number
+                      description: The total amount of order. Please refer to [supported currencies](/docs/payments/supported-currencies) for supported minor units.
+                    total_currency:
+                      type: string
+                      description: The currency of total amount in 3-letter ISO 4217 currency code. Please refer to [supported currencies](/docs/payments/supported-currencies).
+                product_description:
+                  type: string
+                  description: The description of the product. Applicable when the Payment Dispute stage is `CHARGEBACK`.
+                product_type:
+                  type: string
+                  description: 'The type of the product. Possible values: `PHYSICAL_GOODS`, `DIGITAL_PRODUCT_OR_SERVICE`, `OFFLINE_SERVICE`, `TRAVEL`, `RESERVE_OR_BOOKING`, `OTHERS`. Required when the Payment Dispute stage is `CHARGEBACK`.'
+                reason:
+                  type: string
+                  description: "The reason why the merchant challenges the dispute. Possible values: \n\n- **CUSTOMER_WITHDRAWN**: The customer withdrew the dispute\n- **CUSTOMER_REFUNDED**: The customer has already been refunded\n- **PRODUCT_RECEIVED**: The customer has already received / will receive the product or service\n- **PURCHASE_HISTORY**: The customer has a purchasing history with me\n- **NOT_ENTITLED**: The customer is not entitled to refund\n- **SEPARATE_PRODUCT**: The customer purchased separate products or services\n- **AUTHENTIC_PRODUCT**: The product is not damaged, defective or counterfeit\n- **OTHER_REASONS**: Other reasons for challenging.\n"
+                refund_refusal_reason:
+                  type: string
+                  description: Explanation of why refund is refused. Applicable when Payment Dispute stage is `CHARGEBACK`.
+                request_id:
+                  type: string
+                  description: Unique request identifier specified by the merchant.
+                seller_info:
+                  type: object
+                  description: Seller information. Applicable when Payment Dispute stage is `RFI`.
+                  properties:
+                    name:
+                      type: string
+                      description: Seller name.
+                    store_name:
+                      type: string
+                      description: Store name.
+                    store_physical_address:
+                      type: string
+                      description: Store physical address.
+                    store_url:
+                      type: string
+                      description: Store URL.
+                supporting_documents:
+                  type: object
+                  description: The file unique identifiers of support documents.
+                  properties:
+                    customer_communication_documents:
+                      type: array
+                      description: "The file IDs of customer communication. Applicable when stage is `CHARGEBACK`.  \nDeprecated. Use `documents` instead."
+                      items:
+                        type: string
+                    customer_signature_documents:
+                      type: array
+                      description: "The file IDs of customer signature. Applicable when stage is `CHARGEBACK`.  \nDeprecated. Use `documents` instead."
+                      items:
+                        type: string
+                    documents:
+                      type: array
+                      description: List of documents.
+                      items:
+                        type: object
+                        properties:
+                          description:
+                            type: string
+                            description: Additional file descriptions or explanations.
+                          file_ids:
+                            type: array
+                            description: File unique identifiers of the documents.
+                            items:
+                              type: string
+                          type:
+                            type: string
+                            description: 'Type of the documents. Possible values: `PRIMARY`, `ORDER`, `CUSTOMER`, `OTHER`.
+
+
+                              - **PRIMARY**: The primary evidence depends on the challenge reason.
+
+                              - **ORDER**: Order related evidence.
+
+                              - **CUSTOMER**: Customer related evidence.
+
+                              - **OTHER**: Other supporting evidence.
+
+                              '
+                    duplicate_charge_defense_documents:
+                      type: array
+                      description: "The file IDs of duplicate payment evidence. Applicable when stage is `CHARGEBACK`.  \nDeprecated. Use `documents` instead."
+                      items:
+                        type: string
+                    other_documents:
+                      type: array
+                      description: "The list of file IDs of other documents.  \nDeprecated. Use `documents` instead."
+                      items:
+                        type: string
+                    proof_of_delivery_documents:
+                      type: array
+                      description: "The file IDs of proof of delivery. Applicable when stage is `CHARGEBACK`.  \nDeprecated. Use `documents` instead."
+                      items:
+                        type: string
+                    receipt_documents:
+                      type: array
+                      description: "The file IDs of the receipt. Applicable when stage is `CHARGEBACK`.  \nDeprecated. Use `documents` instead."
+                      items:
+                        type: string
+                    refund_policy_documents:
+                      type: array
+                      description: "The file IDs of the refund policy. Applicable when stage is `CHARGEBACK`.  \nDeprecated. Use `documents` instead."
+                      items:
+                        type: string
+        description: Payment Dispute respond request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentDispute'
+        '201':
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/pa/payment_disputes/dst_hkpdw2eqp9oie/challenge
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        request_body:
+          challenged_by: airwallex
+          customer_info:
+            billing_address: 1460 Mission St.#02W101, San Francisco, CA 94103, US
+            device_id: 59ec5db9-399c-4043-9a6c-fcd1a48d99aa
+            email: john.doe@example.com
+            ip: 123.123.123.123
+            name: John Doe
+            phone_number: +1 1234567890
+          delivery_info:
+            address: address
+            delivered_at: '2023-10-01T10:00:00Z'
+            fee_amount: 0
+            fee_currency: 'null'
+            name: 'null'
+            phone_number: 'null'
+            shipped_at: '2023-10-01T10:00:00Z'
+            shipping_company: SF
+            shipping_method: 'null'
+            status: 'null'
+            tracking_number: '123456789'
+          product_description: product description
+          product_type: OFFLINE_SERVICE
+          request_id: 0cb05018-7ccd-42fa-9a5b-7d5197b9fb15
+          supporting_documents:
+            documents:
+            - type: OTHER
+              file_ids:
+              - MTRkYjkyZWYtZTBh12tvbmcsfCxFdmlkZW5jZV9Qcm92aWRlZF9Gb3JfMTc0NDE3Nzg4NzU3Ng
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: dst_hkpdw2eqp9oie
+          stage: CHARGEBACK
+          status: CHALLENGED
+          amount: 100
+          currency: USD
+          mode: COLLABORATION
+          merchant_order_id: D202503210001
+          payment_intent_id: int_hkpdskz7vg1xc7uscdj
+          payment_attempt_id: att_hkpdw2eqp9oie
+          acquirer_reference_number: T1234567890
+          payment_method_type: VISA
+          issuer_comment: ''
+          issuer_documents: []
+          card_brand: visa
+          reason:
+            original_code: '4837'
+            description: Fraudulent transaction.
+            type: FRAUDULENT
+          challenge_details:
+          - stage: CHARGEBACK
+            product_type: OFFLINE_SERVICE
+            product_description: product description
+            customer_info:
+              name: John Doe
+              email: john.doe@example.com
+              ip: 123.123.123.123
+              billing_address: 1460 Mission St.#02W101, San Francisco, CA 94103, US
+              device_id: 59ec5db9-399c-4043-9a6c-fcd1a48d99aa
+              phone_number: +1 1234567890
+            delivery_info:
+              shipped_at: '2023-10-01T10:00:00+00:00'
+              delivered_at: '2023-10-01T10:00:00+00:00'
+              address: address
+              shipping_company: SF
+              tracking_number: '123456789'
+            supporting_documents:
+              documents:
+              - type: OTHER
+                file_ids:
+                - MTRkYjkyZWYtZTBh12tvbmcsfCxFdmlkZW5jZV9Qcm92aWRlZF9Gb3JfMTc0NDE3Nzg4NzU3Ng
+            challenged_by: airwallex
+            challenged_at: '2023-10-01T10:00:00+00:00'
+            reason: Fraudulent transaction
+          due_at: '2023-11-01T10:00:00+00:00'
+          transaction_type: PAYMENT
+          customer_name: John Doe
+          created_at: '2023-10-01T10:00:00+00:00'
+          updated_at: '2023-10-01T10:00:00+00:00'
+      x-scope:
+      - scope: payment_dispute:write
+        group: Payment Acceptance
+        resource_name: Payment Disputes
+      x-domain: Payment Acceptance
+      x-resource: Payment Disputes
+      x-urlPath: challenge
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/pa/payment_disputes/{id}/related_payment_intents:
+    get:
+      tags:
+      - Payment Acceptance > Payment Disputes
+      summary: 6|List all Related Payment Intents
+      description: Get related payment intents for a Payment Dispute. Only applicable when the dispute reason type is `FRAUDULENT` or `DUPLICATE_CHARGE`.
+      operationId: listRelatedPaymentIntents
+      parameters:
+      - name: id
+        in: path
+        description: Payment Dispute unique identifier.
+        required: true
+        schema:
+          type: string
+          default: dst_hkst98v9kgk2t7otgl0
+      - name: page
+        in: query
+        description: A bookmark for use in pagination to retrieve either the next page or the previous page of results. You can fetch the value for this identifier from the response of the previous API call. To retrieve the next page of results, pass the value of page_after (if not null) from the response to a subsequent call. To retrieve the previous page of results, pass the value of page_before (if not null) from the response to a subsequent call.
+        required: false
+        schema:
+          type: string
+          default: '0'
+      - name: page_size
+        in: query
+        description: Number of related payment intents to be listed per page. Maximum is 100.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageResponseDTOOfPaymentAcceptanceRelatedOrder'
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '403':
+          description: Forbidden
+        '404':
+          description: 'Not Found. Possible error codes: `not_found`(invalid url)'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/pa/payment_disputes/{id}/related_payment_intents
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        query_params:
+          id: dst_hkpdw2eqp9oie
+          page: '0'
+          page_size: 10
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - payment_intent_id: int_hkpdskz7vg1xc7uscdj
+            merchant_order_id: ord_1234567890
+            captured_amount: 100
+            currency: USD
+            refunded_amount: 0
+            created_at: '2023-10-01T10:00:00+00:00'
+            disputed: true
+            fraudulent: false
+            match_results:
+              same_ip_address: false
+              same_shipping_address: false
+              same_email_address: false
+      x-scope:
+      - scope: payment_dispute:read
+        group: Payment Acceptance
+        resource_name: Payment Disputes
+      - scope: payment_dispute:write
+        group: Payment Acceptance
+        resource_name: Payment Disputes
+      x-domain: Payment Acceptance
+      x-resource: Payment Disputes
+      x-urlPath: related_payment_intents
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    CustomerInformation:
+      type: object
+      properties:
+        billing_address:
+          type: string
+          description: Customer billing address.
+        device_id:
+          type: string
+          description: Customer device unique identifier.
+        email:
+          type: string
+          description: Customer email.
+        ip:
+          type: string
+          description: Customer ip.
+        name:
+          type: string
+          description: Customer name.
+        phone_number:
+          type: string
+          description: Customer phone number.
+      description: Customer information.
+    AiDisputeEvidence:
+      type: object
+      properties:
+        access_activity_file_ids:
+          type: array
+          description: 'File unique identifiers of access activity files. Provide screenshots from your activity log that show the customer''s on-site behaviour, such as login times or download timestamps. Supported file formats: JPG, PNG, WEBP and max 10MB size. Please use [File Service](/docs/api/supporting_services/file_service/upload_files) to upload files.'
+          items:
+            type: string
+        authenticity_proof_file_ids:
+          type: array
+          description: 'File unique identifiers of authenticity proof files. Provide documentation that confirms your products are genuine and not counterfeit. This can include certificates, supplier invoices, or brand authorization letters. Supported file formats: JPG, PNG, WEBP and max 10MB size. Please use [File Service](/docs/api/supporting_services/file_service/upload_files) to upload files.'
+          items:
+            type: string
+        customer_communication_file_ids:
+          type: array
+          description: 'File unique identifiers of customer communication files. Provide copies of any emails, chat logs, or messages with the customer that show communication before or after the purchase. Supported file formats: JPG, PNG, WEBP and max 10MB size. Please use [File Service](/docs/api/supporting_services/file_service/upload_files) to upload files.'
+          items:
+            type: string
+        duplicate_acquirer_reference_number:
+          type: string
+          description: Acquirer reference number of the duplicate transaction.
+        duplicate_explanation:
+          type: string
+          description: Explanation of the duplicate transaction.
+        duplicate_payment_file_ids:
+          type: array
+          description: 'File unique identifiers of duplicate payment files. Provide documents that show how this transaction differs from any potential duplicates. Supported file formats: JPG, PNG, WEBP and max 10MB size. Please use [File Service](/docs/api/supporting_services/file_service/upload_files) to upload files.'
+          items:
+            type: string
+        duplicate_transaction_amount_currency:
+          type: string
+          description: Amount and currency of the duplicate transaction.
+        duplicate_transaction_created_at:
+          type: string
+          format: date-time
+          description: Creation date of the duplicate transaction.
+        merchant_business_model_description:
+          type: string
+          description: Description of the merchant's business model.
+        order_fulfilled_at:
+          type: string
+          format: date-time
+          description: Date and time when the order was fulfilled.
+        order_fulfillment_file_ids:
+          type: array
+          description: 'File unique identifiers of order fulfillment files. Provide screenshots of delivery confirmation or shipment tracking information that clearly show the order was successfully delivered. Supported file formats: JPG, PNG, WEBP and max 10MB size. Please use [File Service](/docs/api/supporting_services/file_service/upload_files) to upload files.'
+          items:
+            type: string
+        order_snapshot_file_ids:
+          type: array
+          description: 'File unique identifiers of order snapshot files. Provide screenshots of the customer''s receipt or order confirmation page as evidence that the customer placed the order. Supported file formats: JPG, PNG, WEBP and max 10MB size. Please use [File Service](/docs/api/supporting_services/file_service/upload_files) to upload files.'
+          items:
+            type: string
+        previous_dispute_won_on_same_card_file_ids:
+          type: array
+          description: 'File unique identifiers of previous won disputes on same card. Provide evidence of any previous disputes that you won for transactions using the same card. This helps establish a history of legitimate transactions. Supported file formats: JPG, PNG, WEBP and max 10MB size. Please use [File Service](/docs/api/supporting_services/file_service/upload_files) to upload files.'
+          items:
+            type: string
+        previous_purchase_similar_product_file_ids:
+          type: array
+          description: 'File unique identifiers of previous purchases of similar products. Provide proof of the customer''s past purchases of similar items to show their history and relationship with your business. Supported file formats: JPG, PNG, WEBP and max 10MB size. Please use [File Service](/docs/api/supporting_services/file_service/upload_files) to upload files.'
+          items:
+            type: string
+        product_consumption_file_ids:
+          type: array
+          description: 'File unique identifiers of product usage files. Provide evidence that the customer has used the product or service, such as a login record or usage timestamp. Supported file formats: JPG, PNG, WEBP and max 10MB size. Please use [File Service](/docs/api/supporting_services/file_service/upload_files) to upload files.'
+          items:
+            type: string
+        product_description:
+          type: string
+          description: Description of the product.
+        product_snapshot_file_ids:
+          type: array
+          description: 'File unique identifiers of product snapshot files. Provide a screenshot of the product page or a photo of the item to show that the product matches its description. Supported file formats: JPG, PNG, WEBP and max 10MB size. Please use [File Service](/docs/api/supporting_services/file_service/upload_files) to upload files.'
+          items:
+            type: string
+        refund_policy_file_ids:
+          type: array
+          description: 'File unique identifiers for your refund policy documents. Upload all documents that describe your refund policy. Supported file formats: JPG, PNG, WEBP and max 10MB size. Please use [File Service](/docs/api/supporting_services/file_service/upload_files) to upload files.'
+          items:
+            type: string
+        refund_policy_url:
+          type: string
+          description: URL of the refund policy page.
+        user_agreement_file_ids:
+          type: array
+          description: 'File unique identifiers of user agreement files. Upload your user agreement forms that outline the terms and conditions for your customers. Supported file formats: JPG, PNG, WEBP and max 10MB size. Please use [File Service](/docs/api/supporting_services/file_service/upload_files) to upload files.'
+          items:
+            type: string
+      description: The evidence submitted when challenge_method is `AI_DISPUTE_AUTOMATION`.
+    PaymentDispute:
+      type: object
+      properties:
+        accept_details:
+          type: array
+          description: Further details on why the client is accepting the Payment Dispute event.
+          items:
+            $ref: '#/components/schemas/AcceptDetails'
+        acquirer_reference_number:
+          type: string
+          description: The acquirer reference number of original payment.
+        ai_dispute_automation:
+          $ref: '#/components/schemas/AiDisputeAutomation'
+          description: Information about AI dispute automation, including recommendation and current status. Applicable only when the stage is `CHARGEBACK`.
+        amount:
+          type: number
+          description: Payment Dispute amount.
+        card_brand:
+          type: string
+          description: 'The card brand of original payment, applicable when payment_method_type is `CARD`. Possible values: `visa`, `mastercard`, `maestro`, `union pay`, `american express`, `jcb`, `diners club international` and `discover`.'
+        challenge_details:
+          type: array
+          description: The challenge data submitted at each stage.
+          items:
+            $ref: '#/components/schemas/ChallengeDetails'
+        connected_account_id:
+          type: string
+          description: Account identifier of the connected account.
+        created_at:
+          type: string
+          format: date-time
+          description: Time at which this Payment Dispute was created.
+        currency:
+          type: string
+          description: Payment Dispute currency.
+        customer_id:
+          type: string
+          description: The customer unique identifier of original payment.
+        customer_name:
+          type: string
+          description: The customer name of original payment.
+        due_at:
+          type: string
+          format: date-time
+          description: Payment Dispute due date.
+        id:
+          type: string
+          description: Payment Dispute unique identifier.
+        issuer_comment:
+          type: string
+          description: The issuer’s comment on Payment Dispute.
+        issuer_documents:
+          type: array
+          description: The issuer’s documents on Payment Dispute.
+          items:
+            type: string
+        merchant_order_id:
+          type: string
+          description: The order unique identifier of original payment.
+        metadata:
+          type: object
+          description: A set of key-value pairs attached to the dispute by the merchant.
+          additionalProperties:
+            type: string
+        mode:
+          type: string
+          description: 'Payment Dispute mode. Possible values: `ALLOCATION`, `COLLABORATION`, applicable when the stage is `CHARGEBACK`, `PRE_ARBITRATION` and `ARBITRATION`.'
+        payment_attempt_id:
+          type: string
+          description: Payment Attempt unique identifier.
+        payment_intent_id:
+          type: string
+          description: Payment Intent unique identifier.
+        payment_method_type:
+          type: string
+          description: The payment method type of original payment.
+        reason:
+          $ref: '#/components/schemas/ReasonDetails'
+          description: Payment Dispute reason.
+        refunds:
+          type: array
+          description: The Refunds of original payment.
+          items:
+            $ref: '#/components/schemas/RefundDetails'
+        stage:
+          type: string
+          description: 'Payment Dispute stage. Possible values: `RFI`, `PRE_CHARGEBACK`, `CHARGEBACK`, `PRE_ARBITRATION`, `ARBITRATION`.'
+        status:
+          type: string
+          description: "Payment Dispute status. Possible values: \n\n- **REQUIRES_RESPONSE**: In this status, you can decide whether to accept or challenge the Payment Dispute.\n  - Applicable when receive notification from card schemes that Payment Dispute has entered `RFI`, `PRE_CHARGEBACK`, `CHARGEBACK`, or `PRE_ARBITRATION` stage.\n- **CHALLENGED**: In this status, we have informed the issuing bank that you would like to challenge the Payment Dispute.\n  - Applicable when you challenge the Payment Dispute. At `PRE_CHARGEBACK` stage, the issuing bank will escalate to the chargeback stage in the following days. At `RFI`, `CHARGEBACK`, and `PRE_ARBITRATION` stage, the issuing bank will review your submitted evidence and decide whether to escalate the Payment Dispute or not.\n- **ACCEPTED**: In this status the Payment Dispute has been accepted and the payment will be refunded to the shopper.\n  - Applicable when you accept the Payment Dispute at `RFI`, `PRE_CHARGEBACK`, `CHARGEBACK`, and `PRE_ARBITRATION` stage.\n- **REVERSED**: In this status, the Payment Dispute has been reversed by the issuing bank. No further action is required.\n  - Applicable when receive notification from card schemes that Payment Dispute has been reversed at `PRE_CHARGEBACK`, `CHARGEBACK`, and `PRE_ARBITRATION` stage.\n- **WON**: In this status, the issuing bank has accepted the response provided, or card schemes have ruled the Payment Dispute decision in your favor. No further action is required.\n  - Applicable at `CHARGEBACK`, `PRE_ARBITRATION` and `ARBITRATION` stage.\n- **LOST**: In this status, the issuing bank has not accepted the evidence provided by you, or card schemes have ruled the Payment Dispute decision in Issuer’s favor. No further action is required.\n  - Applicable at `PRE_ARBITRATION` and `ARBITRATION` stage.\n- **PENDING_CLOSURE**: In this status, the issuing bank has escalated the Payment Dispute to `PRE_ARBITRATION` stage and Airwallex is reviewing the Payment Dispute. Airwallex will decide whether to accept the Payment Dispute or respond to it on your behalf and may reach out to you for more information.\n  - Applicable at `PRE_ARBITRATION` stage.\n- **EXPIRED**: In this status, the `RFI` event has expired as you have not responded to the request within 15 days.\n  - Applicable at `RFI` stage.\n- **PENDING_DECISION**: In this status, we have responded to the issuing bank with evidence provided by you. The issuing bank will review your submitted evidence and decide whether to accept the Payment Dispute or not.\n  - Applicable at `PRE_ARBITRATION` and `ARBITRATION` stage."
+        transaction_type:
+          type: string
+          description: 'The transaction type of the original transaction. Possible values: `PAYMENT`, `REFUND`.'
+        updated_at:
+          type: string
+          format: date-time
+          description: Last time at which this Payment Dispute was updated or operated on.
+    ReasonDetails:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Payment Dispute reason description.
+        original_code:
+          type: string
+          description: Payment Dispute reason code.
+        type:
+          type: string
+          description: 'Payment Dispute reason type. Possible values: `CREDIT_NOT_PROCESSED`, `FRAUDULENT`, `DUPLICATE_CHARGE`, `PRODUCT_NOT_RECEIVED`, `PRODUCT_UNACCEPTABLE`, `UNRECOGNIZED_CHARGE`, `CANCELLED_PRODUCT`, `MISREPRESENTATION`, `COUNTERFEIT_PRODUCT`, `PROCESSING_ERRORS`, `AUTHORIZATION`, `NOT_RECOGNIZED`, `BANK_REJECTION`, `FUND_REVERSAL`, `CONSUMER_DISPUTE`, `POINT_OF_INTERACTION_ERROR` and `UNKNOWN`.'
+      description: Payment Dispute reason.
+    SupportingDocuments:
+      type: object
+      properties:
+        customer_communication_documents:
+          type: array
+          description: "The file IDs of customer communication. Applicable when stage is `CHARGEBACK`.  \nDeprecated. Use `documents` instead."
+          items:
+            type: string
+        customer_signature_documents:
+          type: array
+          description: "The file IDs of customer signature. Applicable when stage is `CHARGEBACK`.  \nDeprecated. Use `documents` instead."
+          items:
+            type: string
+        documents:
+          type: array
+          description: List of documents.
+          items:
+            $ref: '#/components/schemas/DisputeDocument'
+        duplicate_charge_defense_documents:
+          type: array
+          description: "The file IDs of duplicate payment evidence. Applicable when stage is `CHARGEBACK`.  \nDeprecated. Use `documents` instead."
+          items:
+            type: string
+        generated_files:
+          type: array
+          description: The file unique identifiers of the files generated by Airwallex automatically based on text evidence or refund information.
+          items:
+            type: string
+        other_documents:
+          type: array
+          description: "The list of file IDs of other documents.  \nDeprecated. Use `documents` instead."
+          items:
+            type: string
+        proof_of_delivery_documents:
+          type: array
+          description: "The file IDs of proof of delivery. Applicable when stage is `CHARGEBACK`.  \nDeprecated. Use `documents` instead."
+          items:
+            type: string
+        receipt_documents:
+          type: array
+          description: "The file IDs of the receipt. Applicable when stage is `CHARGEBACK`.  \nDeprecated. Use `documents` instead."
+          items:
+            type: string
+        refund_policy_documents:
+          type: array
+          description: "The file IDs of the refund policy. Applicable when stage is `CHARGEBACK`.  \nDeprecated. Use `documents` instead."
+          items:
+            type: string
+      description: The file unique identifiers of support documents.
+    AcceptDetails:
+      type: object
+      properties:
+        accepted_at:
+          type: string
+          format: date-time
+          description: The time when the user accepted the Payment Dispute.
+        accepted_by:
+          type: string
+          description: User unique identifier of person/system actioned on case.
+        description:
+          type: string
+          description: The accept description.
+        reason:
+          type: string
+          description: "The accept reason. One of \n\n- `AGREEMENT_REACHED_WITH_CUSTOMER`\n- `CUSTOMER_RELATIONSHIP_MAINTENANCE` \n- `LOW_VALUE_TRANSACTION`\n- `VALID_CUSTOMER_DISPUTE` \n- `NO_ACTION_TAKEN_BY_MERCHANT`\n- `RDR_AUTO_ACCEPTED` \n- `COLLABORATION_ACCEPTED_MANUAL`\n- `COLLABORATION_AUTO_ACCEPTED`\n- `COLLABORATION_AUTO_ACCEPTED_BY_EXPIRY`\n- `OTHERS`.\n"
+        refund:
+          $ref: '#/components/schemas/RefundRequest'
+          description: The Refund requested to be created.
+        stage:
+          type: string
+          description: 'The stage when dispute is accepted. Possible values: `RFI`, `PRE_CHARGEBACK`, `CHARGEBACK`, `PRE_ARBITRATION`.'
+    DisputeDocument:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Additional file descriptions or explanations.
+        file_ids:
+          type: array
+          description: File unique identifiers of the documents.
+          items:
+            type: string
+        type:
+          type: string
+          description: 'Type of the documents. Possible values: `PRIMARY`, `ORDER`, `CUSTOMER`, `OTHER`.
+
+
+            - **PRIMARY**: The primary evidence depends on the challenge reason.
+
+            - **ORDER**: Order related evidence.
+
+            - **CUSTOMER**: Customer related evidence.
+
+            - **OTHER**: Other supporting evidence.
+
+            '
+    RelatedOrder:
+      type: object
+      properties:
+        captured_amount:
+          type: number
+          description: The captured amount of the Payment Intent.
+        created_at:
+          type: string
+          format: date-time
+          description: The creation time of the Payment Intent.
+        currency:
+          type: string
+          description: The payment amount currency of the Payment Intent.
+        disputed:
+          type: boolean
+          description: Whether the Payment Intent is disputed.
+        fraudulent:
+          type: boolean
+          description: Whether the Payment Intent is fraudulent.
+        match_results:
+          $ref: '#/components/schemas/MatchResults'
+          description: Matching details between the dispute and the related order.
+        merchant_order_id:
+          type: string
+          description: The merchant order unique identifier of the Payment Intent.
+        payment_intent_id:
+          type: string
+          description: Payment Intent unique identifier.
+        refunded_amount:
+          type: number
+          description: The refunded amount of the Payment Intent.
+    AiDisputeAutomation:
+      type: object
+      properties:
+        recommendation:
+          $ref: '#/components/schemas/AiDisputeRecommendation'
+          description: The AI recommendation for the dispute, present when status is `AVAILABLE`.
+        status:
+          type: string
+          description: 'Indicates whether AI Dispute Automation is available. Possible values: `AVAILABLE`, `UNAVAILABLE`.'
+        unavailable_reason:
+          type: string
+          description: "The reason AI Dispute Automation is unavailable. Possible values: \n\n- **DISABLED**: AI Dispute Automation is currently disabled. [Activate it](/docs/payments/payment-operations/disputes/dispute-automation#activate-ai-dispute-automation) to use this feature.\n- **NOT_SUPPORTED**: AI Dispute Automation is not available for the current dispute.\n"
+      description: Information about AI dispute automation, including recommendation and current status. Applicable only when the stage is `CHARGEBACK`.
+    ProductSeller:
+      type: object
+      properties:
+        identifier:
+          type: string
+          description: The identifier of the seller in the merchant's system.
+        name:
+          type: string
+          description: The name of the seller in the merchant's system.
+      description: Seller info of the purchase order.
+    MatchResults:
+      type: object
+      properties:
+        same_amount:
+          type: boolean
+          description: Whether the payment amount  is the same.
+        same_device_id:
+          type: boolean
+          description: Whether the customer device id or fingerprint is the same.
+        same_email_address:
+          type: boolean
+          description: Whether the customer email address is the same.
+        same_fingerprint:
+          type: boolean
+          description: Whether the customer fingerprint is the same.
+        same_ip_address:
+          type: boolean
+          description: Whether the customer ip address is the same.
+        same_payment_method:
+          type: boolean
+          description: Whether the payment method  is the same.
+        same_shipping_address:
+          type: boolean
+          description: Whether the shipping address is the same.
+      description: Matching details between the dispute and the related order.
+    OrderInformation:
+      type: object
+      properties:
+        created_at:
+          type: string
+          format: date-time
+          description: Time at which this order was created.
+        id:
+          type: string
+          description: The order unique identifier.
+        invoice_number:
+          type: string
+          description: The invoice number of order.
+        products:
+          type: array
+          description: The products of order.
+          items:
+            $ref: '#/components/schemas/Product'
+        total_amount:
+          type: number
+          description: The total amount of order.
+        total_currency:
+          type: string
+          description: The currency of total amount.
+      description: The order information. Applicable when the stage is `RFI`.
+    PageResponseDTOOfPaymentAcceptancePaymentDispute:
+      type: object
+      properties:
+        items:
+          type: array
+          description: The list of Payment Disputes.
+          items:
+            $ref: '#/components/schemas/PaymentDispute'
+        page_after:
+          type: string
+          description: The BASE 64 encoded resource unique identifier of last Payment Dispute in items and navigation direction. When used in request, the response contains the page of Payment Dispute after it.
+        page_before:
+          type: string
+          description: The BASE 64 encoded resource unique identifier of first Payment Dispute in items and navigation direction. When used in request, the response contains the page of Payment Dispute before it.
+    RefundRequest:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: The refund amount when accepting `RFI`. If not specified, it will be same as the remaining amount that has been captured but not yet refunded. Please refer to [supported currencies](/docs/payments/supported-currencies) for supported minor units.
+        reason:
+          type: string
+          description: The refund reason when accepting `RFI`. `OTHERS` is used by default. One of `REQUESTED_BY_CUSTOMER`, `DUPLICATE`, `FRAUDULENT`, `ABANDONED`, and `OTHERS`.
+      description: The Refund requested to be created.
+    DeliveryInformation:
+      type: object
+      properties:
+        address:
+          type: string
+          description: The shipping address. Applicable at stage `RFI`.
+        delivered_at:
+          type: string
+          format: date-time
+          description: The date when services or goods are delivered.
+        fee_amount:
+          type: number
+          description: The amount of shipping fee. Applicable at stage `RFI`.
+        fee_currency:
+          type: string
+          description: The currency of shipping fee. Applicable at stage `RFI`.
+        name:
+          type: string
+          description: The recipient's name. Applicable at stage `RFI`.
+        phone_number:
+          type: string
+          description: The recipient's phone number. Applicable at stage `RFI`.
+        shipped_at:
+          type: string
+          format: date-time
+          description: The shipping date (the expected delivery date for `RFI`).
+        shipping_company:
+          type: string
+          description: The company name managing this delivery, such as asendia-usa, 4px, and so on.
+        shipping_method:
+          type: string
+          description: The shipping method, such as Priority Mail, Flat rate, and so on. Applicable at stage `RFI`.
+        status:
+          type: string
+          description: The shipping status, such as `SHIPPED`, `DELIVERED`, and so on. Applicable at stage `RFI`.
+        tracking_number:
+          type: string
+          description: The shipping tracking number.
+      description: The delivery information.
+    ChallengeDetails:
+      type: object
+      properties:
+        challenge_method:
+          type: string
+          description: "The method used to challenge the dispute. Possible values: \n\n- **AI_DISPUTE_AUTOMATION**: Challenge via AI Dispute Automation\n  - Applicable when Payment Dispute stage is `CHARGEBACK` and AI Dispute Automation status is `AVAILABLE`\n- **STANDARD**: Challenge via standard flow\n\nDefault to `STANDARD` if not provided."
+        challenged_at:
+          type: string
+          format: date-time
+          description: The time when the user challenges Payment Dispute.
+        challenged_by:
+          type: string
+          description: User unique identifier of person/system challenges Payment Dispute.
+        customer_info:
+          $ref: '#/components/schemas/CustomerInformation'
+          description: Customer information.
+        delivery_info:
+          $ref: '#/components/schemas/DeliveryInformation'
+          description: The delivery information.
+        evidence:
+          $ref: '#/components/schemas/AiDisputeEvidence'
+          description: The evidence submitted when challenge_method is `AI_DISPUTE_AUTOMATION`.
+        order_info:
+          $ref: '#/components/schemas/OrderInformation'
+          description: The order information. Applicable when the stage is `RFI`.
+        product_description:
+          type: string
+          description: The description of product.
+        product_type:
+          type: string
+          description: The type of Product.
+        reason:
+          type: string
+          description: "The reason why the merchant challenges the dispute. Possible values: \n\n- **CUSTOMER_WITHDRAWN**: The customer withdrew the dispute\n- **CUSTOMER_REFUNDED**: The customer has already been refunded\n- **PRODUCT_RECEIVED**: The customer has already received / will receive the product or service\n- **PURCHASE_HISTORY**: The customer has a purchasing history with me\n- **NOT_ENTITLED**: The customer is not entitled to refund\n- **SEPARATE_PRODUCT**: The customer purchased separate products or services\n- **AUTHENTIC_PRODUCT**: The product is not damaged, defective or counterfeit\n- **OTHER_REASONS**: Other reasons for challenging.\n"
+        refund_refusal_reason:
+          type: string
+          description: Explanation of why refund is refused.
+        seller_info:
+          $ref: '#/components/schemas/SellerInformation'
+          description: Merchant information.
+        stage:
+          type: string
+          description: 'The stage when evidence is submitted. Possible values: `RFI`, `PRE_CHARGEBACK`, `CHARGEBACK`.'
+        supporting_documents:
+          $ref: '#/components/schemas/SupportingDocuments'
+          description: The file unique identifiers of support documents.
+    Product:
+      type: object
+      properties:
+        category:
+          type: string
+          description: Product category at the merchant store, such as home furnishings, pet supplies, apparel and accessories.
+        code:
+          type: string
+          description: Merchant’s product identifier code. Maximum of 128 characters.
+        desc:
+          type: string
+          description: Product description. Maximum of 500 characters.
+        effective_end_at:
+          type: string
+          description: The effective end time of the product, only applicable when product type is `intangible_good`. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`).
+        effective_start_at:
+          type: string
+          description: The effective start time of the product, only applicable when product type is `intangible_good`. The timestamp must include an explicit timezone (e.g. `Z` or `-04:00`).
+        image_url:
+          type: string
+          description: The preview image url for this product, which is usually displayed as thumbnail in the order details.
+        name:
+          type: string
+          description: Name of the product. Maximum of 255 characters.
+        quantity:
+          type: integer
+          format: int32
+          description: Product quantity.
+        seller:
+          $ref: '#/components/schemas/ProductSeller'
+          description: Seller info of the purchase order.
+        sku:
+          type: string
+          description: Stock keeping unit. A unique identifier assigned by the merchant to identify and track this specific product. Maximum of 128 characters.
+        type:
+          type: string
+          description: Type of product, such as `physical_good`, `intangible_good`, or `service`. Maximum of 128 characters.
+        unit_price:
+          type: number
+          description: Product unit price.
+        url:
+          type: string
+          description: The url that links to the product page at merchant site.
+    PageResponseDTOOfPaymentAcceptanceRelatedOrder:
+      type: object
+      properties:
+        items:
+          type: array
+          description: The list of Payment Disputes.
+          items:
+            $ref: '#/components/schemas/RelatedOrder'
+        page_after:
+          type: string
+          description: The BASE 64 encoded resource unique identifier of last Payment Dispute in items and navigation direction. When used in request, the response contains the page of Payment Dispute after it.
+        page_before:
+          type: string
+          description: The BASE 64 encoded resource unique identifier of first Payment Dispute in items and navigation direction. When used in request, the response contains the page of Payment Dispute before it.
+    SellerInformation:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Seller name.
+        store_name:
+          type: string
+          description: Store name.
+        store_physical_address:
+          type: string
+          description: Store physical address.
+        store_url:
+          type: string
+          description: Store URL.
+      description: Merchant information.
+    AiDisputeRecommendation:
+      type: object
+      properties:
+        action:
+          type: string
+          description: 'The recommended action. Possible values: `Challenge`, `Accept`.'
+        evidence_to_submit:
+          type: array
+          description: "The evidence fields listed below are recommended for challenging this dispute. \nFor field definitions and accepted values, \nrefer to the `evidence` object in [Challenge a Payment Dispute](/docs/api/payments/payment_disputes/challenge)."
+          items:
+            type: string
+      description: The AI recommendation for the dispute, present when status is `AVAILABLE`.
+    RefundDetails:
+      type: object
+      properties:
+        acquirer_reference_number:
+          type: string
+          description: The acquirer reference number of Refund.
+        id:
+          type: string
+          description: Refund unique identifier.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

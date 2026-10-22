@@ -1,0 +1,329 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Billing > Usage Events API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Billing > Usage Events
+  description: A Usage Event represents a customer's usage of a product at a specific timestamp.
+  x-domain: Billing
+  x-resource: Usage Events
+  x-urlPath: billing/usage_events
+paths:
+  /api/v1/billing/usage_events/ingest:
+    post:
+      description: Ingest a single usage event. The event is validated synchronously, but is processed asynchronously. For higher rate limits, please use the Batch Ingest Usage Events API instead.
+      operationId: ingest
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - billing_customer_id
+              - event_name
+              - merchant_event_id
+              - properties
+              type: object
+              properties:
+                billing_customer_id:
+                  type: string
+                  description: ID of the [Billing Customer](/docs/api/billing/billing_customers) related to this usage event.
+                event_name:
+                  maxLength: 200
+                  minLength: 0
+                  pattern: ^\S*$
+                  type: string
+                  description: The name of the event. Corresponds with the `event_name` field on a meter.
+                happened_at:
+                  type: string
+                  description: Time when this event happened. Must be within the past 35 days or up to 5 minutes in the future. Defaults to now.
+                  format: date-time
+                merchant_event_id:
+                  maxLength: 64
+                  minLength: 0
+                  type: string
+                  description: A unique identifier for the event. This value must be unique within a rolling 35-day period and is limited to a maximum of 64 characters.
+                properties:
+                  type: object
+                  additionalProperties:
+                    type: string
+                    description: The payload of events, which contains arbitrary key-value pairs storing properties of the event.
+                  description: The payload of events, which contains arbitrary key-value pairs storing properties of the event.
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageEvent'
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 1|Ingest a Usage Event
+      tags:
+      - Billing > Usage Events
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/billing/usage_events/ingest
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          billing_customer_id: bcus_hkpd7fedfgb004apkvs
+          event_name: api_call
+          happened_at: <date-time>
+          merchant_event_id: merchant_event_12345
+          properties:
+            quantity: '1'
+            region: us-east-1
+            userId: userA
+        response_body:
+          billing_customer_id: bcus_hkpd7fedfgb004apkvs
+          event_name: api_call
+          happened_at: <date-time>
+          ingested_at: <date-time>
+          merchant_event_id: merchant_event_12345
+          properties:
+            quantity: '1'
+            region: us-east-1
+            userId: userA
+          voided: false
+          voided_at: 2025-08-03T00:00:00+0000
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.usage_metering:write
+        group: Billing
+        resource_name: Usage Metering
+      x-domain: Billing
+      x-resource: Usage Events
+      x-urlPath: ingest
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/usage_events/batch_ingest:
+    post:
+      description: Ingest new usage events in a batch. The events are validated and processed asynchronously. If errors occur, webhook events will be published. Maximum 10 events per request.
+      operationId: batchIngest
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - events
+              type: object
+              properties:
+                events:
+                  type: array
+                  description: List of usage events to ingest. Maximum 10 events per request.
+                  items:
+                    required:
+                    - billing_customer_id
+                    - event_name
+                    - merchant_event_id
+                    - properties
+                    type: object
+                    properties:
+                      billing_customer_id:
+                        type: string
+                        description: ID of the [Billing Customer](/docs/api/billing/billing_customers) related to this usage event.
+                      event_name:
+                        maxLength: 200
+                        minLength: 0
+                        pattern: ^\S*$
+                        type: string
+                        description: The name of the event. Corresponds with the `event_name` field on a meter.
+                      happened_at:
+                        type: string
+                        description: Time when this event happened. Must be within the past 35 days or up to 5 minutes in the future. Defaults to now.
+                        format: date-time
+                      merchant_event_id:
+                        maxLength: 64
+                        minLength: 0
+                        type: string
+                        description: A unique identifier for the event. This value must be unique within a rolling 35-day period and is limited to a maximum of 64 characters.
+                      properties:
+                        type: object
+                        additionalProperties:
+                          type: string
+                          description: The payload of events, which contains arbitrary key-value pairs storing properties of the event.
+                        description: The payload of events, which contains arbitrary key-value pairs storing properties of the event.
+        required: true
+      responses:
+        '202':
+          content:
+            application/json:
+              schema: {}
+          description: Accepted
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 2|Batch Ingest Usage Events
+      tags:
+      - Billing > Usage Events
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/billing/usage_events/batch_ingest
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 202
+        reason_phrase: Accepted
+        request_body:
+          events:
+          - billing_customer_id: bcus_hkpd7fedfgb004apkvs
+            event_name: api_call
+            merchant_event_id: merchant_event_12345
+            properties:
+              quantity: '1'
+              region: us-east-1
+              userId: userA
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.usage_metering:write
+        group: Billing
+        resource_name: Usage Metering
+      x-domain: Billing
+      x-resource: Usage Events
+      x-urlPath: batch_ingest
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/usage_events/void:
+    post:
+      description: Void a previous usage event ingested within 35 days.
+      operationId: usageEvents_void
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - merchant_event_id
+              type: object
+              properties:
+                merchant_event_id:
+                  maxLength: 64
+                  minLength: 0
+                  type: string
+                  description: Unique identifier of a previous event.
+        required: true
+      responses:
+        '202':
+          content:
+            application/json:
+              schema: {}
+          description: Accepted
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 3|Void a Usage Event
+      tags:
+      - Billing > Usage Events
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/billing/usage_events/void
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 202
+        reason_phrase: Accepted
+        request_body:
+          merchant_event_id: merchant_event_12345
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.usage_metering:write
+        group: Billing
+        resource_name: Usage Metering
+      x-domain: Billing
+      x-resource: Usage Events
+      x-urlPath: void
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    UsageEvent:
+      required:
+      - billing_customer_id
+      - event_name
+      - happened_at
+      - ingested_at
+      - merchant_event_id
+      - properties
+      - voided
+      type: object
+      properties:
+        billing_customer_id:
+          type: string
+          description: ID of the [Billing Customer](/docs/api/billing/billing_customers) related to this usage event.
+        event_name:
+          type: string
+          description: The name of the event. Corresponds with the `event_name` field on a meter.
+        happened_at:
+          type: string
+          description: Time when this event happened.
+          format: date-time
+        ingested_at:
+          type: string
+          description: Time when this usage event was ingested.
+          format: date-time
+        merchant_event_id:
+          type: string
+          description: Unique identifier of this event in the merchant's system. Maximum length is 64.
+        properties:
+          type: object
+          additionalProperties:
+            type: object
+            description: The payload of events, which contains arbitrary key-value pairs storing properties of the event.
+          description: The payload of events, which contains arbitrary key-value pairs storing properties of the event.
+        voided:
+          type: boolean
+          description: Indicates the status of the event. If `true`, it means the event has been voided and would not be counted into meter result calculation.
+        voided_at:
+          type: string
+          description: Time when this usage event was voided.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

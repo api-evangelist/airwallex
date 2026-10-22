@@ -1,0 +1,2405 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Simulation (Sandbox Only) > Accounts API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Simulation (Sandbox Only) > Accounts
+  description: Simulate the status transition of a connected account through its lifecycle in the sandbox environment.
+  x-domain: Simulation (Sandbox Only)
+  x-resource: Accounts
+  x-urlPath: simulation/accounts
+paths:
+  /api/v1/simulation/account/amendments/{id}/approve:
+    post:
+      servers:
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+      tags:
+      - Simulation (Sandbox Only) > Accounts
+      summary: 1|Approve an Account Amendment
+      description: Use this endpoint to approve an account amendment in PENDING status. Please note that the action is asynchronous and may take some time to complete. This endpoint does not guarantee an immediate status change upon request.
+      operationId: simulation_approveAmendment
+      parameters:
+      - name: id
+        in: path
+        description: Account amendment unique identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulationAmendment'
+        '400':
+          description: invalid_argument
+        '401':
+          description: credentials_invalid
+        '404':
+          description: not_found
+        '500':
+          description: service_unavailable
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/simulation/account/amendments/account_id/approve
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 202
+        reason_phrase: Accepted
+        response_body:
+          id: <string>
+          primary_contact:
+            email: alice.smith@gmail.com
+            mobile: <string>
+          status: APPROVED
+          store_details:
+            cross_border_transaction_percent: '5.6'
+            dispute_percent: '1.5'
+            employee_size: 100
+            estimated_transaction_volume:
+              average_amount_per_transaction: '100'
+              currency: AUD
+              max_amount_per_transaction: '1000'
+              monthly_transaction_amount: '500000'
+            financial_statements:
+            - file_id: your_file_id
+            fulfillment_days: 3
+            industry_code: ICCV3_0002XX
+            mcc: '5599'
+            operating_models:
+            - ONLINE_CHECKOUT
+            - INVOICES_OR_CUSTOM_ORDER_LINKS
+            payment_distribution: []
+            refund_percent: '1.5'
+            selling_to_country_codes:
+            - US
+            - CA
+            shipping_from_country_codes:
+            - US
+            - AU
+            store_address:
+              address_line1: 200 Collins Street
+              address_line2: 200 Collins Street
+              country_code: AU
+              postcode: '3000'
+              state: VIC
+              suburb: Melbourne
+            store_description: I sell awesome products
+            store_name: My Awesome Store
+            store_photos:
+            - file_id: your_photo_file_id
+            store_websites:
+            - url: https://my-awesome-store.com
+          target: account_details.store_details
+      x-scope:
+      - scope: simulation:write
+        group: Simulations
+        resource_name: Simulations
+      x-domain: Simulation (Sandbox Only)
+      x-resource: Accounts
+      x-urlPath: approve_amendments
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+  /api/v1/simulation/account/amendments/{id}/reject:
+    post:
+      servers:
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+      tags:
+      - Simulation (Sandbox Only) > Accounts
+      summary: 2|Reject an Account Amendment
+      description: Use this endpoint to reject an account amendment in PENDING status. Please note that the action is asynchronous and may take some time to complete. This endpoint does not guarantee an immediate status change upon request.
+      operationId: simulation_rejectAmendment
+      parameters:
+      - name: id
+        in: path
+        description: Account amendment unique identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulationAmendment'
+        '400':
+          description: invalid_argument
+        '401':
+          description: credentials_invalid
+        '404':
+          description: not_found
+        '500':
+          description: service_unavailable
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/simulation/account/amendments/account_id/reject
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 202
+        reason_phrase: Accepted
+        response_body:
+          id: <string>
+          primary_contact:
+            email: alice.smith@gmail.com
+            mobile: <string>
+          status: APPROVED
+          store_details:
+            cross_border_transaction_percent: '5.6'
+            dispute_percent: '1.5'
+            employee_size: 100
+            estimated_transaction_volume:
+              average_amount_per_transaction: '100'
+              currency: AUD
+              max_amount_per_transaction: '1000'
+              monthly_transaction_amount: '500000'
+            financial_statements:
+            - file_id: your_file_id
+            fulfillment_days: 3
+            industry_code: ICCV3_0002XX
+            mcc: '5599'
+            operating_models:
+            - ONLINE_CHECKOUT
+            - INVOICES_OR_CUSTOM_ORDER_LINKS
+            payment_distribution: []
+            refund_percent: '1.5'
+            selling_to_country_codes:
+            - US
+            - CA
+            shipping_from_country_codes:
+            - US
+            - AU
+            store_address:
+              address_line1: 200 Collins Street
+              address_line2: 200 Collins Street
+              country_code: AU
+              postcode: '3000'
+              state: VIC
+              suburb: Melbourne
+            store_description: I sell awesome products
+            store_name: My Awesome Store
+            store_photos:
+            - file_id: your_photo_file_id
+            store_websites:
+            - url: https://my-awesome-store.com
+          target: account_details.store_details
+      x-scope:
+      - scope: simulation:write
+        group: Simulations
+        resource_name: Simulations
+      x-domain: Simulation (Sandbox Only)
+      x-resource: Accounts
+      x-urlPath: reject_amendments
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+  /api/v1/simulation/accounts/{account_id}/update_status:
+    post:
+      servers:
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+      tags:
+      - Simulation (Sandbox Only) > Accounts
+      summary: 3|Update Status of Connected Account
+      description: 'Use this endpoint to transition the status of a connected account to one of the following: ACTIVE, SUSPENDED. The connected account must be in the SUBMITTED state to transition statuses. Learn about the connected account status lifecycle.'
+      operationId: simulation_updateStatus
+      parameters:
+      - name: account_id
+        in: path
+        description: Connected account unique identifier.
+        required: true
+        schema:
+          type: string
+          default: acct_zwxZXgUJOTCL5J9v89FfJQ
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - next_status
+              properties:
+                force:
+                  type: boolean
+                  description: Force the account to transition the status. This is true by default. If this is set to false, then any action_required state will not be cleared.
+                next_status:
+                  type: string
+                  description: The connected account status to transition to.
+                  enum:
+                  - ACTION_REQUIRED
+                  - ACTIVE
+                  - SUSPENDED
+        description: payload
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulationAccount'
+        '400':
+          description: invalid_argument
+        '401':
+          description: credentials_invalid
+        '500':
+          description: service_unavailable
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/simulation/accounts/account_id/update_status
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          force: true
+          next_status: ACTIVE
+        response_body:
+          account_details:
+            attachments:
+              additional_files:
+              - tag: DRIVERS_LICENSE_FRONT
+            business_details:
+              account_usage:
+                estimated_monthly_revenue:
+                  amount: '50000'
+                  currency: USD
+                product_reference:
+                - ACCEPT_ONLINE_PAYMENTS
+                - RECEIVE_TRANSFERS
+              as_trustee: true
+              attachments:
+                business_documents:
+                - tag: BUSINESS_LICENSE
+              business_address:
+                address_line1: 200 Collins Street
+                address_line2: 200 Collins Street
+                country_code: AU
+                postcode: '3000'
+                state: VIC
+                suburb: Melbourne
+              business_identifiers:
+              - country_code: US
+                number: A1098762872
+                type: BRN
+              business_name: Swift Concrete Pty Ltd
+              business_name_english: Swift Concrete Pty Ltd
+              business_name_trading: <string>
+              business_start_date: '2023-10-11'
+              business_structure: COMPANY
+              contact_number: '6457892324'
+              description_of_goods_or_services: <string>
+              explanation_for_high_risk_countries_exposure: <string>
+              exports_goods_or_services: true
+              has_member_holding_public_office: true
+              has_nominee_shareholders: true
+              has_prior_financial_institution_refusal: true
+              has_ringgit_borrowing: true
+              industry_category_code: ICCV3_0000XX
+              no_shareholders_with_over_25percent: true
+              operating_country:
+              - US
+              - AU
+              registration_address:
+                address_line1: 200 Collins Street
+                address_line2: 200 Collins Street
+                country_code: AU
+                postcode: '3000'
+                state: VIC
+                suburb: Melbourne
+              registration_address_english:
+                address_line1: 200 Collins Street
+                address_line2: 200 Collins Street
+                country_code: AU
+                postcode: '3000'
+                state: VIC
+                suburb: Melbourne
+              state_of_incorporation: CA
+              url: http://www.your_company.com
+            business_person_details:
+            - attachments:
+                business_person_documents:
+                - tag: PERSON_PURPORTING_TO_ACT_AUTHORISATION_LETTER
+              date_of_birth: '1980-10-10'
+              email: alice.smith@company.com
+              first_name: John
+              first_name_english: Alice
+              identifications:
+                primary:
+                  drivers_license:
+                    effective_at: '2020-11-01'
+                    expire_at: '2040-11-01'
+                    gender: F
+                    issuing_state: VIC
+                    number: '6275046'
+                  identification_type: PASSPORT
+                  issuing_country_code: AU
+                  passport:
+                    effective_at: '2020-11-01'
+                    expire_at: '2040-11-01'
+                    mrz_line1: P<UTOERIKSSON<<ANNA<MARIA<<<<<<<<<<<<<<<<<<<
+                    mrz_line2: L898902C<3UTO6908061F9406236ZE184226B<<<<<14
+                    number: '4107306240'
+                  personal_id:
+                    effective_at: '2020-11-01'
+                    expire_at: '2040-11-01'
+                  tax_id:
+                    type: SSN
+                secondary:
+                  drivers_license:
+                    effective_at: '2020-11-01'
+                    expire_at: '2040-11-01'
+                    gender: F
+                    issuing_state: VIC
+                    number: '6275046'
+                  identification_type: PASSPORT
+                  issuing_country_code: AU
+                  passport:
+                    effective_at: '2020-11-01'
+                    expire_at: '2040-11-01'
+                    mrz_line1: P<UTOERIKSSON<<ANNA<MARIA<<<<<<<<<<<<<<<<<<<
+                    mrz_line2: L898902C<3UTO6908061F9406236ZE184226B<<<<<14
+                    number: '4107306240'
+                  personal_id:
+                    effective_at: '2020-11-01'
+                    expire_at: '2040-11-01'
+                  tax_id:
+                    type: SSN
+              job_title: General Partner
+              last_name: Smith
+              last_name_english: Smith
+              middle_name: John
+              middle_name_english: John
+              nationality: US
+              phone_number: '689342234'
+              residential_address:
+                address_line1: 200 Collins Street
+                address_line2: 200 Collins Street
+                country_code: AU
+                postcode: '3000'
+                state: VIC
+                suburb: Melbourne
+              roles:
+              - BENEFICIAL_OWNER
+            individual_details:
+              account_usage:
+                card_usage:
+                - GENERAL_EXPENSES
+                - BUSINESS_EXPENSES
+                collection_country_codes:
+                - US
+                - AU
+                collection_from:
+                - INCOME_FROM_MARKETPLLACES
+                - INCOME_FROM_PROPERTY
+                expected_monthly_transaction_volume:
+                  amount: '50000'
+                  currency: USD
+                payout_country_codes:
+                - US
+                - GB
+                payout_to:
+                - CONNECTED_AWX_ACCOUNT
+                - EDUCATIONAL_INSTITUTIONS
+                product_reference:
+                - CREATE_CARDS
+                - MAKE_TRANSFERS
+              attachments:
+                individual_documents:
+                - tag: PERSON_NAME_CHANGE_CERTIFICATE
+              date_of_birth: '1970-11-28'
+              employer:
+                business_identifiers:
+                - country_code: US
+                  number: A1098762872
+                  type: BRN
+                business_name: <string>
+                industry_category_code: <string>
+              estimated_monthly_income:
+                amount: <string>
+                currency: <string>
+              first_name: Alice
+              first_name_english: Alice
+              has_member_holding_public_office: false
+              has_prior_financial_institution_refusal: false
+              identifications:
+                primary:
+                  drivers_license:
+                    back_file_id: <string>
+                    effective_at: '2020-11-01'
+                    expire_at: '2040-11-01'
+                    front_file_id: <string>
+                    gender: F
+                    issuing_state: VIC
+                    number: '6275046'
+                    version: <string>
+                  identification_type: PASSPORT
+                  issuing_country_code: AU
+                  medicare_card:
+                    back_file_id: <string>
+                    card_number: '3395653571'
+                    color: GREEN
+                    effective_at: '2020-11-01'
+                    expire_at: '2040-11-01'
+                    front_file_id: <string>
+                    reference_number: <string>
+                  passport:
+                    effective_at: '2020-11-01'
+                    expire_at: '2040-11-01'
+                    front_file_id: <string>
+                    mrz_line1: P<UTOERIKSSON<<ANNA<MARIA<<<<<<<<<<<<<<<<<<<
+                    mrz_line2: L898902C<3UTO6908061F9406236ZE184226B<<<<<14
+                    number: '4107306240'
+                  personal_id:
+                    back_file_id: <string>
+                    effective_at: '2020-11-01'
+                    expire_at: '2040-11-01'
+                    front_file_id: <string>
+                    number: <string>
+                  tax_id:
+                    number: <string>
+                    type: ITIN
+                secondary:
+                  drivers_license:
+                    back_file_id: <string>
+                    effective_at: '2020-11-01'
+                    expire_at: '2040-11-01'
+                    front_file_id: <string>
+                    gender: F
+                    issuing_state: VIC
+                    number: '6275046'
+                    version: <string>
+                  identification_type: PASSPORT
+                  issuing_country_code: AU
+                  medicare_card:
+                    back_file_id: <string>
+                    card_number: '3395653571'
+                    color: GREEN
+                    effective_at: '2020-11-01'
+                    expire_at: '2040-11-01'
+                    front_file_id: <string>
+                    reference_number: <string>
+                  passport:
+                    effective_at: '2020-11-01'
+                    expire_at: '2040-11-01'
+                    front_file_id: <string>
+                    mrz_line1: P<UTOERIKSSON<<ANNA<MARIA<<<<<<<<<<<<<<<<<<<
+                    mrz_line2: L898902C<3UTO6908061F9406236ZE184226B<<<<<14
+                    number: '4107306240'
+                  personal_id:
+                    back_file_id: <string>
+                    effective_at: '2020-11-01'
+                    expire_at: '2040-11-01'
+                    front_file_id: <string>
+                    number: <string>
+                  tax_id:
+                    number: <string>
+                    type: ITIN
+              last_name: Smith
+              last_name_english: Smith
+              live_selfie_file_id: <string>
+              middle_name: Benedict
+              middle_name_english: Benedict
+              nationality: US
+              occupation: OTHERS
+              other_names:
+              - first_name: Alice
+                last_name: Benedict
+                middle_name: Benedict
+              person_id: <string>
+              phone_number: 1-2025551234
+              photo_holding_identification_file_id: <string>
+              residential_address:
+                address_line1: 200 Collins Street
+                address_line2: 200 Collins Street
+                country_code: AU
+                postcode: '3000'
+                state: VIC
+                suburb: Melbourne
+              residential_address_english:
+                address_line1: 200 Collins Street
+                address_line2: 200 Collins Street
+                country_code: AU
+                postcode: '3000'
+                state: VIC
+                suburb: Melbourne
+            legal_entity_id: <string>
+            legal_entity_type: INDIVIDUAL
+            trustee_details:
+              business_details:
+                attachments:
+                  business_documents:
+                  - tag: BUSINESS_LICENSE
+                business_identifiers:
+                - country_code: US
+                  number: A1098762872
+                  type: BRN
+                business_name: Swift Concrete Pty Ltd
+                business_name_english: Swift Concrete Pty Ltd
+                business_person_details:
+                - attachments:
+                    business_person_documents:
+                    - tag: PERSON_PURPORTING_TO_ACT_AUTHORISATION_LETTER
+                  date_of_birth: '1980-10-10'
+                  email: alice.smith@company.com
+                  first_name: John
+                  first_name_english: Alice
+                  identifications:
+                    primary:
+                      drivers_license:
+                        effective_at: '2020-11-01'
+                        expire_at: '2040-11-01'
+                        gender: F
+                        issuing_state: VIC
+                        number: '6275046'
+                      identification_type: PASSPORT
+                      issuing_country_code: AU
+                      passport:
+                        effective_at: '2020-11-01'
+                        expire_at: '2040-11-01'
+                        mrz_line1: P<UTOERIKSSON<<ANNA<MARIA<<<<<<<<<<<<<<<<<<<
+                        mrz_line2: L898902C<3UTO6908061F9406236ZE184226B<<<<<14
+                        number: '4107306240'
+                      personal_id:
+                        effective_at: '2020-11-01'
+                        expire_at: '2040-11-01'
+                      tax_id:
+                        type: SSN
+                    secondary:
+                      drivers_license:
+                        effective_at: '2020-11-01'
+                        expire_at: '2040-11-01'
+                        gender: F
+                        issuing_state: VIC
+                        number: '6275046'
+                      identification_type: PASSPORT
+                      issuing_country_code: AU
+                      passport:
+                        effective_at: '2020-11-01'
+                        expire_at: '2040-11-01'
+                        mrz_line1: P<UTOERIKSSON<<ANNA<MARIA<<<<<<<<<<<<<<<<<<<
+                        mrz_line2: L898902C<3UTO6908061F9406236ZE184226B<<<<<14
+                        number: '4107306240'
+                      personal_id:
+                        effective_at: '2020-11-01'
+                        expire_at: '2040-11-01'
+                      tax_id:
+                        type: SSN
+                  job_title: General Partner
+                  last_name: Smith
+                  last_name_english: Smith
+                  middle_name: John
+                  middle_name_english: John
+                  nationality: US
+                  phone_number: '689342234'
+                  residential_address:
+                    address_line1: 200 Collins Street
+                    address_line2: 200 Collins Street
+                    country_code: AU
+                    postcode: '3000'
+                    state: VIC
+                    suburb: Melbourne
+                  roles:
+                  - BENEFICIAL_OWNER
+                business_structure: COMPANY
+                contact_number: '6457892324'
+                description_of_goods_or_services: <string>
+                explanation_for_high_risk_countries_exposure: <string>
+                industry_category_code: ICCV3_0000XX
+                operating_country:
+                - US
+                - AU
+                registration_address:
+                  address_line1: 200 Collins Street
+                  address_line2: 200 Collins Street
+                  country_code: AU
+                  postcode: '3000'
+                  state: VIC
+                  suburb: Melbourne
+                registration_address_english:
+                  address_line1: 200 Collins Street
+                  address_line2: 200 Collins Street
+                  country_code: AU
+                  postcode: '3000'
+                  state: VIC
+                  suburb: Melbourne
+                url: http://www.your_company.com
+              individual_details:
+              - address:
+                  address_line1: 200 Collins Street
+                  address_line2: 200 Collins Street
+                  country_code: AU
+                  postcode: '3000'
+                  state: VIC
+                  suburb: Melbourne
+                attachments:
+                  identity_files:
+                  - tag: DRIVERS_LICENSE_FRONT
+                date_of_birth: '1980-10-10'
+                first_name: John
+                first_name_english: Alice
+                identification_drivers_license_version: 011536880
+                identification_number: AAA5417287BB
+                identification_type: PERSONAL_ID
+                last_name: Smith
+                last_name_english: Smith
+                nationality: US
+              legal_entity_type: INDIVIDUAL
+          created_at: <string>
+          customer_agreements:
+            agreed_to_biometrics_consent: true
+            agreed_to_data_usage: true
+            agreed_to_terms_and_conditions: true
+            opt_in_for_marketing: true
+            terms_and_conditions:
+              agreed_at: 2024-08-17T16:08:02+1100
+              device_data:
+                ip_address: 127.0.0.1
+                user_agent: Safari/537.36
+              service_agreement_type: FULL
+          id: <string>
+          identifier: <string>
+          metadata: {}
+          next_action:
+            type: <string>
+          nickname: <string>
+          primary_contact:
+            email: alice.smith@gmail.com
+            mobile: <string>
+          reactivate_details:
+            message: <string>
+            reactivated_at: yyyy-MM-dd'T'HH:mm:ssZ
+          requirements:
+            agreement_to_terms_and_conditions_required:
+              endpoint: <string>
+              message: Account has passed review. To activate the account, please agree to the terms and conditions by calling the endpoint.
+              method: POST
+            other:
+            - error_code: OTHER
+              message: Please contact customer support.
+            photo_file_id_required:
+              error_code: FACE_CROPPED
+              message: Please retry the selfie. Your face was cropped.
+              photo_file_id: Njg3MzkzNWMtMmNlNC00NDM3L=
+            photo_holding_id_required:
+            - error_code: FACE_MATCHING_FAILED
+              front_file_id: Njg3MzkzNWMtMmNlNC00NDM3L=
+              message: Please upload a photo of yourself holding your ID. Make sure nothing on the ID is covered — your face and ID details should be clear in the photo.
+              photo_file_id: Njg3MzkzNWMtMmNlNC00NDM3L=
+            primary_identification_required:
+            - back_file_id: Njg3MzkzNWMtMmNlNC00NDM3L=
+              error_code: EXPIRED_DOCUMENT
+              first_name: Alice
+              front_file_id: Njg3MzkzNWMtMmNlNC00NDM3L=
+              last_name: Smith
+              message: Please upload a photo of a valid identification document. Document was expired.
+              middle_name: Benedict
+            reason_for_duplicate_account_required:
+            - error_code: CONFIRM_REASON_FOR_SECOND_ACCOUNT
+              message: Duplicate account found. Please confirm the reason for a second account.
+            secondary_identification_required:
+            - back_file_id: Njg3MzkzNWMtMmNlNC00NDM3L=
+              error_code: EXPIRED_DOCUMENT
+              first_name: Alice
+              front_file_id: Njg3MzkzNWMtMmNlNC00NDM3L=
+              last_name: Smith
+              message: Please upload a photo of a valid identification document. Document was expired.
+              middle_name: Benedict
+          status: <string>
+          suspend_details:
+          - suspended_at: yyyy-MM-dd'T'HH:mm:ssZ
+          view_type: <string>
+      x-scope:
+      - scope: simulation:write
+        group: Simulations
+        resource_name: Simulations
+      x-domain: Simulation (Sandbox Only)
+      x-resource: Accounts
+      x-urlPath: update_status
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+components:
+  schemas:
+    SimulationOtherName:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: First name (given name) of the individual person if different.
+        last_name:
+          type: string
+          description: Last name (family name) of the individual person if different.
+        middle_name:
+          type: string
+          description: Middle name of the individual person if different.
+    SimulationBusinessPersonDocumentation:
+      type: object
+      properties:
+        business_person_documents:
+          type: array
+          description: All personal documents, such as PPTA letter, change or name certificate, or other supporting documents.
+          items:
+            $ref: '#/components/schemas/SimulationBusinessPersonAttachment'
+      description: Reference to uploaded business person document. (For file upload instructions, refer to 'File Service API'.).
+    SimulationBusinessAccountUsage:
+      type: object
+      properties:
+        estimated_monthly_revenue:
+          $ref: '#/components/schemas/SimulationRevenueVolume'
+          description: The approximate amount of revenue a business generates in a month.
+        product_reference:
+          type: array
+          description: "Intended product usage.  \n`ACCEPT_ONLINE_PAYMENTS`,`COLLECT_MARKETPLACE_PROCEEDS`,  \n`RECEIVE_TRANSFERS`,`GET_PAID`,`CONVERT_FUNDS`,  \n`MAKE_TRANSFERS`,`CREATE_CARDS`,`MANAGE_EXPENSES`,  \n`USE_AWX_API`,`TRANSFER_CNY_INBOUND`."
+          items:
+            type: string
+      description: The intended purpose of the account, such as product usage and monthly turnover.
+    SimulationBusinessIdentifier:
+      type: object
+      properties:
+        country_code:
+          type: string
+          description: Country code. (2-letter ISO 3166-2 country code).
+        number:
+          type: string
+          description: Local business registration number i.e. an official signal of identification for the business.
+        type:
+          type: string
+          description: Type of business registration number, depending on what's applicable to the country the business is registered in.
+          enum:
+          - BRN
+          - EIN
+          - SSN
+          - VAT
+          x-enumDescriptions:
+            BRN: Business Registration Number
+            EIN: Employer Identification Number
+            SSN: Social Security Number
+            VAT: Value Added Tax Number
+    SimulationCustomerAgreements:
+      type: object
+      properties:
+        agreed_to_biometrics_consent:
+          type: boolean
+          description: Consent to Airwallex collecting and processing the biometrics data (applicable if liveness check is conducted).
+        agreed_to_data_usage:
+          type: boolean
+          description: Consent to Airwallex using the provided data, including consent for Airwallex to verify the identity of relevant individuals with Airwallex service providers and database owners in accordance with the Identity Verification Terms.
+        agreed_to_terms_and_conditions:
+          type: boolean
+          description: Agreement to abide by the Airwallex terms and conditions.
+        opt_in_for_marketing:
+          type: boolean
+          description: Agreement to receive email from Airwallex on news, promotions, etc.
+        terms_and_conditions:
+          $ref: '#/components/schemas/SimulationTermsAndConditions'
+          description: Terms and conditions between Airwallex and the account holder.
+      description: Agreements collected from the user, such as acceptance of terms and conditions, or opt in for marketing.
+    SimulationFinancialStatement:
+      type: object
+      properties:
+        file_id:
+          type: string
+          description: Unique identifier of file as provided in the response from the File Service API.
+    SimulationDriverLicence:
+      type: object
+      properties:
+        back_file_id:
+          type: string
+          description: File id of the photo of the back of the document.
+        effective_at:
+          type: string
+          format: date
+          description: Document effective as of this date in YYYY-MM-DD format.
+        expire_at:
+          type: string
+          format: date
+          description: Document expiry date in YYYY-MM-DD format.
+        front_file_id:
+          type: string
+          description: File id of the photo of the front of the document.
+        gender:
+          type: string
+          description: Gender listed on document.
+        issuing_state:
+          type: string
+          description: Name of state where the license is issued. Only applicable if relevant to selected country.
+        number:
+          type: string
+          description: Driver's license number.
+        version:
+          type: string
+          description: Version listed on the document. Only applicable if relevant to selected country.
+      description: Driver's license.
+    SimulationIndividualPassport:
+      type: object
+      properties:
+        effective_at:
+          type: string
+          format: date
+          description: Document effective as of this date in YYYY-MM-DD format.
+        expire_at:
+          type: string
+          format: date
+          description: Document expiry date in YYYY-MM-DD format.
+        front_file_id:
+          type: string
+          description: File id of the photo of the front of the document.
+        mrz_line1:
+          type: string
+          description: First line of passport MRZ (machine-readable zone).
+        mrz_line2:
+          type: string
+          description: Second line of passport MRZ (machine-readable zone).
+        number:
+          type: string
+          description: Passport number.
+      description: Passport.
+    SimulationIndividualAccountUsage:
+      type: object
+      properties:
+        card_usage:
+          type: array
+          description: "Ways in which the account will use Airwallex borderless cards.  \n`GENERAL_EXPENSES`, `BUSINESS_EXPENSES`, `EDUCATION`,  \n`TRAVEL_TRANSPORT`, `INSURANCE`, `SERVICES`,  \n`BILLS_UTILITIES`, `INVESTMENT`, `FEES_CHARGES`,  \n`HEALTHCARE`, `HOUSING`, `NO_CARD_USAGE`."
+          items:
+            type: string
+        collection_country_codes:
+          type: array
+          description: Countries from which the account will be collecting funds. (2-letter ISO 3166-2 country code).
+          items:
+            type: string
+        collection_from:
+          type: array
+          description: "Sources and counterparties from which the account will be collecting funds.  \n`ALLOWANCE_FROM_FAMILY`, `BENEFITS_FROM_STATE`, `EMPLOYMENT_INCOME`,  \n`INVESTMENT_INCOME_NONPROPERTY`, `INCOME_FROM_PROPERTY`,  \n`INCOME_FROM_MARKETPLLACES`,  \n`INSURANCE`, `LOANS`, `SAVINGS`, `OTHER_THIRD_PARTIES`,  \n`PAYMENT_REFUNDS`."
+          items:
+            type: string
+        expected_monthly_transaction_volume:
+          $ref: '#/components/schemas/SimulationTransactionVolume'
+          description: Estimate of expected monthly transaction volume.
+        payout_country_codes:
+          type: array
+          description: Countries to which the account will be paying funds. (2-letter ISO 3166-2 country code).
+          items:
+            type: string
+        payout_to:
+          type: array
+          description: "Beneficiaries and counterparties to which the account will be paying funds.  \n`CONNECTED_AWX_ACCOUNT`, `EDUCATIONAL_INSTITUTIONS`, `FRIENDS_OR_RELATIVES`,  \n`MARKETPLACE_PLATFORM`, `MARKETPLACE_SELLERS`, `MOBILITY_PLATFORM`,  \n`OTHER_THIRD_PARTY_INDIVIDUALS`, `OWN_BANK_ACCOUNT`."
+          items:
+            type: string
+        product_reference:
+          type: array
+          description: "Intended product usage.  \n`CREATE_CARDS`, `MAKE_TRANSFERS`, `MARKETPLACE_WALLET`,  \n`MOBILITY_WALLET`, `OTHERS`, `PAYROLL_WALLET`,  \n`RECEIVE_TRANSFERS`, `TRADE_SECURITIES`, `TUITION_PAYMENTS`."
+          items:
+            type: string
+      description: Information on how the account will be used, such as sending/receiving countries and monthly volume.
+    SimulationTransactionVolume:
+      type: object
+      properties:
+        amount:
+          type: string
+          description: Estimate of the expected amount of money to be collected or paid out each month, in US dollars.
+        currency:
+          type: string
+          description: Currency of the revenue. (3-letter ISO 4217 currency code).
+      description: Estimate of expected monthly transaction volume.
+    SimulationStoreAddress:
+      type: object
+      properties:
+        address_line1:
+          type: string
+          description: The first line of a physical address, typically including the street number and name of the building or residence. A P.O. box is not acceptable.
+        address_line2:
+          type: string
+          description: An optional field that can be used to capture additional information about the address, such as the apartment/ suite number, or floor number.
+        country_code:
+          type: string
+          description: Country code. (2-letter ISO 3166-2 country code).
+        postcode:
+          type: string
+          description: Postcode or zip code. Only applicable if relevant to selected country.
+        state:
+          type: string
+          description: Name of state. Only applicable if relevant to selected country.
+        suburb:
+          type: string
+          description: Name of city/suburb.
+      description: Physical address of the store.
+    SimulationBusinessPersonDetail:
+      type: object
+      properties:
+        attachments:
+          $ref: '#/components/schemas/SimulationBusinessPersonDocumentation'
+          description: Reference to uploaded business person document. (For file upload instructions, refer to 'File Service API'.).
+        date_of_birth:
+          type: string
+          format: date
+          description: Birth date of the business person in YYYY-MM-DD format.
+        email:
+          type: string
+          description: Email of the business person.
+        first_name:
+          type: string
+          description: First name of the business person.
+        first_name_english:
+          type: string
+          description: First name of the business person (in ASCII characters only, e.g. romanization of non-Latin characters).
+        identifications:
+          $ref: '#/components/schemas/SimulationBusinessIdentifications'
+          description: Details of the business person for identity verification, such as a passport, driver's license, or other government-issued unique identifier card.
+        job_title:
+          type: string
+          description: Job title of the business person within the business.
+        last_name:
+          type: string
+          description: Last name of the business person.
+        last_name_english:
+          type: string
+          description: Last name of the business person (in ASCII characters only, e.g. romanization of non-Latin characters).
+        live_selfie_file_id:
+          type: string
+          description: File id for live-photo of the individual.
+        middle_name:
+          type: string
+          description: Middle name of the business person.
+        middle_name_english:
+          type: string
+          description: Middle name of the business person (in ASCII characters only, e.g. romanization of non-Latin characters).
+        nationality:
+          type: string
+          description: Nationality of the business person. (2-letter ISO 3166-2 country code).
+        person_id:
+          type: string
+          description: Unique Id of this person. This field is only available when the account has passed KYC.
+          readOnly: true
+        phone_number:
+          type: string
+          description: A valid phone number for the business person.
+        residential_address:
+          $ref: '#/components/schemas/SimulationAddress'
+          description: Address where the business is registered.
+        roles:
+          type: array
+          description: Roles of the business person. Any of `AUTHORISED_PERSON`, `BENEFICIAL_OWNER`, `CONTROLLING_PERSON`, `DIRECTOR`, `LEGAL_REPRESENTATIVE`, `SIGNATORY`. The order is not guaranteed in response.
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - AUTHORISED_PERSON
+            - BENEFICIAL_OWNER
+            - CONTROLLING_PERSON
+            - DIRECTOR
+            - LEGAL_REPRESENTATIVE
+            - SIGNATORY
+    SimulationAdditionalAttachment:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Optional field for any additional notes or text description for the file.
+        file_id:
+          type: string
+          description: Unique identifier of file as provided in the response from the File Service API.
+        tag:
+          type: string
+          description: Tag of the additional file.
+          enum:
+          - DRIVERS_LICENSE_BACK
+          - DRIVERS_LICENSE_FRONT
+          - MEDICARE_CARD
+          - OTHER
+          - PASSPORT
+          - PERSONAL_ID_BACK
+          - PERSONAL_ID_FRONT
+    SimulationPhotoHoldingIdRequired:
+      type: object
+      properties:
+        error_code:
+          type: string
+          description: Error code for what caused this requirement.
+          readOnly: true
+          enum:
+          - FACE_MATCHING_FAILED
+        front_file_id:
+          type: string
+          description: File id of identification file.
+          readOnly: true
+        message:
+          type: string
+          description: Information on requirement for photo of person holding their id.
+          readOnly: true
+        photo_file_id:
+          type: string
+          description: Photo file as provided in the response from the File Service API.
+          readOnly: true
+    SimulationIndividualDocuments:
+      type: object
+      properties:
+        individual_documents:
+          type: array
+          description: Identity files for individual accounts.
+          items:
+            $ref: '#/components/schemas/SimulationIndividualAttachment'
+      description: Reference to uploaded identification document.
+    SimulationBusinessIdentification:
+      type: object
+      properties:
+        drivers_license:
+          $ref: '#/components/schemas/SimulationDriverLicence'
+          description: Driver's license.
+        identification_type:
+          type: string
+          description: Type of identification.
+          enum:
+          - DRIVERS_LICENCE
+          - PASSPORT
+          - PERSONAL_ID
+          - TAX_ID
+        issuing_country_code:
+          type: string
+          description: Country where the license is issued. (2-letter ISO 3166-2 country code).
+        passport:
+          $ref: '#/components/schemas/SimulationPassport'
+          description: Passport.
+        personal_id:
+          $ref: '#/components/schemas/SimulationPersonalId'
+          description: Other government-issued unique identifier card.
+        tax_id:
+          $ref: '#/components/schemas/SimulationBusinessPersonTaxId'
+          description: Tax unique identifier.
+      description: Details of the primary identification.
+    SimulationPersonalId:
+      type: object
+      properties:
+        back_file_id:
+          type: string
+          description: File id of the photo of the back of the document.
+        effective_at:
+          type: string
+          format: date
+          description: Document effective as of this date in YYYY-MM-DD format.
+        expire_at:
+          type: string
+          format: date
+          description: Document expiry date in YYYY-MM-DD format.
+        front_file_id:
+          type: string
+          description: File id of the photo of the front of the document.
+        number:
+          type: string
+          description: Document unique identifier number.
+      description: Other government-issued unique identifier card.
+    SimulationBusinessDocumentation:
+      type: object
+      properties:
+        business_documents:
+          type: array
+          description: All business documents, such as incorporation certificates, ownershipship structure, and other relevant documentation.
+          items:
+            $ref: '#/components/schemas/SimulationBusinessAttachment'
+      description: Reference to uploaded files of business documentation. (For file upload instructions, refer to 'File Service API'.).
+    SimulationReactivateDetail:
+      type: object
+      properties:
+        message:
+          type: string
+        reactivated_at:
+          type: string
+      description: The reactivate details for ACTIVE account with reactivation history.
+    SimulationAccountDetails:
+      type: object
+      properties:
+        attachments:
+          $ref: '#/components/schemas/SimulationSupplementaryMaterials'
+          description: Supplementary Materials.
+        business_details:
+          $ref: '#/components/schemas/SimulationBusinessDetails'
+          description: Business details including the type of business, primary place of business and industry type.
+        business_person_details:
+          type: array
+          description: Details identifying the related persons of the business.
+          items:
+            $ref: '#/components/schemas/SimulationBusinessPersonDetail'
+        individual_details:
+          $ref: '#/components/schemas/SimulationIndividualDetails'
+          description: Individual details including name, address, face photo, and documents.
+        legal_entity_id:
+          type: string
+          description: Legal Entity unique identifier of the account.
+        legal_entity_type:
+          type: string
+          description: Type of account. Defaults to `BUSINESS`.
+          enum:
+          - BUSINESS
+          - INDIVIDUAL
+        store_details:
+          $ref: '#/components/schemas/SimulationStoreDetails-2'
+          description: Relevant information associated with the store you are applying payment solutions for.
+        trustee_details:
+          $ref: '#/components/schemas/SimulationTrusteeDetails'
+          description: Details identifying the trustee of the business.
+      description: Relevant information associated with Airwallex account specified in the request.
+    SimulationBusinessPersonTaxId:
+      type: object
+      properties:
+        number:
+          type: string
+          description: Tax unique identifier number.
+        type:
+          type: string
+          description: Tax unique identifier type.
+          enum:
+          - ITIN
+          - OTHERS
+          - SSN
+          - VAT
+      description: Tax unique identifier.
+    SimulationSupplementaryMaterials:
+      type: object
+      properties:
+        additional_files:
+          type: array
+          description: Additional files.
+          items:
+            $ref: '#/components/schemas/SimulationAdditionalAttachment'
+      description: Supplementary Materials.
+    SimulationStorePhoto:
+      type: object
+      required:
+      - file_id
+      properties:
+        file_id:
+          type: string
+          description: All relevant store photos, if more than 1 physical store, provide one photo of each.
+    SimulationEstimatedTransactionVolume:
+      type: object
+      required:
+      - average_amount_per_transaction
+      - currency
+      - max_amount_per_transaction
+      - monthly_transaction_amount
+      properties:
+        average_amount_per_transaction:
+          type: string
+          description: The average transaction size of your store.
+        currency:
+          type: string
+          description: Currency of the transaction volume. (3-letter ISO 4217 currency code).
+        max_amount_per_transaction:
+          type: string
+          description: The maximum transaction size of your store.
+        monthly_transaction_amount:
+          type: string
+          description: The average monthly volume of your store.
+      description: Your store's anticipated volume of transactions in the next 12 months with Airwallex.
+    SimulationTrusteeIndividual:
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/SimulationAddress'
+          description: Address where the business is registered.
+        attachments:
+          $ref: '#/components/schemas/SimulationIdentityInfo'
+          description: Reference to uploaded identification document. (For file upload instructions, refer to 'File Service API'.).
+        date_of_birth:
+          type: string
+          format: date
+          description: Birth date of the trustee in YYYY-MM-DD format.
+        first_name:
+          type: string
+          description: First name of the trustee.
+        first_name_english:
+          type: string
+          description: First name of the trustee (in ASCII characters only, e.g. romanization of non-Latin characters).
+        identification_drivers_license_version:
+          type: string
+          description: Driver's license card number (not driver's license number) the trustee can provide.
+        identification_number:
+          type: string
+          description: Identification number the trustee can provide.
+        identification_type:
+          type: string
+          description: Identification type the trustee can provide.
+        last_name:
+          type: string
+          description: Last name of the trustee.
+        last_name_english:
+          type: string
+          description: Last name of the trustee (in ASCII characters only, e.g. romanization of non-Latin characters).
+        nationality:
+          type: string
+          description: Nationality of the trustee. (2-letter ISO 3166-2 country code).
+    SimulationRevenueVolume:
+      type: object
+      properties:
+        amount:
+          type: string
+          description: The approximate amount of revenue a business generates in a month.
+        currency:
+          type: string
+          description: Currency of the revenue. (3-letter ISO 4217 currency code).
+      description: The approximate amount of revenue a business generates in a month.
+    SimulationTrusteeDetails:
+      type: object
+      properties:
+        business_details:
+          $ref: '#/components/schemas/SimulationTrusteeBusiness'
+          description: Business details including the type of business, primary place of business, and industry type.
+        individual_details:
+          type: array
+          description: Individual details including name, including name, address, face photo, and documents.
+          items:
+            $ref: '#/components/schemas/SimulationTrusteeIndividual'
+        legal_entity_type:
+          type: string
+          description: Type of trustee. Defaults to `BUSINESS`.
+          enum:
+          - BUSINESS
+          - INDIVIDUAL
+      description: Details identifying the trustee of the business.
+    SimulationStoreWebsite:
+      type: object
+      required:
+      - url
+      properties:
+        url:
+          type: string
+          description: Url of the store websites, including online store, marketplace stores, app-store links or other relevant websites.
+    SimulationBusinessIdentifications:
+      type: object
+      properties:
+        primary:
+          $ref: '#/components/schemas/SimulationBusinessIdentification'
+          description: Details of the primary identification.
+        secondary:
+          $ref: '#/components/schemas/SimulationBusinessIdentification'
+          description: Details of the secondary identity verification.
+      description: Details of the business person for identity verification, such as a passport, driver's license, or other government-issued unique identifier card.
+    SimulationIndividualTaxId:
+      type: object
+      properties:
+        number:
+          type: string
+          description: Tax unique identifier number.
+        type:
+          type: string
+          description: Type of Tax unique identifier commonly used in the selected country.
+          enum:
+          - ITIN
+          - SSN
+      description: Tax unique identifier.
+    SimulationPrimaryContact:
+      type: object
+      properties:
+        email:
+          type: string
+          description: A valid email address.
+        mobile:
+          type: string
+          description: A valid mobile phone number.
+      description: Contact information for the primary contact of the Airwallex specified account.
+    SimulationTermsAndConditions:
+      type: object
+      properties:
+        agreed_at:
+          type: string
+          description: The timestamp marking when the account representative agreed to their service agreement in ISO 8601 format.
+        device_data:
+          $ref: '#/components/schemas/SimulationDeviceData'
+          description: Client device information applicable when agreement is accepted. It is recommended to provide this data for risk analysis.
+        service_agreement_type:
+          type: string
+          description: The user’s service type of their agreement. Default to FULL.
+          enum:
+          - FULL
+          - RECIPIENT
+          x-enumDescriptions:
+            FULL: '[FULL service agreement](https://www.airwallex.com/terms/scale-user-terms-global) creates a service relationship between Airwallex and the account holder.'
+            RECIPIENT: '[RECIPIENT service agreement](https://www.airwallex.com/terms/recipient-agreement-global) clarifies that there is no service relationship between Airwallex and the recipient, and that the recipient’s relationship is with the platform. This service agreement type is required for creating [Ledger Account](/docs/payments-for-platforms/use-cases/payments-for-marketplaces).'
+      description: Terms and conditions between Airwallex and the account holder.
+    SimulationDeviceData:
+      type: object
+      properties:
+        ip_address:
+          type: string
+          description: The IP address from which the account representative accepted their service agreement.
+        user_agent:
+          type: string
+          description: The user agent of the browser from which the account representative accepted their service agreement.
+      description: Client device information applicable when agreement is accepted. It is recommended to provide this data for risk analysis.
+    SimulationIndividualDetails:
+      type: object
+      properties:
+        account_usage:
+          $ref: '#/components/schemas/SimulationIndividualAccountUsage'
+          description: Information on how the account will be used, such as sending/receiving countries and monthly volume.
+        attachments:
+          $ref: '#/components/schemas/SimulationIndividualDocuments'
+          description: Reference to uploaded identification document.
+        date_of_birth:
+          type: string
+          format: date
+          description: Birth date of the account user in YYYY-MM-DD format.
+        employer:
+          $ref: '#/components/schemas/SimulationEmployer'
+          description: Information of the individual's employer.
+        estimated_monthly_income:
+          $ref: '#/components/schemas/SimulationEstimatedMonthlyIncome'
+          description: Estimate of monthly income.
+        first_name:
+          type: string
+          description: First name of the account user.
+        first_name_english:
+          type: string
+          description: First name of the account user (in ASCII characters only, e.g. romanization of non-Latin characters) Required if the first name, middle name or last name fields include non-ASCII characters.
+        has_member_holding_public_office:
+          type: boolean
+          description: Indicate whether the customer, close family member, or business partner holds public office.
+        has_prior_financial_institution_refusal:
+          type: boolean
+          description: Indicate whether the customer has been refused service from a financial institution due to ML/TF concerns.
+        identifications:
+          $ref: '#/components/schemas/SimulationIndividualIdentifications'
+          description: Details of the business person for identity verification, such as a passport, driver's license, or other government-issued unique identifier card.
+        last_name:
+          type: string
+          description: Last name of the account user.
+        last_name_english:
+          type: string
+          description: Last name of the account user (in ASCII characters only, e.g. romanization of non-Latin characters) Required if the first name, middle name or last name fields include non-ASCII characters.
+        live_selfie_file_id:
+          type: string
+          description: File id for live-photo of the individual.
+        middle_name:
+          type: string
+          description: Middle name of the account user.
+        middle_name_english:
+          type: string
+          description: Middle name of the account user. (in ASCII characters only, e.g. romanization of non-Latin characters) Required if the first name, middle name or last name fields include non-ASCII characters.
+        nationality:
+          type: string
+          description: Nationality of the account user. (2-letter ISO 3166-2 country code).
+        occupation:
+          type: string
+          description: Occupation of the individual person.
+          enum:
+          - ACCOUNTANT
+          - ADMINISTRATION
+          - ARCHITECTURE
+          - ARTIST
+          - ATHLETE
+          - BEAUTY
+          - BUSINESSMAN
+          - CONSTRUCTION
+          - COOK
+          - DELIVERY
+          - DESIGNER
+          - ENGINEER
+          - FINANCE
+          - GOVERNMENT
+          - HEALTHCARE
+          - INSURANCE
+          - JOURNALIST
+          - LEGAL
+          - MANAGER
+          - MARKETING
+          - MEDIA
+          - MILITARY
+          - NURSE
+          - OFFICER
+          - OTHERS
+          - PILOT
+          - PRODUCTION
+          - PROGRAMMER
+          - REAL_ESTATE
+          - SALESPERSON
+          - SELF_EMPLOYMENT
+          - STUDENT
+          - SURVEYOR
+          - TEACHER
+          - TECHNICIAN
+          - TRAVEL
+          - UNEMPLOYED
+          - WAITER
+        other_names:
+          type: array
+          description: Alias or other names of the individual person if different.
+          items:
+            $ref: '#/components/schemas/SimulationOtherName'
+        person_id:
+          type: string
+          description: Unique Id of this person. This field is only available when the account has passed KYC.
+          readOnly: true
+        phone_number:
+          type: string
+          description: Phone number of the account user, used for identity verification.
+        photo_holding_identification_file_id:
+          type: string
+          description: File id of a photo of the individual holding their identification. Applicable only if specifically requested by Airwallex.
+        residential_address:
+          $ref: '#/components/schemas/SimulationAddress'
+          description: Address of the account user.
+        residential_address_english:
+          $ref: '#/components/schemas/SimulationAddress'
+          description: Address of the account user (in ASCII characters only, e.g. romanization of non-Latin characters) Required if the address field includes non-ASCII characters.
+      description: Individual details including name, address, face photo, and documents.
+    SimulationPhotoFileRequirement:
+      type: object
+      properties:
+        error_code:
+          type: string
+          description: Error code for what caused this requirement.
+          readOnly: true
+          enum:
+          - FACE_CLOSE_TO_BORDER
+          - FACE_CROPPED
+          - FACE_IS_BLOCKED
+          - FACE_NOT_FOUND
+          - FACE_OVER_ROTATED
+          - FACE_TOO_CLOSE
+          - FACE_TOO_SMALL
+          - FAILED_TO_PROCESS_IMAGE
+          - LIVENESS_CHECK_FAILED
+          - OTHER
+          - TOO_MANY_FACES
+          - UNKNOWN
+        message:
+          type: string
+          description: Information on requirement for Photo File.
+          readOnly: true
+        photo_file_id:
+          type: string
+          description: Photo file as provided in the response from the File Service API.
+          readOnly: true
+      description: File id of the photo file, only required if facial liveness check failed.
+    SimulationBusinessDetails:
+      type: object
+      properties:
+        account_usage:
+          $ref: '#/components/schemas/SimulationBusinessAccountUsage'
+          description: The intended purpose of the account, such as product usage and monthly turnover.
+        as_trustee:
+          type: boolean
+          description: Whether this account is set up as a trustee on behalf of a trust.
+        attachments:
+          $ref: '#/components/schemas/SimulationBusinessDocumentation'
+          description: Reference to uploaded files of business documentation. (For file upload instructions, refer to 'File Service API'.).
+        business_address:
+          $ref: '#/components/schemas/SimulationAddress'
+          description: Address where the business operates and conducts its activities.
+        business_identifiers:
+          type: array
+          description: Local business registration number i.e. an official signal of identification for the business.
+          items:
+            $ref: '#/components/schemas/SimulationBusinessIdentifier'
+        business_name:
+          type: string
+          description: The official legal name of the business as registered with the relevant government authority.
+        business_name_english:
+          type: string
+          description: The official legal name of the business as registered with the relevant government authority. (in ASCII characters only, e.g. romanization of non-Latin characters).
+        business_name_trading:
+          type: string
+          description: Also known as a "doing business as" (DBA) name, refers to a name under which the business operates and conducts its activities, which may differ from its legal name.
+        business_start_date:
+          type: string
+          description: The date on which the business officially begins its operations in YYYY-MM-DD format.
+        business_structure:
+          type: string
+          description: Type of business structure.
+          enum:
+          - COMPANY
+          - CORPORATION
+          - GENERAL_PARTNERSHIP
+          - LIMITED_LIABILITY_COMPANY
+          - LIMITED_LIABILITY_PARTNERSHIP
+          - LIMITED_PARTNERSHIP
+          - NON_REGISTERED_SOLE_PROPRIETOR
+          - OTHER
+          - PARTNERSHIP
+          - SELF_MANAGED_SUPER_FUND
+          - SOLE_PROPRIETOR
+          - TRUST
+        contact_number:
+          type: string
+          description: Primary business phone number.
+        description_of_goods_or_services:
+          type: string
+          description: Free text description of goods or services. Max length is 500 characters.
+        explanation_for_high_risk_countries_exposure:
+          type: string
+          description: Free text description of business activities conducted in high-risk countries if any. Max length is 500 characters.
+        exports_goods_or_services:
+          type: boolean
+          description: Indicate whether the business engages in the export of goods and/or services.
+        has_member_holding_public_office:
+          type: boolean
+          description: Indicate whether the customer, close family member, or business partner holds public office.
+        has_nominee_shareholders:
+          type: boolean
+          description: Indicate whether any of the individuals hold their shares on behalf of a third party.
+        has_prior_financial_institution_refusal:
+          type: boolean
+          description: Indicate whether the customer has been refused service from a financial institution due to ML/TF concerns.
+        has_ringgit_borrowing:
+          type: boolean
+          description: Indicate whether the business engages in domestic Ringgit borrowing.
+        industry_category_code:
+          type: string
+          description: The code of the industry category most aligned with your business. Please navigate to the 'Supporting Services' > 'Reference Data' > 'Industry categories' section for an endpoint to pull a tree of categories.
+        no_shareholders_with_over_25percent:
+          type: boolean
+          description: Attestation of ownership structure without shareholders holding above 25% shares.
+        operating_country:
+          type: array
+          description: The countries in which the business conducts its operations, such as selling products or services, or providing support to customers. Multiple country codes (2-letter ISO 3166-2 country code) may be provided.
+          items:
+            type: string
+        registration_address:
+          $ref: '#/components/schemas/SimulationAddress'
+          description: Address where the business is registered.
+        registration_address_english:
+          $ref: '#/components/schemas/SimulationAddress'
+          description: Address where the business is registered. (in ASCII characters only, e.g. romanization of non-Latin characters).
+        state_of_incorporation:
+          type: string
+          description: The state where the business incorporated, different from registration state. (2-letter ISO 3166-2 state code).
+        url:
+          type: string
+          description: Websites associated with the business, such as its official website, social media pages, or other online profiles.
+      description: Business details including the type of business, primary place of business and industry type.
+    SimulationPassport:
+      type: object
+      properties:
+        effective_at:
+          type: string
+          format: date
+          description: Document effective as of this date in YYYY-MM-DD format.
+        expire_at:
+          type: string
+          format: date
+          description: Document expiry date in YYYY-MM-DD format.
+        front_file_id:
+          type: string
+          description: File id of the photo of the front of the document.
+        mrz_line1:
+          type: string
+          description: First line of passport MRZ (machine-readable zone).
+        mrz_line2:
+          type: string
+          description: Second line of passport MRZ (machine-readable zone).
+        number:
+          type: string
+          description: Passport number.
+      description: Passport.
+    SimulationIndividualMedicareCard:
+      type: object
+      properties:
+        back_file_id:
+          type: string
+          description: File id of the photo of the back of the document.
+        card_number:
+          type: string
+          description: Medicare card number.
+        color:
+          type: string
+          description: Card color.
+          enum:
+          - BLUE
+          - GREEN
+          - YELLOW
+        effective_at:
+          type: string
+          format: date
+          description: Document effective as of this date in YYYY-MM-DD format.
+        expire_at:
+          type: string
+          format: date
+          description: Document expiry date in YYYY-MM-DD format.
+        front_file_id:
+          type: string
+          description: File id of the photo of the front of the document.
+        reference_number:
+          type: string
+          description: Reference number listed on the document.
+      description: Medicare card.
+    SimulationAddress:
+      type: object
+      properties:
+        address_line1:
+          type: string
+          description: The first line of a physical address, typically including the street number and name of the building or residence. A P.O. box is not acceptable.
+        address_line2:
+          type: string
+          description: An optional field that can be used to capture additional information about the address, such as the apartment/ suite number, or floor number.
+        country_code:
+          type: string
+          description: Country code. (2-letter ISO 3166-2 country code).
+        postcode:
+          type: string
+          description: Postcode or zip code. Only applicable if relevant to selected country.
+        state:
+          type: string
+          description: Name of state. Only applicable if relevant to selected country.
+        suburb:
+          type: string
+          description: Name of city/suburb.
+      description: Address where the business operates and conducts its activities.
+    SimulationTrusteeBusiness:
+      type: object
+      properties:
+        attachments:
+          $ref: '#/components/schemas/SimulationBusinessDocumentation'
+          description: Reference to uploaded files of business documentation. (For file upload instructions, refer to 'File Service API'.).
+        business_identifiers:
+          type: array
+          description: Local business registration number i.e. an official signal of identification for the business.
+          items:
+            $ref: '#/components/schemas/SimulationBusinessIdentifier'
+        business_name:
+          type: string
+          description: The official legal name of the business as registered with the relevant government authority..
+        business_name_english:
+          type: string
+          description: The official legal name of the business as registered with the relevant government authority. (in ASCII characters only, e.g. romanization of non-Latin characters).
+        business_person_details:
+          type: array
+          description: Details identifying the related persons of the business.
+          items:
+            $ref: '#/components/schemas/SimulationBusinessPersonDetail'
+        business_structure:
+          type: string
+          description: Type of business structure.
+          enum:
+          - COMPANY
+          - PARTNERSHIP
+          - SOLE_PROPRIETOR
+        contact_number:
+          type: string
+          description: Primary business phone number.
+        description_of_goods_or_services:
+          type: string
+          description: Free text description of goods or services. Max length is 500 characters.
+        explanation_for_high_risk_countries_exposure:
+          type: string
+          description: Free text description of business activities conducted in high-risk countries if any. Max length is 500 characters.
+        industry_category_code:
+          type: string
+          description: The code of the industry category most aligned with your business. Please navigate to the 'Supporting Services' > 'Reference Data' > 'Industry categories' section for an endpoint to pull a tree of categories.
+        operating_country:
+          type: array
+          description: The countries in which the business conducts its operations, such as selling products or services, or providing support to customers. Multiple country codes (2-letter ISO 3166-2 country code) may be provided.
+          items:
+            type: string
+        registration_address:
+          $ref: '#/components/schemas/SimulationAddress'
+          description: Address where the business is registered.
+        registration_address_english:
+          $ref: '#/components/schemas/SimulationAddress'
+          description: Address where the business is registered. (in ASCII characters only, e.g. romanization of non-Latin characters).
+        url:
+          type: string
+          description: Websites associated with the business, such as its official website, social media pages, or other online profiles.
+      description: Business details including the type of business, primary place of business, and industry type.
+    SimulationPaymentDistribution:
+      type: object
+      properties:
+        payment_type:
+          type: string
+          description: Type of payment methods.
+          enum:
+          - BANK_DIRECT_DEBIT
+          - CARDS
+          - OTHER
+        percentage:
+          type: string
+          description: Percentage of anticipated transaction volume.
+    SimulationIndividualIdDocumentation:
+      type: object
+      properties:
+        drivers_license:
+          $ref: '#/components/schemas/SimulationIndividualDriverLicence'
+          description: Driver's license.
+        identification_type:
+          type: string
+          description: Type of identification.
+          enum:
+          - DRIVERS_LICENSE
+          - MEDICARE_CARD
+          - PASSPORT
+          - PERSONAL_ID
+          - TAX_ID
+        issuing_country_code:
+          type: string
+          description: Country issuing the document. (2-letter ISO 3166-2 country code).
+        medicare_card:
+          $ref: '#/components/schemas/SimulationIndividualMedicareCard'
+          description: Medicare card.
+        passport:
+          $ref: '#/components/schemas/SimulationIndividualPassport'
+          description: Passport.
+        personal_id:
+          $ref: '#/components/schemas/SimulationIndividualPersonalId'
+          description: Personal unique identifier.
+        tax_id:
+          $ref: '#/components/schemas/SimulationIndividualTaxId'
+          description: Tax unique identifier.
+    SimulationBusinessAttachment:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Optional field for any additional notes or text description for the file.
+        file_id:
+          type: string
+          description: Unique identifier of file as provided in the response from the File Service API.
+        tag:
+          type: string
+          description: Tag of the business file.
+          enum:
+          - ACRA_COMPANY_PROFILE_DOCUMENT
+          - ANNUAL_REPORT
+          - ANNUAL_RETURN
+          - ARTICLES_OF_ASSOCIATION
+          - ASIC_CURRENT_COMPANY_EXTRACT
+          - ASSUMED_NAME_CERTIFICATE
+          - AUTHORIZED_SIGNATORY_DISCLOSURE
+          - BUSINESS_LICENSE
+          - CERTIFICATE_OF_INCORPORATION
+          - CERTIFICATION_REGISTRATION
+          - COMPANY_CERTIFICATE
+          - COMPANY_CONSTITUTION
+          - COMPANY_PROFILE
+          - CONFIRMATION_STATEMENT
+          - DIRECTOR_LIST
+          - LEGAL_NAME_AND_ADDRESS
+          - OPERATING_AGREEMENT
+          - PARTNERSHIP_AGREEMENT
+          - REGISTRATION_CERTIFICATE
+          - SHAREHOLDING_STRUCTURE_CHART
+          - SUPPORTIVE_OTHER
+          - THIRD_PARTY_SHAREHOLDING_DOCUMENT
+          - TRUST_DEED
+          - UBO_SUPPORTIVE
+          - UNIT_HOLDER_REGISTER
+    SimulationStoreDetails-2:
+      type: object
+      required:
+      - cross_border_transaction_percent
+      - estimated_transaction_volume
+      - fulfillment_days
+      - industry_code
+      - operating_models
+      - store_description
+      - store_name
+      description: Relevant information associated with the store you are applying payment solutions for.
+      properties:
+        cross_border_transaction_percent:
+          type: string
+          description: Percentage of products or services provided to international customers residing outside of where your business's registered.
+        dispute_percent:
+          type: string
+          description: Average dispute rate (percentage of total successful payments that are claimed as disputed charges by card schemes) of your store in the past three months.
+        employee_size:
+          type: integer
+          format: int32
+          description: Total number of staff in all stores.
+        estimated_transaction_volume:
+          type: object
+          required:
+          - average_amount_per_transaction
+          - currency
+          - max_amount_per_transaction
+          - monthly_transaction_amount
+          description: Your store's anticipated volume of transactions in the next 12 months with Airwallex.
+          properties:
+            average_amount_per_transaction:
+              type: string
+              description: The average transaction size of your store.
+            currency:
+              type: string
+              description: Currency of the transaction volume. (3-letter ISO 4217 currency code).
+            max_amount_per_transaction:
+              type: string
+              description: The maximum transaction size of your store.
+            monthly_transaction_amount:
+              type: string
+              description: The average monthly volume of your store.
+        financial_statements:
+          type: array
+          description: Additional documents about your store's financials.
+          items:
+            type: object
+            properties:
+              file_id:
+                type: string
+                description: Unique identifier of file as provided in the response from the File Service API.
+        fulfillment_days:
+          type: integer
+          format: int32
+          description: Number of days your customers will typically need to wait to receive their goods or services after paying for their orders.
+        industry_code:
+          type: string
+          description: The code of the industry category most aligned with your store. Please navigate to the 'Supporting Services' > 'Reference Data' > 'Industry categories' section for an endpoint to pull a tree of categories.
+        mcc:
+          type: string
+          description: Current or desired MCC for your store.
+        operating_models:
+          type: array
+          description: "The model of which our customers pay for their orders. Refer to https://www.airwallex.com/docs/payments/about-airwallex-payments/choose-your-payments-solution#what-is-your-payments-use-case  \nOne or more of `ONLINE_CHECKOUT`, `INVOICES_OR_CUSTOM_ORDER_LINKS`, `IN_PERSON`."
+          items:
+            type: string
+            enum:
+            - ONLINE_CHECKOUT
+            - INVOICES_OR_CUSTOM_ORDER_LINKS
+            - IN_PERSON
+        payment_distribution:
+          type: array
+          description: Anticipated transaction volume split by payment methods.
+          items:
+            type: object
+            properties:
+              payment_type:
+                type: string
+                description: Type of payment methods.
+                enum:
+                - CARDS
+                - BANK_DIRECT_DEBIT
+                - OTHER
+              percentage:
+                type: string
+                description: Percentage of anticipated transaction volume.
+        refund_percent:
+          type: string
+          description: Average refund rate (percentage of total successful payments that are refunded to your customers) of your store in the past three months.
+        selling_to_country_codes:
+          type: array
+          description: List of country codes where products are sold.
+          items:
+            type: string
+        shipping_from_country_codes:
+          type: array
+          description: List of country codes from which goods are shipped.
+          items:
+            type: string
+        store_address:
+          type: object
+          description: Physical address of the store.
+          properties:
+            address_line1:
+              type: string
+              description: The first line of a physical address, typically including the street number and name of the building or residence. A P.O. box is not acceptable.
+            address_line2:
+              type: string
+              description: An optional field that can be used to capture additional information about the address, such as the apartment/ suite number, or floor number.
+            country_code:
+              type: string
+              description: Country code. (2-letter ISO 3166-2 country code).
+            postcode:
+              type: string
+              description: Postcode or zip code. Only applicable if relevant to selected country.
+            state:
+              type: string
+              description: Name of state. Only applicable if relevant to selected country.
+            suburb:
+              type: string
+              description: Name of city/suburb.
+        store_description:
+          type: string
+          description: Free text description of your store's goods or services offerings. Max length is 500 characters.
+        store_name:
+          type: string
+          description: The trading name your store is operating as. This name will also appear on the receipts to your customers.
+        store_photos:
+          type: array
+          description: Store photos of shop front clearly displaying the company name or photo of building entrance as well as directory with company name listed.
+          items:
+            type: object
+            required:
+            - file_id
+            properties:
+              file_id:
+                type: string
+                description: All relevant store photos, if more than 1 physical store, provide one photo of each.
+        store_websites:
+          type: array
+          description: All websites associated with the store you are applying payment solutions for. They must be in the same industry selling the same or similar goods and services, otherwise you will need to submit another application as a different store.
+          items:
+            type: object
+            required:
+            - url
+            properties:
+              url:
+                type: string
+                description: Url of the store websites, including online store, marketplace stores, app-store links or other relevant websites.
+    SimulationIdRequirement:
+      type: object
+      properties:
+        back_file_id:
+          type: string
+          description: File id of identification file.
+          readOnly: true
+        error_code:
+          type: string
+          description: Error code for what caused this requirement.
+          readOnly: true
+          enum:
+          - ADDRESS_NOT_FOUND
+          - BLURRY_IMAGE
+          - DATA_COMPARISON_TOO_LOW
+          - DOCUMENT_TYPE_FAILED
+          - DOCUMENT_VALIDATION_FAILED
+          - EXPIRED_DOCUMENT
+          - FACE_MATCHING_FAILED
+          - FAILED_TO_PROCESS
+          - GLARE_IMAGE
+          - OTHER
+        first_name:
+          type: string
+          description: First name of person requiring identification.
+          readOnly: true
+        front_file_id:
+          type: string
+          description: File id of identification file.
+          readOnly: true
+        last_name:
+          type: string
+          description: Last name of person requiring identification.
+          readOnly: true
+        message:
+          type: string
+          description: Information on requirement for identification.
+          readOnly: true
+        middle_name:
+          type: string
+          description: Middle name of person requiring identification.
+          readOnly: true
+    SimulationAgreementToTermsAndConditionsRequired:
+      type: object
+      properties:
+        endpoint:
+          type: string
+          description: Call this endpoint to agree to terms and conditions.
+          readOnly: true
+        message:
+          type: string
+          description: Message describing what needs to be done to agree to terms and conditions.
+          readOnly: true
+        method:
+          type: string
+          description: Call the endpoint with this http method to agree to terms and conditions.
+          readOnly: true
+      description: Agreement to terms and conditions required, only if account is submitted without having agreed.
+    SimulationOtherRequirement:
+      type: object
+      properties:
+        error_code:
+          type: string
+          description: Error code for what caused this requirement.
+          readOnly: true
+          enum:
+          - OTHER
+        message:
+          type: string
+          description: Information on requirement.
+          readOnly: true
+    SimulationEstimatedMonthlyIncome:
+      type: object
+      properties:
+        amount:
+          type: string
+          description: Estimate of monthly income.
+        currency:
+          type: string
+          description: Currency of the income. (3-letter ISO 4217 currency code).
+      description: Estimate of monthly income.
+    SimulationAmendment:
+      type: object
+      properties:
+        id:
+          type: string
+          description: A unique identifier of the amendment.
+        primary_contact:
+          $ref: '#/components/schemas/SimulationPrimaryContact'
+          description: Contact information for the primary contact of the Airwallex specified account.
+        status:
+          type: string
+          description: Status of the amendment. One of `PENDING`, `APPROVED`, `REJECTED`.
+        store_details:
+          $ref: '#/components/schemas/SimulationStoreDetails'
+          description: Relevant information associated with the store you are applying payment solutions for.
+        target:
+          type: string
+          description: Target of the amendment.
+          enum:
+          - account_details.store_details
+          - primary_contact
+    SimulationNextAction:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Code that describes what to do next when status is ACTION_REQUIRED.
+          readOnly: true
+      description: Further information required in order to proceed with this account.
+    SimulationIdentityAttachment:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Optional field for any additional notes or text description for the file.
+        file_id:
+          type: string
+          description: Unique identifier of file as provided in the response from the File Service API.
+        tag:
+          type: string
+          description: Tag of the identity file.
+          enum:
+          - DRIVERS_LICENSE_BACK
+          - DRIVERS_LICENSE_FRONT
+          - PASSPORT
+          - PERSONAL_ID_BACK
+          - PERSONAL_ID_FRONT
+    SimulationEmployer:
+      type: object
+      properties:
+        business_identifiers:
+          type: array
+          description: Local business registration number i.e. an official signal of identification for the business.
+          items:
+            $ref: '#/components/schemas/SimulationBusinessIdentifier'
+        business_name:
+          type: string
+          description: Name of the employer.
+        industry_category_code:
+          type: string
+          description: The code of the industry category most aligned with the individual's employer. Please navigate to the 'Supporting Services' > 'Reference Data' > 'Industry categories' section for an endpoint to pull a tree of categories.
+      description: Information of the individual's employer.
+    SimulationIndividualPersonalId:
+      type: object
+      properties:
+        back_file_id:
+          type: string
+          description: File id of the photo of the back of the document.
+        effective_at:
+          type: string
+          format: date
+          description: Document effective as of this date in YYYY-MM-DD format.
+        expire_at:
+          type: string
+          format: date
+          description: Document expiry date in YYYY-MM-DD format.
+        front_file_id:
+          type: string
+          description: File id of the photo of the front of the document.
+        number:
+          type: string
+          description: Document unique identifier number.
+      description: Personal unique identifier.
+    SimulationAccount:
+      type: object
+      properties:
+        account_details:
+          $ref: '#/components/schemas/SimulationAccountDetails'
+          description: Relevant information associated with Airwallex account specified in the request.
+        created_at:
+          type: string
+          description: Time the account was created.
+          readOnly: true
+        customer_agreements:
+          $ref: '#/components/schemas/SimulationCustomerAgreements'
+          description: Agreements collected from the user, such as acceptance of terms and conditions, or opt in for marketing.
+        id:
+          type: string
+          description: Airwallex account unique identifier. Once this new account is created, it will be connected to your account and becomes the key value you communicate with Airwallex for any activities in the future.
+        identifier:
+          type: string
+          description: The identifier that the platform uses to identify a merchant, usually a unique merchant identifier.
+        metadata:
+          type: object
+          description: A set of key-value pairs that you can attach to an Account object. This can be useful for storing additional information about the account in a structured format.
+          additionalProperties:
+            type: string
+        next_action:
+          $ref: '#/components/schemas/SimulationNextAction'
+          description: Further information required in order to proceed with this account.
+        nickname:
+          type: string
+          description: Optional human-friendly account name.
+        primary_contact:
+          $ref: '#/components/schemas/SimulationPrimaryContact'
+          description: Contact information for the primary contact of the Airwallex specified account.
+        reactivate_details:
+          $ref: '#/components/schemas/SimulationReactivateDetail'
+          description: The reactivate details for ACTIVE account with reactivation history.
+        requirements:
+          $ref: '#/components/schemas/SimulationAccountRequirement'
+          description: Further information required in order to proceed with this account.
+        status:
+          type: string
+          description: Status of the account. One of `CREATED`, `SUBMITTED`, `ACTION_REQUIRED`, `ACTIVE`, `SUSPENDED`.
+        suspend_details:
+          type: array
+          description: The suspend details for SUSPENDED account.
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/SimulationSuspendDetail'
+        view_type:
+          type: string
+          description: Information on whether the response contains complete or PII excluded data.
+    SimulationBusinessPersonAttachment:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Optional field for any additional notes or text description for the file.
+        file_id:
+          type: string
+          description: Unique identifier of file as provided in the response from the File Service API.
+        tag:
+          type: string
+          description: Tag of the personal document.
+          enum:
+          - APPLICANT_SIGNATURE
+          - PERSON_NAME_CHANGE_CERTIFICATE
+          - PERSON_PURPORTING_TO_ACT_AUTHORISATION_LETTER
+          - PROOF_OF_ADDRESS
+          - SUPPORTIVE_OTHER
+    SimulationIdentityInfo:
+      type: object
+      properties:
+        identity_files:
+          type: array
+          description: Identity files.
+          items:
+            $ref: '#/components/schemas/SimulationIdentityAttachment'
+      description: Reference to uploaded identification document. (For file upload instructions, refer to 'File Service API'.).
+    SimulationAccountRequirement:
+      type: object
+      properties:
+        agreement_to_terms_and_conditions_required:
+          $ref: '#/components/schemas/SimulationAgreementToTermsAndConditionsRequired'
+          description: Agreement to terms and conditions required, only if account is submitted without having agreed.
+        other:
+          type: array
+          description: Any other requirements.
+          items:
+            $ref: '#/components/schemas/SimulationOtherRequirement'
+        photo_file_id_required:
+          $ref: '#/components/schemas/SimulationPhotoFileRequirement'
+          description: File id of the photo file, only required if facial liveness check failed.
+        photo_holding_id_required:
+          type: array
+          description: Photo of user holding their id, only required if document face matching failed.
+          items:
+            $ref: '#/components/schemas/SimulationPhotoHoldingIdRequired'
+        primary_identification_required:
+          type: array
+          description: The primary form of identification, only required if document verification failed.
+          items:
+            $ref: '#/components/schemas/SimulationIdRequirement'
+        reason_for_duplicate_account_required:
+          type: array
+          description: An explanation for why you are creating a second account, only required if one already exists.
+          items:
+            $ref: '#/components/schemas/SimulationReasonForDuplicateAccountRequired'
+        secondary_identification_required:
+          type: array
+          description: A secondary form of identification, only required if otherwise provided identification is insufficient to proceed.
+          items:
+            $ref: '#/components/schemas/SimulationIdRequirement'
+      description: Further information required in order to proceed with this account.
+    SimulationIndividualDriverLicence:
+      type: object
+      properties:
+        back_file_id:
+          type: string
+          description: File id of the photo of the back of the document.
+        effective_at:
+          type: string
+          format: date
+          description: Document effective as of this date in YYYY-MM-DD format.
+        expire_at:
+          type: string
+          format: date
+          description: Document expiry date in YYYY-MM-DD format.
+        front_file_id:
+          type: string
+          description: File id of the photo of the front of the document.
+        gender:
+          type: string
+          description: Gender listed on document.
+        issuing_state:
+          type: string
+          description: Name of state issuing the license. Only applicable if relevant to selected country.
+        number:
+          type: string
+          description: Driver's license number.
+        version:
+          type: string
+          description: Version listed on the document. Only applicable if relevant to selected country.
+      description: Driver's license.
+    SimulationStoreDetails:
+      type: object
+      required:
+      - cross_border_transaction_percent
+      - estimated_transaction_volume
+      - fulfillment_days
+      - industry_code
+      - operating_models
+      - store_description
+      - store_name
+      properties:
+        cross_border_transaction_percent:
+          type: string
+          description: Percentage of products or services provided to international customers residing outside of where your business's registered.
+        dispute_percent:
+          type: string
+          description: Average dispute rate (percentage of total successful payments that are claimed as disputed charges by card schemes) of your store in the past three months.
+        employee_size:
+          type: integer
+          format: int32
+          description: Total number of staff in all stores.
+        estimated_transaction_volume:
+          $ref: '#/components/schemas/SimulationEstimatedTransactionVolume'
+          description: Your store's anticipated volume of transactions in the next 12 months with Airwallex.
+        financial_statements:
+          type: array
+          description: Additional documents about your store's financials.
+          items:
+            $ref: '#/components/schemas/SimulationFinancialStatement'
+        fulfillment_days:
+          type: integer
+          format: int32
+          description: Number of days your customers will typically need to wait to receive their goods or services after paying for their orders.
+        industry_code:
+          type: string
+          description: The code of the industry category most aligned with your store. Please navigate to the 'Supporting Services' > 'Reference Data' > 'Industry categories' section for an endpoint to pull a tree of categories.
+        mcc:
+          type: string
+          description: Current or desired MCC for your store.
+        operating_models:
+          type: array
+          description: "The model of which our customers pay for their orders. Refer to https://www.airwallex.com/docs/payments/about-airwallex-payments/choose-your-payments-solution#what-is-your-payments-use-case  \nOne or more of `ONLINE_CHECKOUT`, `INVOICES_OR_CUSTOM_ORDER_LINKS`, `IN_PERSON`."
+          items:
+            type: string
+            enum:
+            - INVOICES_OR_CUSTOM_ORDER_LINKS
+            - IN_PERSON
+            - ONLINE_CHECKOUT
+        payment_distribution:
+          type: array
+          description: Anticipated transaction volume split by payment methods.
+          items:
+            $ref: '#/components/schemas/SimulationPaymentDistribution'
+        refund_percent:
+          type: string
+          description: Average refund rate (percentage of total successful payments that are refunded to your customers) of your store in the past three months.
+        selling_to_country_codes:
+          type: array
+          description: List of country codes where products are sold.
+          items:
+            type: string
+        shipping_from_country_codes:
+          type: array
+          description: List of country codes from which goods are shipped.
+          items:
+            type: string
+        store_address:
+          $ref: '#/components/schemas/SimulationStoreAddress'
+          description: Physical address of the store.
+        store_description:
+          type: string
+          description: Free text description of your store's goods or services offerings. Max length is 500 characters.
+        store_name:
+          type: string
+          description: The trading name your store is operating as. This name will also appear on the receipts to your customers.
+        store_photos:
+          type: array
+          description: Store photos of shop front clearly displaying the company name or photo of building entrance as well as directory with company name listed.
+          items:
+            $ref: '#/components/schemas/SimulationStorePhoto'
+        store_websites:
+          type: array
+          description: All websites associated with the store you are applying payment solutions for. They must be in the same industry selling the same or similar goods and services, otherwise you will need to submit another application as a different store.
+          items:
+            $ref: '#/components/schemas/SimulationStoreWebsite'
+      description: Relevant information associated with the store you are applying payment solutions for.
+    SimulationReasonForDuplicateAccountRequired:
+      type: object
+      properties:
+        error_code:
+          type: string
+          description: Error code for what caused this requirement.
+          readOnly: true
+          enum:
+          - CONFIRM_REASON_FOR_SECOND_ACCOUNT
+          - OTHER
+        message:
+          type: string
+          description: Information on requirement when the account appears to be a duplicate.
+          readOnly: true
+    SimulationSuspendDetail:
+      type: object
+      required:
+      - code
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+          additionalProperties:
+            type: string
+        message:
+          type: string
+        suspended_at:
+          type: string
+    SimulationIndividualIdentifications:
+      type: object
+      properties:
+        primary:
+          $ref: '#/components/schemas/SimulationIndividualIdDocumentation'
+        secondary:
+          $ref: '#/components/schemas/SimulationIndividualIdDocumentation'
+      description: Details of the business person for identity verification, such as a passport, driver's license, or other government-issued unique identifier card.
+    SimulationIndividualAttachment:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Optional field for any additional notes or text description for the file.
+        file_id:
+          type: string
+          description: Unique identifier of file as provided in the response from the File Service API.
+        tag:
+          type: string
+          description: Tag of the identity file.
+          enum:
+          - PERSON_NAME_CHANGE_CERTIFICATE
+          - PROOF_OF_ADDRESS
+          - SUPPORTIVE_OTHER
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

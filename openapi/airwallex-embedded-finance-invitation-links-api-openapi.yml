@@ -1,0 +1,404 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Embedded Finance > Invitation Links API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Embedded Finance > Invitation Links
+  description: Invitation Links are used by platforms or partners to manage Scale Connect invitation links.
+  x-domain: Embedded Finance
+  x-resource: Invitation Links
+  x-urlPath: scale/invitation_links
+paths:
+  /api/v1/accounts/invitation_links/create:
+    post:
+      tags:
+      - Embedded Finance > Invitation Links
+      summary: 1|Create an Account Invitation Link
+      operationId: createInvitationLink
+      x-oboSupported: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - mode
+              properties:
+                account_id:
+                  type: string
+                  description: Id of Airwallex account to be invited. Required for `scale_connect` mode, optional for `oauth2` mode. When provided, account must already be connected to partner or platform.
+                mode:
+                  type: string
+                  description: Invitation link mode. One of `oauth2`, `scale_connect`.
+                oauth2:
+                  type: object
+                  required:
+                  - redirect_uri
+                  - response_type
+                  - scope
+                  description: OAuth parameters, if invitation link mode is `oauth2`.
+                  properties:
+                    redirect_uri:
+                      type: string
+                      description: The platform callback URL redirected to after auth.
+                    response_type:
+                      type: string
+                      description: This tells the Airwallex authorization server that the platform is initiating a Scale Invitation Link flow with OAuth mode. One of `code`.
+                    scope:
+                      type: array
+                      description: The permissions the platform is requesting from the user.
+                      items:
+                        type: string
+                    state:
+                      type: string
+                      description: The platform generates a random string and includes it in the request. It should then check that the same value is returned after the user authorizes the app. Max length is 100 characters.
+                scale_connect:
+                  type: object
+                  required:
+                  - redirect_uri
+                  description: Scale connect parameters, if invitation link mode is `scale_connect`.
+                  properties:
+                    redirect_uri:
+                      type: string
+                      description: The platform callback URL redirected to after scale connect.
+                metadata:
+                  type: object
+                  description: A set of key-value pairs that you can attach to an Account object. This can be useful for storing additional information about the account in a structured format. You can specify up to 5 keys, with key names up to 20 characters long and values up to 150 characters long.
+                  additionalProperties:
+                    type: string
+                identifier:
+                  type: string
+                  description: The identifier that the platform uses to identify a merchant, usually a unique merchant identifier. In oauth2 mode, identifier will be included in the query parameter when redirecting a user back to the client's redirect_uri. Max length is 1000 characters.
+                prefilled_formdata:
+                  type: array
+                  description: Data pre-filled by platform during new user signup.
+                  items:
+                    type: object
+                    required:
+                    - field
+                    - value
+                    properties:
+                      field:
+                        type: string
+                        description: the field name of pre filled form data.
+                        enum:
+                        - email
+                        - first_name
+                        - last_name
+                        - mobile_number
+                        - business_name
+                        - country
+                        - contact_name
+                      value:
+                        type: string
+                        description: The field value of pre-filled form data.
+                      verified:
+                        type: boolean
+                        description: Whether the platform has verified the value.
+                      editable:
+                        type: boolean
+                        description: Whether the user can edit the value.
+        description: link.
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountLink'
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/accounts/invitation_links/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          account_id: acct_hm-QFRVYO4-InXeIsCPKOg
+          mode: oauth2
+          oauth2:
+            redirect_uri: https://oauth.pstmn.io/v1/callback
+            response_type: code
+            scope:
+            - r:awx_action:balances_view
+            - r:awx_action:settings.account_details_view
+            state: xcoiv98y2kd22vusuye3kch
+          scale_connect:
+            redirect_uri: https://www.pstmn.io/v1/callback
+          metadata:
+            id: '1'
+          identifier: 2fe425fd
+          prefilled_formdata:
+          - field: email
+            value: charlotesmith@email.com
+            verified: true
+            editable: false
+        response_body:
+          account_id: acct_hm-QFRVYO4-InXeIsCPKOg
+          created_at: '2021-07-13T15:56:57.006071Z'
+          expire_at: '2021-08-12T15:56:57.006071Z'
+          id: link_V8CoOYobPMyBKyL-S59DtA
+          identifier: 2fe425fd
+          metadata:
+            id: '1'
+          mode: oauth2
+          oauth2:
+            redirect_uri: https://oauth.pstmn.io/v1/callback
+            response_type: code
+            scope:
+            - r:awx_action:balances_view
+            - r:awx_action:settings.account_details_view
+            state: xcoiv98y2kd22vusuye3kch
+          prefilled_formdata:
+          - field: email
+            value: charlotesmith@email.com
+            verified: true
+            editable: false
+          scale_connect:
+            redirect_uri: https://www.pstmn.io/v1/callback
+          url: https://www.sandbox.airwallex.com/connect/scale?invitationId=link_V8CoOYobPMyBKyL-S59DtA
+      x-oauthSupported: false
+      x-scope:
+      - scope: invitation_link:write
+        group: Embedded Finance
+        resource_name: Invitation Links
+      x-domain: Embedded Finance
+      x-resource: Invitation Links
+      x-urlPath: create
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/accounts/invitation_links/{id}:
+    get:
+      tags:
+      - Embedded Finance > Invitation Links
+      summary: 2|Retrieve an Account Invitation Link
+      operationId: retrieveInvitationLink
+      x-oboSupported: false
+      parameters:
+      - name: id
+        in: path
+        description: Airwallex invitation link unique identifier.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountLink'
+        '400':
+          description: '["field_required","invalid_argument"]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/accounts/invitation_links/invitation_link_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          account_id: acct_hm-QFRVYO4-InXeIsCPKOg
+          created_at: '2021-07-13T15:56:57.006071Z'
+          expire_at: '2021-08-12T15:56:57.006071Z'
+          id: link_V8CoOYobPMyBKyL-S59DtA
+          identifier: 2fe425fd
+          metadata:
+            id: '1'
+          mode: oauth2
+          oauth2:
+            redirect_uri: https://oauth.pstmn.io/v1/callback
+            response_type: code
+            scope:
+            - r:awx_action:balances_view
+            - r:awx_action:settings.account_details_view
+            state: xcoiv98y2kd22vusuye3kch
+          prefilled_formdata:
+          - field: email
+            value: charlotesmith@email.com
+            verified: true
+            editable: false
+          scale_connect:
+            redirect_uri: https://www.pstmn.io/v1/callback
+          url: https://www.sandbox.airwallex.com/connect/scale?invitationId=link_V8CoOYobPMyBKyL-S59DtA
+      x-oauthSupported: false
+      x-scope:
+      - scope: connected_account:read
+        group: Embedded Finance
+        resource_name: Connected Accounts
+      x-domain: Embedded Finance
+      x-resource: Invitation Links
+      x-urlPath: retrieve
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    OauthReq:
+      type: object
+      required:
+      - redirect_uri
+      - response_type
+      - scope
+      properties:
+        redirect_uri:
+          type: string
+          description: The platform callback URL redirected to after auth.
+        response_type:
+          type: string
+          description: This tells the Airwallex authorization server that the platform is initiating a Scale Invitation Link flow with OAuth mode. One of `code`.
+        scope:
+          type: array
+          description: The permissions the platform is requesting from the user.
+          items:
+            type: string
+        state:
+          type: string
+          description: The platform generates a random string and includes it in the request. It should then check that the same value is returned after the user authorizes the app. Max length is 100 characters.
+      description: OAuth parameters, if invitation link mode is `oauth2`.
+    ConnectReq:
+      type: object
+      required:
+      - redirect_uri
+      properties:
+        redirect_uri:
+          type: string
+          description: The platform callback URL redirected to after scale connect.
+      description: Scale connect parameters, if invitation link mode is `scale_connect`.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    AccountLink:
+      type: object
+      required:
+      - scale_connect
+      properties:
+        account_id:
+          type: string
+          description: Invite Airwallex account Id.
+        created_at:
+          type: string
+          description: Time the account link was created.
+          readOnly: true
+        expire_at:
+          type: string
+          description: Time the account link will expire.
+          readOnly: true
+        id:
+          type: string
+          description: Airwallex account link unique identifier.
+          readOnly: true
+        identifier:
+          type: string
+          description: The identifier that the platform uses to identify a merchant, usually a unique merchant identifier. In oauth2 mode, identifier will be included in the query parameter when redirecting a user back to the client's redirect_uri. Max length is 1000 characters.
+        metadata:
+          type: object
+          description: A set of key-value pairs that you can attach to an Account object. This can be useful for storing additional information about the account in a structured format. You can specify up to 5 keys, with key names up to 20 characters long and values up to 150 characters long.
+          additionalProperties:
+            type: string
+        mode:
+          type: string
+          description: Invitation link mode.
+          readOnly: true
+        oauth2:
+          $ref: '#/components/schemas/OauthReq'
+          description: OAuth parameters, if invitation link mode is `oauth2`.
+        prefilled_formdata:
+          type: array
+          description: Data pre-filled by platform during new user signup.
+          items:
+            $ref: '#/components/schemas/PrefilledFormData'
+        scale_connect:
+          $ref: '#/components/schemas/ConnectReq'
+          description: Scale connect parameters, if invitation link mode is `scale_connect`.
+        url:
+          type: string
+          description: URL provided by Airwallex for the end user to use in order to complete their OAuth 2.0 authorization.
+          readOnly: true
+    PrefilledFormData:
+      type: object
+      required:
+      - field
+      - value
+      properties:
+        field:
+          type: string
+          description: the field name of pre filled form data.
+          enum:
+          - email
+          - first_name
+          - last_name
+          - mobile_number
+          - business_name
+          - country
+          - contact_name
+        value:
+          type: string
+          description: The field value of pre-filled form data.
+        verified:
+          type: boolean
+          description: Whether the platform has verified the value.
+        editable:
+          type: boolean
+          description: Whether the user can edit the value.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

@@ -1,0 +1,234 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Simulation (Sandbox Only) > Linked Accounts API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Simulation (Sandbox Only) > Linked Accounts
+  description: Simulate the Linked Account lifecycle scenarios in the sandbox environment.
+  x-domain: Simulation (Sandbox Only)
+  x-resource: Linked Accounts
+  x-urlPath: simulation/linked_accounts
+paths:
+  /api/v1/simulation/linked_accounts/{linked_account_id}/mandate/accept:
+    post:
+      servers:
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+      tags:
+      - Simulation (Sandbox Only) > Linked Accounts
+      summary: 1|Accept a Mandate
+      description: Accept a Mandate by transitioning the mandate status from `PROCESSING` to `ACTIVE`.
+      operationId: simulation_acceptMandate
+      parameters:
+      - name: linked_account_id
+        in: path
+        description: Unique identifier of the Linked Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: f79e57a7-2323-4e8f-9bca-6c02afea1bc2
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
+        '400':
+          description: '["invalid_argument","invalid_status_for_operation"]'
+        '401':
+          description: credentials_invalid
+        '500':
+          description: service_unavailable
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/simulation/linked_accounts/linked_account_id/mandate/accept
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body: false
+      x-scope:
+      - scope: simulation:write
+        group: Simulations
+        resource_name: Simulations
+      x-domain: Simulation (Sandbox Only)
+      x-resource: Linked Accounts
+      x-urlPath: accept_mandate
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+  /api/v1/simulation/linked_accounts/{linked_account_id}/mandate/reject:
+    post:
+      servers:
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+      tags:
+      - Simulation (Sandbox Only) > Linked Accounts
+      summary: 2|Reject a Mandate
+      description: Reject a Mandate by transitioning the mandate status from `PROCESSING` to `INACTIVE`.
+      operationId: simulation_rejectMandate
+      parameters:
+      - name: linked_account_id
+        in: path
+        description: Unique identifier of the Linked Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: f79e57a7-2323-4e8f-9bca-6c02afea1bc2
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
+        '400':
+          description: '["invalid_argument","invalid_status_for_operation"]'
+        '401':
+          description: credentials_invalid
+        '500':
+          description: service_unavailable
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/simulation/linked_accounts/linked_account_id/mandate/reject
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body: false
+      x-scope:
+      - scope: simulation:write
+        group: Simulations
+        resource_name: Simulations
+      x-domain: Simulation (Sandbox Only)
+      x-resource: Linked Accounts
+      x-urlPath: reject_mandate
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+  /api/v1/simulation/linked_accounts/{linked_account_id}/mandate/cancel:
+    post:
+      servers:
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+      tags:
+      - Simulation (Sandbox Only) > Linked Accounts
+      summary: 3|Cancel a Mandate
+      description: Cancel a Mandate by transitioning the mandate status from `PROCESSING` or `ACTIVE` to `INACTIVE`.
+      operationId: simulation_cancelMandate
+      parameters:
+      - name: linked_account_id
+        in: path
+        description: Unique identifier of the Linked Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: f79e57a7-2323-4e8f-9bca-6c02afea1bc2
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
+        '400':
+          description: '["invalid_argument","invalid_status_for_operation"]'
+        '401':
+          description: credentials_invalid
+        '500':
+          description: service_unavailable
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/simulation/linked_accounts/linked_account_id/mandate/cancel
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body: false
+      x-scope:
+      - scope: simulation:write
+        group: Simulations
+        resource_name: Simulations
+      x-domain: Simulation (Sandbox Only)
+      x-resource: Linked Accounts
+      x-urlPath: cancel_mandate
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+  /api/v1/simulation/linked_accounts/{linked_account_id}/fail_microdeposits:
+    post:
+      servers:
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+      tags:
+      - Simulation (Sandbox Only) > Linked Accounts
+      summary: 4|Fail a Micro Deposits Verification
+      description: Fail a Micro Deposits verification by transitioning the Linked Account status from `REQUIRES_ACTION` to `FAILED` with the reason `MICRO_DEPOSIT_FAILED`.
+      operationId: simulation_failMicrodeposits
+      parameters:
+      - name: linked_account_id
+        in: path
+        description: Unique identifier of the Linked Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          default: f79e57a7-2323-4e8f-9bca-6c02afea1bc2
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
+        '400':
+          description: '["invalid_argument","invalid_status_for_operation"]'
+        '401':
+          description: credentials_invalid
+        '500':
+          description: service_unavailable
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/simulation/linked_accounts/linked_account_id/fail_microdeposits
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body: false
+      x-scope:
+      - scope: simulation:write
+        group: Simulations
+        resource_name: Simulations
+      x-domain: Simulation (Sandbox Only)
+      x-resource: Linked Accounts
+      x-urlPath: fail_microdeposits
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

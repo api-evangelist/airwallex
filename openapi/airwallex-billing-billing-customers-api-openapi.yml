@@ -1,0 +1,818 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Billing > Billing Customers API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Billing > Billing Customers
+  description: A Billing Customer is an individual or business who purchases or subscribes to your products or services.
+  x-domain: Billing
+  x-resource: Billing Customers
+  x-urlPath: billing/billing_customers
+paths:
+  /api/v1/billing/billing_customers/create:
+    post:
+      description: Creates a Billing Customer.
+      operationId: createBillingCustomer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - request_id
+              type: object
+              properties:
+                address:
+                  required:
+                  - country_code
+                  type: object
+                  description: Address of the billing customer.
+                  properties:
+                    city:
+                      type: string
+                      description: City of the address.
+                    country_code:
+                      type: string
+                      description: The two-letter country code in ISO 3166-1 alpha-2 format.
+                    postcode:
+                      type: string
+                      description: PostCode of the address.
+                    state:
+                      type: string
+                      description: State or province of the address.
+                    street:
+                      type: string
+                      description: Street of the address.
+                default_billing_currency:
+                  type: string
+                  description: Default currency to use when billing this customer in 3-letter ISO-4217 format.
+                default_legal_entity_id:
+                  type: string
+                  description: ID of the default legal entity to use when billing this customer. You can get this ID from the `legal_entity_id` in the response of the [Retrieve account details API](/docs/api/scale/accounts/retrieve).
+                description:
+                  type: string
+                  description: Additional description about the billing customer.
+                email:
+                  type: string
+                  description: Email address of the billing customer.
+                metadata:
+                  type: object
+                  additionalProperties:
+                    type: string
+                    description: A set of string key-value pairs that you can attach to this object for storing additional information.
+                  description: A set of string key-value pairs that you can attach to this object for storing additional information.
+                name:
+                  type: string
+                  description: Name of the billing customer.
+                nickname:
+                  type: string
+                  description: Internal nickname for the billing customer.
+                phone_number:
+                  type: string
+                  description: Phone number of the billing customer.
+                request_id:
+                  maxLength: 64
+                  minLength: 0
+                  type: string
+                  description: Unique request ID specified by the merchant.
+                tax_identification_number:
+                  type: string
+                  description: Tax identification number of the billing customer.
+                type:
+                  pattern: ^(BUSINESS|INDIVIDUAL)$
+                  type: string
+                  description: Type of the billing customer. Defaults to `BUSINESS` if `tax_identification_number` exists. Otherwise defaults to `INDIVIDUAL`.
+                  enum:
+                  - BUSINESS
+                  - INDIVIDUAL
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+          description: Created
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`, `resource_not_found`(invalid `default_billing_entity_id`), `duplicate_request_id`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 1|Create a Billing Customer
+      tags:
+      - Billing > Billing Customers
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/billing/billing_customers/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          address:
+            city: Shanghai
+            country_code: CN
+            postcode: '100000'
+            state: Shanghai
+            street: Pudong District
+          default_billing_currency: USD
+          default_legal_entity_id: le_ib2DZgZJN72T7bObvNuMYQ
+          description: VIP customer.
+          email: john.doe@example.com
+          metadata:
+            customer_segment: premium
+          name: John Doe
+          nickname: JohnnyD
+          phone_number: '+1234567890'
+          request_id: ee939540-3203-4a2c-9172-89a566485dd9
+          tax_identification_number: 123-45-6789
+          type: INDIVIDUAL
+        response_body:
+          address:
+            city: Shanghai
+            country_code: CN
+            postcode: '100000'
+            state: Shanghai
+            street: Pudong District
+          automatic_tax_eligibility: ELIGIBLE
+          created_at: 2024-06-10T12:34:56+0000
+          default_billing_currency: USD
+          default_legal_entity_id: le_ib2DZgZJN72T7bObvNuMYQ
+          description: VIP customer.
+          email: john.doe@example.com
+          id: bcus_hkpd7fedfgb004apkvs
+          metadata:
+            customer_segment: premium
+          name: John Doe
+          nickname: JohnnyD
+          phone_number: '+1234567890'
+          tax_identification_number: 123-45-6789
+          type: INDIVIDUAL
+          updated_at: 2024-06-10T12:34:56+0000
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.customer:write
+        group: Billing
+        resource_name: Billing Customers
+      x-domain: Billing
+      x-resource: Billing Customers
+      x-urlPath: create
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/billing_customers/{id}:
+    get:
+      description: Retrieves the details of a Billing Customer.
+      operationId: retrieveBillingCustomer
+      parameters:
+      - description: ID of the Billing Customer object.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 2|Retrieve a Billing Customer
+      tags:
+      - Billing > Billing Customers
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/billing/billing_customers/billing_customer_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          address:
+            city: Shanghai
+            country_code: CN
+            postcode: '100000'
+            state: Shanghai
+            street: Pudong District
+          automatic_tax_eligibility: ELIGIBLE
+          created_at: 2024-06-10T12:34:56+0000
+          default_billing_currency: USD
+          default_legal_entity_id: le_ib2DZgZJN72T7bObvNuMYQ
+          description: VIP customer.
+          email: john.doe@example.com
+          id: bcus_hkpd7fedfgb004apkvs
+          metadata:
+            customer_segment: premium
+          name: John Doe
+          nickname: JohnnyD
+          phone_number: '+1234567890'
+          tax_identification_number: 123-45-6789
+          type: INDIVIDUAL
+          updated_at: 2024-06-10T12:34:56+0000
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.customer:read
+        group: Billing
+        resource_name: Billing Customers
+      - scope: billing.customer:write
+        group: Billing
+        resource_name: Billing Customers
+      x-domain: Billing
+      x-resource: Billing Customers
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/billing_customers/{id}/bank_transfer_instructions:
+    get:
+      description: Retrieves the bank transfer instructions of a Billing Customer as a read-only list, with one entry per supported currency. The list is empty until bank transfer instructions have been provisioned.
+      operationId: listBillingCustomerBankTransferInstructions
+      parameters:
+      - description: ID of the Billing Customer object.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                description: List of bank transfer detail value objects owned by the Billing Customer, with one entry per supported currency. Empty when no bank transfer instructions have been provisioned.
+                items:
+                  $ref: '#/components/schemas/BankTransferInstructions'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 3|Retrieve Bank Transfer Instructions of a Billing Customer
+      tags:
+      - Billing > Billing Customers
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/billing/billing_customers/billing_customer_id/bank_transfer_instructions
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+        - currency: USD
+          account_name: Tromp, Littel and Luettgen
+          account_number: '8453687204'
+          bank_name: Community Federal Savings Bank
+          routing_number: '026073150'
+      - key: swift
+        name: International (SWIFT)
+        method: GET
+        uri: /api/v1/billing/billing_customers/billing_customer_id/bank_transfer_instructions
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+        - currency: SGD
+          account_name: Airwallex (Singapore) Pte Ltd
+          account_number: '885388629'
+          account_category: CHECKING
+          bank_name: DBS Bank Ltd
+          swift_code: DBSSSGSG
+          charge_type: OUR
+          merchant_address:
+            country_code: SG
+            postcode: 018956
+            suburb: Downtown Core
+            street_address:
+            - 1 Raffles Place
+            - '#20-01 One Raffles Place Tower 1'
+      - key: empty
+        name: No bank transfer instructions available
+        method: GET
+        uri: /api/v1/billing/billing_customers/billing_customer_id/bank_transfer_instructions
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body: []
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.customer:read
+        group: Billing
+        resource_name: Billing Customers
+      - scope: billing.customer:write
+        group: Billing
+        resource_name: Billing Customers
+      x-domain: Billing
+      x-resource: Billing Customers
+      x-urlPath: bank_transfer_instructions
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/billing_customers:
+    get:
+      description: Retrieves a list of Billing Customers based on the query parameters.
+      operationId: listBillingCustomers
+      parameters:
+      - description: The start time of `created_at` in ISO8601 format (inclusive).
+        in: query
+        name: from_created_at
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - description: The end time of `created_at` in ISO8601 format (exclusive).
+        in: query
+        name: to_created_at
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - description: Email address of the billing customer.
+        in: query
+        name: email
+        required: false
+        schema:
+          type: string
+      - description: A bookmark for use in pagination to retrieve either the next page or the previous page of results. You can fetch the value for this identifier from the response of the previous API call. To retrieve the next page of results, pass the value of `page_after` (if not `null`) from the response to a subsequent call. To retrieve the previous page of results, pass the value of `page_before` (if not `null`) from the response to a subsequent call.
+        in: query
+        name: page
+        required: false
+        schema:
+          type: string
+      - description: Number of billing customer objects per page. Defaults to `20`.
+        in: query
+        name: page_size
+        required: false
+        schema:
+          maximum: 1000
+          minimum: 1
+          type: integer
+          format: int32
+          default: 20
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CursorPaginationClientApiResponseCustomer'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 4|List all Billing Customers
+      tags:
+      - Billing > Billing Customers
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/billing/billing_customers
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - address:
+              city: Shanghai
+              country_code: CN
+              postcode: '100000'
+              state: Shanghai
+              street: Pudong District
+            automatic_tax_eligibility: ELIGIBLE
+            created_at: 2024-06-10T12:34:56+0000
+            default_billing_currency: USD
+            default_legal_entity_id: le_ib2DZgZJN72T7bObvNuMYQ
+            description: VIP customer.
+            email: john.doe@example.com
+            id: bcus_hkpd7fedfgb004apkvs
+            metadata:
+              customer_segment: premium
+            name: John Doe
+            nickname: JohnnyD
+            phone_number: '+1234567890'
+            tax_identification_number: 123-45-6789
+            type: INDIVIDUAL
+            updated_at: 2024-06-10T12:34:56+0000
+          page_after: <string>
+          page_before: <string>
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.customer:read
+        group: Billing
+        resource_name: Billing Customers
+      - scope: billing.customer:write
+        group: Billing
+        resource_name: Billing Customers
+      x-domain: Billing
+      x-resource: Billing Customers
+      x-urlPath: list
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/billing/billing_customers/{id}/update:
+    post:
+      description: Updates a Billing Customer. Only fields provided in the request are updated, while omitted fields remain unchanged. Array fields are fully replaced if included. Set a field to null or an empty string (for strings) to clear its value.
+      operationId: updateBillingCustomer
+      parameters:
+      - description: ID of the Billing Customer object.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                address:
+                  required:
+                  - country_code
+                  type: object
+                  description: Address of the billing customer.
+                  properties:
+                    city:
+                      type: string
+                      description: City of the address.
+                    country_code:
+                      type: string
+                      description: The two-letter country code in ISO 3166-1 alpha-2 format.
+                    postcode:
+                      type: string
+                      description: PostCode of the address.
+                    state:
+                      type: string
+                      description: State or province of the address.
+                    street:
+                      type: string
+                      description: Street of the address.
+                default_billing_currency:
+                  type: string
+                  description: Default currency to use when billing this customer in 3-letter ISO-4217 format.
+                default_legal_entity_id:
+                  type: string
+                  description: ID of the default legal entity to use when billing this customer.
+                description:
+                  type: string
+                  description: Additional description about the billing customer.
+                email:
+                  type: string
+                  description: Email address of the billing customer.
+                metadata:
+                  type: object
+                  additionalProperties:
+                    type: string
+                    description: A set of string key-value pairs that you can attach to this object for storing additional information.
+                  description: A set of string key-value pairs that you can attach to this object for storing additional information.
+                name:
+                  type: string
+                  description: Name of the billing customer.
+                nickname:
+                  type: string
+                  description: Internal nickname for the billing customer.
+                phone_number:
+                  type: string
+                  description: Phone number of the billing customer.
+                tax_identification_number:
+                  type: string
+                  description: Tax identification number of the billing customer.
+                type:
+                  pattern: ^(BUSINESS|INDIVIDUAL)$
+                  type: string
+                  description: Type of the billing customer.
+                  enum:
+                  - BUSINESS
+                  - INDIVIDUAL
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+          description: OK
+        '400':
+          description: 'Bad Request. Possible error codes: `validation_error`'
+        '401':
+          description: 'Unauthorized. Possible error codes: `unauthorized`'
+        '404':
+          description: 'Not Found. Possible error codes: `resource_not_found`'
+        '500':
+          description: 'Server Error. Possible error codes: `internal_error`'
+      summary: 5|Update a Billing Customer
+      tags:
+      - Billing > Billing Customers
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/billing/billing_customers/billing_customer_id/update
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          address:
+            city: Melbourne
+            country_code: AU
+            postcode: '3000'
+            state: VIC
+            street: 200 Collins Street
+          default_billing_currency: EUR
+          default_legal_entity_id: le_ib2DZgZJN72T7bObvNuMYQ
+          description: Updated corporate account.
+          email: billing@acmecorp.com
+          metadata:
+            customer_segment: enterprise
+          name: Acme Corporation
+          nickname: Acme Corp
+          phone_number: '+1987654321'
+          tax_identification_number: 987-65-4321
+          type: BUSINESS
+        response_body:
+          address:
+            city: Shanghai
+            country_code: CN
+            postcode: '100000'
+            state: Shanghai
+            street: Pudong District
+          automatic_tax_eligibility: ELIGIBLE
+          created_at: 2024-06-10T12:34:56+0000
+          default_billing_currency: USD
+          default_legal_entity_id: le_ib2DZgZJN72T7bObvNuMYQ
+          description: VIP customer.
+          email: john.doe@example.com
+          id: bcus_hkpd7fedfgb004apkvs
+          metadata:
+            customer_segment: premium
+          name: John Doe
+          nickname: JohnnyD
+          phone_number: '+1234567890'
+          tax_identification_number: 123-45-6789
+          type: INDIVIDUAL
+          updated_at: 2024-06-10T12:34:56+0000
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: billing.customer:write
+        group: Billing
+        resource_name: Billing Customers
+      x-domain: Billing
+      x-resource: Billing Customers
+      x-urlPath: update
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    CustomerAddress:
+      required:
+      - country_code
+      type: object
+      properties:
+        city:
+          type: string
+          description: City of the address.
+        country_code:
+          type: string
+          description: The two-letter country code in ISO 3166-1 alpha-2 format.
+        postcode:
+          type: string
+          description: PostCode of the address.
+        state:
+          type: string
+          description: State or province of the address.
+        street:
+          type: string
+          description: Street of the address.
+      description: Address of the billing customer.
+    CursorPaginationClientApiResponseCustomer:
+      required:
+      - items
+      type: object
+      properties:
+        items:
+          type: array
+          description: Paged results.
+          items:
+            $ref: '#/components/schemas/CustomerResponse'
+        page_after:
+          type: string
+          description: The page cursor used for searching after page.
+        page_before:
+          type: string
+          description: The page cursor used for search before page.
+    CustomerResponse:
+      required:
+      - automatic_tax_eligibility
+      - created_at
+      - id
+      - updated_at
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/CustomerAddress'
+          description: Address of the billing customer.
+        automatic_tax_eligibility:
+          type: string
+          description: Indicates whether automatic tax can be applied for this customer based on the customer's current address data and the seller’s tax registration for that jurisdiction.
+          enum:
+          - ELIGIBLE
+          - LOCATION_NOT_SUPPORTED
+          - ADDRESS_INCOMPLETE
+          x-enumDescriptions:
+            ELIGIBLE: Customer is in a jurisdiction where the seller is registered, and automatic tax can be applied.
+            LOCATION_NOT_SUPPORTED: The customer's jurisdiction can be determined from the current address data, but automatic tax calculation isn't supported there.
+            ADDRESS_INCOMPLETE: The customer's jurisdiction can't be determined from the provided address data.
+        created_at:
+          type: string
+          description: Time when the billing customer was created.
+        default_billing_currency:
+          type: string
+          description: Default currency to use when billing this customer in 3-letter ISO-4217 format.
+        default_legal_entity_id:
+          type: string
+          description: ID of the default legal entity to use when billing this customer.
+        description:
+          type: string
+          description: Additional description about the billing customer.
+        email:
+          type: string
+          description: Email address of the billing customer.
+        id:
+          type: string
+          description: ID of the billing customer object.
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+            description: A set of string key-value pairs that you can attach to this object for storing additional information.
+          description: A set of string key-value pairs that you can attach to this object for storing additional information.
+        name:
+          type: string
+          description: Name of the billing customer.
+        nickname:
+          type: string
+          description: Internal nickname for the billing customer.
+        phone_number:
+          type: string
+          description: Phone number of the billing customer.
+        tax_identification_number:
+          type: string
+          description: Tax identification number of the billing customer.
+        type:
+          type: string
+          description: Type of the billing customer.
+          enum:
+          - BUSINESS
+          - INDIVIDUAL
+        updated_at:
+          type: string
+          description: Time when the billing customer was last updated.
+    BankTransferInstructions:
+      required:
+      - account_name
+      - currency
+      type: object
+      properties:
+        currency:
+          type: string
+          description: Currency of the receiving account (3-letter ISO-4217 code).
+        account_name:
+          type: string
+          description: Name of the account holder receiving the transfer.
+        account_number:
+          type: string
+          description: Bank account number.
+        account_category:
+          type: string
+          description: Category of the receiving bank account. One of `CHECKING`, `SAVINGS`, or `BUSINESS`.
+          enum:
+          - CHECKING
+          - SAVINGS
+          - BUSINESS
+        bank_name:
+          type: string
+          description: Name of the financial institution in which the receiving account is domiciled.
+        iban:
+          type: string
+          description: IBAN number.
+        swift_code:
+          type: string
+          description: Bank SWIFT or BIC code.
+        routing_number:
+          type: string
+          description: Bank routing number. Applicable only to accounts in the United States.
+        sort_code:
+          type: string
+          description: Bank sort code. Applicable only to accounts in the United Kingdom.
+        bsb_number:
+          type: string
+          description: Bank State Branch (BSB) number. Applicable only to accounts in Australia.
+        bank_code:
+          type: string
+          description: Code identifying the bank. Applicable in markets including Singapore and Hong Kong.
+        branch_code:
+          type: string
+          description: Code identifying the bank branch. Used together with `bank_code`.
+        transit_number:
+          type: string
+          description: Bank transit number. Applicable only to accounts in Canada.
+        institution_number:
+          type: string
+          description: Institution number identifying the bank. Applicable only to accounts in Canada.
+        charge_type:
+          type: string
+          description: 'Indicates who bears the bank charges on the transfer. Returned only for international (SWIFT) transfers. Omitted for local transfers.
+
+            Possible value:
+
+            - `OUR`: The payer covers all transfer charges so the full amount is received.'
+          enum:
+          - OUR
+        merchant_address:
+          required:
+          - country_code
+          type: object
+          description: The recipient's registered business address, used when making an international (SWIFT) transfer. Returned only for SWIFT transfers. Omitted for local transfers.
+          properties:
+            country_code:
+              type: string
+              description: Two-letter ISO 3166-1 country code of the recipient's address.
+            state:
+              type: string
+              description: State, province, or region of the recipient's address.
+            suburb:
+              type: string
+              description: Suburb or city of the recipient's address.
+            postcode:
+              type: string
+              description: Postal or ZIP code of the recipient's address.
+            street_address:
+              type: array
+              description: Street address of the recipient, given as one or more address lines.
+              items:
+                type: string
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

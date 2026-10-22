@@ -1,0 +1,531 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Issuing > Card Transactions API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Issuing > Card Transactions
+  description: 'A **card transaction** is the middle level of the three-level transaction model
+
+    (**Lifecycle → Card Transaction → Transaction Event**).
+
+
+    It groups related transaction events and represents Airwallex''s interpretation of a single card
+
+    transaction. Each card transaction has a guaranteed terminal status and a fund direction, making it
+
+    the recommended level for tracking payment outcomes without implementing custom grouping logic.
+
+
+    **Statuses:** `AUTHORIZED` (non-terminal), `CLEARED`, `REVERSED`, `EXPIRED`, `DECLINED`,
+
+    `VERIFIED` (terminal).
+
+
+    **Fund directions:** `DEBIT`, `CREDIT`, or `NO_MOVEMENT`.
+
+
+    All card transactions within the same payment flow share a common lifecycle ID.
+
+
+    **Data retention:** Resources can be queried for a maximum of 2 years from creation.
+
+
+    Learn more about the transaction lifecycle.'
+  x-domain: Issuing
+  x-resource: Card Transactions
+  x-urlPath: issuing/card_transactions
+paths:
+  /api/v1/issuing/card_transactions/{id}:
+    get:
+      tags:
+      - Issuing > Card Transactions
+      summary: 1|Retrieve a Card Transaction
+      description: Retrieve a single card transaction by its unique identifier. The response includes the current status, fund direction, merchant details, and aggregated billing amounts.
+      operationId: retrieveCardTransaction
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the card transaction.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonPciCardTransaction'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/issuing/card_transactions/card_transaction_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          billing_amounts:
+            currency: USD
+            total_authorized: 100
+            total_credited: 0
+            total_debited: 100
+            total_declined: 0
+            total_expired: 0
+            total_pending: 0
+            total_reversed: 0
+          card_id: 5b2dc266-09ad-4235-b61a-767c7cd6d6ef
+          created_at: '2018-03-22T16:08:02+00:00'
+          digital_wallet_token:
+            id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+            payment_method: GOOGLE_PAY
+          expiry_date: '2026-02-01T16:08:02+00:00'
+          failure_reason: <string>
+          fee_details:
+          - amount: 500
+            currency: USD
+            type: ATM_ACCESS_FEE
+          fund_direction: DEBIT
+          id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+          lifecycle_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+          masked_card_number: '************4242'
+          merchant:
+            additional_merchant_info:
+              merchant_brand_category_id: 17000
+              merchant_brand_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+              merchant_brand_name: Meta
+              merchant_brand_subcategory_id: 17004
+              merchant_logo_url: https://example.com/logo.png
+            category_code: '4829'
+            city: New York
+            country: US
+            identifier: 012345678910123
+            name: Test Merchant
+            postcode: '10001'
+            state: NY
+          status: AUTHORIZED
+          transaction_amounts:
+            currency: USD
+            total_authorized: 100
+            total_credited: 0
+            total_debited: 100
+            total_declined: 0
+            total_expired: 0
+            total_pending: 0
+            total_reversed: 0
+          updated_at: '2018-03-22T16:08:02+00:00'
+      x-scope:
+      - scope: issuing.transaction:read
+        group: Issuing
+        resource_name: Authorizations and Transactions
+      x-domain: Issuing
+      x-resource: Card Transactions
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/issuing/card_transactions:
+    get:
+      tags:
+      - Issuing > Card Transactions
+      summary: 2|List all Card Transactions
+      description: Retrieve a paginated list of card transactions. Each card transaction includes its status, fund direction, merchant details, and aggregated billing amounts. Use the `lifecycle_id` filter to retrieve all card transactions within a specific lifecycle, or `status` to filter by transaction status.
+      operationId: listCardTransactions
+      parameters:
+      - name: billing_currency
+        in: query
+        description: Filter by billing currency (3-letter ISO 4217 code).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: card_id
+        in: query
+        description: Filter by card. Only returns card transactions associated with this card.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          format: uuid
+      - name: from_created_at
+        in: query
+        description: Filter for items created after this date in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          format: date-time
+      - name: lifecycle_id
+        in: query
+        description: Filter by lifecycle. Only returns card transactions belonging to this lifecycle.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          format: uuid
+      - name: page
+        in: query
+        description: A bookmark for use in pagination to retrieve either the next page or the previous page of results. You can fetch the value for this identifier from the response of the previous API call. To retrieve the next page of results, pass the value of `page_after` (if not null) from the response to a subsequent call. To retrieve the previous page of results, pass the value of `page_before` (if not null) from the response to a subsequent call.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: page_size
+        in: query
+        description: Number of related objects to be listed per page. The maximum is 100.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: status
+        in: query
+        description: Filter by status. One of `AUTHORIZED`, `CLEARED`, `DECLINED`, `EXPIRED`, `REVERSED`, or `VERIFIED`.
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          enum:
+          - AUTHORIZED
+          - CLEARED
+          - DECLINED
+          - EXPIRED
+          - REVERSED
+          - VERIFIED
+          - UNKNOWN
+      - name: to_created_at
+        in: query
+        description: Filter for items created before this date in ISO8601 format (inclusive).
+        required: false
+        allowEmptyValue: false
+        schema:
+          type: string
+          format: date-time
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonPciBookmarkedResultOfIssuingNonPciCardTransaction'
+        '400':
+          description: '["field_required"
+
+            ,"bad_request"
+
+            ,"invalid_argument"
+
+            ]'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: '["credentials_invalid"
+
+            ,"credentials_expired"]'
+        '429':
+          description: Too many requests
+        '500':
+          description: Service unavailable
+      deprecated: false
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/issuing/card_transactions
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - billing_amounts:
+              currency: USD
+              total_authorized: 100
+              total_credited: 0
+              total_debited: 100
+              total_declined: 0
+              total_expired: 0
+              total_pending: 0
+              total_reversed: 0
+            card_id: 5b2dc266-09ad-4235-b61a-767c7cd6d6ef
+            created_at: '2018-03-22T16:08:02+00:00'
+            digital_wallet_token:
+              id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+              payment_method: GOOGLE_PAY
+            expiry_date: '2026-02-01T16:08:02+00:00'
+            fee_details:
+            - amount: 500
+              currency: USD
+              type: ATM_ACCESS_FEE
+            fund_direction: DEBIT
+            id: 7f687fe6-dcf4-4462-92fa-80335301d9d2
+            lifecycle_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+            masked_card_number: '************4242'
+            merchant:
+              additional_merchant_info:
+                merchant_brand_category_id: 17000
+                merchant_brand_id: 6c2dc266-09ad-4235-b61a-767c7cd6d6ea
+                merchant_brand_name: Meta
+                merchant_brand_subcategory_id: 17004
+                merchant_logo_url: https://example.com/logo.png
+              category_code: '4829'
+              city: New York
+              country: US
+              identifier: 012345678910123
+              name: Test Merchant
+              postcode: '10001'
+              state: NY
+            status: AUTHORIZED
+            transaction_amounts:
+              currency: USD
+              total_authorized: 100
+              total_credited: 0
+              total_debited: 100
+              total_declined: 0
+              total_expired: 0
+              total_pending: 0
+              total_reversed: 0
+            updated_at: '2018-03-22T16:08:02+00:00'
+          page_after: YWZ0ZXI9MmFjNmEzMjQtM2IwNC00M2JkLThmNTUtOWQ5YzdmZjEzZGZm
+          page_before: YmVmb3JlPWVmZDQxZTk3LTU2MzctNDQ5MC04NjNkLTU2MDE5MjIwNDQ2YQ==
+      x-scope:
+      - scope: issuing.transaction:read
+        group: Issuing
+        resource_name: Authorizations and Transactions
+      x-domain: Issuing
+      x-resource: Card Transactions
+      x-urlPath: list
+      x-oauthSupported: true
+      x-oboSupported: true
+      x-resourceLevel: account
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    NonPciMerchantWithEnrichment:
+      type: object
+      properties:
+        additional_merchant_info:
+          $ref: '#/components/schemas/NonPciAdditionalMerchantInfo-2'
+          description: Supplemental details providing richer context on the merchant and its brand. Learn more about [merchant brand controls](/docs/issuing/card-controls/authorization-controls/merchant-brand-transaction-categories).
+        category_code:
+          type: string
+          description: The Merchant Category Code (MCC).
+        city:
+          type: string
+          description: The city of the merchant.
+        country:
+          type: string
+          description: The country of the merchant.
+        identifier:
+          type: string
+          description: Unique identifier for the merchant.
+        name:
+          type: string
+          description: The short name of the merchant.
+        postcode:
+          type: string
+          description: The postal code of the merchant.
+        state:
+          type: string
+          description: The state or province of the merchant.
+      description: Details about the merchant where the transaction occurred, including enriched brand information.
+    NonPciBookmarkedResultOfIssuingNonPciCardTransaction:
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/NonPciCardTransaction'
+        page_after:
+          type: string
+          description: A marker for retrieving the next page of results. Include this value in the `page` request parameter to retrieve subsequent pages.
+        page_before:
+          type: string
+          description: A marker for retrieving the previous page of results. Include this value in the `page` request parameter to retrieve previous pages.
+    NonPciFeeDetail:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: Fee amount.
+        currency:
+          type: string
+          description: Currency in which the fee is charged (3-letter ISO-4217 code).
+        type:
+          type: string
+          description: 'Fee type. One of: `ATM_ACCESS_FEE`.'
+    NonPciAdditionalMerchantInfo-2:
+      type: object
+      properties:
+        merchant_brand_category_id:
+          type: integer
+          format: int32
+          description: The unique identifier associated with the merchant category.
+        merchant_brand_id:
+          type: string
+          format: uuid
+          description: The unique identifier for the merchant brand.
+        merchant_brand_name:
+          type: string
+          description: The full legal or common name of the merchant.
+        merchant_brand_subcategory_id:
+          type: integer
+          format: int32
+          description: The unique identifier associated with the merchant's sub-category.
+        merchant_logo_url:
+          type: string
+          description: URL of the merchant's logo for display purposes.
+      description: Supplemental details providing richer context on the merchant and its brand. Learn more about [merchant brand controls](/docs/issuing/card-controls/authorization-controls/merchant-brand-transaction-categories).
+    NonPciSimpleDigitalWalletToken:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the digital token.
+        payment_method:
+          type: string
+          description: 'Payment method used. One of: `APPLE_PAY`, `GOOGLE_PAY`, `CARD_ON_FILE`.'
+      description: Details of the digital wallet token used for the transaction, if applicable.
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        details:
+          type: object
+        message:
+          type: string
+        source:
+          type: string
+    NonPciAggregatedAmounts:
+      type: object
+      properties:
+        currency:
+          type: string
+          description: Three-letter ISO 4217 currency code for all amounts in this object.
+        total_authorized:
+          type: number
+          description: Total amount authorized (funds reserved in the wallet).
+        total_credited:
+          type: number
+          description: Total amount credited (funds returned to the wallet, e.g., refunds).
+        total_debited:
+          type: number
+          description: Total amount debited (funds moved out of the wallet after clearing).
+        total_declined:
+          type: number
+          description: Total amount declined (transaction amounts that were rejected).
+        total_expired:
+          type: number
+          description: Total amount expired (authorized amounts that were never captured and have been released).
+        total_pending:
+          type: number
+          description: Total amount still pending (outstanding authorized amount not yet cleared, reversed, or expired).
+        total_reversed:
+          type: number
+          description: Total amount reversed (authorized amounts that were cancelled and released).
+      description: Aggregated amounts in the card's billing currency (the currency of the cardholder's wallet). Includes totals for authorized, debited, credited, pending, and other states.
+    NonPciCardTransaction:
+      type: object
+      properties:
+        billing_amounts:
+          $ref: '#/components/schemas/NonPciAggregatedAmounts'
+          description: Aggregated amounts in the card's billing currency (the currency of the cardholder's wallet). Includes totals for authorized, debited, credited, pending, and other states.
+        card_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the card associated with this card transaction.
+        created_at:
+          type: string
+          description: Date and time when the card transaction was created, in ISO 8601 format.
+        digital_wallet_token:
+          $ref: '#/components/schemas/NonPciSimpleDigitalWalletToken'
+          description: Details of the digital wallet token used for the transaction, if applicable.
+        expiry_date:
+          type: string
+          description: 'The date and time when the current authorization is set to expire, in ISO 8601 format. After expiry, reserved funds are released. Note: the status may not update to `EXPIRED` immediately after this time.'
+        failure_reason:
+          type: string
+          description: The reason the transaction was declined. Only present when `status` is `DECLINED`. Learn more about [transaction failure reasons](/docs/issuing/transactions/transaction-failure-reasons).
+        fee_details:
+          type: array
+          description: Fees applied to this card transaction, such as ATM fees or foreign transaction fees.
+          items:
+            $ref: '#/components/schemas/NonPciFeeDetail'
+        fund_direction:
+          type: string
+          description: 'The direction of funds relative to the cardholder''s wallet. One of: `DEBIT`, `CREDIT`, or `NO_MOVEMENT`.'
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the card transaction.
+        lifecycle_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the lifecycle this card transaction belongs to. Use this to retrieve all related card transactions (e.g., a purchase and its refund).
+        masked_card_number:
+          type: string
+          description: The masked primary account number (PAN) of the card.
+        merchant:
+          $ref: '#/components/schemas/NonPciMerchantWithEnrichment'
+          description: Details about the merchant where the transaction occurred, including enriched brand information.
+        status:
+          type: string
+          description: 'The current status of the card transaction. `AUTHORIZED` is non-terminal; all other statuses are terminal. One of: `AUTHORIZED`, `CLEARED`, `DECLINED`, `EXPIRED`, `REVERSED`, `VERIFIED`.'
+        transaction_amounts:
+          $ref: '#/components/schemas/NonPciAggregatedAmounts'
+          description: Aggregated amounts in the merchant's transaction currency (the currency used at the point of sale).
+        updated_at:
+          type: string
+          description: Date and time when the card transaction was last updated, in ISO 8601 format.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'

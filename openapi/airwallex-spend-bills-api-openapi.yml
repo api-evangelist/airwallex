@@ -1,0 +1,2120 @@
+openapi: 3.2.0
+info:
+  title: Airwallex Spend > Bills API
+  version: '2026-08-21'
+  description: Airwallex Client API, assembled verbatim from the per-category OpenAPI fragments (paths, operations, component schemas) that the Airwallex API reference at https://www.airwallex.com/docs/api serves as Next.js page data. The reference names the source file airwallex-openapi-2026-08-21.yaml but does not offer it for download.
+  contact:
+    name: Airwallex
+    url: https://www.airwallex.com/docs/api
+servers:
+- url: https://api.airwallex.com
+  description: Production
+- url: https://api.sandbox.airwallex.com
+  description: Sandbox
+tags:
+- name: Spend > Bills
+  description: Manages bills representing accounts payable obligations. Supports retrieval, listing with filters, and sync status updates for integration with external accounting systems.
+  x-domain: Spend
+  x-resource: Bills
+  x-urlPath: spend/bills
+paths:
+  /api/v1/spend/bills/create:
+    post:
+      tags:
+      - Spend > Bills
+      x-stage: beta
+      summary: 1|Create a Bill
+      description: Creates a new bill.
+      operationId: createBill
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - billing_currency
+              - due_date
+              - external_id
+              - invoice_number
+              - issued_date
+              - legal_entity_id
+              - line_items
+              - request_id
+              - sync_status
+              - tax_status
+              - vendor_id
+              properties:
+                request_id:
+                  type: string
+                  description: Unique identifier for this request to ensure idempotency. To prevent accidental duplication, clients should generate a random UUID.
+                external_id:
+                  type: string
+                  description: External identifier for this bill in your system.
+                legal_entity_id:
+                  type: string
+                  description: Unique identifier of the legal entity associated with the bill.
+                vendor_id:
+                  type: string
+                  format: uuid
+                  description: Unique identifier of the vendor associated with the bill.
+                invoice_number:
+                  type: string
+                  description: Invoice number associated with the bill.
+                issued_date:
+                  type: string
+                  description: Date when the bill was issued, in ISO8601 format.
+                due_date:
+                  type: string
+                  description: Date when the bill is due, in ISO8601 format.
+                billing_currency:
+                  type: string
+                  description: Currency of the bill, as an ISO 4217 currency code.
+                  enum:
+                  - UNDEFINED
+                  - AED
+                  - AFN
+                  - ALL
+                  - AMD
+                  - ANG
+                  - AOA
+                  - ARS
+                  - AUD
+                  - AWG
+                  - AZN
+                  - BAM
+                  - BBD
+                  - BDT
+                  - BGN
+                  - BHD
+                  - BIF
+                  - BMD
+                  - BND
+                  - BOB
+                  - BOV
+                  - BRL
+                  - BSD
+                  - BTN
+                  - BWP
+                  - BYN
+                  - BYR
+                  - BZD
+                  - CAD
+                  - CDF
+                  - CHE
+                  - CHF
+                  - CHW
+                  - CLF
+                  - CLP
+                  - CNY
+                  - COP
+                  - COU
+                  - CRC
+                  - CUC
+                  - CUP
+                  - CVE
+                  - CZK
+                  - DJF
+                  - DKK
+                  - DOP
+                  - DZD
+                  - EGP
+                  - ERN
+                  - ETB
+                  - EUR
+                  - FJD
+                  - FKP
+                  - GBP
+                  - GEL
+                  - GHS
+                  - GIP
+                  - GMD
+                  - GNF
+                  - GTQ
+                  - GYD
+                  - HKD
+                  - HNL
+                  - HRK
+                  - HTG
+                  - HUF
+                  - IDR
+                  - ILS
+                  - INR
+                  - IQD
+                  - IRR
+                  - ISK
+                  - JMD
+                  - JOD
+                  - JPY
+                  - KES
+                  - KGS
+                  - KHR
+                  - KMF
+                  - KPW
+                  - KRW
+                  - KWD
+                  - KYD
+                  - KZT
+                  - LAK
+                  - LBP
+                  - LKR
+                  - LRD
+                  - LSL
+                  - LTL
+                  - LYD
+                  - MAD
+                  - MDL
+                  - MGA
+                  - MKD
+                  - MMK
+                  - MNT
+                  - MOP
+                  - MRO
+                  - MRU
+                  - MUR
+                  - MVR
+                  - MWK
+                  - MXN
+                  - MXV
+                  - MYR
+                  - MZN
+                  - NAD
+                  - NGN
+                  - NIO
+                  - NOK
+                  - NPR
+                  - NZD
+                  - OMR
+                  - PAB
+                  - PEN
+                  - PGK
+                  - PHP
+                  - PKR
+                  - PLN
+                  - PYG
+                  - QAR
+                  - RON
+                  - RSD
+                  - RUB
+                  - RUR
+                  - RWF
+                  - SAR
+                  - SBD
+                  - SCR
+                  - SDG
+                  - SEK
+                  - SGD
+                  - SHP
+                  - SLL
+                  - SOS
+                  - SRD
+                  - SSP
+                  - STD
+                  - STN
+                  - SVC
+                  - SYP
+                  - SZL
+                  - THB
+                  - TJS
+                  - TMT
+                  - TND
+                  - TOP
+                  - TRY
+                  - TTD
+                  - TWD
+                  - TZS
+                  - UAH
+                  - UGX
+                  - USD
+                  - USN
+                  - USS
+                  - UYI
+                  - UYU
+                  - UZS
+                  - VEF
+                  - VES
+                  - VND
+                  - VUV
+                  - WST
+                  - XAF
+                  - XAG
+                  - XAU
+                  - XBA
+                  - XBB
+                  - XBC
+                  - XBD
+                  - XCD
+                  - XDR
+                  - XOF
+                  - XPD
+                  - XPF
+                  - XPT
+                  - XSU
+                  - XTS
+                  - XUA
+                  - XXX
+                  - YER
+                  - ZAR
+                  - ZMW
+                  - ZWL
+                tax_status:
+                  type: string
+                  description: Tax status for bill creation.
+                  enum:
+                  - TAX_EXCLUSIVE
+                  - TAX_INCLUSIVE
+                sync_status:
+                  type: string
+                  description: Sync status for an accounting system.
+                  enum:
+                  - NOT_SYNCED
+                  - SYNCED
+                  - SYNC_FAILED
+                line_items:
+                  type: array
+                  description: List of line items on the bill.
+                  items:
+                    type: object
+                    required:
+                    - quantity
+                    - unit_price
+                    properties:
+                      description:
+                        type: string
+                        description: Description of the line item.
+                      quantity:
+                        type: string
+                        description: Quantity of the line item.
+                      unit_price:
+                        type: string
+                        description: Unit price of the line item (tax-exclusive). Tax is applied separately based on the selected tax rate.
+                      accounting_field_selections:
+                        type: array
+                        description: List of accounting fields selected for the line item.
+                        items:
+                          type: object
+                          required:
+                          - type
+                          - source_id
+                          properties:
+                            type:
+                              type: string
+                              description: Type of accounting field selection.
+                              enum:
+                              - GENERAL_LEDGER_ACCOUNT
+                              - TAX_CODE
+                              - OTHER
+                              x-enumDescriptions:
+                                GENERAL_LEDGER_ACCOUNT: General ledger (GL) account assigned to the line item.
+                                TAX_CODE: Tax code applied to the line item.
+                                OTHER: Custom accounting field defined in your ERP.
+                            source_id:
+                              type: string
+                              format: uuid
+                              description: 'Unique identifier of the general ledger (GL) account, tax code, or accounting field value to assign to this line item. The required `id` depends on `type`: use [List General Ledger Accounts](/docs/api/accounting/general_ledger_accounts/list) for `GENERAL_LEDGER_ACCOUNT`, [List Tax Codes](/docs/api/accounting/tax_codes/list) for `TAX_CODE`, or [List Accounting Field Values](/docs/api/accounting/accounting_field_values/list) for `OTHER`.'
+                          description: List of accounting fields selected for the line item.
+                      purchase_order_line_item_id:
+                        type: string
+                        format: uuid
+                        description: Unique identifier of the purchase order line item associated with this bill line item.
+                    description: Bill line item request.
+                description:
+                  type: string
+                  description: Description of the bill.
+                purchase_order_id:
+                  type: string
+                  format: uuid
+                  description: Unique identifier of the purchase order associated with the bill.
+                attachments:
+                  type: array
+                  description: List of file IDs to attach to the bill. Upload each file with [Upload a file](/docs/api/supporting_services/file_service/upload_files) first, setting `purpose` to `SPEND_ATTACHMENT`.
+                  items:
+                    type: string
+                    format: uuid
+                    description: Unique identifier of an uploaded file.
+              description: Bill creation payload.
+        required: true
+      responses:
+        '201':
+          description: Bill created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bill'
+        '400':
+          description: Invalid Request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/spend/bills/create
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 201
+        reason_phrase: Created
+        request_body:
+          attachments:
+          - cea842bd-b6b8-4f70-bfa5-4d28e7978db7
+          request_id: 985461d5-016f-4e1f-a387-5f1380b42d92
+          external_id: BILL-EXT-001
+          legal_entity_id: le_U3jlHqQRNHWn2zAKeeT8sg
+          vendor_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+          invoice_number: INV-0001
+          issued_date: '2025-01-10'
+          due_date: '2025-01-10'
+          billing_currency: USD
+          tax_status: TAX_EXCLUSIVE
+          sync_status: SYNCED
+          line_items:
+          - description: Office supplies.
+            quantity: '10'
+            unit_price: '500.0'
+            accounting_field_selections:
+            - type: GENERAL_LEDGER_ACCOUNT
+              source_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+            purchase_order_line_item_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+          description: Office supplies for Q1 2025.
+          purchase_order_id: ca56f0ff-8081-4db6-8333-4e011fe9561e
+        response_body:
+          id: 985461d5-016f-4e1f-a387-5f1380b42d92
+          legal_entity_id: le_U3jlHqQRNHWn2zAKeeT8sg
+          invoice_number: INV-0001
+          billing_amount: '551.0'
+          billing_currency: USD
+          status: AWAITING_PAYMENT
+          sync_status: SYNCED
+          sync_error_message: 'Failed to sync bill: found a mismatch between the bill payment and bill currency.'
+          tax_status: TAX_EXCLUSIVE
+          description: Office supplies for Q1 2025.
+          approvers:
+          - approver1@airwallex.com
+          - approver2@airwallex.com
+          issued_date: '2025-01-10'
+          due_date: '2025-01-10'
+          vendor_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+          purchase_order_id: ca56f0ff-8081-4db6-8333-4e011fe9561e
+          bill_payments:
+          - id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+            type: CARD_TRANSACTION
+            amount: '300.00'
+            currency: USD
+            card_transaction:
+              card_transaction_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+              card_id: 985461d5-016f-4e1f-a387-5f1380b42d92
+              account_id: acct_a2y0pxz3m4k5hoZldn97hjzp
+              card_funding_type: CREDIT
+              source_amount: '300.00'
+              source_currency: USD
+              transacted_at: '2025-01-02T00:00:00Z'
+            created_at: '2025-01-02T00:00:00Z'
+          - id: 985461d5-016f-4e1f-a387-5f1380b42d92
+            type: TRANSFER
+            amount: '251.00'
+            currency: USD
+            transfer:
+              transfer_id: 985461d5-016f-4e1f-a387-5f1380b42d92
+              account_id: acct_a2y0pxz3m4k5hoZldn97hjzp
+              multi_bill: false
+              source_amount: '251.00'
+              source_currency: USD
+              transfer_date: '2025-01-01'
+            created_at: '2025-01-01T00:00:00Z'
+          external_id: BILL-EXT-001
+          attachments:
+          - id: cea842bd-b6b8-4f70-bfa5-4d28e7978db7
+            content_type: application/pdf
+            file_name: invoice.pdf
+            file_url: https://www.airwallex.com/invoice.pdf
+            created_at: '2025-02-02T00:00:00Z'
+          line_items:
+          - id: 985461d5-016f-4e1f-a387-5f1380b42d92
+            unit_price: '100.0'
+            quantity: '5'
+            description: Office supplies.
+            total_amount: '500.0'
+            tax_amount: '51.0'
+            accounting_field_selections:
+            - type: OTHER
+              source_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+              name: Cost Center
+              external_id: 1036f6f7-87e4-4508-b865-f670b1926022
+              value: Office Expense
+              value_label: Office Expense
+            purchase_order_line_item_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-02-02T00:00:00Z'
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: spend.bill:write
+        group: Spend
+        resource_name: Bills
+      x-domain: Spend
+      x-resource: Bills
+      x-urlPath: create
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/spend/bills/{id}:
+    get:
+      tags:
+      - Spend > Bills
+      x-stage: beta
+      summary: 2|Retrieve a Bill
+      description: Retrieves the details of an existing bill.
+      operationId: retrieveBill
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the bill.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bill'
+        '400':
+          description: Invalid Request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/spend/bills/bill_id
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: 985461d5-016f-4e1f-a387-5f1380b42d92
+          legal_entity_id: le_U3jlHqQRNHWn2zAKeeT8sg
+          invoice_number: INV-0001
+          billing_amount: '551.0'
+          billing_currency: USD
+          status: AWAITING_PAYMENT
+          sync_status: SYNCED
+          sync_error_message: 'Failed to sync bill: found a mismatch between the bill payment and bill currency.'
+          tax_status: TAX_EXCLUSIVE
+          description: Office supplies for Q1 2025.
+          approvers:
+          - approver1@airwallex.com
+          - approver2@airwallex.com
+          issued_date: '2025-01-10'
+          due_date: '2025-01-10'
+          vendor_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+          purchase_order_id: ca56f0ff-8081-4db6-8333-4e011fe9561e
+          bill_payments:
+          - id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+            type: CARD_TRANSACTION
+            amount: '300.00'
+            currency: USD
+            card_transaction:
+              card_transaction_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+              card_id: 985461d5-016f-4e1f-a387-5f1380b42d92
+              account_id: acct_a2y0pxz3m4k5hoZldn97hjzp
+              card_funding_type: CREDIT
+              source_amount: '300.00'
+              source_currency: USD
+              transacted_at: '2025-01-02T00:00:00Z'
+            created_at: '2025-01-02T00:00:00Z'
+          - id: 985461d5-016f-4e1f-a387-5f1380b42d92
+            type: TRANSFER
+            amount: '251.00'
+            currency: USD
+            transfer:
+              transfer_id: 985461d5-016f-4e1f-a387-5f1380b42d92
+              account_id: acct_a2y0pxz3m4k5hoZldn97hjzp
+              multi_bill: false
+              source_amount: '251.00'
+              source_currency: USD
+              transfer_date: '2025-01-01'
+            created_at: '2025-01-01T00:00:00Z'
+          external_id: BILL-EXT-001
+          attachments:
+          - id: cea842bd-b6b8-4f70-bfa5-4d28e7978db7
+            content_type: application/pdf
+            file_name: invoice.pdf
+            file_url: https://www.airwallex.com/invoice.pdf
+            created_at: '2025-02-02T00:00:00Z'
+          line_items:
+          - id: 985461d5-016f-4e1f-a387-5f1380b42d92
+            unit_price: '100.0'
+            quantity: '5'
+            description: Office supplies.
+            total_amount: '500.0'
+            tax_amount: '51.0'
+            accounting_field_selections:
+            - type: OTHER
+              source_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+              name: Cost Center
+              external_id: 1036f6f7-87e4-4508-b865-f670b1926022
+              value: Office Expense
+              value_label: Office Expense
+            purchase_order_line_item_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-02-02T00:00:00Z'
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: spend.bill:read
+        group: Spend
+        resource_name: Bills
+      x-domain: Spend
+      x-resource: Bills
+      x-urlPath: retrieve
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/spend/bills:
+    get:
+      tags:
+      - Spend > Bills
+      x-stage: beta
+      summary: 3|List all Bills
+      description: Returns a list of bills filtered by the specified query parameters.
+      operationId: listBills
+      parameters:
+      - name: page
+        in: query
+        description: A bookmark for use in pagination to retrieve either the next page or the previous page of results. You can fetch the value for this identifier from the response of the previous API call.
+        required: false
+        schema:
+          type: string
+      - name: page_size
+        in: query
+        description: The number of items returned per page, between 1 and 100. The default is 100.
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 100
+      - name: from_created_at
+        in: query
+        description: Filter by bills created after this timestamp (inclusive) in ISO8601 format. If not specified, defaults to last 30 days from `to_created_at`.
+        required: false
+        schema:
+          type: string
+      - name: to_created_at
+        in: query
+        description: Filter by bills created before this timestamp (exclusive) in ISO8601 format. If not specified, defaults to now.
+        required: false
+        schema:
+          type: string
+      - name: from_updated_at
+        in: query
+        description: Filter by bills updated after this timestamp (inclusive) in ISO8601 format.
+        required: false
+        schema:
+          type: string
+      - name: to_updated_at
+        in: query
+        description: Filter by bills updated before this timestamp (exclusive) in ISO8601 format.
+        required: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: Filter by bill status.
+        required: false
+        schema:
+          type: string
+          enum:
+          - DRAFT
+          - AWAITING_APPROVAL
+          - AWAITING_PAYMENT
+          - PAYMENT_IN_PROGRESS
+          - PAID
+          - REJECTED
+          - SCHEDULED
+      - name: sync_status
+        in: query
+        description: Filter by sync status.
+        required: false
+        schema:
+          type: string
+          enum:
+          - NOT_SYNCED
+          - SYNCED
+          - SYNC_FAILED
+      - name: legal_entity_id
+        in: query
+        description: Filter by legal entity unique identifier.
+        required: false
+        schema:
+          type: string
+      - name: purchase_order_id
+        in: query
+        description: Filter by purchase order unique identifier.
+        required: false
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillPagination'
+        '400':
+          description: Invalid Request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: GET
+        uri: /api/v1/spend/bills
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          items:
+          - id: 985461d5-016f-4e1f-a387-5f1380b42d92
+            legal_entity_id: le_U3jlHqQRNHWn2zAKeeT8sg
+            invoice_number: INV-0001
+            billing_amount: '551.0'
+            billing_currency: USD
+            status: AWAITING_PAYMENT
+            sync_status: SYNCED
+            sync_error_message: 'Failed to sync bill: found a mismatch between the bill payment and bill currency.'
+            tax_status: TAX_EXCLUSIVE
+            description: Office supplies for Q1 2025.
+            approvers:
+            - approver1@airwallex.com
+            - approver2@airwallex.com
+            issued_date: '2025-01-10'
+            due_date: '2025-01-10'
+            vendor_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+            purchase_order_id: ca56f0ff-8081-4db6-8333-4e011fe9561e
+            bill_payments:
+            - id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+              type: CARD_TRANSACTION
+              amount: '300.00'
+              currency: USD
+              card_transaction:
+                card_transaction_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+                card_id: 985461d5-016f-4e1f-a387-5f1380b42d92
+                account_id: acct_a2y0pxz3m4k5hoZldn97hjzp
+                card_funding_type: CREDIT
+                source_amount: '300.00'
+                source_currency: USD
+                transacted_at: '2025-01-02T00:00:00Z'
+              created_at: '2025-01-02T00:00:00Z'
+            - id: 985461d5-016f-4e1f-a387-5f1380b42d92
+              type: TRANSFER
+              amount: '251.00'
+              currency: USD
+              transfer:
+                transfer_id: 985461d5-016f-4e1f-a387-5f1380b42d92
+                account_id: acct_a2y0pxz3m4k5hoZldn97hjzp
+                multi_bill: false
+                source_amount: '251.00'
+                source_currency: USD
+                transfer_date: '2025-01-01'
+              created_at: '2025-01-01T00:00:00Z'
+            external_id: BILL-EXT-001
+            attachments:
+            - id: cea842bd-b6b8-4f70-bfa5-4d28e7978db7
+              content_type: application/pdf
+              file_name: invoice.pdf
+              file_url: https://www.airwallex.com/invoice.pdf
+              created_at: '2025-02-02T00:00:00Z'
+            line_items:
+            - id: 985461d5-016f-4e1f-a387-5f1380b42d92
+              unit_price: '100.0'
+              quantity: '5'
+              description: Office supplies.
+              total_amount: '500.0'
+              tax_amount: '51.0'
+              accounting_field_selections:
+              - type: OTHER
+                source_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+                name: Cost Center
+                external_id: 1036f6f7-87e4-4508-b865-f670b1926022
+                value: Office Expense
+                value_label: Office Expense
+              purchase_order_line_item_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+            created_at: '2025-01-01T00:00:00Z'
+            updated_at: '2025-02-02T00:00:00Z'
+          page_after: eyJwYWdlX2JlZm9yZSI6IjIwMjUtMDctMDFUMDA6MDA6MDBaIn0=
+          page_before: eyJwYWdlX2JlZm9yZSI6IjIwMjUtMDctMDFUMDA6MDA6MDBaIn0=
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: spend.bill:read
+        group: Spend
+        resource_name: Bills
+      x-domain: Spend
+      x-resource: Bills
+      x-urlPath: list
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/spend/bills/{id}/mark_as_paid:
+    post:
+      tags:
+      - Spend > Bills
+      x-stage: beta
+      summary: 4|Mark Bill As Paid
+      description: Marks a bill as paid outside of Airwallex.
+      operationId: markBillAsPaid
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the bill.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Bill marked as paid successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bill'
+        '400':
+          description: Invalid Request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/spend/bills/bill_id/mark_as_paid
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        response_body:
+          id: 985461d5-016f-4e1f-a387-5f1380b42d92
+          legal_entity_id: le_U3jlHqQRNHWn2zAKeeT8sg
+          invoice_number: INV-0001
+          billing_amount: '551.0'
+          billing_currency: USD
+          status: AWAITING_PAYMENT
+          sync_status: SYNCED
+          sync_error_message: 'Failed to sync bill: found a mismatch between the bill payment and bill currency.'
+          tax_status: TAX_EXCLUSIVE
+          description: Office supplies for Q1 2025.
+          approvers:
+          - approver1@airwallex.com
+          - approver2@airwallex.com
+          issued_date: '2025-01-10'
+          due_date: '2025-01-10'
+          vendor_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+          purchase_order_id: ca56f0ff-8081-4db6-8333-4e011fe9561e
+          bill_payments:
+          - id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+            type: CARD_TRANSACTION
+            amount: '300.00'
+            currency: USD
+            card_transaction:
+              card_transaction_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+              card_id: 985461d5-016f-4e1f-a387-5f1380b42d92
+              account_id: acct_a2y0pxz3m4k5hoZldn97hjzp
+              card_funding_type: CREDIT
+              source_amount: '300.00'
+              source_currency: USD
+              transacted_at: '2025-01-02T00:00:00Z'
+            created_at: '2025-01-02T00:00:00Z'
+          - id: 985461d5-016f-4e1f-a387-5f1380b42d92
+            type: TRANSFER
+            amount: '251.00'
+            currency: USD
+            transfer:
+              transfer_id: 985461d5-016f-4e1f-a387-5f1380b42d92
+              account_id: acct_a2y0pxz3m4k5hoZldn97hjzp
+              multi_bill: false
+              source_amount: '251.00'
+              source_currency: USD
+              transfer_date: '2025-01-01'
+            created_at: '2025-01-01T00:00:00Z'
+          external_id: BILL-EXT-001
+          attachments:
+          - id: cea842bd-b6b8-4f70-bfa5-4d28e7978db7
+            content_type: application/pdf
+            file_name: invoice.pdf
+            file_url: https://www.airwallex.com/invoice.pdf
+            created_at: '2025-02-02T00:00:00Z'
+          line_items:
+          - id: 985461d5-016f-4e1f-a387-5f1380b42d92
+            unit_price: '100.0'
+            quantity: '5'
+            description: Office supplies.
+            total_amount: '500.0'
+            tax_amount: '51.0'
+            accounting_field_selections:
+            - type: OTHER
+              source_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+              name: Cost Center
+              external_id: 1036f6f7-87e4-4508-b865-f670b1926022
+              value: Office Expense
+              value_label: Office Expense
+            purchase_order_line_item_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-02-02T00:00:00Z'
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: spend.bill:write
+        group: Spend
+        resource_name: Bills
+      x-domain: Spend
+      x-resource: Bills
+      x-urlPath: mark_as_paid
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+  /api/v1/spend/bills/{id}/sync:
+    post:
+      tags:
+      - Spend > Bills
+      x-stage: beta
+      summary: 5|Update Bill Sync Status
+      description: Updates the sync status of a bill.
+      operationId: syncBills
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the bill.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - sync_status
+              properties:
+                sync_status:
+                  type: string
+                  description: Sync status for an accounting system.
+                  enum:
+                  - NOT_SYNCED
+                  - SYNCED
+                  - SYNC_FAILED
+                sync_error_message:
+                  type: string
+                  description: Error message for sync failures. Only applicable when sync_status is `SYNC_FAILED`.
+              description: Bill Update Sync Status Payload.
+        required: true
+      responses:
+        '200':
+          description: Bill sync status updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bill'
+        '400':
+          description: Invalid Request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+      x-examples:
+      - key: default
+        name: ''
+        method: POST
+        uri: /api/v1/spend/bills/bill_id/sync
+        request_headers:
+          Authorization: Bearer {{ACCESS_TOKEN}}
+          Content-Type: application/json
+        status_code: 200
+        reason_phrase: OK
+        request_body:
+          sync_status: SYNC_FAILED
+          sync_error_message: 'Failed to sync bill: found a mismatch between the bill payment and bill currency.'
+        response_body:
+          id: 985461d5-016f-4e1f-a387-5f1380b42d92
+          legal_entity_id: le_U3jlHqQRNHWn2zAKeeT8sg
+          invoice_number: INV-0001
+          billing_amount: '551.0'
+          billing_currency: USD
+          status: AWAITING_PAYMENT
+          sync_status: SYNCED
+          sync_error_message: 'Failed to sync bill: found a mismatch between the bill payment and bill currency.'
+          tax_status: TAX_EXCLUSIVE
+          description: Office supplies for Q1 2025.
+          approvers:
+          - approver1@airwallex.com
+          - approver2@airwallex.com
+          issued_date: '2025-01-10'
+          due_date: '2025-01-10'
+          vendor_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+          purchase_order_id: ca56f0ff-8081-4db6-8333-4e011fe9561e
+          bill_payments:
+          - id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+            type: CARD_TRANSACTION
+            amount: '300.00'
+            currency: USD
+            card_transaction:
+              card_transaction_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+              card_id: 985461d5-016f-4e1f-a387-5f1380b42d92
+              account_id: acct_a2y0pxz3m4k5hoZldn97hjzp
+              card_funding_type: CREDIT
+              source_amount: '300.00'
+              source_currency: USD
+              transacted_at: '2025-01-02T00:00:00Z'
+            created_at: '2025-01-02T00:00:00Z'
+          - id: 985461d5-016f-4e1f-a387-5f1380b42d92
+            type: TRANSFER
+            amount: '251.00'
+            currency: USD
+            transfer:
+              transfer_id: 985461d5-016f-4e1f-a387-5f1380b42d92
+              account_id: acct_a2y0pxz3m4k5hoZldn97hjzp
+              multi_bill: false
+              source_amount: '251.00'
+              source_currency: USD
+              transfer_date: '2025-01-01'
+            created_at: '2025-01-01T00:00:00Z'
+          external_id: BILL-EXT-001
+          attachments:
+          - id: cea842bd-b6b8-4f70-bfa5-4d28e7978db7
+            content_type: application/pdf
+            file_name: invoice.pdf
+            file_url: https://www.airwallex.com/invoice.pdf
+            created_at: '2025-02-02T00:00:00Z'
+          line_items:
+          - id: 985461d5-016f-4e1f-a387-5f1380b42d92
+            unit_price: '100.0'
+            quantity: '5'
+            description: Office supplies.
+            total_amount: '500.0'
+            tax_amount: '51.0'
+            accounting_field_selections:
+            - type: OTHER
+              source_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+              name: Cost Center
+              external_id: 1036f6f7-87e4-4508-b865-f670b1926022
+              value: Office Expense
+              value_label: Office Expense
+            purchase_order_line_item_id: ba46f0ff-8081-4db6-8333-4e011fe9561d
+          created_at: '2025-01-01T00:00:00Z'
+          updated_at: '2025-02-02T00:00:00Z'
+      x-resourceLevel: org
+      x-oboSupported: false
+      x-scope:
+      - scope: spend.bill:write
+        group: Spend
+        resource_name: Bills
+      x-domain: Spend
+      x-resource: Bills
+      x-urlPath: sync
+      x-oauthSupported: true
+      servers:
+      - url: https://api.airwallex.com
+        description: Production
+      - url: https://api.sandbox.airwallex.com
+        description: Sandbox
+components:
+  schemas:
+    BillPayment:
+      type: object
+      required:
+      - amount
+      - created_at
+      - currency
+      - id
+      - type
+      properties:
+        created_at:
+          type: string
+          description: Timestamp for when the resource was created in ISO8601 format.
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the payment.
+        type:
+          type: string
+          description: Payment method type.
+          enum:
+          - TRANSFER
+          - CARD_TRANSACTION
+          - EXTERNAL
+        amount:
+          type: string
+          description: Amount of the payment.
+        currency:
+          type: string
+          description: Currency of the payment, as an ISO 4217 currency code.
+          enum:
+          - UNDEFINED
+          - AED
+          - AFN
+          - ALL
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BOV
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BYR
+          - BZD
+          - CAD
+          - CDF
+          - CHE
+          - CHF
+          - CHW
+          - CLF
+          - CLP
+          - CNY
+          - COP
+          - COU
+          - CRC
+          - CUC
+          - CUP
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - EUR
+          - FJD
+          - FKP
+          - GBP
+          - GEL
+          - GHS
+          - GIP
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IQD
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LBP
+          - LKR
+          - LRD
+          - LSL
+          - LTL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRO
+          - MRU
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MXV
+          - MYR
+          - MZN
+          - NAD
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - NZD
+          - OMR
+          - PAB
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RUR
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SHP
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STD
+          - STN
+          - SVC
+          - SYP
+          - SZL
+          - THB
+          - TJS
+          - TMT
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UGX
+          - USD
+          - USN
+          - USS
+          - UYI
+          - UYU
+          - UZS
+          - VEF
+          - VES
+          - VND
+          - VUV
+          - WST
+          - XAF
+          - XAG
+          - XAU
+          - XBA
+          - XBB
+          - XBC
+          - XBD
+          - XCD
+          - XDR
+          - XOF
+          - XPD
+          - XPF
+          - XPT
+          - XSU
+          - XTS
+          - XUA
+          - XXX
+          - YER
+          - ZAR
+          - ZMW
+          - ZWL
+        transfer:
+          $ref: '#/components/schemas/TransferDetails'
+        card_transaction:
+          $ref: '#/components/schemas/CardTransactionDetails'
+      description: 'Payment applied to a bill. The `type` field determines which payment details are present: when `type` is `TRANSFER`, only `transfer` is populated; when `type` is `CARD_TRANSACTION`, only `card_transaction` is populated.'
+    CardTransactionDetails:
+      type: object
+      required:
+      - account_id
+      - card_funding_type
+      - card_id
+      - card_transaction_id
+      - source_amount
+      - source_currency
+      - transacted_at
+      properties:
+        card_transaction_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the card transaction.
+        card_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the card used for payment.
+        account_id:
+          type: string
+          description: Unique identifier of the Airwallex account associated with the wallet that funded the card payment.
+        card_funding_type:
+          type: string
+          description: Card funding type.
+          enum:
+          - CREDIT
+          - CASH
+        source_amount:
+          type: string
+          description: Transaction amount in the source currency before conversion.
+        source_currency:
+          type: string
+          description: Currency of the original card transaction, as an ISO 4217 currency code.
+          enum:
+          - UNDEFINED
+          - AED
+          - AFN
+          - ALL
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BOV
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BYR
+          - BZD
+          - CAD
+          - CDF
+          - CHE
+          - CHF
+          - CHW
+          - CLF
+          - CLP
+          - CNY
+          - COP
+          - COU
+          - CRC
+          - CUC
+          - CUP
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - EUR
+          - FJD
+          - FKP
+          - GBP
+          - GEL
+          - GHS
+          - GIP
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IQD
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LBP
+          - LKR
+          - LRD
+          - LSL
+          - LTL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRO
+          - MRU
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MXV
+          - MYR
+          - MZN
+          - NAD
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - NZD
+          - OMR
+          - PAB
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RUR
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SHP
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STD
+          - STN
+          - SVC
+          - SYP
+          - SZL
+          - THB
+          - TJS
+          - TMT
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UGX
+          - USD
+          - USN
+          - USS
+          - UYI
+          - UYU
+          - UZS
+          - VEF
+          - VES
+          - VND
+          - VUV
+          - WST
+          - XAF
+          - XAG
+          - XAU
+          - XBA
+          - XBB
+          - XBC
+          - XBD
+          - XCD
+          - XDR
+          - XOF
+          - XPD
+          - XPF
+          - XPT
+          - XSU
+          - XTS
+          - XUA
+          - XXX
+          - YER
+          - ZAR
+          - ZMW
+          - ZWL
+        transacted_at:
+          type: string
+          description: Timestamp of the card transaction in ISO8601 format.
+      description: Details of the card transaction used to pay the bill.
+    BillPagination:
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          description: List of items returned.
+          items:
+            $ref: '#/components/schemas/Bill'
+        page_after:
+          type: string
+          description: A pointer to the end of the page list used in pagination to retrieve the next page of results.
+        page_before:
+          type: string
+          description: A pointer to the start of the page list use in pagination to retrieve the previous page of results.
+      description: Paginated list of bills.
+    BillLineItem:
+      type: object
+      required:
+      - accounting_field_selections
+      - id
+      - total_amount
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the line item.
+        unit_price:
+          type: string
+          description: Unit price of the line item.
+        quantity:
+          type: string
+          description: Quantity of the line item.
+        description:
+          type: string
+          description: Description of the line item.
+        total_amount:
+          type: string
+          description: Total amount for this line item.
+        tax_amount:
+          type: string
+          description: Tax amount for this line item.
+        accounting_field_selections:
+          type: array
+          description: List of accounting fields selected for the line item.
+          items:
+            $ref: '#/components/schemas/AccountingFieldSelection'
+        purchase_order_line_item_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the purchase order line item associated with this bill line item.
+      description: Individual line item on a bill, representing a specific product or service with its own amount and accounting categorization.
+    Bill:
+      type: object
+      required:
+      - approvers
+      - attachments
+      - bill_payments
+      - billing_amount
+      - created_at
+      - id
+      - legal_entity_id
+      - line_items
+      - status
+      - sync_status
+      - tax_status
+      - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the bill.
+        legal_entity_id:
+          type: string
+          description: Unique identifier of the legal entity associated with the bill.
+        invoice_number:
+          type: string
+          description: Invoice number associated with the bill.
+        billing_amount:
+          type: string
+          description: Total amount of the bill.
+        billing_currency:
+          type: string
+          description: Currency of the bill, as an ISO 4217 currency code.
+          enum:
+          - UNDEFINED
+          - AED
+          - AFN
+          - ALL
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BOV
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BYR
+          - BZD
+          - CAD
+          - CDF
+          - CHE
+          - CHF
+          - CHW
+          - CLF
+          - CLP
+          - CNY
+          - COP
+          - COU
+          - CRC
+          - CUC
+          - CUP
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - EUR
+          - FJD
+          - FKP
+          - GBP
+          - GEL
+          - GHS
+          - GIP
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IQD
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LBP
+          - LKR
+          - LRD
+          - LSL
+          - LTL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRO
+          - MRU
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MXV
+          - MYR
+          - MZN
+          - NAD
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - NZD
+          - OMR
+          - PAB
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RUR
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SHP
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STD
+          - STN
+          - SVC
+          - SYP
+          - SZL
+          - THB
+          - TJS
+          - TMT
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UGX
+          - USD
+          - USN
+          - USS
+          - UYI
+          - UYU
+          - UZS
+          - VEF
+          - VES
+          - VND
+          - VUV
+          - WST
+          - XAF
+          - XAG
+          - XAU
+          - XBA
+          - XBB
+          - XBC
+          - XBD
+          - XCD
+          - XDR
+          - XOF
+          - XPD
+          - XPF
+          - XPT
+          - XSU
+          - XTS
+          - XUA
+          - XXX
+          - YER
+          - ZAR
+          - ZMW
+          - ZWL
+        status:
+          type: string
+          description: Bill status.
+          enum:
+          - DRAFT
+          - AWAITING_APPROVAL
+          - AWAITING_PAYMENT
+          - PAYMENT_IN_PROGRESS
+          - PAID
+          - REJECTED
+          - SCHEDULED
+        sync_status:
+          type: string
+          description: Sync status for an accounting system.
+          enum:
+          - NOT_SYNCED
+          - SYNCED
+          - SYNC_FAILED
+        sync_error_message:
+          type: string
+          description: Error message describing the sync failure reason, populated when the sync status is updated via the API. Null when no sync error has occurred.
+        tax_status:
+          type: string
+          description: Tax status indicating whether amounts include or exclude tax.
+          enum:
+          - TAX_EXCLUSIVE
+          - TAX_INCLUSIVE
+          - UNSPECIFIED
+        description:
+          type: string
+          description: Description of the bill.
+        approvers:
+          type: array
+          description: List of user emails who can approve the bill.
+          items:
+            type: string
+            description: List of user emails who can approve the bill.
+        issued_date:
+          type: string
+          description: Date when the bill was issued, in ISO8601 format.
+        due_date:
+          type: string
+          description: Date when the bill is due, in ISO8601 format.
+        vendor_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the vendor associated with the bill.
+        purchase_order_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the purchase order associated with the bill.
+        bill_payments:
+          type: array
+          description: List of payments applied to the bill.
+          items:
+            $ref: '#/components/schemas/BillPayment'
+        external_id:
+          type: string
+          description: External identifier for this bill in your system.
+        attachments:
+          type: array
+          description: List of file attachments associated with the bill.
+          items:
+            $ref: '#/components/schemas/Attachment'
+        line_items:
+          type: array
+          description: List of line items on the bill.
+          items:
+            $ref: '#/components/schemas/BillLineItem'
+        created_at:
+          type: string
+          description: Timestamp for when the resource was created in ISO8601 format.
+        updated_at:
+          type: string
+          description: Timestamp for when the resource was updated in ISO8601 format.
+      description: Bill representing an accounts payable obligation, including payment details, line items, and accounting categorization.
+    TransferDetails:
+      type: object
+      required:
+      - account_id
+      - multi_bill
+      - transfer_date
+      - transfer_id
+      properties:
+        transfer_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the transfer.
+        account_id:
+          type: string
+          description: Unique identifier of the Airwallex account associated with the wallet that funded the transfer.
+        multi_bill:
+          type: boolean
+          description: Whether this transfer payment pays multiple bills.
+        source_amount:
+          type: string
+          description: Transfer amount in the source currency before conversion.
+        source_currency:
+          type: string
+          description: Currency of the original transfer, as an ISO 4217 currency code.
+          enum:
+          - UNDEFINED
+          - AED
+          - AFN
+          - ALL
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BOV
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BYR
+          - BZD
+          - CAD
+          - CDF
+          - CHE
+          - CHF
+          - CHW
+          - CLF
+          - CLP
+          - CNY
+          - COP
+          - COU
+          - CRC
+          - CUC
+          - CUP
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - EUR
+          - FJD
+          - FKP
+          - GBP
+          - GEL
+          - GHS
+          - GIP
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IQD
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LBP
+          - LKR
+          - LRD
+          - LSL
+          - LTL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRO
+          - MRU
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MXV
+          - MYR
+          - MZN
+          - NAD
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - NZD
+          - OMR
+          - PAB
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RUR
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SHP
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STD
+          - STN
+          - SVC
+          - SYP
+          - SZL
+          - THB
+          - TJS
+          - TMT
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UGX
+          - USD
+          - USN
+          - USS
+          - UYI
+          - UYU
+          - UZS
+          - VEF
+          - VES
+          - VND
+          - VUV
+          - WST
+          - XAF
+          - XAG
+          - XAU
+          - XBA
+          - XBB
+          - XBC
+          - XBD
+          - XCD
+          - XDR
+          - XOF
+          - XPD
+          - XPF
+          - XPT
+          - XSU
+          - XTS
+          - XUA
+          - XXX
+          - YER
+          - ZAR
+          - ZMW
+          - ZWL
+        transfer_date:
+          type: string
+          description: Date when the transfer was made, in ISO8601 format.
+      description: Details of the transfer used to pay the bill.
+    Attachment:
+      type: object
+      required:
+      - content_type
+      - created_at
+      - file_name
+      - file_url
+      - id
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the attachment.
+        content_type:
+          type: string
+          description: MIME type of the attached file. Common types include `image/jpeg`, `image/png`, and `application/pdf`.
+        file_name:
+          type: string
+          description: Original filename of the uploaded attachment, including the file extension.
+        file_url:
+          type: string
+          description: URL to access and download the attachment file.
+        created_at:
+          type: string
+          description: Timestamp for when the resource was created in ISO8601 format.
+      description: File attachment containing supporting documentation such as receipts, invoices, or other proof of expense. Used for compliance, audit trails, and approval workflows.
+    AccountingFieldSelection:
+      type: object
+      required:
+      - source_id
+      - type
+      - value
+      properties:
+        source_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the selected general ledger (GL) account, tax code, or accounting field value.
+        type:
+          type: string
+          description: Type of accounting field.
+          enum:
+          - GENERAL_LEDGER_ACCOUNT
+          - TAX_CODE
+          - OTHER
+          x-enumDescriptions:
+            GENERAL_LEDGER_ACCOUNT: General ledger (GL) account assigned to the line item.
+            TAX_CODE: Tax code applied to the line item.
+            OTHER: Custom accounting field defined in your ERP. The field name is provided in `name`.
+        name:
+          type: string
+          description: Name of the accounting field in the ERP software. This field is populated only when `type` is set to `OTHER`.
+        external_id:
+          type: string
+          description: External unique identifier of the accounting field value in the ERP.
+        value:
+          type: string
+          description: Name of the accounting field value in the ERP.
+        value_label:
+          type: string
+          description: Name of the accounting field value displayed in Airwallex.
+x-assembled-from: https://www.airwallex.com/docs/api/_next/data/<build>/<category>.json
+x-assembled: '2026-10-20'
