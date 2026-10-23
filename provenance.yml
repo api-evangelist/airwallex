@@ -19,53 +19,53 @@ artifacts:
     method: searched
     evidence: declared in the artifact
   collections/airwallex-authentication-api.opencollection.json:
-    method: derived
-    evidence: openapi/airwallex-authentication-api
+    method: unknown
+    evidence: no authorship recorded
   collections/airwallex-authentication-api.postman_collection.json:
-    method: derived
-    evidence: openapi/airwallex-authentication-api
+    method: unknown
+    evidence: no authorship recorded
   collections/airwallex-balances-api.opencollection.json:
-    method: derived
-    evidence: openapi/airwallex-balances-api
+    method: unknown
+    evidence: no authorship recorded
   collections/airwallex-balances-api.postman_collection.json:
-    method: derived
-    evidence: openapi/airwallex-balances-api
+    method: unknown
+    evidence: no authorship recorded
   collections/airwallex-beneficiaries-api.opencollection.json:
-    method: derived
-    evidence: openapi/airwallex-beneficiaries-api
+    method: unknown
+    evidence: no authorship recorded
   collections/airwallex-beneficiaries-api.postman_collection.json:
-    method: derived
-    evidence: openapi/airwallex-beneficiaries-api
+    method: unknown
+    evidence: no authorship recorded
   collections/airwallex-customers-api.opencollection.json:
-    method: derived
-    evidence: openapi/airwallex-customers-api
+    method: unknown
+    evidence: no authorship recorded
   collections/airwallex-customers-api.postman_collection.json:
-    method: derived
-    evidence: openapi/airwallex-customers-api
+    method: unknown
+    evidence: no authorship recorded
   collections/airwallex-payment-intents-api.opencollection.json:
-    method: derived
-    evidence: openapi/airwallex-payment-intents-api
+    method: unknown
+    evidence: no authorship recorded
   collections/airwallex-payment-intents-api.postman_collection.json:
-    method: derived
-    evidence: openapi/airwallex-payment-intents-api
+    method: unknown
+    evidence: no authorship recorded
   collections/airwallex-payouts-api.opencollection.json:
-    method: derived
-    evidence: openapi/airwallex-payouts-api
+    method: unknown
+    evidence: no authorship recorded
   collections/airwallex-payouts-api.postman_collection.json:
-    method: derived
-    evidence: openapi/airwallex-payouts-api
+    method: unknown
+    evidence: no authorship recorded
   collections/airwallex-refunds-api.opencollection.json:
-    method: derived
-    evidence: openapi/airwallex-refunds-api
+    method: unknown
+    evidence: no authorship recorded
   collections/airwallex-refunds-api.postman_collection.json:
-    method: derived
-    evidence: openapi/airwallex-refunds-api
+    method: unknown
+    evidence: no authorship recorded
   collections/airwallex-transfers-api.opencollection.json:
-    method: derived
-    evidence: openapi/airwallex-transfers-api
+    method: unknown
+    evidence: no authorship recorded
   collections/airwallex-transfers-api.postman_collection.json:
-    method: derived
-    evidence: openapi/airwallex-transfers-api
+    method: unknown
+    evidence: no authorship recorded
   collections/airwallex.opencollection.json:
     method: derived
     evidence: openapi/airwallex
@@ -108,16 +108,58 @@ artifacts:
   front-door-ai/2026-09-17.yml:
     method: unknown
     evidence: no authorship recorded
+  hosts/airwallex-hosts.yml:
+    method: derived
+    evidence: declared in the artifact
+  integrations/_index.yml:
+    method: generated
+    evidence: carries an API Evangelist house phrase
+  integrations/airwallex-integration-edges.yml:
+    method: searched
+    evidence: declared in the artifact
+  integrations/airwallex-slack-card-limit-alert.yml:
+    method: generated
+    evidence: declared in the artifact
+  integrations/airwallex-slack-failed-card-transactions.yml:
+    method: generated
+    evidence: declared in the artifact
+  integrations/airwallex-slack-low-balance-alert.yml:
+    method: generated
+    evidence: declared in the artifact
+  integrations/airwallex-slack-new-transactions-channel-message.yml:
+    method: generated
+    evidence: declared in the artifact
+  integrations/airwallex-slack-new-transactions-notification.yml:
+    method: generated
+    evidence: declared in the artifact
   json-ld/airwallex-context.jsonld:
     method: unknown
     evidence: no authorship recorded
   json-schema/airwallex-account-schema.json:
     method: unknown
     evidence: no authorship recorded
+  json-schema/airwallex-checkout-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/airwallex-checkout-session-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/airwallex-customer-balance-transaction-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
   json-schema/airwallex-fx-quote-schema.json:
     method: unknown
     evidence: no authorship recorded
+  json-schema/airwallex-invoice-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/airwallex-payment-intent-list-schema.json:
+    method: unknown
+    evidence: no authorship recorded
   json-schema/airwallex-payment-intent-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/airwallex-settlement-record-schema.json:
     method: unknown
     evidence: no authorship recorded
   json-schema/airwallex-transfer-schema.json:
@@ -135,127 +177,7 @@ artifacts:
   json-structure/airwallex-transfer-structure.json:
     method: unknown
     evidence: no authorship recorded
-  kin/checks-2026-09-24T161608.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-25T125852.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-25T133943.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-25T143147.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-25T154045.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-26T215308.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T094438.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T103455.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T123021.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T132314.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T140727.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-28T221322.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-29T213958.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-29T230545.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-30T203505.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-30T220315.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-31T223420.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-01T063623.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-01T210448.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-01T222808.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-02T211804.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-02T224043.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-03T161828.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-03T174231.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-04T062714.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-04T212454.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-04T224856.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T055819.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T072335.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T144739.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T195450.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T211839.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-06T011047.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-06T211804.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-06T224210.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-07T200636.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-07T213054.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-08T214843.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-08T232836.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-10T204815.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-10T222408.yml:
+  kin/checks-2026-10-11T110117.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-09-12T062655.yml:
@@ -339,9 +261,27 @@ artifacts:
   kin/score-2026-09-24T161608.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-25T210408.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-25T232841.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-03T000835.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-03T024842.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-11T110117.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
   lifecycle/airwallex-lifecycle.yml:
     method: searched
     evidence: declared in the artifact
+  llms/airwallex-llms-provenance.yml:
+    method: searched
+    evidence: 'derive-llms-provenance.py: harvested'
   llms/airwallex-llms.txt:
     method: searched
     evidence: 'derive-llms-provenance.py: harvested'
@@ -354,58 +294,341 @@ artifacts:
   mcp/airwallex-tool-crosswalk.yml:
     method: derived
     evidence: declared in the artifact
+  openapi/_original/airwallex-docs-reference-pagedata-2026-08-21.json:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/airwallex-openapi.yml:
     method: harvested
     evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
       to the provider's source is unverified
-  openapi/airwallex-authentication-api-openapi.yml:
+  openapi/airwallex-account-capability-account-capability-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/airwallex-balances-api-openapi.yml:
+  openapi/airwallex-accounting-accounting-field-values-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/airwallex-beneficiaries-api-openapi.yml:
+  openapi/airwallex-accounting-accounting-fields-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/airwallex-customers-api-openapi.yml:
+  openapi/airwallex-accounting-general-ledger-accounts-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/airwallex-payment-intents-api-openapi.yml:
+  openapi/airwallex-accounting-tax-codes-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/airwallex-payouts-api-openapi.yml:
+  openapi/airwallex-authentication-authentication-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/airwallex-refunds-api-openapi.yml:
+  openapi/airwallex-authentication-embedded-components-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/airwallex-transfers-api-openapi.yml:
+  openapi/airwallex-auto-payments-auto-payments-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  overlays/airwallex-authentication-api-overlay.yaml:
-    method: generated
-    evidence: declared in the artifact
-  overlays/airwallex-balances-api-overlay.yaml:
-    method: generated
-    evidence: declared in the artifact
-  overlays/airwallex-beneficiaries-api-overlay.yaml:
-    method: generated
-    evidence: declared in the artifact
-  overlays/airwallex-customers-api-overlay.yaml:
-    method: generated
-    evidence: declared in the artifact
-  overlays/airwallex-payment-intents-api-overlay.yaml:
-    method: generated
-    evidence: declared in the artifact
-  overlays/airwallex-payouts-api-overlay.yaml:
-    method: generated
-    evidence: declared in the artifact
-  overlays/airwallex-refunds-api-overlay.yaml:
-    method: generated
-    evidence: declared in the artifact
-  overlays/airwallex-transfers-api-overlay.yaml:
-    method: generated
-    evidence: declared in the artifact
+  openapi/airwallex-billing-billing-checkouts-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-billing-billing-customers-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-billing-billing-transactions-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-billing-coupons-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-billing-credit-notes-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-billing-e-invoicing-documents-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-billing-invoices-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-billing-meters-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-billing-payment-sources-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-billing-prices-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-billing-products-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-billing-rate-cards-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-billing-subscriptions-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-billing-usage-events-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-checkout-checkout-sessions-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-confirmation-letter-confirmation-letter-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-core-resources-balances-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-core-resources-deposits-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-core-resources-direct-debits-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-core-resources-global-accounts-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-core-resources-linked-accounts-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-embedded-finance-accounts-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-embedded-finance-charges-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-embedded-finance-connected-account-transfers-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-embedded-finance-hosted-flows-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-embedded-finance-invitation-links-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-embedded-finance-offboardings-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-embedded-finance-platform-liquidity-programs-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-embedded-finance-platform-reports-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-embedded-finance-psp-settlement-deposits-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-embedded-finance-psp-settlement-intents-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-embedded-finance-psp-settlement-splits-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-finance-financial-reports-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-finance-financial-transactions-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-finance-settlements-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-issuing-authorizations-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-issuing-card-transaction-events-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-issuing-card-transaction-lifecycles-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-issuing-card-transactions-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-issuing-cardholders-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-issuing-cards-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-issuing-config-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-issuing-digital-wallet-tokens-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-issuing-merchant-brands-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-issuing-transaction-disputes-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-issuing-transactions-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-lending-borrower-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-lending-lender-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-payment-acceptance-config-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-payment-acceptance-conversion-quotes-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-payment-acceptance-customer-balance-transactions-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-payment-acceptance-customers-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-payment-acceptance-customs-declarations-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-payment-acceptance-funds-split-reversals-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-payment-acceptance-funds-splits-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-payment-acceptance-payment-attempts-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-payment-acceptance-payment-consents-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-payment-acceptance-payment-disputes-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-payment-acceptance-payment-intents-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-payment-acceptance-payment-links-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-payment-acceptance-payment-methods-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-payment-acceptance-reference-data-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-payment-acceptance-refunds-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-payment-acceptance-settlement-records-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-payment-acceptance-terminals-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-payouts-batch-transfers-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-payouts-beneficiaries-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-payouts-payers-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-payouts-transfers-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-reconciliation-reconciliation-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-reserves-reserves-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-risk-fraud-feedback-issuing-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-risk-request-for-information-rfi-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-risk-risk-reports-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-risk-sellers-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-risk-watchlist-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-scale-settlements-scale-settlements-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-security-activity-log-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-simulation-sandbox-only-accounts-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-simulation-sandbox-only-billing-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-simulation-sandbox-only-deposits-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-simulation-sandbox-only-issuing-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-simulation-sandbox-only-linked-accounts-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-simulation-sandbox-only-offboardings-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-simulation-sandbox-only-payment-acceptance-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-simulation-sandbox-only-request-for-information-rfi-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-simulation-sandbox-only-terminal-simulation-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-simulation-sandbox-only-transfers-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-spend-bills-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-spend-expenses-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-spend-purchase-orders-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-spend-reimbursements-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-spend-vendors-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-supporting-services-connected-stores-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-supporting-services-file-service-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-supporting-services-reference-data-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-transactional-fx-conversion-amendments-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-transactional-fx-conversion-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-transactional-fx-quotes-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/airwallex-transactional-fx-rates-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  overlays/airwallex-openapi-overlay.yaml:
+    method: derived
+    evidence: an API Evangelist overlay (title) over the provider's contract
   packages/airwallex-packages.yml:
     method: searched
     evidence: declared in the artifact
@@ -413,33 +636,39 @@ artifacts:
     method: searched
     evidence: declared in the artifact
   postman/airwallex-authentication-api.postman_collection.json:
-    method: derived
-    evidence: openapi/airwallex-authentication-api
+    method: unknown
+    evidence: no authorship recorded
   postman/airwallex-balances-api.postman_collection.json:
-    method: derived
-    evidence: openapi/airwallex-balances-api
+    method: unknown
+    evidence: no authorship recorded
   postman/airwallex-beneficiaries-api.postman_collection.json:
-    method: derived
-    evidence: openapi/airwallex-beneficiaries-api
+    method: unknown
+    evidence: no authorship recorded
   postman/airwallex-customers-api.postman_collection.json:
-    method: derived
-    evidence: openapi/airwallex-customers-api
+    method: unknown
+    evidence: no authorship recorded
   postman/airwallex-payment-intents-api.postman_collection.json:
-    method: derived
-    evidence: openapi/airwallex-payment-intents-api
+    method: unknown
+    evidence: no authorship recorded
   postman/airwallex-payouts-api.postman_collection.json:
-    method: derived
-    evidence: openapi/airwallex-payouts-api
+    method: unknown
+    evidence: no authorship recorded
   postman/airwallex-refunds-api.postman_collection.json:
-    method: derived
-    evidence: openapi/airwallex-refunds-api
+    method: unknown
+    evidence: no authorship recorded
   postman/airwallex-transfers-api.postman_collection.json:
-    method: derived
-    evidence: openapi/airwallex-transfers-api
+    method: unknown
+    evidence: no authorship recorded
   rate-limits/airwallex-rate-limits.yml:
     method: searched
     evidence: declared in the artifact
+  regulatory/airwallex-regulatory-posture.yml:
+    method: searched
+    evidence: declared in the artifact
   rules/airwallex-jsonschema-spectral-rules.yml:
+    method: generated
+    evidence: declared in the artifact
+  rules/airwallex-rules.yml:
     method: generated
     evidence: declared in the artifact
   rules/airwallex-spectral-rules.yml:
@@ -461,44 +690,35 @@ artifacts:
     method: searched
     evidence: declared in the artifact
   skills/_index.yml:
-    method: searched
+    method: generated
     evidence: declared in the artifact
-  skills/airwallex-agentos-awx-best-practices.md:
-    method: unknown
-    evidence: no authorship recorded
-  skills/airwallex-agentos-beneficiary-creation.md:
-    method: unknown
-    evidence: no authorship recorded
-  skills/airwallex-agentos-card-provisioning.md:
-    method: unknown
-    evidence: no authorship recorded
-  skills/airwallex-agentos-contract-to-billing.md:
-    method: unknown
-    evidence: no authorship recorded
-  skills/airwallex-agentos-manage-cashflow.md:
-    method: unknown
-    evidence: no authorship recorded
-  skills/airwallex-dev-ai-provider-card-mit.md:
-    method: unknown
-    evidence: no authorship recorded
-  skills/airwallex-dev-billing-checkout.md:
-    method: unknown
-    evidence: no authorship recorded
-  skills/airwallex-dev-dropin.md:
-    method: unknown
-    evidence: no authorship recorded
-  skills/airwallex-dev-hpp.md:
-    method: unknown
-    evidence: no authorship recorded
-  skills/airwallex-dev-kyc.md:
-    method: unknown
-    evidence: no authorship recorded
-  skills/airwallex-dev-split-card.md:
+  skills/airwallex-accept-a-payment.md:
+    method: generated
+    evidence: declared in the artifact
+  skills/airwallex-beneficiary-creation.md:
+    method: generated
+    evidence: declared in the artifact
+  skills/airwallex-card-provisioning.md:
+    method: generated
+    evidence: declared in the artifact
+  skills/airwallex-contract-to-billing.md:
+    method: generated
+    evidence: declared in the artifact
+  skills/airwallex-manage-cashflow.md:
+    method: generated
+    evidence: declared in the artifact
+  skills/airwallex-pay-a-supplier.md:
+    method: generated
+    evidence: declared in the artifact
+  vendors/airwallex-vendors.yml:
     method: unknown
     evidence: no authorship recorded
   vocabulary/airwallex-vocabulary.yaml:
     method: unknown
     evidence: no authorship recorded
+  vocabulary/airwallex-vocabulary.yml:
+    method: derived
+    evidence: declared in the artifact
   well-known/airwallex-mcp-oauth-authorization-server.json:
     method: unknown
     evidence: no authorship recorded
