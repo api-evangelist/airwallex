@@ -46,6 +46,7 @@ checked:
 - https://hex.pm/api
 - https://packagist.org/packages
 - https://pub.dev/api
+- xero/integrations/xero-integration-edges.yml
 summary: null
 marketplace_apps:
 - marketplace: zapier
@@ -858,6 +859,75 @@ edges:
       P856 not contradicting (Kin 2026-10-20 decision 2)
   detected_by: sweep-eu-psd2-payment-institutions.py
   first_seen: '2026-10-21'
+- partner_name: ASIC Australian Financial Services licensees
+  partner: null
+  partner_match: register-name
+  type: register
+  channel: regulator-register
+  relationship: standard-participant
+  direction: partner-built
+  evidence: https://data.gov.au/data/dataset/ab7eddce-84df-4098-bc8f-500d0d9776d1/resource/d98a113d-6b50-40e6-b65f-2612efc877f4/download/afs_lic_202610.csv
+  category: Australian financial services licence (ASIC)
+  contract_reference:
+    register: ASIC Australian Financial Services licensees
+    spec_file: null
+    standard: null
+    role: afs-licensee
+    registrations:
+    - registered_name: AIRWALLEX PTY LTD
+      licences:
+      - AFS licence
+      - non-cash payment products
+      - foreign exchange contracts
+      - market making
+      register_country: AU
+      matched_domain: null
+      matched_by: register-name
+      register_id: AFSL 487221
+      abn_acn: '37609653312'
+      state: VIC
+      start: 05/09/2016
+      register_name_note: register-name 'airwallex' = airwallex; wikidata P856 airwallex.com agrees or unheld; hand-verified
+    signal_note: 'participation only: a regulator licence / authorisation listing; no API conformance is published
+      by this register'
+    detected_by: sweep-australia-afs-adi-registers.py
+    detected: '2026-10-22'
+    matched_by: register-name
+    identity_source: register-name
+    identity_note: register gave only the name; exact normalised match to the repo's apis.yml name, one repo, Wikidata
+      P856 not contradicting (Kin 2026-10-20 decision 2)
+  detected_by: sweep-australia-afs-adi-registers.py
+  first_seen: '2026-10-22'
+- partner_name: Packagist
+  partner: packagist
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (PHP)
+  evidence: https://packagist.org/packages/airwallex/payments-plugin-magento
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: Packagist (public registry JSON)
+    spec_file: null
+    language: PHP
+    packages:
+    - name: airwallex/payments-plugin-magento
+      version: 1.25.0
+      released: '2026-09-23'
+      released_field: time
+      lapsed: false
+      page: https://packagist.org/packages/airwallex/payments-plugin-magento
+      repo_leg: github-org:airwallex
+      publisher_leg: org:airwallex
+      matched_by: github-org
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-php-dart-elixir-package-registries.py
+    detected: '2026-10-22'
+  detected_by: sweep-php-dart-elixir-package-registries.py
+  first_seen: '2026-10-22'
 - partner_name: WooCommerce (own)
   partner: woocommerce
   partner_match: mirror
@@ -960,75 +1030,25 @@ edges:
   detected: '2026-10-22'
   detected_by: mirror-platform-listings.py
   category: Adobe Commerce Marketplace extension
-- partner_name: ASIC Australian Financial Services licensees
-  partner: null
-  partner_match: register-name
-  type: register
-  channel: regulator-register
-  relationship: standard-participant
-  direction: partner-built
-  evidence: https://data.gov.au/data/dataset/ab7eddce-84df-4098-bc8f-500d0d9776d1/resource/d98a113d-6b50-40e6-b65f-2612efc877f4/download/afs_lic_202610.csv
-  category: Australian financial services licence (ASIC)
-  contract_reference:
-    register: ASIC Australian Financial Services licensees
-    spec_file: null
-    standard: null
-    role: afs-licensee
-    registrations:
-    - registered_name: AIRWALLEX PTY LTD
-      licences:
-      - AFS licence
-      - non-cash payment products
-      - foreign exchange contracts
-      - market making
-      register_country: AU
-      matched_domain: null
-      matched_by: register-name
-      register_id: AFSL 487221
-      abn_acn: '37609653312'
-      state: VIC
-      start: 05/09/2016
-      register_name_note: register-name 'airwallex' = airwallex; wikidata P856 airwallex.com agrees or unheld; hand-verified
-    signal_note: 'participation only: a regulator licence / authorisation listing; no API conformance is published
-      by this register'
-    detected_by: sweep-australia-afs-adi-registers.py
-    detected: '2026-10-22'
-    matched_by: register-name
-    identity_source: register-name
-    identity_note: register gave only the name; exact normalised match to the repo's apis.yml name, one repo, Wikidata
-      P856 not contradicting (Kin 2026-10-20 decision 2)
-  detected_by: sweep-australia-afs-adi-registers.py
-  first_seen: '2026-10-22'
-- partner_name: Packagist
-  partner: packagist
-  partner_match: register
-  type: register
-  direction: provider-built
-  category: official SDK (PHP)
-  evidence: https://packagist.org/packages/airwallex/payments-plugin-magento
-  channel: package-registry
-  relationship: distribution-channel
-  contract_reference:
-    register: Packagist (public registry JSON)
-    spec_file: null
-    language: PHP
-    packages:
-    - name: airwallex/payments-plugin-magento
-      version: 1.25.0
-      released: '2026-09-23'
-      released_field: time
-      lapsed: false
-      page: https://packagist.org/packages/airwallex/payments-plugin-magento
-      repo_leg: github-org:airwallex
-      publisher_leg: org:airwallex
-      matched_by: github-org
-    current: true
-    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
-      24 months'
-    detected_by: sweep-php-dart-elixir-package-registries.py
-    detected: '2026-10-22'
-  detected_by: sweep-php-dart-elixir-package-registries.py
-  first_seen: '2026-10-22'
+- partner_name: Xero (own)
+  partner: xero
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://apps.xero.com/nz/app/airwallex
+  mirror_of: xero/integrations/xero-integration-edges.yml
+  apps:
+  - Airwallex
+  listing_count: 1
+  detected: '2026-10-23'
+  detected_by: mirror-platform-listings.py
+  category: Bills and expenses
+  features:
+  - Sign Up with Xero
 templates:
 - title: Create spreadsheet rows in Google Sheets for new Airwallex transactions (payouts, deposits, and conversions)
   url: https://zapier.com/apps/airwallex/integrations/google-sheets/1220342/create-spreadsheet-rows-in-google-sheets-for-new-airwallex-transactions-payouts-deposits-and-conversions
