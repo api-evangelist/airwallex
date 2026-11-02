@@ -1,0 +1,181 @@
+# Pricing transcribed from the provider's own page — see provenance. Numbers are quoted, not derived.
+generated: '2026-10-28'
+method: searched
+source: https://www.airwallex.com/en-us/pricing
+sources:
+- https://www.airwallex.com/en-us/pricing
+- https://www.airwallex.com/pricing
+provenance:
+  tool: engine/economics/harvest_pricing.py
+  run: 20261028T120612
+  grounding: every price_text was found verbatim in the fetched page text
+audience: business-product
+pricing_basis: tiered-subscription
+delivery:
+  delivery: managed
+  method: page
+  read: '2026-10-28'
+  managed_tier: Grow
+published: true
+note: Tiered plans priced per user/month plus per-transaction fees (FX, payments, transfers); Platform
+  API/embedded finance pricing is custom.
+plan_count: 11
+currency: USD
+plans:
+- name: Explore
+  price_text: Free $0 per user/month²
+  price: 0
+  currency: USD
+  period: month
+  unit: per user
+  included_quota: Up to 10 free Spend users; business accounts, spend, payments, billing, integrations
+- name: Grow
+  price_text: $12 per user/month² + platform fee based on team size
+  price: 12
+  currency: USD
+  period: month
+  unit: per user
+  included_quota: Everything in Explore, plus; maximum 250 Spend users
+- name: Accelerate
+  price_text: Custom pricing
+  period: none
+  included_quota: Everything in Grow, plus enterprise capabilities and dedicated support
+- name: Domestic cards (payment acceptance)
+  price_text: 2.8% + $0.30
+  currency: USD
+  period: per-use
+  unit: per transaction
+- name: International cards
+  price_text: 4.30% + $0.30
+  currency: USD
+  period: per-use
+  unit: per transaction
+- name: Local payment methods
+  price_text: $0.30 + Payment Method Fee
+  price: 0.3
+  currency: USD
+  period: per-use
+  unit: per transaction
+- name: SWIFT transfers
+  price_text: $15-$25/ transfer (SHA and OUR)
+  currency: USD
+  period: per-use
+  unit: per transfer
+- name: FX conversions
+  price_text: 0.5% above interbank rates for major currencies, 1.0% for all others
+  period: per-use
+  unit: FX conversion
+- name: Subscription Management / Usage-based Billing
+  price_text: 0.50% per successful transaction
+  price: 0.5
+  period: per-use
+  unit: per successful transaction
+- name: Automatic tax calculation
+  price_text: 0.4% fee per transaction
+  price: 0.4
+  period: per-use
+  unit: per transaction
+- name: Platform API & Embedded Finance
+  price_text: Contact Sales
+  period: none
+rate_limit_statements:
+- The Explore Plan includes up to 10 free Spend users while the Grow Plan allows a maximum of 250 Spend
+  users.
+x-canonical:
+  generated: '2026-11-01'
+  vocabulary: engine/economics/plans-canonical.yml
+  models:
+  - free
+  - hybrid
+  - metered
+  - seat
+  units:
+  - seat
+  - transaction
+  plans:
+  - name: Explore
+    access: other
+    model: free
+    model_how: derived
+    units:
+    - seat
+    periods:
+    - month
+  - name: Grow
+    access: other
+    model: seat
+    model_how: derived
+    units:
+    - seat
+    periods:
+    - month
+  - name: Accelerate
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods:
+    - none
+  - name: Domestic cards (payment acceptance)
+    access: other
+    model: metered
+    model_how: derived
+    units:
+    - transaction
+    periods:
+    - other
+  - name: International cards
+    access: other
+    model: metered
+    model_how: derived
+    units:
+    - transaction
+    periods:
+    - other
+  - name: Local payment methods
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - transaction
+    periods:
+    - other
+  - name: SWIFT transfers
+    access: other
+    model: unstated
+    model_how: derived
+    units:
+    - other
+    periods:
+    - other
+  - name: FX conversions
+    access: other
+    model: unstated
+    model_how: derived
+    units:
+    - other
+    periods:
+    - other
+  - name: Subscription Management / Usage-based Billing
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - transaction
+    periods:
+    - other
+  - name: Automatic tax calculation
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - transaction
+    periods:
+    - other
+  - name: Platform API & Embedded Finance
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods:
+    - none
