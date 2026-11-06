@@ -82,7 +82,7 @@ rate_limit_statements:
 - The Explore Plan includes up to 10 free Spend users while the Grow Plan allows a maximum of 250 Spend
   users.
 x-canonical:
-  generated: '2026-11-02'
+  generated: '2026-11-06'
   vocabulary: engine/economics/plans-canonical.yml
   models:
   - free
